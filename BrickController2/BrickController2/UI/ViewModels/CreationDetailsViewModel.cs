@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using BrickController2.UI.Navigation;
 
-namespace BrickController2.UI.ViewModels
+namespace BrickController2.UI.DI
 {
     public class CreationDetailsViewModel : ViewModelBase
     {

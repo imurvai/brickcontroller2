@@ -104,6 +104,8 @@
     <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="HardwareServices\DI\HardwareServicesModule.cs" />
+    <Compile Include="HardwareServices\InfraredService.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <None Include="Entitlements.plist" />

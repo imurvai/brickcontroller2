@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using BrickController2.UI.ViewModels;
+﻿using BrickController2.UI.DI;
+using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

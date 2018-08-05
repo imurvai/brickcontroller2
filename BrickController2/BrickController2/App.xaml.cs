@@ -1,6 +1,6 @@
 using System;
 using BrickController2.UI.Navigation;
-using BrickController2.UI.Pages;
+using BrickController2.UI.DI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

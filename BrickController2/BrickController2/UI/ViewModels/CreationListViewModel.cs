@@ -3,7 +3,7 @@ using System.Windows.Input;
 using BrickController2.UI.Navigation;
 using Xamarin.Forms;
 
-namespace BrickController2.UI.ViewModels
+namespace BrickController2.UI.DI
 {
     public class CreationListViewModel : ViewModelBase
     {

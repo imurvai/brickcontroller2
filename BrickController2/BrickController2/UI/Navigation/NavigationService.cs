@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BrickController2.UI.Pages;
+using BrickController2.UI.DI;
 using Xamarin.Forms;
 
 namespace BrickController2.UI.Navigation
