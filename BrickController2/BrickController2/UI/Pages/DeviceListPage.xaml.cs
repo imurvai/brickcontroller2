@@ -1,17 +1,13 @@
-﻿using BrickController2.UI.DI;
-using System.Collections.Generic;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using BrickController2.UI.ViewModels;
 
 namespace BrickController2.UI.Pages
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DeviceListPage : ContentPage
+    public partial class DeviceListPage : PageBase
     {
-        public DeviceListPage(ViewModelFactory viewModelFactory, IDictionary<string, object> parameters)
+        public DeviceListPage(ViewModelBase vm)
         {
             InitializeComponent();
-            BindingContext = viewModelFactory(typeof(DeviceListViewModel), parameters);
+            BindingContext = vm;
         }
     }
 }

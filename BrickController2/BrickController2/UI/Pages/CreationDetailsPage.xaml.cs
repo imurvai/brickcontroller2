@@ -1,17 +1,13 @@
-﻿using BrickController2.UI.DI;
-using System.Collections.Generic;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using BrickController2.UI.ViewModels;
 
 namespace BrickController2.UI.Pages
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class CreationDetailsPage : ContentPage
+	public partial class CreationDetailsPage : PageBase
 	{
-		public CreationDetailsPage(ViewModelFactory viewModelFactory, IDictionary<string, object> parameters)
+		public CreationDetailsPage(ViewModelBase vm)
 		{
 			InitializeComponent();
-		    BindingContext = viewModelFactory(typeof(CreationDetailsViewModel), parameters);
+            BindingContext = vm;
 		}
 	}
 }

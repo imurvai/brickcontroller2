@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using BrickController2.UI.ViewModels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BrickController2.UI.Navigation
 {
     public interface INavigationService
     {
-        Task NavigateToAsync(NavigationKey navigationKey, IDictionary<string, object> parameters = null);
+        Task NavigateToAsync<T>(IDictionary<string, object> parameters = null) where T : ViewModelBase;
 
         Task NavigateBackAsync();
     }

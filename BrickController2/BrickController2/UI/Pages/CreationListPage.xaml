@@ -1,23 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:fab="clr-namespace:SuaveControls.Views;assembly=SuaveControls.FloatingActionButton"
-             x:Class="BrickController2.UI.Pages.CreationListPage"
-             Title="Creation list">
-    <ContentPage.Content>
+<local:PageBase
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    x:Class="BrickController2.UI.Pages.CreationListPage"
+    Title="Creation list">
+    
+    <PageBase.Content>
         <StackLayout>
             <ListView ItemsSource="{Binding Creations}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Label Text="valami"></Label>
+                        <Label Text="{Binding Name}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        
-            <fab:FloatingActionButton
-                HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" 
-                WidthRequest="50" HeightRequest="50"
-                Image="" ButtonColor="Red"/>
+            
         </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
+    </PageBase.Content>
+</local:PageBase>

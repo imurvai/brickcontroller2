@@ -4,7 +4,6 @@ using BrickController2.DeviceManagement.DI;
 using BrickController2.iOS.HardwareServices.DI;
 using BrickController2.UI.DI;
 using Foundation;
-using SuaveControls.FloatingActionButton.iOS.Renderers;
 using UIKit;
 
 namespace BrickController2.iOS
@@ -25,8 +24,6 @@ namespace BrickController2.iOS
         public override bool FinishedLaunching(UIApplication uiApp, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
-
-            FloatingActionButtonRenderer.InitRenderer();
 
             var container = InitDI();
             var app = container.Resolve<App>();

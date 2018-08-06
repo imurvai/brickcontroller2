@@ -2,6 +2,7 @@
 using Autofac;
 using BrickController2.UI.Navigation;
 using BrickController2.UI.Pages;
+using BrickController2.UI.ViewModels;
 using Xamarin.Forms;
 
 namespace BrickController2.UI.DI
@@ -17,13 +18,13 @@ namespace BrickController2.UI.DI
             // Register pages and viewmodels
 
             builder.RegisterType<CreationListViewModel>().Keyed<ViewModelBase>(typeof(CreationListViewModel));
-            builder.RegisterType<CreationListPage>().Keyed<Page>(NavigationKey.CreationList);
+            builder.RegisterType<CreationListPage>().Keyed<PageBase>(typeof(CreationListPage));
 
             builder.RegisterType<CreationDetailsViewModel>().Keyed<ViewModelBase>(typeof(CreationDetailsViewModel));
-            builder.RegisterType<CreationDetailsPage>().Keyed<Page>(NavigationKey.CreationDetails);
+            builder.RegisterType<CreationDetailsPage>().Keyed<PageBase>(typeof(CreationDetailsPage));
 
             builder.RegisterType<DeviceListViewModel>().Keyed<ViewModelBase>(typeof(DeviceListViewModel));
-            builder.RegisterType<DeviceListPage>().Keyed<Page>(NavigationKey.DeviceList);
+            builder.RegisterType<DeviceListPage>().Keyed<PageBase>(typeof(DeviceListPage));
 
             // Register the viewmodel factory
             builder.Register<ViewModelFactory>(c =>
@@ -36,7 +37,7 @@ namespace BrickController2.UI.DI
             builder.Register<PageFactory>(c =>
             {
                 var componentContext = c.Resolve<IComponentContext>();
-                return (key, parameters) => componentContext.ResolveKeyed<Page>(key, new TypedParameter(typeof(IDictionary<string, object>), parameters));
+                return (type, vm) => componentContext.ResolveKeyed<PageBase>(type, new TypedParameter(typeof(ViewModelBase), vm));
             });
 
             // 

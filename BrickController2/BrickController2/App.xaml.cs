@@ -1,19 +1,24 @@
 using System;
-using BrickController2.UI.Navigation;
 using BrickController2.UI.DI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using BrickController2.UI.ViewModels;
+using BrickController2.UI.Pages;
 
-[assembly: XamlCompilation (XamlCompilationOptions.Compile)]
+[assembly: XamlCompilation (XamlCompilationOptions.Skip)]
 namespace BrickController2
 {
 	public partial class App : Application
 	{
-		public App(PageFactory pageFactory, Func<Page, NavigationPage> navigationPageFactory)
+		public App(
+            ViewModelFactory viewModelFactory, 
+            PageFactory pageFactory, 
+            Func<Page, NavigationPage> navigationPageFactory)
 		{
 			InitializeComponent();
 
-		    var rootPage = pageFactory(NavigationKey.CreationList, null);
+            var vm = viewModelFactory(typeof(CreationListViewModel), null);
+		    var rootPage = pageFactory(typeof(CreationListPage), vm);
 		    MainPage = navigationPageFactory(rootPage);
 		}
 

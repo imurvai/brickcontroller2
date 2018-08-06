@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using BrickController2.UI.Navigation;
 
-namespace BrickController2.UI.DI
+namespace BrickController2.UI.ViewModels
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
@@ -12,6 +12,10 @@ namespace BrickController2.UI.DI
         }
 
         protected INavigationService NavigationService { get; }
+
+        public virtual void OnAppearing() { }
+        public virtual void OnDisappearing() { }
+        public virtual void OnBackButtonPressed() { }
 
         #region INotifyPropertyChanged
 

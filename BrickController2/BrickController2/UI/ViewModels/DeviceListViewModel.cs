@@ -1,6 +1,6 @@
 ﻿using BrickController2.UI.Navigation;
 
-namespace BrickController2.UI.DI
+namespace BrickController2.UI.ViewModels
 {
     public class DeviceListViewModel : ViewModelBase
     {

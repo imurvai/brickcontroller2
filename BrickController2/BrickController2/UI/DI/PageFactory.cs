@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using BrickController2.UI.Navigation;
-using Xamarin.Forms;
+﻿using BrickController2.UI.Pages;
+using BrickController2.UI.ViewModels;
+using System;
 
 namespace BrickController2.UI.DI
 {
-    public delegate Page PageFactory(NavigationKey navigationKey, IDictionary<string, object> parameters);
+    public delegate PageBase PageFactory(Type type, ViewModelBase vm);
 }
