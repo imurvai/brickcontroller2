@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using BrickController2.UI.Navigation;
 using Xamarin.Forms;
@@ -21,5 +22,7 @@ namespace BrickController2.UI.DI
         }
 
         public ICommand NavigateToCreationDetailsCommand { get; }
+
+        public ObservableCollection<string> Creations { get; } = new ObservableCollection<string>();
     }
 }
