@@ -8,7 +8,7 @@ using BrickController2.UI.Pages;
 [assembly: XamlCompilation (XamlCompilationOptions.Skip)]
 namespace BrickController2
 {
-	public partial class App : Application
+	public partial class App
 	{
 		public App(
             ViewModelFactory viewModelFactory, 
@@ -18,8 +18,8 @@ namespace BrickController2
 			InitializeComponent();
 
             var vm = viewModelFactory(typeof(CreationListViewModel), null);
-		    var rootPage = pageFactory(typeof(CreationListPage), vm);
-		    MainPage = navigationPageFactory(rootPage);
+		    var page = pageFactory(typeof(CreationListPage), vm);
+		    MainPage = navigationPageFactory(page);
 		}
 
 		protected override void OnStart()

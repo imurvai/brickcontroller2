@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<p:PageBase
+<local:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:p="clr-namespace:BrickController2.UI.Pages"
+    xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.DeviceListPage">
 
-    <PageBase.Content>
+    <local:PageBase.Content>
         <StackLayout>
             <Label Text="Device list"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
         </StackLayout>
-    </PageBase.Content>
-</p:PageBase>
+    </local:PageBase.Content>
+</local:PageBase>

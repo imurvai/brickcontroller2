@@ -3,29 +3,23 @@ using Xamarin.Forms;
 
 namespace BrickController2.UI.Pages
 {
-    public class PageBase : ContentPage
+    public abstract class PageBase : ContentPage
     {
         protected override void OnAppearing()
         {
-            var vm = BindingContext as ViewModelBase;
-            vm?.OnAppearing();
-
+            (BindingContext as ViewModelBase)?.OnAppearing();
             base.OnAppearing();
         }
 
         protected override void OnDisappearing()
         {
-            var vm = BindingContext as ViewModelBase;
-            vm?.OnDisappearing();
-
+            (BindingContext as ViewModelBase)?.OnDisappearing();
             base.OnDisappearing();
         }
 
         protected override bool OnBackButtonPressed()
         {
-            var vm = BindingContext as ViewModelBase;
-            vm?.OnBackButtonPressed();
-
+            (BindingContext as ViewModelBase)?.OnBackButtonPressed();
             return base.OnBackButtonPressed();
         }
     }

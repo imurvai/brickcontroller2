@@ -2,7 +2,7 @@
 
 namespace BrickController2.UI.Pages
 {
-    public partial class DeviceListPage : PageBase
+    public partial class DeviceListPage
     {
         public DeviceListPage(ViewModelBase vm)
         {

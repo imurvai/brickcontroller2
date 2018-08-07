@@ -5,11 +5,11 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationDetailsPage">
     
-    <PageBase.Content>
+    <local:PageBase.Content>
         <StackLayout>
             <Label Text="Creation details"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
         </StackLayout>
-    </PageBase.Content>
+    </local:PageBase.Content>
 </local:PageBase>

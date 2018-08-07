@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 using BrickController2.UI.Navigation;
 using BrickController2.UI.Pages;
@@ -15,16 +17,17 @@ namespace BrickController2.UI.DI
 
             builder.RegisterType<NavigationService>().As<INavigationService>().SingleInstance();
 
-            // Register pages and viewmodels
+            // Register viewmodels
+            foreach (var vmType in GetSubClassesOf<ViewModelBase>())
+            {
+                builder.RegisterType(vmType).Keyed<ViewModelBase>(vmType);
+            }
 
-            builder.RegisterType<CreationListViewModel>().Keyed<ViewModelBase>(typeof(CreationListViewModel));
-            builder.RegisterType<CreationListPage>().Keyed<PageBase>(typeof(CreationListPage));
-
-            builder.RegisterType<CreationDetailsViewModel>().Keyed<ViewModelBase>(typeof(CreationDetailsViewModel));
-            builder.RegisterType<CreationDetailsPage>().Keyed<PageBase>(typeof(CreationDetailsPage));
-
-            builder.RegisterType<DeviceListViewModel>().Keyed<ViewModelBase>(typeof(DeviceListViewModel));
-            builder.RegisterType<DeviceListPage>().Keyed<PageBase>(typeof(DeviceListPage));
+            // Register pages
+            foreach (var pageType in GetSubClassesOf<PageBase>())
+            {
+                builder.RegisterType(pageType).Keyed<PageBase>(pageType);
+            }
 
             // Register the viewmodel factory
             builder.Register<ViewModelFactory>(c =>
@@ -43,6 +46,13 @@ namespace BrickController2.UI.DI
             // 
             builder.RegisterType<NavigationPage>();
             builder.RegisterType<App>();
+        }
+
+        private IEnumerable<Type> GetSubClassesOf<T>()
+        {
+            return ThisAssembly.GetTypes()
+                .Where(t => t != typeof(T) && typeof(T).IsAssignableFrom(t))
+                .ToList();
         }
     }
 }

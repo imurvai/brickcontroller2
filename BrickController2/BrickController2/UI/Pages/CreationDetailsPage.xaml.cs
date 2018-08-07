@@ -2,7 +2,7 @@
 
 namespace BrickController2.UI.Pages
 {
-	public partial class CreationDetailsPage : PageBase
+	public partial class CreationDetailsPage
 	{
 		public CreationDetailsPage(ViewModelBase vm)
 		{

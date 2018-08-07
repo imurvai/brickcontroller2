@@ -6,8 +6,9 @@
     x:Class="BrickController2.UI.Pages.CreationListPage"
     Title="Creation list">
     
-    <PageBase.Content>
+    <local:PageBase.Content>
         <StackLayout>
+            <Button Text="Go to" Command="{Binding NavigeteToDeviceListCommand}"/>
             <ListView ItemsSource="{Binding Creations}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -17,5 +18,5 @@
             </ListView>
             
         </StackLayout>
-    </PageBase.Content>
+    </local:PageBase.Content>
 </local:PageBase>

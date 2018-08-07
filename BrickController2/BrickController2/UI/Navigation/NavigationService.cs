@@ -16,7 +16,7 @@ namespace BrickController2.UI.Navigation
         {
             { typeof(CreationListViewModel), typeof(CreationListPage) },
             { typeof(CreationDetailsViewModel), typeof(CreationDetailsPage) },
-            { typeof(DeviceListPage), typeof(DeviceListPage) }
+            { typeof(DeviceListViewModel), typeof(DeviceListPage) }
         };
 
         public NavigationService(PageFactory pageFactory, ViewModelFactory viewModelFactory)
