@@ -46,48 +46,17 @@ namespace BrickController2.Droid
 
         public override bool OnKeyDown([GeneratedEnum] Keycode keyCode, KeyEvent e)
         {
-            if (((int)e.Source & (int)InputSourceType.Gamepad) != 0 && e.RepeatCount == 0)
-            {
-                _gameControllerService.SendEvent(GameControllerEventType.Button, e.KeyCode.ToString(), 1.0F);
-                return true;
-            }
-
-            return base.OnKeyDown(keyCode, e);
+            return _gameControllerService.OnKeyDown(keyCode, e) || base.OnKeyDown(keyCode, e);
         }
 
         public override bool OnKeyUp([GeneratedEnum] Keycode keyCode, KeyEvent e)
         {
-            if (((int)e.Source & (int)InputSourceType.Gamepad) != 0 && e.RepeatCount == 0)
-            {
-                _gameControllerService.SendEvent(GameControllerEventType.Button, e.KeyCode.ToString(), 0.0F);
-                return true;
-            }
-
-            return base.OnKeyUp(keyCode, e);
+            return _gameControllerService.OnKeyUp(keyCode, e) || base.OnKeyUp(keyCode, e);
         }
 
         public override bool OnGenericMotionEvent(MotionEvent e)
         {
-            if (e.Source == InputSourceType.Joystick && e.Action == MotionEventActions.Move)
-            {
-                var events = new Dictionary<(GameControllerEventType, string), float>();
-                foreach (Axis axisCode in Enum.GetValues(typeof(Axis)))
-                {
-                    var axisValue = e.GetAxisValue(axisCode);
-                    
-                    if (Math.Abs(axisValue) < 0.1F)
-                    {
-                        axisValue = 0.0F;
-                    }
-
-                    events[(GameControllerEventType.Axis, axisCode.ToString())] = axisValue;
-                }
-
-                _gameControllerService.SendEvents(events);
-                return true;
-            }
-
-            return base.OnGenericMotionEvent(e);
+            return _gameControllerService.OnGenericMotionEvent(e) || base.OnGenericMotionEvent(e);
         }
 
         #endregion
