@@ -8,10 +8,7 @@ using BrickController2.CreationManagement.DI;
 using BrickController2.DeviceManagement.DI;
 using BrickController2.Droid.HardwareServices;
 using BrickController2.Droid.HardwareServices.DI;
-using BrickController2.HardwareServices;
 using BrickController2.UI.DI;
-using System;
-using System.Collections.Generic;
 
 namespace BrickController2.Droid
 {
