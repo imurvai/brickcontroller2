@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using BrickController2.UI.Navigation;
 using Xamarin.Forms;
@@ -13,20 +12,23 @@ namespace BrickController2.UI.ViewModels
         {
             NavigateToCreationDetailsCommand = new Command(async () =>
             {
-                var parameters = new Dictionary<string, object>();
-                parameters["key1"] = "value1";
-                parameters["key2"] = "value2";
-                await NavigationService.NavigateToAsync<CreationDetailsViewModel>(parameters);
+                await NavigationService.NavigateToAsync<CreationDetailsViewModel>(new NavigationParameters(("key1", "value1"), ("key2", "value2")));
             });
 
             NavigeteToDeviceListCommand = new Command(async () =>
             {
                 await NavigationService.NavigateToAsync<DeviceListViewModel>(null);
             });
+
+            NavigateToControllerTesterCommand = new Command(async () =>
+            {
+                await NavigationService.NavigateToAsync<ControllerTesterViewModel>();
+            });
         }
 
         public ICommand NavigateToCreationDetailsCommand { get; }
         public ICommand NavigeteToDeviceListCommand { get; }
+        public ICommand NavigateToControllerTesterCommand { get; }
 
         public ObservableCollection<string> Creations { get; } = new ObservableCollection<string>();
     }

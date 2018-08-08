@@ -33,7 +33,7 @@ namespace BrickController2.UI.DI
             builder.Register<ViewModelFactory>(c =>
             {
                 var componentContext = c.Resolve<IComponentContext>();
-                return (type, parameters) => componentContext.ResolveKeyed<ViewModelBase>(type, new TypedParameter(typeof(IDictionary<string, object>), parameters));
+                return (type, parameters) => componentContext.ResolveKeyed<ViewModelBase>(type, new TypedParameter(typeof(NavigationParameters), parameters));
             });
 
             // Register the page factory

@@ -3,20 +3,18 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
-    x:Class="BrickController2.UI.Pages.CreationListPage"
-    Title="Creation list">
+    x:Class="BrickController2.UI.Pages.ControllerTesterPage"
+    Title="Controller tester">
     
     <local:PageBase.Content>
         <StackLayout>
-            <Button Text="Go to" Command="{Binding NavigateToControllerTesterCommand}"/>
-            <ListView ItemsSource="{Binding Creations}">
+            <ListView ItemsSource="{Binding ControllerEventList}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Label Text="{Binding Name}"/>
+                        <TextCell Text="{Binding}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            
         </StackLayout>
     </local:PageBase.Content>
 </local:PageBase>

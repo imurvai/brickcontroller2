@@ -105,6 +105,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="HardwareServices\DI\HardwareServicesModule.cs" />
+    <Compile Include="HardwareServices\GameControllerService.cs" />
     <Compile Include="HardwareServices\InfraredService.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />

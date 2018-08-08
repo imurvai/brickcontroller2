@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HardwareServices\DI\HardwareServicesModule.cs" />
+    <Compile Include="HardwareServices\GameControllerService.cs" />
     <Compile Include="HardwareServices\InfraredService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

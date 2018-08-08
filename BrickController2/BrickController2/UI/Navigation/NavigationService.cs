@@ -16,7 +16,8 @@ namespace BrickController2.UI.Navigation
         {
             { typeof(CreationListViewModel), typeof(CreationListPage) },
             { typeof(CreationDetailsViewModel), typeof(CreationDetailsPage) },
-            { typeof(DeviceListViewModel), typeof(DeviceListPage) }
+            { typeof(DeviceListViewModel), typeof(DeviceListPage) },
+            { typeof(ControllerTesterViewModel), typeof(ControllerTesterPage) }
         };
 
         public NavigationService(PageFactory pageFactory, ViewModelFactory viewModelFactory)
@@ -25,14 +26,26 @@ namespace BrickController2.UI.Navigation
             _viewModelFactory = viewModelFactory;
         }
 
-        public Task NavigateToAsync<T>(IDictionary<string, object> parameters = null) where T : ViewModelBase
+        public Task NavigateToAsync<T>(NavigationParameters parameters = null) where T : ViewModelBase
         {
             var vm = _viewModelFactory(typeof(T), parameters);
             var page = _pageFactory(GetPageType<T>(), vm);
             return Application.Current.MainPage.Navigation.PushAsync(page);
         }
 
+        public Task NavigateToModalAsync<T>(NavigationParameters parameters = null) where T : ViewModelBase
+        {
+            var vm = _viewModelFactory(typeof(T), parameters);
+            var page = _pageFactory(GetPageType<T>(), vm);
+            return Application.Current.MainPage.Navigation.PushModalAsync(page);
+        }
+
         public Task NavigateBackAsync()
+        {
+            return Application.Current.MainPage.Navigation.PopAsync();
+        }
+
+        public Task NavigateModalBackAsync()
         {
             return Application.Current.MainPage.Navigation.PopAsync();
         }

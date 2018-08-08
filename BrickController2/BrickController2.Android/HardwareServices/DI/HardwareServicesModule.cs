@@ -8,6 +8,7 @@ namespace BrickController2.Droid.HardwareServices.DI
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<InfraredService>().As<IInfraredService>().SingleInstance();
+            builder.RegisterType<GameControllerService>().AsSelf().As<IGameControllerService>().SingleInstance();
         }
     }
 }
