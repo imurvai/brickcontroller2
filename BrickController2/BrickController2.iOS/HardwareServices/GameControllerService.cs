@@ -191,31 +191,40 @@ namespace BrickController2.iOS.HardwareServices
         {
             button.ValueChangedHandler = (btn, value, isPressed) =>
             {
-                if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], btn.Value))
+                if (!btn.IsAnalog)
                 {
-                    _lastControllerEventValueMap[name] = btn.Value;
-                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Button, name, btn.IsPressed ? 1.0F : 0.0F));
+                    value = btn.IsPressed ? 1.0F : 0.0F;
+                }
+
+                if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], value))
+                {
+                    _lastControllerEventValueMap[name] = value;
+                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(btn.IsAnalog ? GameControllerEventType.Axis : GameControllerEventType.Button, name, value));
                 }
             };
         }
 
         private void SetupDPadInput(GCControllerDirectionPad dPad, string name)
         {
-            dPad.ValueChangedHandler = (dp, xValue, yValue) =>
-            {
-                var nameX = $"{name}_X";
-                var nameY = $"{name}_Y";
+            SetupAxisInput(dPad.XAxis, $"{name}_X");
+            SetupAxisInput(dPad.YAxis, $"{name}_Y");
+        }
 
-                if (!_lastControllerEventValueMap.ContainsKey(nameX) || !AreAlmostEqual(_lastControllerEventValueMap[nameX], xValue))
+        private void SetupAxisInput(GCControllerAxisInput axis, string name)
+        {
+            axis.ValueChangedHandler = (ax, value) =>
+            {
+                if (!ax.IsAnalog)
                 {
-                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Axis, nameX, xValue));
-                    _lastControllerEventValueMap[nameX] = xValue;
+                    if (value < -0.5F) value = -1.0F;
+                    else if (value > 0.5F) value = 1.0F;
+                    else value = 0.0F;
                 }
 
-                if (!_lastControllerEventValueMap.ContainsKey(nameY) || !AreAlmostEqual(_lastControllerEventValueMap[nameY], yValue))
+                if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], value))
                 {
-                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Axis, nameY, yValue));
-                    _lastControllerEventValueMap[nameY] = yValue;
+                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Axis, name, value));
+                    _lastControllerEventValueMap[name] = value;
                 }
             };
         }
