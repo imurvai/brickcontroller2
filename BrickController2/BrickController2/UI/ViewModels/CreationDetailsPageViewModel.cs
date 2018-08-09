@@ -3,9 +3,9 @@ using BrickController2.UI.Navigation;
 
 namespace BrickController2.UI.ViewModels
 {
-    public class CreationDetailsViewModel : ViewModelBase
+    public class CreationDetailsPageViewModel : PageViewModelBase
     {
-        public CreationDetailsViewModel(INavigationService navigationService, IDictionary<string, object> parameters)
+        public CreationDetailsPageViewModel(INavigationService navigationService, IDictionary<string, object> parameters)
             : base(navigationService)
         {
         }

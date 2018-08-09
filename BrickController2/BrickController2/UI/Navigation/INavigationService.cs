@@ -5,8 +5,8 @@ namespace BrickController2.UI.Navigation
 {
     public interface INavigationService
     {
-        Task NavigateToAsync<T>(NavigationParameters parameters = null) where T : ViewModelBase;
-        Task NavigateToModalAsync<T>(NavigationParameters parameters = null) where T : ViewModelBase;
+        Task NavigateToAsync<T>(NavigationParameters parameters = null) where T : PageViewModelBase;
+        Task NavigateToModalAsync<T>(NavigationParameters parameters = null) where T : PageViewModelBase;
         Task NavigateBackAsync();
         Task NavigateModalBackAsync();
     }

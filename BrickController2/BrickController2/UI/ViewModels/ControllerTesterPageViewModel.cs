@@ -6,12 +6,12 @@ using System.Collections.ObjectModel;
 
 namespace BrickController2.UI.ViewModels
 {
-    public class ControllerTesterViewModel : ViewModelBase
+    public class ControllerTesterPageViewModel : PageViewModelBase
     {
         private readonly IGameControllerService _gameControllerService;
         private readonly IDictionary<(GameControllerEventType EventType, string EventCode), float> _controllerEvents = new Dictionary<(GameControllerEventType, string), float>();
 
-        public ControllerTesterViewModel(
+        public ControllerTesterPageViewModel(
             INavigationService navigationService,
             IGameControllerService gameControllerService)
             : base(navigationService)

@@ -6,9 +6,9 @@ using BrickController2.UI.Navigation;
 
 namespace BrickController2.UI.ViewModels
 {
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    public abstract class PageViewModelBase : INotifyPropertyChanged
     {
-        protected ViewModelBase(INavigationService navigationService)
+        protected PageViewModelBase(INavigationService navigationService)
         {
             NavigationService = navigationService;
         }

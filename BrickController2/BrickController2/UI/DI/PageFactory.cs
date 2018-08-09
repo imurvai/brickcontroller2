@@ -4,5 +4,5 @@ using System;
 
 namespace BrickController2.UI.DI
 {
-    public delegate PageBase PageFactory(Type type, ViewModelBase vm);
+    public delegate PageBase PageFactory(Type type, PageViewModelBase vm);
 }

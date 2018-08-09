@@ -2,9 +2,9 @@
 
 namespace BrickController2.UI.ViewModels
 {
-    public class DeviceListViewModel : ViewModelBase
+    public class DeviceListPageViewModel : PageViewModelBase
     {
-        public DeviceListViewModel(INavigationService navigationService) 
+        public DeviceListPageViewModel(INavigationService navigationService) 
             : base(navigationService)
         {
         }

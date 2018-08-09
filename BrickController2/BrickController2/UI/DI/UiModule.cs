@@ -18,9 +18,9 @@ namespace BrickController2.UI.DI
             builder.RegisterType<NavigationService>().As<INavigationService>().SingleInstance();
 
             // Register viewmodels
-            foreach (var vmType in GetSubClassesOf<ViewModelBase>())
+            foreach (var vmType in GetSubClassesOf<PageViewModelBase>())
             {
-                builder.RegisterType(vmType).Keyed<ViewModelBase>(vmType);
+                builder.RegisterType(vmType).Keyed<PageViewModelBase>(vmType);
             }
 
             // Register pages
@@ -33,14 +33,14 @@ namespace BrickController2.UI.DI
             builder.Register<ViewModelFactory>(c =>
             {
                 var componentContext = c.Resolve<IComponentContext>();
-                return (type, parameters) => componentContext.ResolveKeyed<ViewModelBase>(type, new TypedParameter(typeof(NavigationParameters), parameters));
+                return (type, parameters) => componentContext.ResolveKeyed<PageViewModelBase>(type, new TypedParameter(typeof(NavigationParameters), parameters));
             });
 
             // Register the page factory
             builder.Register<PageFactory>(c =>
             {
                 var componentContext = c.Resolve<IComponentContext>();
-                return (type, vm) => componentContext.ResolveKeyed<PageBase>(type, new TypedParameter(typeof(ViewModelBase), vm));
+                return (type, vm) => componentContext.ResolveKeyed<PageBase>(type, new TypedParameter(typeof(PageViewModelBase), vm));
             });
 
             // 

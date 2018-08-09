@@ -17,7 +17,7 @@ namespace BrickController2
 		{
 			InitializeComponent();
 
-            var vm = viewModelFactory(typeof(CreationListViewModel), null);
+            var vm = viewModelFactory(typeof(CreationListPageViewModel), null);
 		    var page = pageFactory(typeof(CreationListPage), vm);
 		    MainPage = navigationPageFactory(page);
 		}

@@ -4,7 +4,7 @@ namespace BrickController2.UI.Pages
 {
 	public partial class ControllerTesterPage
 	{
-		public ControllerTesterPage(ViewModelBase vm)
+		public ControllerTesterPage(PageViewModelBase vm)
 		{
 			InitializeComponent();
             BindingContext = vm;

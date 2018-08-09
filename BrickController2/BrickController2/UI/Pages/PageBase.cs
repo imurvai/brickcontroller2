@@ -13,27 +13,27 @@ namespace BrickController2.UI.Pages
 
         protected override void OnAppearing()
         {
-            (BindingContext as ViewModelBase)?.OnAppearing();
+            (BindingContext as PageViewModelBase)?.OnAppearing();
             base.OnAppearing();
             SetViewModelDisplayCallbacks();
         }
 
         protected override void OnDisappearing()
         {
-            (BindingContext as ViewModelBase)?.OnDisappearing();
+            (BindingContext as PageViewModelBase)?.OnDisappearing();
             base.OnDisappearing();
             ClearViewModelDisplayCallbacks();
         }
 
         protected override bool OnBackButtonPressed()
         {
-            (BindingContext as ViewModelBase)?.OnBackButtonPressed();
+            (BindingContext as PageViewModelBase)?.OnBackButtonPressed();
             return base.OnBackButtonPressed();
         }
 
         private void SetViewModelDisplayCallbacks()
         {
-            if (BindingContext is ViewModelBase vm)
+            if (BindingContext is PageViewModelBase vm)
             {
                 vm.OnDisplayAlert = (title, message, accept, cancel) => string.IsNullOrEmpty(accept) ?
                     DisplayAlert(title, message, cancel) :
@@ -45,7 +45,7 @@ namespace BrickController2.UI.Pages
 
         private void ClearViewModelDisplayCallbacks()
         {
-            if (BindingContext is ViewModelBase vm)
+            if (BindingContext is PageViewModelBase vm)
             {
                 vm.OnDisplayAlert = null;
                 vm.OnDisplayActionSheet = null;

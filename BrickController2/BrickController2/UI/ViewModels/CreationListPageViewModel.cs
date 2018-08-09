@@ -5,24 +5,24 @@ using Xamarin.Forms;
 
 namespace BrickController2.UI.ViewModels
 {
-    public class CreationListViewModel : ViewModelBase
+    public class CreationListPageViewModel : PageViewModelBase
     {
-        public CreationListViewModel(INavigationService navigationService)
+        public CreationListPageViewModel(INavigationService navigationService)
             : base(navigationService)
         {
             NavigateToCreationDetailsCommand = new Command(async () =>
             {
-                await NavigationService.NavigateToAsync<CreationDetailsViewModel>(new NavigationParameters(("key1", "value1"), ("key2", "value2")));
+                await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("key1", "value1"), ("key2", "value2")));
             });
 
             NavigeteToDeviceListCommand = new Command(async () =>
             {
-                await NavigationService.NavigateToAsync<DeviceListViewModel>(null);
+                await NavigationService.NavigateToAsync<DeviceListPageViewModel>(null);
             });
 
             NavigateToControllerTesterCommand = new Command(async () =>
             {
-                await NavigationService.NavigateToAsync<ControllerTesterViewModel>();
+                await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>();
             });
         }
 

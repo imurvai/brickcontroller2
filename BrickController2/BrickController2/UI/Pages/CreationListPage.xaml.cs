@@ -4,7 +4,7 @@ namespace BrickController2.UI.Pages
 {
 	public partial class CreationListPage
 	{
-		public CreationListPage(ViewModelBase vm)
+		public CreationListPage(PageViewModelBase vm)
 		{
 			InitializeComponent();
 		    BindingContext = vm;
