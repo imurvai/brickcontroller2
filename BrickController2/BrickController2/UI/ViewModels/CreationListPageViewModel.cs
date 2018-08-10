@@ -36,5 +36,12 @@ namespace BrickController2.UI.ViewModels
         public ICommand NavigateToControllerTesterCommand { get; }
 
         public ObservableCollection<string> Creations { get; } = new ObservableCollection<string>();
+
+        public override void OnAppearing()
+        {
+            // TODO: Add the creation loading here + progress dialog
+
+            base.OnAppearing();
+        }
     }
 }

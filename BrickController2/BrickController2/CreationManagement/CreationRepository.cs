@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using BrickController2.Helpers;
+using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace BrickController2.CreationManagement
     {
         private const string CreationDatabaseName = "creations.db3";
         private readonly SQLiteAsyncConnection _databaseConnection;
+        private readonly AsyncLock _lock = new AsyncLock();
 
         public CreationRepository()
         {
@@ -23,93 +25,132 @@ namespace BrickController2.CreationManagement
             _databaseConnection.CreateTableAsync<ControllerAction>().Wait();
         }
 
-        public Task<List<Creation>> GetCreationsAsync()
+        public async Task<List<Creation>> GetCreationsAsync()
         {
-            return _databaseConnection.GetAllWithChildrenAsync<Creation>();
+            using (_lock.LockAsync())
+            {
+                return await _databaseConnection.GetAllWithChildrenAsync<Creation>();
+            }
         }
 
-        public Task InsertCreationAsync(Creation creation)
+        public async Task InsertCreationAsync(Creation creation)
         {
-            return _databaseConnection.InsertAsync(creation);
+            using (_lock.LockAsync())
+            {
+                await _databaseConnection.InsertAsync(creation);
+            }
         }
 
-        public Task UodateCreationAsync(Creation creation)
+        public async Task UodateCreationAsync(Creation creation)
         {
-            return _databaseConnection.UpdateAsync(creation);
+            using (_lock.LockAsync())
+            {
+                await _databaseConnection.UpdateAsync(creation);
+            }
         }
 
-        public Task DeleteCreationAsync(Creation creation)
+        public async Task DeleteCreationAsync(Creation creation)
         {
-            return _databaseConnection.DeleteAsync(creation);
+            using (_lock.LockAsync())
+            {
+                await _databaseConnection.DeleteAsync(creation);
+            }
         }
 
         public async Task InsertControllerProfileAsync(Creation creation, ControllerProfile controllerProfile)
         {
-            await _databaseConnection.InsertAsync(controllerProfile);
-
-            if (creation.ControllerProfiles == null)
+            using (_lock.LockAsync())
             {
-                creation.ControllerProfiles = new List<ControllerProfile>();
+                await _databaseConnection.InsertAsync(controllerProfile);
+
+                if (creation.ControllerProfiles == null)
+                {
+                    creation.ControllerProfiles = new List<ControllerProfile>();
+                }
+
+                creation.ControllerProfiles.Add(controllerProfile);
+                await _databaseConnection.UpdateWithChildrenAsync(creation);
             }
-
-            creation.ControllerProfiles.Add(controllerProfile);
-            await _databaseConnection.UpdateWithChildrenAsync(creation);
         }
 
-        public Task UpdateControllerProfileAsync(ControllerProfile controllerProfile)
+        public async Task UpdateControllerProfileAsync(ControllerProfile controllerProfile)
         {
-            return _databaseConnection.UpdateAsync(controllerProfile);
+            using (_lock.LockAsync())
+            {
+                await _databaseConnection.UpdateAsync(controllerProfile);
+            }
         }
 
-        public Task DeleteControllerProfileAsync(ControllerProfile controllerProfile)
+        public async Task DeleteControllerProfileAsync(ControllerProfile controllerProfile)
         {
-            return _databaseConnection.DeleteAsync(controllerProfile);
+            using (_lock.LockAsync())
+            {
+                await _databaseConnection.DeleteAsync(controllerProfile);
+            }
         }
 
         public async Task InsertControllerEventAsync(ControllerProfile controllerProfile, ControllerEvent controllerEvent)
         {
-            await _databaseConnection.InsertAsync(controllerEvent);
-
-            if (controllerProfile.ControllerEvents == null)
+            using (_lock.LockAsync())
             {
-                controllerProfile.ControllerEvents = new List<ControllerEvent>();
+                await _databaseConnection.InsertAsync(controllerEvent);
+
+                if (controllerProfile.ControllerEvents == null)
+                {
+                    controllerProfile.ControllerEvents = new List<ControllerEvent>();
+                }
+
+                controllerProfile.ControllerEvents.Add(controllerEvent);
+                await _databaseConnection.UpdateWithChildrenAsync(controllerProfile);
             }
-
-            controllerProfile.ControllerEvents.Add(controllerEvent);
-            await _databaseConnection.UpdateWithChildrenAsync(controllerProfile);
         }
 
-        public Task UpdateControllerEventAsync(ControllerEvent controllerEvent)
+        public async Task UpdateControllerEventAsync(ControllerEvent controllerEvent)
         {
-            return _databaseConnection.UpdateAsync(controllerEvent);
+            using (_lock.LockAsync())
+            {
+                await _databaseConnection.UpdateAsync(controllerEvent);
+            }
         }
 
-        public Task DeleteControllerEventAsync(ControllerEvent controllerEvent)
+        public async Task DeleteControllerEventAsync(ControllerEvent controllerEvent)
         {
-            return _databaseConnection.DeleteAsync(controllerEvent);
+            using (_lock.LockAsync())
+            {
+                await _databaseConnection.DeleteAsync(controllerEvent);
+            }
         }
 
         public async Task InsertControllerActionAsync(ControllerEvent controllerEvent, ControllerAction controllerAction)
         {
-            await _databaseConnection.InsertAsync(controllerAction);
-
-            if (controllerEvent.ControllerActions == null)
+            using (_lock.LockAsync())
             {
-                controllerEvent.ControllerActions = new List<ControllerAction>();
-            }
+                await _databaseConnection.InsertAsync(controllerAction);
 
-            controllerEvent.ControllerActions.Add(controllerAction);
-            await _databaseConnection.UpdateWithChildrenAsync(controllerEvent);
+                if (controllerEvent.ControllerActions == null)
+                {
+                    controllerEvent.ControllerActions = new List<ControllerAction>();
+                }
+
+                controllerEvent.ControllerActions.Add(controllerAction);
+                await _databaseConnection.UpdateWithChildrenAsync(controllerEvent);
+            }
         }
 
         public Task UpdateControllerActionAsync(ControllerAction controllerAction)
         {
-            return _databaseConnection.UpdateAsync(controllerAction);
+            using (_lock.LockAsync())
+            {
+                return _databaseConnection.UpdateAsync(controllerAction);
+            }
         }
 
         public Task DeleteControllerActionAsync(ControllerAction controllerAction)
         {
-            return _databaseConnection.DeleteAsync(controllerAction);
+            using (_lock.LockAsync())
+            {
+                return _databaseConnection.DeleteAsync(controllerAction);
+            }
         }
     }
 }
