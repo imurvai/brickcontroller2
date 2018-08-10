@@ -149,77 +149,105 @@ namespace BrickController2.iOS.HardwareServices
 
         private void SetupMicroGamePad(GCMicroGamepad gamePad)
         {
-            SetupButtonInput(gamePad.ButtonA, "Button_A");
-            SetupButtonInput(gamePad.ButtonX, "Button_X");
+            SetupDigitalButtonInput(gamePad.ButtonA, "Button_A");
+            SetupDigitalButtonInput(gamePad.ButtonX, "Button_X");
 
             SetupDPadInput(gamePad.Dpad, "DPad");
         }
 
         private void SetupGamePad(GCGamepad gamePad)
         {
-            SetupButtonInput(gamePad.ButtonA, "Button_A");
-            SetupButtonInput(gamePad.ButtonB, "Button_B");
-            SetupButtonInput(gamePad.ButtonX, "Button_X");
-            SetupButtonInput(gamePad.ButtonY, "Button_Y");
+            SetupDigitalButtonInput(gamePad.ButtonA, "Button_A");
+            SetupDigitalButtonInput(gamePad.ButtonB, "Button_B");
+            SetupDigitalButtonInput(gamePad.ButtonX, "Button_X");
+            SetupDigitalButtonInput(gamePad.ButtonY, "Button_Y");
 
-            SetupButtonInput(gamePad.LeftShoulder, "LeftShoulder");
-            SetupButtonInput(gamePad.RightShoulder, "LeftShoulder");
+            SetupDigitalButtonInput(gamePad.LeftShoulder, "LeftShoulder");
+            SetupDigitalButtonInput(gamePad.RightShoulder, "LeftShoulder");
 
             SetupDPadInput(gamePad.DPad, "DPad");
         }
 
         private void SetupExtendedGamePad(GCExtendedGamepad gamePad)
         {
-            SetupButtonInput(gamePad.ButtonA, "Button_A");
-            SetupButtonInput(gamePad.ButtonB, "Button_B");
-            SetupButtonInput(gamePad.ButtonX, "Button_X");
-            SetupButtonInput(gamePad.ButtonY, "Button_Y");
+            SetupDigitalButtonInput(gamePad.ButtonA, "Button_A");
+            SetupDigitalButtonInput(gamePad.ButtonB, "Button_B");
+            SetupDigitalButtonInput(gamePad.ButtonX, "Button_X");
+            SetupDigitalButtonInput(gamePad.ButtonY, "Button_Y");
 
-            SetupButtonInput(gamePad.LeftShoulder, "LeftShoulder");
-            SetupButtonInput(gamePad.RightShoulder, "LeftShoulder");
+            SetupDigitalButtonInput(gamePad.LeftShoulder, "LeftShoulder");
+            SetupDigitalButtonInput(gamePad.RightShoulder, "LeftShoulder");
 
-            SetupButtonInput(gamePad.LeftTrigger, "LeftTrigger");
-            SetupButtonInput(gamePad.RightTrigger, "RightTrigger");
+            SetupAnalogButtonInput(gamePad.LeftTrigger, "LeftTrigger");
+            SetupAnalogButtonInput(gamePad.RightTrigger, "RightTrigger");
 
             SetupDPadInput(gamePad.DPad, "DPad");
 
-            SetupDPadInput(gamePad.LeftThumbstick, "Axis_LeftThumbStick");
-            SetupDPadInput(gamePad.RightThumbstick, "Axis_RightThumbStick");
+            SetupJoyInput(gamePad.LeftThumbstick, "LeftThumbStick");
+            SetupJoyInput(gamePad.RightThumbstick, "RightThumbStick");
         }
 
-        private void SetupButtonInput(GCControllerButtonInput button, string name)
+        private void SetupDigitalButtonInput(GCControllerButtonInput button, string name)
         {
             button.ValueChangedHandler = (btn, value, isPressed) =>
             {
-                if (!btn.IsAnalog)
-                {
-                    value = btn.IsPressed ? 1.0F : 0.0F;
-                }
+                value = isPressed ? 1.0F : 0.0F;
 
                 if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], value))
                 {
                     _lastControllerEventValueMap[name] = value;
-                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(btn.IsAnalog ? GameControllerEventType.Axis : GameControllerEventType.Button, name, value));
+                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Button, name, value));
+                }
+            };
+        }
+
+        private void SetupAnalogButtonInput(GCControllerButtonInput button, string name)
+        {
+            button.ValueChangedHandler = (btn, value, isPressed) =>
+            {
+                value = value < 0.1 ? 0.0F : value;
+
+                if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], value))
+                {
+                    _lastControllerEventValueMap[name] = value;
+                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Axis, name, value));
                 }
             };
         }
 
         private void SetupDPadInput(GCControllerDirectionPad dPad, string name)
         {
-            SetupAxisInput(dPad.XAxis, $"{name}_X");
-            SetupAxisInput(dPad.YAxis, $"{name}_Y");
+            SetupDigitalAxisInput(dPad.XAxis, $"{name}_X");
+            SetupDigitalAxisInput(dPad.YAxis, $"{name}_Y");
         }
 
-        private void SetupAxisInput(GCControllerAxisInput axis, string name)
+        private void SetupDigitalAxisInput(GCControllerAxisInput axis, string name)
         {
             axis.ValueChangedHandler = (ax, value) =>
             {
-                if (!ax.IsAnalog)
+                if (value < -0.1F) value = -1.0F;
+                else if (value > 0.1F) value = 1.0F;
+                else value = 0.0F;
+
+                if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], value))
                 {
-                    if (value < -0.5F) value = -1.0F;
-                    else if (value > 0.5F) value = 1.0F;
-                    else value = 0.0F;
+                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Axis, name, value));
+                    _lastControllerEventValueMap[name] = value;
                 }
+            };
+        }
+
+        private void SetupJoyInput(GCControllerDirectionPad joy, string name)
+        {
+            SetupAnalogAxisInput(joy.XAxis, $"{name}_X");
+            SetupAnalogAxisInput(joy.YAxis, $"{name}_Y");
+        }
+
+        private void SetupAnalogAxisInput(GCControllerAxisInput axis, string name)
+        {
+            axis.ValueChangedHandler = (ax, value) =>
+            {
+                value = Math.Abs(value) < 0.1 ? 0.0F : value;
 
                 if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], value))
                 {

@@ -1,6 +1,8 @@
 ﻿namespace BrickController2.CreationManagement
 {
-    public interface ICreationManager
+    public enum ControllerEventType
     {
+        Button,
+        Axis
     }
 }

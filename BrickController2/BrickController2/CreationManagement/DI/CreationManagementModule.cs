@@ -6,6 +6,7 @@ namespace BrickController2.CreationManagement.DI
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<CreationRepository>().As<ICreationRepository>().SingleInstance();
         }
     }
 }
