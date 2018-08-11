@@ -1,9 +1,8 @@
-﻿using BrickController2.Helpers;
+﻿using BrickController2.Database;
+using BrickController2.Helpers;
 using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace BrickController2.CreationManagement
@@ -14,20 +13,28 @@ namespace BrickController2.CreationManagement
         private readonly SQLiteAsyncConnection _databaseConnection;
         private readonly AsyncLock _lock = new AsyncLock();
 
-        public CreationRepository()
+        public CreationRepository(SQLiteAsyncConnectionFactory connectionFaRRctory)
         {
-            var databasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), CreationDatabaseName);
+            _databaseConnection = connectionFaRRctory(CreationDatabaseName);
+            InitAsync();
+        }
 
-            _databaseConnection = new SQLiteAsyncConnection(databasePath);
-            _databaseConnection.CreateTableAsync<Creation>().Wait();
-            _databaseConnection.CreateTableAsync<ControllerProfile>().Wait();
-            _databaseConnection.CreateTableAsync<ControllerEvent>().Wait();
-            _databaseConnection.CreateTableAsync<ControllerAction>().Wait();
+        private async void InitAsync()
+        {
+            using (await _lock.LockAsync())
+            {
+                await _databaseConnection.CreateTableAsync<Creation>();
+                await _databaseConnection.CreateTableAsync<ControllerProfile>();
+                await _databaseConnection.CreateTableAsync<ControllerEvent>();
+                await _databaseConnection.CreateTableAsync<ControllerAction>();
+
+                //await _databaseConnection.InsertAsync(new Creation { Name = "First Creation" });
+            }
         }
 
         public async Task<List<Creation>> GetCreationsAsync()
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
                 return await _databaseConnection.GetAllWithChildrenAsync<Creation>();
             }
@@ -35,7 +42,7 @@ namespace BrickController2.CreationManagement
 
         public async Task InsertCreationAsync(Creation creation)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
                 await _databaseConnection.InsertAsync(creation);
             }
@@ -43,7 +50,7 @@ namespace BrickController2.CreationManagement
 
         public async Task UodateCreationAsync(Creation creation)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
                 await _databaseConnection.UpdateAsync(creation);
             }
@@ -51,7 +58,7 @@ namespace BrickController2.CreationManagement
 
         public async Task DeleteCreationAsync(Creation creation)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
                 await _databaseConnection.DeleteAsync(creation);
             }
@@ -59,7 +66,7 @@ namespace BrickController2.CreationManagement
 
         public async Task InsertControllerProfileAsync(Creation creation, ControllerProfile controllerProfile)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
                 await _databaseConnection.InsertAsync(controllerProfile);
 
@@ -75,7 +82,7 @@ namespace BrickController2.CreationManagement
 
         public async Task UpdateControllerProfileAsync(ControllerProfile controllerProfile)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
                 await _databaseConnection.UpdateAsync(controllerProfile);
             }
@@ -83,7 +90,7 @@ namespace BrickController2.CreationManagement
 
         public async Task DeleteControllerProfileAsync(ControllerProfile controllerProfile)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
                 await _databaseConnection.DeleteAsync(controllerProfile);
             }
@@ -91,7 +98,7 @@ namespace BrickController2.CreationManagement
 
         public async Task InsertControllerEventAsync(ControllerProfile controllerProfile, ControllerEvent controllerEvent)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
                 await _databaseConnection.InsertAsync(controllerEvent);
 
@@ -107,7 +114,7 @@ namespace BrickController2.CreationManagement
 
         public async Task UpdateControllerEventAsync(ControllerEvent controllerEvent)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
                 await _databaseConnection.UpdateAsync(controllerEvent);
             }
@@ -115,7 +122,7 @@ namespace BrickController2.CreationManagement
 
         public async Task DeleteControllerEventAsync(ControllerEvent controllerEvent)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
                 await _databaseConnection.DeleteAsync(controllerEvent);
             }
@@ -123,7 +130,7 @@ namespace BrickController2.CreationManagement
 
         public async Task InsertControllerActionAsync(ControllerEvent controllerEvent, ControllerAction controllerAction)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
                 await _databaseConnection.InsertAsync(controllerAction);
 
@@ -137,19 +144,19 @@ namespace BrickController2.CreationManagement
             }
         }
 
-        public Task UpdateControllerActionAsync(ControllerAction controllerAction)
+        public async Task UpdateControllerActionAsync(ControllerAction controllerAction)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
-                return _databaseConnection.UpdateAsync(controllerAction);
+                await _databaseConnection.UpdateAsync(controllerAction);
             }
         }
 
-        public Task DeleteControllerActionAsync(ControllerAction controllerAction)
+        public async Task DeleteControllerActionAsync(ControllerAction controllerAction)
         {
-            using (_lock.LockAsync())
+            using (await _lock.LockAsync())
             {
-                return _databaseConnection.DeleteAsync(controllerAction);
+                await _databaseConnection.DeleteAsync(controllerAction);
             }
         }
     }

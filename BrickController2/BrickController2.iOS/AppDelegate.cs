@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using BrickController2.CreationManagement.DI;
+using BrickController2.Database.DI;
 using BrickController2.DeviceManagement.DI;
 using BrickController2.iOS.HardwareServices.DI;
 using BrickController2.UI.DI;
@@ -28,6 +29,7 @@ namespace BrickController2.iOS
 
             builder.RegisterModule(new HardwareServicesModule());
 
+            builder.RegisterModule(new DatabaseModule());
             builder.RegisterModule(new CreationManagementModule());
             builder.RegisterModule(new DeviceManagementModule());
             builder.RegisterModule(new UiModule());

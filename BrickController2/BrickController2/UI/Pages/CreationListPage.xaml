@@ -9,10 +9,16 @@
     <local:PageBase.Content>
         <StackLayout>
             <Button Text="Go to" Command="{Binding NavigateToControllerTesterCommand}"/>
+            
             <ListView ItemsSource="{Binding Creations}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Label Text="{Binding Name}"/>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Creation: "/>
+                                <Label Text="{Binding Name}"/>
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

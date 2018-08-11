@@ -5,6 +5,7 @@ using Android.Runtime;
 using Android.Views;
 using Autofac;
 using BrickController2.CreationManagement.DI;
+using BrickController2.Database.DI;
 using BrickController2.DeviceManagement.DI;
 using BrickController2.Droid.HardwareServices;
 using BrickController2.Droid.HardwareServices.DI;
@@ -64,6 +65,7 @@ namespace BrickController2.Droid
 
             builder.RegisterModule(new HardwareServicesModule());
 
+            builder.RegisterModule(new DatabaseModule());
             builder.RegisterModule(new CreationManagementModule());
             builder.RegisterModule(new DeviceManagementModule());
             builder.RegisterModule(new UiModule());

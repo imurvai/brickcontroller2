@@ -35,13 +35,18 @@ namespace BrickController2.UI.ViewModels
         public ICommand NavigeteToDeviceListCommand { get; }
         public ICommand NavigateToControllerTesterCommand { get; }
 
-        public ObservableCollection<string> Creations { get; } = new ObservableCollection<string>();
+        public ObservableCollection<Creation> Creations { get; } = new ObservableCollection<Creation>();
 
-        public override void OnAppearing()
+        public override async void OnAppearing()
         {
-            // TODO: Add the creation loading here + progress dialog
-
             base.OnAppearing();
+
+            var creations = await _creationRepository.GetCreationsAsync();
+            Creations.Clear();
+            foreach (var creation in creations)
+            {
+                Creations.Add(creation);
+            }
         }
     }
 }
