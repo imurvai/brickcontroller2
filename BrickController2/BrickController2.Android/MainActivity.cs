@@ -1,4 +1,5 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
@@ -63,6 +64,7 @@ namespace BrickController2.Droid
         {
             var builder = new ContainerBuilder();
 
+            builder.RegisterInstance(Application).As<Context>();
             builder.RegisterModule(new HardwareServicesModule());
 
             builder.RegisterModule(new DatabaseModule());

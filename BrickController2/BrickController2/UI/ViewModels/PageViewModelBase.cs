@@ -19,7 +19,7 @@ namespace BrickController2.UI.ViewModels
 
         public virtual void OnAppearing() { }
         public virtual void OnDisappearing() { }
-        public virtual void OnBackButtonPressed() { }
+        public virtual bool OnBackButtonPressed() { return true; }
 
         #endregion
 
@@ -27,12 +27,12 @@ namespace BrickController2.UI.ViewModels
 
         public Func<string, string, string, string, Task> OnDisplayAlert { get; set; }
 
-        protected Task DisplayAlert(string title, string message, string cancel)
+        protected Task DisplayAlertAsync(string title, string message, string cancel)
         {
             return OnDisplayAlert?.Invoke(title, message, null, cancel);
         }
 
-        protected Task DisplayAlert(string title, string message, string accept, string cancel)
+        protected Task DisplayAlertAsync(string title, string message, string accept, string cancel)
         {
             return OnDisplayAlert?.Invoke(title, message, accept, cancel);
         }
@@ -43,7 +43,7 @@ namespace BrickController2.UI.ViewModels
 
         public Func<string, string, string, string[], Task<string>> OnDisplayActionSheet { get; set; }
 
-        protected Task<string> DisplayActionSheet(string title, string cancel, string destruction, params string[] buttons)
+        protected Task<string> DisplayActionSheetAsync(string title, string cancel, string destruction, params string[] buttons)
         {
             return OnDisplayActionSheet?.Invoke(title, cancel, destruction, buttons);
         }

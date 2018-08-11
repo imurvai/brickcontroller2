@@ -6,10 +6,17 @@
     x:Class="BrickController2.UI.Pages.DeviceListPage">
 
     <local:PageBase.Content>
-        <StackLayout>
-            <Label Text="Device list"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <Label Grid.Row="0" Text="Devices"/>
+
+            <Grid Grid.Row="1" BackgroundColor="DarkGray" Padding="20">
+                <Button Text="Scan" Command="{Binding StartScanCommand}"/>
+            </Grid>
+        </Grid>
     </local:PageBase.Content>
 </local:PageBase>

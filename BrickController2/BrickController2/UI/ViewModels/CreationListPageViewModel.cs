@@ -15,9 +15,10 @@ namespace BrickController2.UI.ViewModels
         {
             _creationRepository = creationRepository;
 
-            NavigateToCreationDetailsCommand = new Command(async () =>
+            AddCreationCommand = new Command(async () =>
             {
-                await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("key1", "value1"), ("key2", "value2")));
+                var result = await DisplayActionSheetAsync("Choose...", "Cancel", "Destruction", "1", "2", "3");
+                await DisplayAlertAsync("Result", result, "Ok");
             });
 
             NavigeteToDeviceListCommand = new Command(async () =>
@@ -31,7 +32,8 @@ namespace BrickController2.UI.ViewModels
             });
         }
 
-        public ICommand NavigateToCreationDetailsCommand { get; }
+        public ICommand AddCreationCommand { get; }
+        public ICommand SelectNavigationTargetCommand { get; }
         public ICommand NavigeteToDeviceListCommand { get; }
         public ICommand NavigateToControllerTesterCommand { get; }
 

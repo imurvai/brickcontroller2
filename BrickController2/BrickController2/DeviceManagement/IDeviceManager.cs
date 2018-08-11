@@ -6,6 +6,6 @@ namespace BrickController2.DeviceManagement
 {
     public interface IDeviceManager
     {
-        Task ScanAsync(TimeSpan duration, CancellationToken token);
+        Task ScanAsync(CancellationToken token);
     }
 }

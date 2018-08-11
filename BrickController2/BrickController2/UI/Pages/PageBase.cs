@@ -27,8 +27,8 @@ namespace BrickController2.UI.Pages
 
         protected override bool OnBackButtonPressed()
         {
-            (BindingContext as PageViewModelBase)?.OnBackButtonPressed();
-            return base.OnBackButtonPressed();
+            var result = ((BindingContext as PageViewModelBase)?.OnBackButtonPressed()) ?? true;
+            return result && base.OnBackButtonPressed();
         }
 
         private void SetViewModelDisplayCallbacks()
