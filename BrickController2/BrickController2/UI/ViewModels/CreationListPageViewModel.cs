@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using BrickController2.CreationManagement;
 using BrickController2.UI.Navigation;
@@ -45,6 +46,18 @@ namespace BrickController2.UI.ViewModels
         {
             base.OnAppearing();
 
+            RequestPermissions();
+
+            var creations = await _creationRepository.GetCreationsAsync();
+            Creations.Clear();
+            foreach (var creation in creations)
+            {
+                Creations.Add(creation);
+            }
+        }
+
+        private async Task RequestPermissions()
+        {
             var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
             if (status != PermissionStatus.Granted)
             {
@@ -63,13 +76,6 @@ namespace BrickController2.UI.ViewModels
             if (status != PermissionStatus.Granted)
             {
                 await DisplayAlertAsync("Warning", "Bluetooth devices will NOT be available.", "Ok");
-            }
-
-            var creations = await _creationRepository.GetCreationsAsync();
-            Creations.Clear();
-            foreach (var creation in creations)
-            {
-                Creations.Add(creation);
             }
         }
     }

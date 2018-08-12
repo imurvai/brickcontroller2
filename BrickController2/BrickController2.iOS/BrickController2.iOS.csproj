@@ -58,7 +58,8 @@
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>
     </CodesignEntitlements>
-    <CodesignProvision>iOS Team Provisioning Profile: com.scn.BrickController</CodesignProvision>
+    <CodesignProvision>
+    </CodesignProvision>
     <CodesignExtraArgs />
     <CodesignResourceRules />
     <MtouchLink>None</MtouchLink>
