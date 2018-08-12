@@ -12,30 +12,32 @@ namespace BrickController2.CreationManagement
         private const string CreationDatabaseName = "creations.db3";
         private readonly SQLiteAsyncConnection _databaseConnection;
         private readonly AsyncLock _lock = new AsyncLock();
+        private bool _inited;
 
         public CreationRepository(SQLiteAsyncConnectionFactory connectionFaRRctory)
         {
             _databaseConnection = connectionFaRRctory(CreationDatabaseName);
-            InitAsync();
         }
 
-        private async void InitAsync()
+        private async Task InitAsync()
         {
-            using (await _lock.LockAsync())
+            if (_inited)
             {
-                await _databaseConnection.CreateTableAsync<Creation>();
-                await _databaseConnection.CreateTableAsync<ControllerProfile>();
-                await _databaseConnection.CreateTableAsync<ControllerEvent>();
-                await _databaseConnection.CreateTableAsync<ControllerAction>();
-
-                //await _databaseConnection.InsertAsync(new Creation { Name = "First Creation" });
+                return;
             }
+
+            await _databaseConnection.CreateTableAsync<Creation>();
+            await _databaseConnection.CreateTableAsync<ControllerProfile>();
+            await _databaseConnection.CreateTableAsync<ControllerEvent>();
+            await _databaseConnection.CreateTableAsync<ControllerAction>();
+            _inited = true;
         }
 
         public async Task<List<Creation>> GetCreationsAsync()
         {
             using (await _lock.LockAsync())
             {
+                await InitAsync();
                 return await _databaseConnection.GetAllWithChildrenAsync<Creation>();
             }
         }
@@ -44,6 +46,7 @@ namespace BrickController2.CreationManagement
         {
             using (await _lock.LockAsync())
             {
+                await InitAsync();
                 await _databaseConnection.InsertAsync(creation);
             }
         }
