@@ -2,6 +2,8 @@
 using System.Windows.Input;
 using BrickController2.CreationManagement;
 using BrickController2.UI.Navigation;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using Xamarin.Forms;
 
 namespace BrickController2.UI.ViewModels
@@ -42,6 +44,26 @@ namespace BrickController2.UI.ViewModels
         public override async void OnAppearing()
         {
             base.OnAppearing();
+
+            var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+            if (status != PermissionStatus.Granted)
+            {
+                if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
+                {
+                    await DisplayAlertAsync("Permission request", "Location permission is needed for accessing bluetooth", "Ok");
+                }
+
+                var result = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
+                if (result.ContainsKey(Permission.Location))
+                {
+                    status = result[Permission.Location];
+                }
+            }
+
+            if (status != PermissionStatus.Granted)
+            {
+                await DisplayAlertAsync("Warning", "Bluetooth devices will NOT be available.", "Ok");
+            }
 
             var creations = await _creationRepository.GetCreationsAsync();
             Creations.Clear();

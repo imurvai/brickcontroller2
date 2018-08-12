@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Plugin.BLE.Abstractions.Contracts;
@@ -15,9 +16,10 @@ namespace BrickController2.DeviceManagement
             _ble = ble;
             _adapter = adapter;
 
+            _adapter.ScanMode = ScanMode.LowLatency;
             _adapter.DeviceDiscovered += (sender, args) =>
             {
-                Console.WriteLine($"Found device: {args.Device.Name} - {args.Device.Id}");
+                Debug.WriteLine($"Found device: {args.Device.Name} - {args.Device.Id}");
             };
         }
 

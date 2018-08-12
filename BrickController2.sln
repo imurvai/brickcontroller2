@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrickController2.Android", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrickController2.iOS", "BrickController2\BrickController2.iOS\BrickController2.iOS.csproj", "{E52D9D91-6F31-42E2-8261-D85AA62D39D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrickController2", "BrickController2\BrickController2\BrickController2.csproj", "{852D9034-471A-42D0-8701-63D12E2EDACA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrickController2", "BrickController2\BrickController2\BrickController2.csproj", "{852D9034-471A-42D0-8701-63D12E2EDACA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

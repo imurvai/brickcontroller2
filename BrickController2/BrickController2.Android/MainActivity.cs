@@ -11,6 +11,8 @@ using BrickController2.DeviceManagement.DI;
 using BrickController2.Droid.HardwareServices;
 using BrickController2.Droid.HardwareServices.DI;
 using BrickController2.UI.DI;
+using Plugin.CurrentActivity;
+using Plugin.Permissions;
 
 namespace BrickController2.Droid
 {
@@ -33,10 +35,11 @@ namespace BrickController2.Droid
 
             base.OnCreate(bundle);
 
+            CrossCurrentActivity.Current.Init(this, bundle);
+
             global::Xamarin.Forms.Forms.Init(this, bundle);
 
             var container = InitDI();
-
             _gameControllerService = container.Resolve<GameControllerService>();
 
             var app = container.Resolve<App>();
@@ -56,6 +59,12 @@ namespace BrickController2.Droid
         public override bool OnGenericMotionEvent(MotionEvent e)
         {
             return _gameControllerService.OnGenericMotionEvent(e) || base.OnGenericMotionEvent(e);
+        }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
+        {
+            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
         #endregion
