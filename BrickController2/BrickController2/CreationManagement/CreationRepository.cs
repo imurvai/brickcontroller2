@@ -15,9 +15,9 @@ namespace BrickController2.CreationManagement
         private readonly AsyncLock _lock = new AsyncLock();
         private bool _inited;
 
-        public CreationRepository(SQLiteAsyncConnectionFactory connectionFaRRctory)
+        public CreationRepository(SQLiteAsyncConnectionFactory connectionFactory)
         {
-            _databaseConnection = connectionFaRRctory(CreationDatabaseName);
+            _databaseConnection = connectionFactory(CreationDatabaseName);
         }
 
         private async Task InitAsync()
