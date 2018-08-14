@@ -1,11 +1,14 @@
-﻿using SQLite;
+﻿using BrickController2.Helpers;
+using SQLite;
 using SQLiteNetExtensions.Attributes;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace BrickController2.CreationManagement
 {
-    public class ControllerProfile
+    public class ControllerProfile : NotifyPropertyChangedSource
     {
+        private string _name;
+
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
@@ -15,9 +18,13 @@ namespace BrickController2.CreationManagement
         [ManyToOne]
         public Creation Creation { get; set; }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; RaisePropertyChanged(); }
+        }
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
-        public List<ControllerEvent> ControllerEvents { get; set; }
+        public ObservableCollection<ControllerEvent> ControllerEvents { get; set; }
     }
 }

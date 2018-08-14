@@ -3,6 +3,7 @@ using BrickController2.Helpers;
 using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace BrickController2.CreationManagement
@@ -51,7 +52,7 @@ namespace BrickController2.CreationManagement
             }
         }
 
-        public async Task UodateCreationAsync(Creation creation)
+        public async Task UpdateCreationAsync(Creation creation)
         {
             using (await _lock.LockAsync())
             {
@@ -75,7 +76,7 @@ namespace BrickController2.CreationManagement
 
                 if (creation.ControllerProfiles == null)
                 {
-                    creation.ControllerProfiles = new List<ControllerProfile>();
+                    creation.ControllerProfiles = new ObservableCollection<ControllerProfile>();
                 }
 
                 creation.ControllerProfiles.Add(controllerProfile);
@@ -107,7 +108,7 @@ namespace BrickController2.CreationManagement
 
                 if (controllerProfile.ControllerEvents == null)
                 {
-                    controllerProfile.ControllerEvents = new List<ControllerEvent>();
+                    controllerProfile.ControllerEvents = new ObservableCollection<ControllerEvent>();
                 }
 
                 controllerProfile.ControllerEvents.Add(controllerEvent);
@@ -139,7 +140,7 @@ namespace BrickController2.CreationManagement
 
                 if (controllerEvent.ControllerActions == null)
                 {
-                    controllerEvent.ControllerActions = new List<ControllerAction>();
+                    controllerEvent.ControllerActions = new ObservableCollection<ControllerAction>();
                 }
 
                 controllerEvent.ControllerActions.Add(controllerAction);

@@ -7,7 +7,7 @@ namespace BrickController2.CreationManagement
     {
         Task<List<Creation>> GetCreationsAsync();
         Task InsertCreationAsync(Creation creation);
-        Task UodateCreationAsync(Creation creation);
+        Task UpdateCreationAsync(Creation creation);
         Task DeleteCreationAsync(Creation creation);
 
         Task InsertControllerProfileAsync(Creation creation, ControllerProfile controllerProfile);
