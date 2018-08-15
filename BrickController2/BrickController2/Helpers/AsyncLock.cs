@@ -1,69 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BrickController2.Helpers
 {
     public class AsyncLock
     {
-        private readonly Queue<TaskCompletionSource<Releaser>> _waiters = new Queue<TaskCompletionSource<Releaser>>();
-        private readonly object _lock = new object();
-        private bool _acquired = false;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        public AsyncLock()
+        public async Task<Releaser> LockAsync()
         {
-        }
-
-        public Task<Releaser> LockAsync()
-        {
-            lock (_lock)
-            {
-                if (_acquired)
-                {
-                    var waiter = new TaskCompletionSource<Releaser>();
-                    _waiters.Enqueue(waiter);
-                    return waiter.Task;
-                }
-                else
-                {
-                    _acquired = true;
-                    return Task.FromResult(new Releaser(this));
-                }
-            }
-        }
-
-        private void Release()
-        {
-            lock (_lock)
-            {
-                if (_waiters.Any())
-                {
-                    var waiter = _waiters.Dequeue();
-                    waiter.SetResult(new Releaser(this));
-                }
-                else
-                {
-                    _acquired = false;
-                }
-            }
+            await _semaphore.WaitAsync();
+            return new Releaser(_semaphore);
         }
 
         public struct Releaser : IDisposable
         {
-            private AsyncLock _owner;
+            private SemaphoreSlim _semaphore;
 
-            internal Releaser(AsyncLock owner)
+            internal Releaser(SemaphoreSlim semaphore)
             {
-                _owner = owner;
+                _semaphore = semaphore;
             }
 
             public void Dispose()
             {
-                if (_owner != null)
+                if (_semaphore != null)
                 {
-                    _owner.Release();
-                    _owner = null;
+                    _semaphore.Release();
+                    _semaphore = null;
                 }
             }
         }
