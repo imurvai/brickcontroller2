@@ -5,6 +5,6 @@
         SBrick,
         BuWizz,
         BuWizz2,
-        InfraRed
+        Infrared
     }
 }

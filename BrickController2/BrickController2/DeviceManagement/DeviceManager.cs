@@ -29,6 +29,8 @@ namespace BrickController2.DeviceManagement
         {
             using (await _asyncLock.LockAsync())
             {
+                Devices.Clear();
+
                 var deviceDTOs = await _deviceRepository.GetDevicesAsync();
                 foreach (var deviceDTO in deviceDTOs)
                 {
@@ -43,7 +45,10 @@ namespace BrickController2.DeviceManagement
                         case DeviceType.SBrick:
                             break;
 
-                        case DeviceType.InfraRed:
+                        case DeviceType.Infrared:
+                            // TODO: temp code
+                            var device = new InfraredDevice(deviceDTO.Name, deviceDTO.Address);
+                            Devices.Add(device);
                             break;
 
                         default:
@@ -57,6 +62,9 @@ namespace BrickController2.DeviceManagement
         {
             using (await _asyncLock.LockAsync())
             {
+                Devices.Clear();
+                await _deviceRepository.DeleteDevicesAsync();
+
                 var infraScan = _infraredDeviceManager.ScanAsync(FoundDevice, token);
                 var bluetoothScan = _bluetoothDeviceManager.ScanAsync(FoundDevice, token);
 
@@ -64,9 +72,26 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private async Task FoundDevice(Device device)
+        private async Task FoundDevice(DeviceType deviceType, string deviceName, string deviceAddress)
         {
-            // TODO: store device here
+            switch (deviceType)
+            {
+                case DeviceType.BuWizz:
+                    break;
+
+                case DeviceType.BuWizz2:
+                    break;
+
+                case DeviceType.SBrick:
+                    break;
+
+                case DeviceType.Infrared:
+                    // TODO: temp code
+                    var device = new InfraredDevice(deviceName, deviceAddress);
+                    await _deviceRepository.InsertDeviceAsync(new DeviceDTO { DeviceType = DeviceType.Infrared, Name = deviceName, Address = deviceAddress, DeviceSpecificData = null });
+                    Devices.Add(device);
+                    break;
+            }
         }
     }
 }

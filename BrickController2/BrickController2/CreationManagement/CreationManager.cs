@@ -18,7 +18,7 @@ namespace BrickController2.CreationManagement
 
         public ObservableCollection<Creation> Creations { get; } = new ObservableCollection<Creation>();
 
-        public async Task LoadCreations()
+        public async Task LoadCreationsAsync()
         {
             using (await _asyncLock.LockAsync())
             {

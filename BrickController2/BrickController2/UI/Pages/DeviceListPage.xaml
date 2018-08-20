@@ -12,7 +12,7 @@
     
     <local:PageBase.Content>
         <StackLayout>
-            <ListView ItemsSource="{Binding DeviceManager.Devices}">
+            <ListView ItemsSource="{Binding Devices}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

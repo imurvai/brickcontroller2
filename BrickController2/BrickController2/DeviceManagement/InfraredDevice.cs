@@ -10,7 +10,7 @@ namespace BrickController2.DeviceManagement
         {
         }
 
-        public override DeviceType DeviceType => DeviceType.InfraRed;
+        public override DeviceType DeviceType => DeviceType.Infrared;
 
         public override int NumberOfChannels => 2;
 

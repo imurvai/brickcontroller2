@@ -8,6 +8,7 @@ namespace BrickController2.DeviceManagement
         Task<IEnumerable<DeviceDTO>> GetDevicesAsync();
         Task InsertDeviceAsync(DeviceDTO device);
         Task DeleteDeviceAsync(DeviceDTO device);
+        Task DeleteDevicesAsync();
         Task UpdateDeviceAsync(DeviceDTO device);
     }
 }

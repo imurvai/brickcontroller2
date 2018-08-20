@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BrickController2.CreationManagement;
+using BrickController2.DeviceManagement;
 using BrickController2.UI.Navigation;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
@@ -11,12 +12,17 @@ namespace BrickController2.UI.ViewModels
 {
     public class CreationListPageViewModel : PageViewModelBase
     {
-        private readonly ICreationRepository _creationRepository;
+        private readonly ICreationManager _creationManager;
+        private readonly IDeviceManager _deviceManager;
 
-        public CreationListPageViewModel(INavigationService navigationService, ICreationRepository creationRepository)
+        public CreationListPageViewModel(
+            INavigationService navigationService,
+            ICreationManager creationManager,
+            IDeviceManager deviceManager)
             : base(navigationService)
         {
-            _creationRepository = creationRepository;
+            _creationManager = creationManager;
+            _deviceManager = deviceManager;
 
             AddCreationCommand = new Command(async () =>
             {
@@ -39,17 +45,20 @@ namespace BrickController2.UI.ViewModels
             });
         }
 
+        public ObservableCollection<Creation> Creations => _creationManager.Creations;
+
         public ICommand AddCreationCommand { get; }
         public ICommand MenuCommand { get; }
-
-        public ObservableCollection<Creation> Creations { get; } = new ObservableCollection<Creation>();
 
         public override async void OnAppearing()
         {
             base.OnAppearing();
 
             await RequestPermissions();
-            await LoadCreations();
+
+            // TODO: show progress
+            await _creationManager.LoadCreationsAsync();
+            await _deviceManager.LoadDevicesAsync();
         }
 
         private async Task RequestPermissions()
@@ -72,17 +81,6 @@ namespace BrickController2.UI.ViewModels
             if (status != PermissionStatus.Granted)
             {
                 await DisplayAlertAsync("Warning", "Bluetooth devices will NOT be available.", "Ok");
-            }
-        }
-
-        private async Task LoadCreations()
-        {
-            Creations.Clear();
-
-            var creations = await _creationRepository.GetCreationsAsync();
-            foreach (var creation in creations)
-            {
-                Creations.Add(creation);
             }
         }
     }

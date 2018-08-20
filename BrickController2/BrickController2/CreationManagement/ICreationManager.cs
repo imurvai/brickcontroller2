@@ -7,7 +7,7 @@ namespace BrickController2.CreationManagement
     {
         ObservableCollection<Creation> Creations { get; }
 
-        Task LoadCreations();
+        Task LoadCreationsAsync();
 
         Task<bool> IsCreationNameAvailableAsync(string creationName);
         Task<Creation> AddCreationAsync(string creationName);

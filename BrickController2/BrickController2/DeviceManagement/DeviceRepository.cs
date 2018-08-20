@@ -38,10 +38,20 @@ namespace BrickController2.DeviceManagement
             }
         }
 
+        public async Task DeleteDevicesAsync()
+        {
+            using (await _lock.LockAsync())
+            {
+                await InitAsync();
+                await _databaseConnection.ExecuteAsync("DELETE FROM Device");
+            }
+        }
+
         public async Task InsertDeviceAsync(DeviceDTO device)
         {
             using (await _lock.LockAsync())
             {
+                await InitAsync();
                 await _databaseConnection.InsertAsync(device);
             }
         }
