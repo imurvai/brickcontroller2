@@ -8,23 +8,23 @@ namespace BrickController2.UI.ViewModels
 {
     public class DeviceListPageViewModel : PageViewModelBase
     {
-        private readonly IDeviceManager _deviceManager;
-
         public DeviceListPageViewModel(INavigationService navigationService, IDeviceManager deviceManager) 
             : base(navigationService)
         {
-            _deviceManager = deviceManager;
+            DeviceManager = deviceManager;
 
-            StartScanCommand = new Command(async () =>
+            ScanCommand = new Command(async () =>
             {
                 var tokenSource = new CancellationTokenSource();
-                var scanTask = _deviceManager.ScanAsync(tokenSource.Token);
+                var scanTask = DeviceManager.ScanAsync(tokenSource.Token);
                 await DisplayAlertAsync(null, "Scanning...", "Cancel");
                 tokenSource.Cancel();
                 await scanTask;
             });
         }
 
-        public ICommand StartScanCommand { get; }
+        public IDeviceManager DeviceManager { get; }
+
+        public ICommand ScanCommand { get; }
     }
 }

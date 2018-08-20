@@ -29,7 +29,7 @@ namespace BrickController2.DeviceManagement
             _inited = true;
         }
 
-        public async Task<IEnumerable<DeviceDTO>> GetDevices()
+        public async Task<IEnumerable<DeviceDTO>> GetDevicesAsync()
         {
             using (await _lock.LockAsync())
             {
@@ -38,7 +38,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task InsertDevice(DeviceDTO device)
+        public async Task InsertDeviceAsync(DeviceDTO device)
         {
             using (await _lock.LockAsync())
             {
@@ -46,7 +46,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task DeleteDevice(DeviceDTO device)
+        public async Task DeleteDeviceAsync(DeviceDTO device)
         {
             using (await _lock.LockAsync())
             {
@@ -54,7 +54,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task UpdateDevice(DeviceDTO device)
+        public async Task UpdateDeviceAsync(DeviceDTO device)
         {
             using (await _lock.LockAsync())
             {

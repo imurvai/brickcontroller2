@@ -5,9 +5,9 @@ namespace BrickController2.DeviceManagement
 {
     public interface IDeviceRepository
     {
-        Task<IEnumerable<DeviceDTO>> GetDevices();
-        Task InsertDevice(DeviceDTO device);
-        Task DeleteDevice(DeviceDTO device);
-        Task UpdateDevice(DeviceDTO device);
+        Task<IEnumerable<DeviceDTO>> GetDevicesAsync();
+        Task InsertDeviceAsync(DeviceDTO device);
+        Task DeleteDeviceAsync(DeviceDTO device);
+        Task UpdateDeviceAsync(DeviceDTO device);
     }
 }

@@ -5,6 +5,12 @@ namespace BrickController2.DeviceManagement
 {
     public abstract class Device
     {
+        public Device(string name, string address)
+        {
+            Name = name;
+            Address = address;
+        }
+
         public string Name { get; }
         public string Address { get; }
         public string Id => $"{Name}-{Address}";

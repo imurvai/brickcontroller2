@@ -14,6 +14,7 @@ namespace BrickController2.DeviceManagement.DI
             builder.RegisterType<BluetoothDeviceManager>().As<IBluetoothDeviceManager>().SingleInstance();
             builder.RegisterType<InfraredDeviceManager>().As<IInfraredDeviceManager>().SingleInstance();
 
+            builder.RegisterType<DeviceRepository>().As<IDeviceRepository>().SingleInstance();
             builder.RegisterType<DeviceManager>().As<IDeviceManager>().SingleInstance();
         }
     }

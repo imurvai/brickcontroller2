@@ -5,15 +5,15 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationListPage"
     Title="Creation list">
+
+    <local:PageBase.ToolbarItems>
+        <ToolbarItem Name="Add" Command="{Binding AddCreationCommand}"/>
+        <ToolbarItem Name="Menu" Command="{Binding MenuCommand}"/>
+    </local:PageBase.ToolbarItems>
     
     <local:PageBase.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            
-            <ListView Grid.Row="0" ItemsSource="{Binding Creations}">
+        <StackLayout>
+            <ListView ItemsSource="{Binding Creations}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -25,18 +25,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-
-            <Grid Grid.Row="1" BackgroundColor="DarkGray" Padding="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <Button Grid.Column="0" Text="Controller" Command="{Binding NavigateToControllerTesterCommand}"/>
-                <Button Grid.Column="1" Text="Devices" Command="{Binding NavigeteToDeviceListCommand}"/>
-                <Button Grid.Column="2" Text="Add" Command="{Binding AddCreationCommand}"/>
-            </Grid>
-        </Grid>
+        </StackLayout>
     </local:PageBase.Content>
 </local:PageBase>

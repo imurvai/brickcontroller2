@@ -15,14 +15,12 @@ namespace BrickController2.DeviceManagement
             _infraredService = infraredService;
         }
 
-        public Task ScanAsync(Action<Device> deviceFoundCallback, CancellationToken token)
+        public async Task ScanAsync(Func<Device, Task> deviceFoundCallback, CancellationToken token)
         {
             if (_infraredService.IsInfraredSupported && _infraredService.IsCarrierFrequencySupported(IR_FREQUENCY))
             {
                 // TODO: call callback with the 4 PF device
             }
-
-            return Task.FromResult(true);
         }
     }
 }

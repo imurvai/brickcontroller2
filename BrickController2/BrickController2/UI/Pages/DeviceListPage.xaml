@@ -3,20 +3,27 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
-    x:Class="BrickController2.UI.Pages.DeviceListPage">
+    x:Class="BrickController2.UI.Pages.DeviceListPage"
+    Title="Devices">
 
+    <local:PageBase.ToolbarItems>
+        <ToolbarItem Name="Scan" Command="{Binding ScanCommand}"/>
+    </local:PageBase.ToolbarItems>
+    
     <local:PageBase.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            
-            <Label Grid.Row="0" Text="Devices"/>
-
-            <Grid Grid.Row="1" BackgroundColor="DarkGray" Padding="20">
-                <Button Text="Scan" Command="{Binding StartScanCommand}"/>
-            </Grid>
-        </Grid>
+        <StackLayout>
+            <ListView ItemsSource="{Binding DeviceManager.Devices}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Device: "/>
+                                <Label Text="{Binding Name}"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
     </local:PageBase.Content>
 </local:PageBase>

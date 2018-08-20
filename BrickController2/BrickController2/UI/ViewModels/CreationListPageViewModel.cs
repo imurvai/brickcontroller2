@@ -20,25 +20,27 @@ namespace BrickController2.UI.ViewModels
 
             AddCreationCommand = new Command(async () =>
             {
-                var result = await DisplayActionSheetAsync("Choose...", "Cancel", "Destruction", "1", "2", "3");
-                await DisplayAlertAsync("Result", result, "Ok");
+                await DisplayAlertAsync("...", "Add creation", "Cancel");
             });
 
-            NavigeteToDeviceListCommand = new Command(async () =>
+            MenuCommand = new Command(async () =>
             {
-                await NavigationService.NavigateToAsync<DeviceListPageViewModel>(null);
-            });
+                var result = await DisplayActionSheetAsync("Select option", "Cancel", null, "Devices", "About");
+                switch (result)
+                {
+                    case "Devices":
+                        await NavigationService.NavigateToAsync<DeviceListPageViewModel>();
+                        break;
 
-            NavigateToControllerTesterCommand = new Command(async () =>
-            {
-                await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>();
+                    case "About":
+                        await DisplayAlertAsync(null, "About selected", "Ok");
+                        break;
+                }
             });
         }
 
         public ICommand AddCreationCommand { get; }
-        public ICommand SelectNavigationTargetCommand { get; }
-        public ICommand NavigeteToDeviceListCommand { get; }
-        public ICommand NavigateToControllerTesterCommand { get; }
+        public ICommand MenuCommand { get; }
 
         public ObservableCollection<Creation> Creations { get; } = new ObservableCollection<Creation>();
 
@@ -46,14 +48,8 @@ namespace BrickController2.UI.ViewModels
         {
             base.OnAppearing();
 
-            RequestPermissions();
-
-            var creations = await _creationRepository.GetCreationsAsync();
-            Creations.Clear();
-            foreach (var creation in creations)
-            {
-                Creations.Add(creation);
-            }
+            await RequestPermissions();
+            await LoadCreations();
         }
 
         private async Task RequestPermissions()
@@ -76,6 +72,17 @@ namespace BrickController2.UI.ViewModels
             if (status != PermissionStatus.Granted)
             {
                 await DisplayAlertAsync("Warning", "Bluetooth devices will NOT be available.", "Ok");
+            }
+        }
+
+        private async Task LoadCreations()
+        {
+            Creations.Clear();
+
+            var creations = await _creationRepository.GetCreationsAsync();
+            foreach (var creation in creations)
+            {
+                Creations.Add(creation);
             }
         }
     }

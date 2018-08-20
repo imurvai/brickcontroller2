@@ -20,7 +20,7 @@ namespace BrickController2.DeviceManagement
             _adapter = adapter;
         }
 
-        public async Task ScanAsync(Action<Device> deviceFoundCallback, CancellationToken token)
+        public async Task ScanAsync(Func<Device, Task> deviceFoundCallback, CancellationToken token)
         {
             var deviceDiscoveredHandler = new EventHandler<DeviceEventArgs>((object sender, DeviceEventArgs args) =>
             {

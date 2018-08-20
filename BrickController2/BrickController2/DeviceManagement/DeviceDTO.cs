@@ -8,8 +8,9 @@ namespace BrickController2.DeviceManagement
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
+        public DeviceType DeviceType { get; set; }
         public string Name { get; set; }
-        public string DeviceId { get; set; }
+        public string Address { get; set; }
         public string DeviceSpecificData { get; set; }
     }
 }
