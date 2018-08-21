@@ -3,22 +3,32 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     x:Class="BrickController2.UI.Pages.DeviceListPage"
     Title="Devices">
 
+    <local:PageBase.Resources>
+        <ResourceDictionary>
+            <converters:DeviceTypeToSmallImageConverter x:Key="DeviceTypeToSmallImage"/>
+        </ResourceDictionary>
+    </local:PageBase.Resources>
+    
     <local:PageBase.ToolbarItems>
         <ToolbarItem Name="Scan" Command="{Binding ScanCommand}"/>
     </local:PageBase.ToolbarItems>
     
     <local:PageBase.Content>
         <StackLayout>
-            <ListView ItemsSource="{Binding Devices}">
+            <ListView ItemsSource="{Binding Devices}" SelectionMode="None" HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="Device: "/>
-                                <Label Text="{Binding Name}"/>
+                            <StackLayout Orientation="Horizontal" Padding="10">
+                                <Image Source="{Binding DeviceType, Converter={StaticResource DeviceTypeToSmallImage}}" WidthRequest="50" HeightRequest="50"/>
+                                <StackLayout Orientation="Vertical">
+                                    <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Address}"/>
+                                </StackLayout>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

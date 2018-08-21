@@ -1,6 +1,6 @@
 ﻿using BrickController2.Helpers;
-using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -47,9 +47,6 @@ namespace BrickController2.DeviceManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                Devices.Clear();
-                await _deviceRepository.DeleteDevicesAsync();
-
                 var infraScan = _infraredDeviceManager.ScanAsync(FoundDevice, token);
                 var bluetoothScan = _bluetoothDeviceManager.ScanAsync(FoundDevice, token);
 
@@ -58,6 +55,11 @@ namespace BrickController2.DeviceManagement
 
             async Task FoundDevice(DeviceType deviceType, string deviceName, string deviceAddress)
             {
+                if (Devices.Any(d => d.DeviceType == deviceType && d.Address == deviceAddress))
+                {
+                    return;
+                }
+
                 var device = CreateDevice(deviceType, deviceName, deviceAddress, null);
                 if (device != null)
                 {

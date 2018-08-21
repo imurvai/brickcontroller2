@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using BrickController2.UI.Converters;
 using BrickController2.UI.Navigation;
 using BrickController2.UI.Pages;
 using BrickController2.UI.ViewModels;
@@ -16,6 +17,10 @@ namespace BrickController2.UI.DI
             // Register services
 
             builder.RegisterType<NavigationService>().As<INavigationService>().SingleInstance();
+
+            // Register converters
+
+            builder.RegisterType<DeviceTypeToSmallImageConverter>();
 
             // Register viewmodels
             foreach (var vmType in GetSubClassesOf<PageViewModelBase>())

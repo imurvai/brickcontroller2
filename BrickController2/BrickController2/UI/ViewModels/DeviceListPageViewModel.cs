@@ -24,10 +24,16 @@ namespace BrickController2.UI.ViewModels
                 tokenSource.Cancel();
                 await scanTask;
             });
+
+            DeviceTappedCommand = new Command(async () =>
+            {
+
+            });
         }
 
         public ObservableCollection<DeviceManagement.Device> Devices => _deviceManager.Devices;
 
         public ICommand ScanCommand { get; }
+        public ICommand DeviceTappedCommand { get; }
     }
 }
