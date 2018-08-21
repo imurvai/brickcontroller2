@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BrickController2.Helpers;
+using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 
@@ -22,10 +23,13 @@ namespace BrickController2.DeviceManagement
 
         public async Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
         {
-            var deviceDiscoveredHandler = new EventHandler<DeviceEventArgs>((object sender, DeviceEventArgs args) =>
+            var deviceDiscoveredHandler = new EventHandler<DeviceEventArgs>(async (sender, args) =>
             {
-                // TODO: call the deviceFoundCallback here
-                Debug.WriteLine($"Found device: {args.Device.Name} - {args.Device.Id}");
+                var deviceType = GetDeviceType(args.Device);
+                if (deviceType != DeviceType.Unknown)
+                {
+                    await deviceFoundCallback(deviceType, args.Device.Name, args.Device.Id.ToString());
+                }
             });
 
             using (await _asyncLock.LockAsync())
@@ -39,8 +43,61 @@ namespace BrickController2.DeviceManagement
                     _adapter.DeviceDiscovered -= deviceDiscoveredHandler;
                 });
 
-                await _adapter.StartScanningForDevicesAsync();
+                await _adapter.StartScanningForDevicesAsync(null, DeviceFilter, false, CancellationToken.None);
             }
+        }
+
+        public Device CreateDevice(DeviceType deviceType, string name, string address, string deviceSpecificData)
+        {
+            switch (deviceType)
+            {
+                case DeviceType.BuWizz:
+                    return new BuWizzDevice(name, address);
+
+                case DeviceType.BuWizz2:
+                    return new BuWizz2Device(name, address);
+
+                case DeviceType.SBrick:
+                    return new SBrickDevice(name, address);
+
+                default:
+                    throw new InvalidOperationException($"Invalid device type: {deviceType}.");
+            }
+        }
+
+        private bool DeviceFilter(IDevice device)
+        {
+            return GetDeviceType(device) != DeviceType.Unknown;
+        }
+
+        private DeviceType GetDeviceType(IDevice device)
+        {
+            var manufacturerData = device.AdvertisementRecords.FirstOrDefault(ar => ar.Type == AdvertisementRecordType.ManufacturerSpecificData);
+
+            if (manufacturerData?.Data == null || manufacturerData.Data.Length < 2)
+            {
+                return DeviceType.Unknown;
+            }
+
+            var data1 = manufacturerData.Data[0];
+            var data2 = manufacturerData.Data[1];
+
+            if (data1 == 0x98 && data2 == 0x01)
+            {
+                return DeviceType.SBrick;
+            }
+
+            if (data1 == 0x48 && data2 == 0x4D)
+            {
+                return DeviceType.BuWizz;
+            }
+
+            if (data1 == 0x4e && data2 == 0x05)
+            {
+                return DeviceType.BuWizz2;
+            }
+
+            return DeviceType.Unknown;
         }
     }
 }

@@ -22,6 +22,8 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
+                Creations.Clear();
+
                 var creations = await _creationRepository.GetCreationsAsync();
                 foreach (var creation in creations)
                 {

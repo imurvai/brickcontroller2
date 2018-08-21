@@ -14,6 +14,7 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
+        private bool _isLoaded = false;
 
         public CreationListPageViewModel(
             INavigationService navigationService,
@@ -56,9 +57,12 @@ namespace BrickController2.UI.ViewModels
 
             await RequestPermissions();
 
-            // TODO: show progress
-            await _creationManager.LoadCreationsAsync();
-            await _deviceManager.LoadDevicesAsync();
+            if (!_isLoaded)
+            {
+                // TODO: show progress
+                await _creationManager.LoadCreationsAsync();
+                await _deviceManager.LoadDevicesAsync();
+            }
         }
 
         private async Task RequestPermissions()

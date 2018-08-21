@@ -2,6 +2,7 @@
 {
     public enum DeviceType
     {
+        Unknown,
         SBrick,
         BuWizz,
         BuWizz2,

@@ -25,5 +25,15 @@ namespace BrickController2.DeviceManagement
                 await deviceFoundCallback(DeviceType.Infrared, "PF Infra red 4", "Infrared-4");
             }
         }
+
+        public Device CreateDevice(DeviceType deviceType, string name, string address, string deviceSpecificData)
+        {
+            if (deviceType != DeviceType.Infrared)
+            {
+                throw new InvalidOperationException($"Invalid device type: {deviceType}");
+            }
+
+            return new InfraredDevice(name, address);
+        }
     }
 }

@@ -34,25 +34,10 @@ namespace BrickController2.DeviceManagement
                 var deviceDTOs = await _deviceRepository.GetDevicesAsync();
                 foreach (var deviceDTO in deviceDTOs)
                 {
-                    switch (deviceDTO.DeviceType)
+                    var device = CreateDevice(deviceDTO.DeviceType, deviceDTO.Name, deviceDTO.Address, deviceDTO.DeviceSpecificData);
+                    if (device != null)
                     {
-                        case DeviceType.BuWizz:
-                            break;
-
-                        case DeviceType.BuWizz2:
-                            break;
-
-                        case DeviceType.SBrick:
-                            break;
-
-                        case DeviceType.Infrared:
-                            // TODO: temp code
-                            var device = new InfraredDevice(deviceDTO.Name, deviceDTO.Address);
-                            Devices.Add(device);
-                            break;
-
-                        default:
-                            throw new InvalidOperationException($"Not supported device type: {deviceDTO.DeviceType}.");
+                        Devices.Add(device);
                     }
                 }
             }
@@ -70,27 +55,33 @@ namespace BrickController2.DeviceManagement
 
                 await Task.WhenAll(infraScan, bluetoothScan);
             }
+
+            async Task FoundDevice(DeviceType deviceType, string deviceName, string deviceAddress)
+            {
+                var device = CreateDevice(deviceType, deviceName, deviceAddress, null);
+                if (device != null)
+                {
+                    var deviceDTO = new DeviceDTO { DeviceType = device.DeviceType, Name = device.Name, Address = device.Address, DeviceSpecificData = device.DeviceSpecificData };
+                    await _deviceRepository.InsertDeviceAsync(deviceDTO);
+                    Devices.Add(device);
+                }
+            }
         }
 
-        private async Task FoundDevice(DeviceType deviceType, string deviceName, string deviceAddress)
+        private Device CreateDevice(DeviceType deviceType, string deviceName, string deviceAddress, string deviceSpecificData)
         {
             switch (deviceType)
             {
                 case DeviceType.BuWizz:
-                    break;
-
                 case DeviceType.BuWizz2:
-                    break;
-
                 case DeviceType.SBrick:
-                    break;
+                    return _bluetoothDeviceManager.CreateDevice(deviceType, deviceName, deviceAddress, deviceSpecificData);
 
                 case DeviceType.Infrared:
-                    // TODO: temp code
-                    var device = new InfraredDevice(deviceName, deviceAddress);
-                    await _deviceRepository.InsertDeviceAsync(new DeviceDTO { DeviceType = DeviceType.Infrared, Name = deviceName, Address = deviceAddress, DeviceSpecificData = null });
-                    Devices.Add(device);
-                    break;
+                    return _infraredDeviceManager.CreateDevice(deviceType, deviceName, deviceAddress, deviceSpecificData);
+
+                default:
+                    return null;
             }
         }
     }
