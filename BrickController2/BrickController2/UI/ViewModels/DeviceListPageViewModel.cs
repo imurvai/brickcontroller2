@@ -25,9 +25,9 @@ namespace BrickController2.UI.ViewModels
                 await scanTask;
             });
 
-            DeviceTappedCommand = new Command(async o =>
+            DeviceTappedCommand = new Command(async device =>
             {
-                await DisplayAlertAsync("Device tapped", o.ToString(), "Ok");
+                await NavigationService.NavigateToAsync<DeviceDetailsPageViewModel>(new NavigationParameters(("device", device)));
             });
         }
 
