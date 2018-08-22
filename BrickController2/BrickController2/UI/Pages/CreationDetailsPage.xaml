@@ -3,13 +3,26 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
-    x:Class="BrickController2.UI.Pages.CreationDetailsPage">
-    
+    x:Class="BrickController2.UI.Pages.CreationDetailsPage"
+    Title="Creation details">
+
+    <local:PageBase.ToolbarItems>
+        <ToolbarItem Name="Delete" Command="{Binding DeleteCreationCommand}"/>
+    </local:PageBase.ToolbarItems>
+
     <local:PageBase.Content>
-        <StackLayout>
-            <Label Text="Creation details"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+        <StackLayout Orientation="Vertical">
+
+            <Grid BackgroundColor="LightGray" Padding="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold"/>
+                <Button Grid.Column="1" Text="Edit" Command="{Binding EditCreationCommand}"/>
+            </Grid>
+
         </StackLayout>
     </local:PageBase.Content>
 </local:PageBase>

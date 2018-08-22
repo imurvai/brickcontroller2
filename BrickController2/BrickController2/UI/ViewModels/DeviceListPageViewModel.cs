@@ -14,6 +14,8 @@ namespace BrickController2.UI.ViewModels
         private readonly IDeviceManager _deviceManager;
         private readonly IUserDialogs _userDialogs;
 
+        private CancellationTokenSource _scanTokenSource;
+
         public DeviceListPageViewModel(
             INavigationService navigationService,
             IDeviceManager deviceManager,
@@ -25,25 +27,25 @@ namespace BrickController2.UI.ViewModels
 
             ScanCommand = new Command(async () =>
             {
-                var tokenSource = new CancellationTokenSource();
+                _scanTokenSource = new CancellationTokenSource();
                 var progressConfig = new ProgressDialogConfig()
                     .SetTitle("Scanning...")
                     .SetIsDeterministic(true)
-                    .SetCancel("Cancel", () => tokenSource.Cancel());
+                    .SetCancel("Cancel", () => _scanTokenSource.Cancel());
 
                 var percent = 0;
                 using (var progressDialog = _userDialogs.Progress(progressConfig))
                 {
-                    var scanTask = _deviceManager.ScanAsync(tokenSource.Token);
+                    var scanTask = _deviceManager.ScanAsync(_scanTokenSource.Token);
 
-                    while (!tokenSource.Token.IsCancellationRequested && percent <= 100)
+                    while (!_scanTokenSource.Token.IsCancellationRequested && percent <= 100)
                     {
                         progressDialog.PercentComplete = percent;
                         await Task.Delay(100);
                         percent += 1;
                     }
 
-                    tokenSource.Cancel();
+                    _scanTokenSource.Cancel();
                     await scanTask;
                 }
             });
@@ -58,5 +60,11 @@ namespace BrickController2.UI.ViewModels
 
         public ICommand ScanCommand { get; }
         public ICommand DeviceTappedCommand { get; }
+
+        public override void OnDisappearing()
+        {
+            _scanTokenSource?.Cancel();
+            base.OnDisappearing();
+        }
     }
 }

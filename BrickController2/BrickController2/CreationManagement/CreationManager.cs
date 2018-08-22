@@ -44,11 +44,6 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                if (!(await IsCreationNameAvailableAsync(creationName)))
-                {
-                    throw new ArgumentException($"Creation with same name already exists ({creationName}).");
-                }
-
                 var creation = new Creation { Name = creationName };
                 await _creationRepository.InsertCreationAsync(creation);
                 Creations.Add(creation);
@@ -69,11 +64,6 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                if (!(await IsCreationNameAvailableAsync(newName)))
-                {
-                    throw new ArgumentException($"Creation already exists with name {newName}.");
-                }
-
                 creation.Name = newName;
                 await _creationRepository.UpdateCreationAsync(creation);
             }

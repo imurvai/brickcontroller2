@@ -31,7 +31,27 @@ namespace BrickController2.UI.ViewModels
 
             AddCreationCommand = new Command(async () =>
             {
-                await DisplayAlertAsync("...", "Add creation", "Cancel");
+                var result = await _userDialogs.PromptAsync("New creation name", null, "Create", "Cancel", "Name", InputType.Default, null);
+                if (result.Ok)
+                {
+                    if (string.IsNullOrWhiteSpace(result.Text))
+                    {
+                        await DisplayAlertAsync("Warning", "Creation name can not be empty.", "Ok");
+                        return;
+                    }
+
+                    var progressConfig = new ProgressDialogConfig()
+                        .SetIsDeterministic(false)
+                        .SetTitle("Creating...");
+
+                    Creation creation;
+                    using (_userDialogs.Progress(progressConfig))
+                    {
+                        creation = await _creationManager.AddCreationAsync(result.Text);
+                    }
+
+                    await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation)));
+                }
             });
 
             MenuCommand = new Command(async () =>
@@ -52,32 +72,25 @@ namespace BrickController2.UI.ViewModels
                         break;
                 }
             });
+
+            CreationTappedCommand = new Command(async creation =>
+            {
+                await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation)));
+            });
         }
 
         public ObservableCollection<Creation> Creations => _creationManager.Creations;
 
         public ICommand AddCreationCommand { get; }
         public ICommand MenuCommand { get; }
+        public ICommand CreationTappedCommand { get; }
 
         public override async void OnAppearing()
         {
             base.OnAppearing();
 
             await RequestPermissions();
-
-            if (!_isLoaded)
-            {
-                var progressDialogConfig = new ProgressDialogConfig()
-                    .SetTitle("Loading...")
-                    .SetIsDeterministic(false);
-
-                using (_userDialogs.Progress(progressDialogConfig))
-                {
-                    await _creationManager.LoadCreationsAsync();
-                    await _deviceManager.LoadDevicesAsync();
-                    _isLoaded = true;
-                }
-            }
+            await LoadCreationsAndDevices();
         }
 
         private async Task RequestPermissions()
@@ -100,6 +113,23 @@ namespace BrickController2.UI.ViewModels
             if (status != PermissionStatus.Granted)
             {
                 await DisplayAlertAsync("Warning", "Bluetooth devices will NOT be available.", "Ok");
+            }
+        }
+
+        private async Task LoadCreationsAndDevices()
+        {
+            if (!_isLoaded)
+            {
+                var progressDialogConfig = new ProgressDialogConfig()
+                    .SetTitle("Loading...")
+                    .SetIsDeterministic(false);
+
+                using (_userDialogs.Progress(progressDialogConfig))
+                {
+                    await _creationManager.LoadCreationsAsync();
+                    await _deviceManager.LoadDevicesAsync();
+                    _isLoaded = true;
+                }
             }
         }
     }

@@ -3,6 +3,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     x:Class="BrickController2.UI.Pages.CreationListPage"
     Title="Creation list">
 
@@ -13,18 +14,23 @@
     
     <local:PageBase.Content>
         <StackLayout>
-            <ListView ItemsSource="{Binding Creations}" SelectionMode="None">
+
+            <ListView ItemsSource="{Binding Creations}" SelectionMode="None" HasUnevenRows="True">
+                <ListView.Behaviors>
+                    <behaviors:ListViewItemTappedBehavior Command="{Binding CreationTappedCommand}"/>
+                </ListView.Behaviors>
+
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="Creation: "/>
-                                <Label Text="{Binding Name}"/>
+                            <StackLayout Orientation="Horizontal" Padding="10">
+                                <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            
         </StackLayout>
     </local:PageBase.Content>
 </local:PageBase>
