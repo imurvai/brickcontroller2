@@ -63,10 +63,26 @@ namespace BrickController2.DeviceManagement
                 var device = CreateDevice(deviceType, deviceName, deviceAddress, null);
                 if (device != null)
                 {
-                    var deviceDTO = new DeviceDTO { DeviceType = device.DeviceType, Name = device.Name, Address = device.Address, DeviceSpecificData = device.DeviceSpecificData };
-                    await _deviceRepository.InsertDeviceAsync(deviceDTO);
+                    await _deviceRepository.InsertDeviceAsync(device.DeviceType, device.Name, device.Address, device.DeviceSpecificData);
                     Devices.Add(device);
                 }
+            }
+        }
+
+        public async Task RenameDeviceAsync(Device device, string newName)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                await _deviceRepository.UpdateDeviceAsync(device.DeviceType, device.Address, newName);
+                device.Name = newName;
+            }
+        }
+
+        public async Task DeleteDeviceAsync(Device device)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                await _deviceRepository.DeleteDeviceAsync(device.DeviceType, device.Address);
             }
         }
 

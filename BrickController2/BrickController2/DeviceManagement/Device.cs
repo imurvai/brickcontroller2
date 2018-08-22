@@ -1,17 +1,25 @@
-﻿using System.Threading;
+﻿using BrickController2.Helpers;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
-    public abstract class Device
+    public abstract class Device : NotifyPropertyChangedSource
     {
+        private string _name;
+
         protected Device(string name, string address)
         {
             Name = name;
             Address = address;
         }
 
-        public string Name { get; }
+        public string Name
+        {
+            get => _name;
+            set { _name = value; RaisePropertyChanged(); }
+        }
+
         public string Address { get; }
         public string DeviceSpecificData => string.Empty;
 

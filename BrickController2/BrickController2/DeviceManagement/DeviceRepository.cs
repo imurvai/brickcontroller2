@@ -38,37 +38,38 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task DeleteDevicesAsync()
+        public async Task InsertDeviceAsync(DeviceType type, string name, string address, string deviceSpecificData)
         {
             using (await _lock.LockAsync())
             {
-                await InitAsync();
-                await _databaseConnection.ExecuteAsync("DELETE FROM Device");
-            }
-        }
-
-        public async Task InsertDeviceAsync(DeviceDTO device)
-        {
-            using (await _lock.LockAsync())
-            {
+                var device = new DeviceDTO { DeviceType = type, Address = address, Name = name, DeviceSpecificData = deviceSpecificData };
                 await InitAsync();
                 await _databaseConnection.InsertAsync(device);
             }
         }
 
-        public async Task DeleteDeviceAsync(DeviceDTO device)
+        public async Task DeleteDeviceAsync(DeviceType type, string address)
         {
             using (await _lock.LockAsync())
             {
-                await _databaseConnection.DeleteAsync(device);
+                var device = await _databaseConnection.Table<DeviceDTO>().Where(d => d.DeviceType == type && d.Address == address).FirstOrDefaultAsync();
+                if (device != null)
+                {
+                    await _databaseConnection.DeleteAsync(device);
+                }
             }
         }
 
-        public async Task UpdateDeviceAsync(DeviceDTO device)
+        public async Task UpdateDeviceAsync(DeviceType type, string address, string newName)
         {
             using (await _lock.LockAsync())
             {
-                await _databaseConnection.UpdateAsync(device);
+                var device = await _databaseConnection.Table<DeviceDTO>().Where(d => d.DeviceType == type && d.Address == address).FirstOrDefaultAsync();
+                if (device != null)
+                {
+                    device.Name = newName;
+                    await _databaseConnection.UpdateAsync(device);
+                }
             }
         }
     }

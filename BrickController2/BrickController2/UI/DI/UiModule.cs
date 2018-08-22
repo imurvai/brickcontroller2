@@ -20,10 +20,6 @@ namespace BrickController2.UI.DI
             builder.RegisterType<NavigationService>().As<INavigationService>().SingleInstance();
             builder.RegisterInstance(UserDialogs.Instance).As<IUserDialogs>().SingleInstance();
 
-            // Register converters
-
-            //builder.RegisterType<DeviceTypeToSmallImageConverter>();
-
             // Register viewmodels
             foreach (var vmType in GetSubClassesOf<PageViewModelBase>())
             {
