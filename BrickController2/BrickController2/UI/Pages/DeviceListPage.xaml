@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     x:Class="BrickController2.UI.Pages.DeviceListPage"
     Title="Devices">
 
@@ -19,7 +20,12 @@
     
     <local:PageBase.Content>
         <StackLayout>
+
             <ListView ItemsSource="{Binding Devices}" SelectionMode="None" HasUnevenRows="True">
+                <ListView.Behaviors>
+                    <behaviors:ListViewItemTappedBehavior Command="{Binding DeviceTappedCommand}"/>
+                </ListView.Behaviors>
+
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -34,6 +40,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
         </StackLayout>
     </local:PageBase.Content>
 </local:PageBase>

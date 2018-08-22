@@ -13,9 +13,9 @@ namespace BrickController2.UI.Pages
 
         protected override void OnAppearing()
         {
+            SetViewModelDisplayCallbacks();
             (BindingContext as PageViewModelBase)?.OnAppearing();
             base.OnAppearing();
-            SetViewModelDisplayCallbacks();
         }
 
         protected override void OnDisappearing()
@@ -39,7 +39,7 @@ namespace BrickController2.UI.Pages
                     DisplayAlert(title, message, cancel) :
                     DisplayAlert(title, message, accept, cancel);
 
-                vm.OnDisplayActionSheet = (title, cancel, destruction, buttons) => DisplayActionSheet(title, cancel, destruction, buttons);
+                vm.OnDisplayActionSheet = DisplayActionSheet;
             }
         }
 
