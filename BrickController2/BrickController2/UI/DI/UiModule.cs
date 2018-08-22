@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Acr.UserDialogs;
 using Autofac;
 using BrickController2.UI.Converters;
 using BrickController2.UI.Navigation;
@@ -17,10 +18,11 @@ namespace BrickController2.UI.DI
             // Register services
 
             builder.RegisterType<NavigationService>().As<INavigationService>().SingleInstance();
+            builder.RegisterInstance(UserDialogs.Instance).As<IUserDialogs>().SingleInstance();
 
             // Register converters
 
-            builder.RegisterType<DeviceTypeToSmallImageConverter>();
+            //builder.RegisterType<DeviceTypeToSmallImageConverter>();
 
             // Register viewmodels
             foreach (var vmType in GetSubClassesOf<PageViewModelBase>())

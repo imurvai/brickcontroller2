@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Acr.UserDialogs;
 using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
 using BrickController2.UI.Navigation;
@@ -14,16 +15,19 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
+        private readonly IUserDialogs _userDialogs;
         private bool _isLoaded = false;
 
         public CreationListPageViewModel(
             INavigationService navigationService,
             ICreationManager creationManager,
-            IDeviceManager deviceManager)
+            IDeviceManager deviceManager,
+            IUserDialogs userDialogs)
             : base(navigationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;
+            _userDialogs = userDialogs;
 
             AddCreationCommand = new Command(async () =>
             {
@@ -32,11 +36,15 @@ namespace BrickController2.UI.ViewModels
 
             MenuCommand = new Command(async () =>
             {
-                var result = await DisplayActionSheetAsync("Select option", "Cancel", null, "Devices", "About");
+                var result = await DisplayActionSheetAsync("Select option", "Cancel", null, "Devices", "Controller tester", "About");
                 switch (result)
                 {
                     case "Devices":
                         await NavigationService.NavigateToAsync<DeviceListPageViewModel>();
+                        break;
+
+                    case "Controller tester":
+                        await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>();
                         break;
 
                     case "About":
@@ -59,9 +67,16 @@ namespace BrickController2.UI.ViewModels
 
             if (!_isLoaded)
             {
-                // TODO: show progress
-                await _creationManager.LoadCreationsAsync();
-                await _deviceManager.LoadDevicesAsync();
+                var progressDialogConfig = new ProgressDialogConfig()
+                    .SetTitle("Loading...")
+                    .SetIsDeterministic(false);
+
+                using (_userDialogs.Progress(progressDialogConfig))
+                {
+                    await _creationManager.LoadCreationsAsync();
+                    await _deviceManager.LoadDevicesAsync();
+                    _isLoaded = true;
+                }
             }
         }
 
