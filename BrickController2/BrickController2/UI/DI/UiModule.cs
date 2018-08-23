@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Acr.UserDialogs;
 using Autofac;
-using BrickController2.UI.Converters;
 using BrickController2.UI.Navigation;
 using BrickController2.UI.Pages;
 using BrickController2.UI.ViewModels;

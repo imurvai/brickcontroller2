@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using BrickController2.HardwareServices;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace BrickController2.CreationManagement
@@ -19,7 +20,7 @@ namespace BrickController2.CreationManagement
         Task DeleteControllerProfileAsync(ControllerProfile controllerProfile);
         Task RenameControllerProfileAsync(ControllerProfile controllerProfile, string newName);
 
-        Task<ControllerEvent> AddOrGetControllerEventAsync(ControllerProfile controllerProfile, ControllerEventType eventType, string eventCode);
+        Task<ControllerEvent> AddOrGetControllerEventAsync(ControllerProfile controllerProfile, GameControllerEventType eventType, string eventCode);
         Task DeleteControllerEventAsync(ControllerEvent controllerEvent);
 
         Task<ControllerAction> AddOrUpdateControllerActionAsync(ControllerEvent controllerEvent, string deviceId, int channel, bool isInvert, bool isToggle, int maxOutput);

@@ -1,4 +1,5 @@
-﻿using BrickController2.Helpers;
+﻿using BrickController2.HardwareServices;
+using BrickController2.Helpers;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 using System.Collections.ObjectModel;
@@ -7,7 +8,7 @@ namespace BrickController2.CreationManagement
 {
     public class ControllerEvent : NotifyPropertyChangedSource
     {
-        private ControllerEventType _eventType;
+        private GameControllerEventType _eventType;
         private string _eventCode;
         private ObservableCollection<ControllerAction> _controllerActions;
 
@@ -20,7 +21,7 @@ namespace BrickController2.CreationManagement
         [ManyToOne]
         public ControllerProfile ControllerProfile { get; set; }
 
-        public ControllerEventType EventType
+        public GameControllerEventType EventType
         {
             get { return _eventType; }
             set { _eventType = value; RaisePropertyChanged(); }

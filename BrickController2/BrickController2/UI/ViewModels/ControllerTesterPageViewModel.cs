@@ -1,15 +1,14 @@
 ﻿using BrickController2.HardwareServices;
 using BrickController2.UI.Navigation;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace BrickController2.UI.ViewModels
 {
     public class ControllerTesterPageViewModel : PageViewModelBase
     {
         private readonly IGameControllerService _gameControllerService;
-        private readonly IDictionary<(GameControllerEventType EventType, string EventCode), float> _controllerEvents = new Dictionary<(GameControllerEventType, string), float>();
 
         public ControllerTesterPageViewModel(
             INavigationService navigationService,
@@ -31,32 +30,31 @@ namespace BrickController2.UI.ViewModels
             base.OnDisappearing();
         }
 
-        public ObservableCollection<string> ControllerEventList { get; } = new ObservableCollection<string>(); 
+        public ObservableCollection<ControllerEventViewModel> ControllerEventList { get; } = new ObservableCollection<ControllerEventViewModel>(); 
 
         private void GameControllerEventHandler(object sender, GameControllerEventArgs args)
         {
             foreach (var controllerEvent in args.ControllerEvents)
             {
-                if (Math.Abs(controllerEvent.Value) < 0.1F)
+                var controllerEventViewModel = ControllerEventList.FirstOrDefault(ce => ce.EventType == controllerEvent.Key.EventType && ce.EventCode == controllerEvent.Key.EventCode);
+                if (0.1F < Math.Abs(controllerEvent.Value))
                 {
-                    if (_controllerEvents.ContainsKey(controllerEvent.Key))
+                    if (controllerEventViewModel != null)
                     {
-                        _controllerEvents.Remove(controllerEvent.Key);
+                        controllerEventViewModel.Value = controllerEvent.Value;
+                    }
+                    else
+                    {
+                        ControllerEventList.Add(new ControllerEventViewModel(controllerEvent.Key.EventType, controllerEvent.Key.EventCode, controllerEvent.Value));
                     }
                 }
                 else
                 {
-                    _controllerEvents[controllerEvent.Key] = controllerEvent.Value;
+                    if (controllerEventViewModel != null)
+                    {
+                        ControllerEventList.Remove(controllerEventViewModel);
+                    }
                 }
-            }
-
-            ControllerEventList.Clear();
-            foreach (var entry in _controllerEvents)
-            {
-                var text = entry.Key.EventType == GameControllerEventType.Button ? 
-                    $"Button - {entry.Key.EventCode}" : 
-                    $"Axis - {entry.Key.EventCode} : ( {entry.Value.ToString("0.00")} )";
-                ControllerEventList.Add(text);
             }
         }
     }

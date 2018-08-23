@@ -1,4 +1,5 @@
 ﻿using BrickController2.Helpers;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -66,6 +67,17 @@ namespace BrickController2.DeviceManagement
                     await _deviceRepository.InsertDeviceAsync(device.DeviceType, device.Name, device.Address, device.DeviceSpecificData);
                     Devices.Add(device);
                 }
+            }
+        }
+
+        public async Task<Device> GetDeviceById(string Id)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var deviceTypeAndAddress = Id.Split('#');
+                var deviceType = (DeviceType)Enum.Parse(typeof(DeviceType), deviceTypeAndAddress[0]);
+                var deviceAddress = deviceTypeAndAddress[1];
+                return Devices.FirstOrDefault(d => d.DeviceType == deviceType && d.Address == deviceAddress);
             }
         }
 

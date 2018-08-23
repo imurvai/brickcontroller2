@@ -16,10 +16,14 @@
         <StackLayout>
 
             <ListView ItemsSource="{Binding Creations}" SelectionMode="None" HasUnevenRows="True">
+                <ListView.Triggers>
+                    <DataTrigger TargetType="ListView" Binding="{Binding Creations.Count}" Value="0">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                </ListView.Triggers>
                 <ListView.Behaviors>
                     <behaviors:ListViewItemTappedBehavior Command="{Binding CreationTappedCommand}"/>
                 </ListView.Behaviors>
-
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -30,7 +34,15 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            
+
+            <Label Text="Add creations" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding Creations.Count}" Value="0">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
         </StackLayout>
     </local:PageBase.Content>
 </local:PageBase>

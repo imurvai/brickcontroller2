@@ -14,6 +14,8 @@ namespace BrickController2.DeviceManagement
             Address = address;
         }
 
+        public string Id => $"{DeviceType}#{Address}";
+
         public string Name
         {
             get => _name;

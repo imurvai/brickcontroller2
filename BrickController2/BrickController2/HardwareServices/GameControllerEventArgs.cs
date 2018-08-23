@@ -4,12 +4,6 @@ using System.Collections.ObjectModel;
 
 namespace BrickController2.HardwareServices
 {
-    public enum GameControllerEventType
-    {
-        Button,
-        Axis
-    }
-
     public class GameControllerEventArgs : EventArgs
     {
         public GameControllerEventArgs(GameControllerEventType eventType, string eventCode, float value)
@@ -24,6 +18,6 @@ namespace BrickController2.HardwareServices
             ControllerEvents = new ReadOnlyDictionary<(GameControllerEventType, string), float>(events);
         }
 
-        public IReadOnlyDictionary<(GameControllerEventType eventType, string eventCode), float> ControllerEvents { get; }
+        public IReadOnlyDictionary<(GameControllerEventType EventType, string EventCode), float> ControllerEvents { get; }
     }
 }

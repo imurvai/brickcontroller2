@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using BrickController2.Helpers;
 using BrickController2.UI.Navigation;
 
 namespace BrickController2.UI.ViewModels
 {
-    public abstract class PageViewModelBase : INotifyPropertyChanged
+    public abstract class PageViewModelBase : NotifyPropertyChangedSource
     {
         protected PageViewModelBase(INavigationService navigationService)
         {
@@ -46,17 +45,6 @@ namespace BrickController2.UI.ViewModels
         protected Task<string> DisplayActionSheetAsync(string title, string cancel, string destruction, params string[] buttons)
         {
             return OnDisplayActionSheet?.Invoke(title, cancel, destruction, buttons);
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void RaisePropertyChanged([CallerMemberName]string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

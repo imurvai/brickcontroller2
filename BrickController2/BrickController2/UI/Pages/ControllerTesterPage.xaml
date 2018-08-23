@@ -7,14 +7,38 @@
     Title="Controller tester">
     
     <local:PageBase.Content>
-        <StackLayout>
-            <ListView ItemsSource="{Binding ControllerEventList}">
+        <StackLayout Padding="10">
+            
+            <ListView ItemsSource="{Binding ControllerEventList}" SelectionMode="None" HasUnevenRows="True">
+                <ListView.Triggers>
+                    <DataTrigger TargetType="ListView" Binding="{Binding ControllerEventList.Count}" Value="0">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                </ListView.Triggers>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding}"/>
+                        <ViewCell>
+                            <StackLayout Orientation="Vertical" Padding="10">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding EventCode}" FontSize="Large" FontAttributes="Bold"/>
+                                    <Label Text=" - " FontSize="Large"/>
+                                    <Label Text="{Binding Value}" FontSize="Large"/>
+                                </StackLayout>
+                                <Label Text="{Binding EventType}" FontSize="Medium"/>
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
+            <Label Text="Press buttons or move the joys" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding ControllerEventList.Count}" Value="0">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </DataTrigger>
+                </Label.Triggers>                
+            </Label>
+            
         </StackLayout>
     </local:PageBase.Content>
 </local:PageBase>

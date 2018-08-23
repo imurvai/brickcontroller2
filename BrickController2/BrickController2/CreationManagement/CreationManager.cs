@@ -1,4 +1,5 @@
-﻿using BrickController2.Helpers;
+﻿using BrickController2.HardwareServices;
+using BrickController2.Helpers;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -114,7 +115,7 @@ namespace BrickController2.CreationManagement
             }
         }
 
-        public async Task<ControllerEvent> AddOrGetControllerEventAsync(ControllerProfile controllerProfile, ControllerEventType eventType, string eventCode)
+        public async Task<ControllerEvent> AddOrGetControllerEventAsync(ControllerProfile controllerProfile, GameControllerEventType eventType, string eventCode)
         {
             using (await _asyncLock.LockAsync())
             {
