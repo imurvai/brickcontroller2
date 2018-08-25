@@ -68,6 +68,16 @@ namespace BrickController2.UI.ViewModels
                     await NavigationService.NavigateBackAsync();
                 }
             });
+
+            AddControllerProfileCommand = new Command(async () =>
+            {
+
+            });
+
+            ControllerProfileTappedCommand = new Command(async controllerProfile =>
+            {
+
+            });
         }
 
         public Creation Creation { get; }
@@ -75,5 +85,6 @@ namespace BrickController2.UI.ViewModels
         public ICommand EditCreationCommand { get; }
         public ICommand DeleteCreationCommand { get; }
         public ICommand AddControllerProfileCommand { get; }
+        public ICommand ControllerProfileTappedCommand { get; }
     }
 }

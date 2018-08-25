@@ -23,6 +23,34 @@
                 <Button Grid.Column="1" Text="Edit" Command="{Binding EditCreationCommand}"/>
             </Grid>
 
+            <ListView ItemsSource="{Binding Creation.ControllerProfiles}" SelectionMode="None" HasUnevenRows="True">
+                <ListView.Triggers>
+                    <DataTrigger TargetType="ListView" Binding="{Binding Creation.ControllerProfiles.Count}" Value="0">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                </ListView.Triggers>
+                <ListView.Behaviors>
+                    <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerProfileTappedCommand}"/>
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="10">
+                                <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Label Text="Add creations" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding Creation.ControllerProfiles.Count}" Value="0">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
         </StackLayout>
     </local:PageBase.Content>
 </local:PageBase>
