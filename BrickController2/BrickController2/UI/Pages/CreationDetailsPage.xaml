@@ -3,6 +3,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     x:Class="BrickController2.UI.Pages.CreationDetailsPage"
     Title="Creation details">
 
@@ -43,7 +44,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Label Text="Add creations" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <Label Text="Add controller profiles" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label.Triggers>
                     <DataTrigger TargetType="Label" Binding="{Binding Creation.ControllerProfiles.Count}" Value="0">
                         <Setter Property="IsVisible" Value="True"/>
