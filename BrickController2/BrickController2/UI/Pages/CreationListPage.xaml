@@ -8,8 +8,8 @@
     Title="Creation list">
 
     <local:PageBase.ToolbarItems>
-        <ToolbarItem Name="Add" Command="{Binding AddCreationCommand}"/>
-        <ToolbarItem Name="Menu" Command="{Binding MenuCommand}"/>
+        <ToolbarItem Icon="ic_add.png" Order="Primary" Command="{Binding AddCreationCommand}"/>
+        <ToolbarItem Icon="ic_menu.png" Order="Primary" Command="{Binding MenuCommand}"/>
     </local:PageBase.ToolbarItems>
     
     <local:PageBase.Content>
