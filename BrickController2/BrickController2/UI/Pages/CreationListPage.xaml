@@ -3,6 +3,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     x:Class="BrickController2.UI.Pages.CreationListPage"
@@ -22,6 +23,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
+            <!-- Creation list -->
             <ListView Grid.Row="0" ItemsSource="{Binding Creations}" SelectionMode="None" HasUnevenRows="True">
                 <ListView.Triggers>
                     <DataTrigger TargetType="ListView" Binding="{Binding Creations.Count}" Value="0">
@@ -35,8 +37,8 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" Padding="10">
-                                <Frame WidthRequest="40" HeightRequest="40" BackgroundColor="{Binding Id, Converter={StaticResource IntToColor}}" CornerRadius="40" Padding="0">
-                                    <Label Text="{Binding Name, Converter={StaticResource TextToCapitalInitial}}" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                <Frame WidthRequest="40" HeightRequest="40" BackgroundColor="DarkGray" CornerRadius="20" Padding="0" HasShadow="False">
+                                    <Label Text="{Binding Name, Converter={StaticResource TextToCapitalInitial}}" TextColor="White" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="Center"/>
                                 </Frame>
                                 <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
                             </StackLayout>
@@ -45,6 +47,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
+            <!-- Creation list placeholder -->
             <Label Grid.Row="0" Text="Add creations" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label.Triggers>
                     <DataTrigger TargetType="Label" Binding="{Binding Creations.Count}" Value="0">
@@ -53,13 +56,10 @@
                 </Label.Triggers>
             </Label>
 
-            <Frame Grid.Row="0" HorizontalOptions="End" VerticalOptions="End" WidthRequest="50" HeightRequest="50" BackgroundColor="Red" CornerRadius="50" Padding="5" Margin="10">
-                <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding AddCreationCommand}"/>
-                </Frame.GestureRecognizers>
-                <Image Source="ic_add.png"  WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"/>
-            </Frame>
+            <!-- FAB -->
+            <controls:FloatingActionButton Grid.Row="0" ButtonColor="Red" ImageSource="ic_add.png" Command="{Binding AddCreationCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
+            <!-- Bottom buttons -->
             <Grid Grid.Row="1" BackgroundColor="#E0E0E0" Padding="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -67,7 +67,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Frame Grid.Column="0" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent">
+                <Frame Grid.Column="0" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateToDevicesCommand}"/>
                     </Frame.GestureRecognizers>
@@ -76,7 +76,7 @@
                         <Label Text="Devices" FontSize="Small"/>
                     </StackLayout>
                 </Frame>
-                <Frame Grid.Column="1" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent">
+                <Frame Grid.Column="1" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateToControllerTesterCommand}"/>
                     </Frame.GestureRecognizers>
@@ -85,7 +85,7 @@
                         <Label Text="Controller" FontSize="Small"/>
                     </StackLayout>
                 </Frame>
-                <Frame Grid.Column="2" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent">
+                <Frame Grid.Column="2" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateToAboutCommand}"/>
                     </Frame.GestureRecognizers>

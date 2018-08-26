@@ -3,6 +3,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     x:Class="BrickController2.UI.Pages.DeviceListPage"
@@ -17,6 +18,7 @@
     <local:PageBase.Content>
         <StackLayout>
 
+            <!-- Device list -->
             <ListView ItemsSource="{Binding Devices}" SelectionMode="None" HasUnevenRows="True">
                 <ListView.Triggers>
                     <DataTrigger TargetType="ListView" Binding="{Binding Devices.Count}" Value="0">
@@ -41,6 +43,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
+            <!-- Device list placeholder -->
             <Label Text="Press scan to discover devices" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label.Triggers>
                     <DataTrigger TargetType="Label" Binding="{Binding Devices.Count}" Value="0">
@@ -49,12 +52,8 @@
                 </Label.Triggers>
             </Label>
 
-            <Frame HorizontalOptions="End" VerticalOptions="End" WidthRequest="50" HeightRequest="50" BackgroundColor="Red" CornerRadius="50" Padding="5" Margin="10">
-                <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ScanCommand}"/>
-                </Frame.GestureRecognizers>
-                <Image Source="ic_search.png" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"/>
-            </Frame>
+            <!-- FAB -->
+            <controls:FloatingActionButton Grid.Row="0" ButtonColor="Red" ImageSource="ic_search.png" Command="{Binding ScanCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
         </StackLayout>
     </local:PageBase.Content>
