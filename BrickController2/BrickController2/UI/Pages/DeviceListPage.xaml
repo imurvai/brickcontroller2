@@ -14,10 +14,6 @@
         </ResourceDictionary>
     </local:PageBase.Resources>
     
-    <local:PageBase.ToolbarItems>
-        <ToolbarItem Name="Scan" Command="{Binding ScanCommand}"/>
-    </local:PageBase.ToolbarItems>
-    
     <local:PageBase.Content>
         <StackLayout>
 
@@ -52,6 +48,13 @@
                     </DataTrigger>
                 </Label.Triggers>
             </Label>
+
+            <Frame HorizontalOptions="End" VerticalOptions="End" WidthRequest="50" HeightRequest="50" BackgroundColor="Red" CornerRadius="50" Padding="5" Margin="10">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ScanCommand}"/>
+                </Frame.GestureRecognizers>
+                <Image Source="ic_search.png" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Frame>
 
         </StackLayout>
     </local:PageBase.Content>

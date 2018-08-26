@@ -3,19 +3,26 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     x:Class="BrickController2.UI.Pages.CreationListPage"
     Title="Creation list">
 
-    <local:PageBase.ToolbarItems>
-        <ToolbarItem Icon="ic_add.png" Order="Primary" Command="{Binding AddCreationCommand}"/>
-        <ToolbarItem Icon="ic_menu.png" Order="Primary" Command="{Binding MenuCommand}"/>
-    </local:PageBase.ToolbarItems>
-    
-    <local:PageBase.Content>
-        <StackLayout>
+    <local:PageBase.Resources>
+        <ResourceDictionary>
+            <converters:TextToCapitalInitialConverter x:Key="TextToCapitalInitial"/>
+            <converters:IntToColorConverter x:Key="IntToColor"/>
+        </ResourceDictionary>
+    </local:PageBase.Resources>
 
-            <ListView ItemsSource="{Binding Creations}" SelectionMode="None" HasUnevenRows="True">
+    <local:PageBase.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ListView Grid.Row="0" ItemsSource="{Binding Creations}" SelectionMode="None" HasUnevenRows="True">
                 <ListView.Triggers>
                     <DataTrigger TargetType="ListView" Binding="{Binding Creations.Count}" Value="0">
                         <Setter Property="IsVisible" Value="False"/>
@@ -28,14 +35,17 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" Padding="10">
-                                <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
+                                <Frame WidthRequest="40" HeightRequest="40" BackgroundColor="{Binding Id, Converter={StaticResource IntToColor}}" CornerRadius="40" Padding="0">
+                                    <Label Text="{Binding Name, Converter={StaticResource TextToCapitalInitial}}" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Frame>
+                                <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Label Text="Add creations" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <Label Grid.Row="0" Text="Add creations" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label.Triggers>
                     <DataTrigger TargetType="Label" Binding="{Binding Creations.Count}" Value="0">
                         <Setter Property="IsVisible" Value="True"/>
@@ -43,6 +53,49 @@
                 </Label.Triggers>
             </Label>
 
-        </StackLayout>
+            <Frame Grid.Row="0" HorizontalOptions="End" VerticalOptions="End" WidthRequest="50" HeightRequest="50" BackgroundColor="Red" CornerRadius="50" Padding="5" Margin="10">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddCreationCommand}"/>
+                </Frame.GestureRecognizers>
+                <Image Source="ic_add.png"  WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Frame>
+
+            <Grid Grid.Row="1" BackgroundColor="#E0E0E0" Padding="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Frame Grid.Column="0" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToDevicesCommand}"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                        <Image Source="ic_link.png" WidthRequest="20" HeightRequest="20"/>
+                        <Label Text="Devices" FontSize="Small"/>
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Column="1" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToControllerTesterCommand}"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                        <Image Source="ic_console.png" WidthRequest="20" HeightRequest="20"/>
+                        <Label Text="Controller" FontSize="Small"/>
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Column="2" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToAboutCommand}"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                        <Image Source="ic_info.png" WidthRequest="20" HeightRequest="20"/>
+                        <Label Text="About" FontSize="Small"/>
+                    </StackLayout>
+                </Frame>
+            </Grid>
+
+        </Grid>
     </local:PageBase.Content>
 </local:PageBase>

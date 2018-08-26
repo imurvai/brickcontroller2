@@ -54,36 +54,23 @@ namespace BrickController2.UI.ViewModels
                 }
             });
 
-            MenuCommand = new Command(async () =>
-            {
-                var result = await DisplayActionSheetAsync("Select option", "Cancel", null, "Devices", "Controller tester", "About");
-                switch (result)
-                {
-                    case "Devices":
-                        await NavigationService.NavigateToAsync<DeviceListPageViewModel>();
-                        break;
-
-                    case "Controller tester":
-                        await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>();
-                        break;
-
-                    case "About":
-                        await DisplayAlertAsync(null, "About selected", "Ok");
-                        break;
-                }
-            });
-
             CreationTappedCommand = new Command(async creation =>
             {
                 await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation)));
             });
+
+            NavigateToDevicesCommand = new Command(async () => await NavigationService.NavigateToAsync<DeviceListPageViewModel>());
+            NavigateToControllerTesterCommand = new Command(async () => await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>());
+            NavigateToAboutCommand = new Command(async () => await DisplayAlertAsync(null, "About selected", "Ok"));
         }
 
         public ObservableCollection<Creation> Creations => _creationManager.Creations;
 
         public ICommand AddCreationCommand { get; }
-        public ICommand MenuCommand { get; }
         public ICommand CreationTappedCommand { get; }
+        public ICommand NavigateToDevicesCommand { get; }
+        public ICommand NavigateToControllerTesterCommand { get; }
+        public ICommand NavigateToAboutCommand { get; }
 
         public override async void OnAppearing()
         {
