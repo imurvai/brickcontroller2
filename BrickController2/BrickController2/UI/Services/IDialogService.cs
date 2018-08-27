@@ -11,5 +11,7 @@ namespace BrickController2.UI.Services
         Task<IDisposable> ShowProgressDialogAsync(string message, string cancelButtonText, CancellationTokenSource tokenSource);
 
         Task<IDeterministicProgressDialog> ShowProgressDialogAsync(string message, string cancelButtonText, CancellationTokenSource tokenSource, int minValue, int maxValue);
+
+        Task<IGameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string message, string cancelButtonText);
     }
 }

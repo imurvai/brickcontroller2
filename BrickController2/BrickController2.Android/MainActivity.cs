@@ -11,6 +11,7 @@ using BrickController2.Database.DI;
 using BrickController2.DeviceManagement.DI;
 using BrickController2.Droid.HardwareServices;
 using BrickController2.Droid.HardwareServices.DI;
+using BrickController2.Droid.UI.Services.DI;
 using BrickController2.UI.DI;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
@@ -77,6 +78,7 @@ namespace BrickController2.Droid
 
             builder.RegisterInstance(Application).As<Context>();
             builder.RegisterModule(new HardwareServicesModule());
+            builder.RegisterModule(new UIServicesModule());
 
             builder.RegisterModule(new DatabaseModule());
             builder.RegisterModule(new CreationManagementModule());

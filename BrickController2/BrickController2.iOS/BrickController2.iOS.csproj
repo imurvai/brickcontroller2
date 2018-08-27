@@ -108,6 +108,8 @@
     <Compile Include="HardwareServices\InfraredService.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="UI\Services\DialogService.cs" />
+    <Compile Include="UI\Services\DI\UIServicesModule.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
