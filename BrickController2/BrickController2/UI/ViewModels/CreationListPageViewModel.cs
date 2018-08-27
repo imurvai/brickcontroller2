@@ -29,36 +29,8 @@ namespace BrickController2.UI.ViewModels
             _deviceManager = deviceManager;
             _userDialogs = userDialogs;
 
-            AddCreationCommand = new Command(async () =>
-            {
-                var result = await _userDialogs.PromptAsync("New creation name", null, "Create", "Cancel", "Name", InputType.Default, null);
-                if (result.Ok)
-                {
-                    if (string.IsNullOrWhiteSpace(result.Text))
-                    {
-                        await DisplayAlertAsync("Warning", "Creation name can not be empty.", "Ok");
-                        return;
-                    }
-
-                    var progressConfig = new ProgressDialogConfig()
-                        .SetIsDeterministic(false)
-                        .SetTitle("Creating...");
-
-                    Creation creation;
-                    using (_userDialogs.Progress(progressConfig))
-                    {
-                        creation = await _creationManager.AddCreationAsync(result.Text);
-                    }
-
-                    await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation)));
-                }
-            });
-
-            CreationTappedCommand = new Command(async creation =>
-            {
-                await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation)));
-            });
-
+            AddCreationCommand = new Command(async () => await AddCreation());
+            CreationTappedCommand = new Command<Creation>(async creation => await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation))));
             NavigateToDevicesCommand = new Command(async () => await NavigationService.NavigateToAsync<DeviceListPageViewModel>());
             NavigateToControllerTesterCommand = new Command(async () => await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>());
             NavigateToAboutCommand = new Command(async () => await DisplayAlertAsync(null, "About selected", "Ok"));
@@ -117,6 +89,31 @@ namespace BrickController2.UI.ViewModels
                     await _deviceManager.LoadDevicesAsync();
                     _isLoaded = true;
                 }
+            }
+        }
+
+        private async Task AddCreation()
+        {
+            var result = await _userDialogs.PromptAsync("New creation name", null, "Create", "Cancel", "Name", InputType.Default, null);
+            if (result.Ok)
+            {
+                if (string.IsNullOrWhiteSpace(result.Text))
+                {
+                    await DisplayAlertAsync("Warning", "Creation name can not be empty.", "Ok");
+                    return;
+                }
+
+                var progressConfig = new ProgressDialogConfig()
+                    .SetIsDeterministic(false)
+                    .SetTitle("Creating...");
+
+                Creation creation;
+                using (_userDialogs.Progress(progressConfig))
+                {
+                    creation = await _creationManager.AddCreationAsync(result.Text);
+                }
+
+                await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation)));
             }
         }
     }

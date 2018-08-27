@@ -2,9 +2,9 @@
 
 namespace BrickController2.UI.Pages
 {
-	public partial class ControllerProfileDetailesPage
+	public partial class ControllerProfileDetailsPage
 	{
-		public ControllerProfileDetailesPage(PageViewModelBase vm)
+		public ControllerProfileDetailsPage(PageViewModelBase vm)
         {
             InitializeComponent();
             BindingContext = vm;

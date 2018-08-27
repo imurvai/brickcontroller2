@@ -8,6 +8,7 @@ namespace BrickController2.CreationManagement
     public class ControllerProfile : NotifyPropertyChangedSource
     {
         private string _name;
+        private ObservableCollection<ControllerEvent> _controllerEvents = new ObservableCollection<ControllerEvent>();
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -25,6 +26,10 @@ namespace BrickController2.CreationManagement
         }
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
-        public ObservableCollection<ControllerEvent> ControllerEvents { get; set; }
+        public ObservableCollection<ControllerEvent> ControllerEvents
+        {
+            get { return _controllerEvents; }
+            set { _controllerEvents = value; RaisePropertyChanged(); }
+        }
     }
 }

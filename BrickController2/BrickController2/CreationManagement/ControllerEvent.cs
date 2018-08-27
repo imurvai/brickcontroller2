@@ -10,7 +10,7 @@ namespace BrickController2.CreationManagement
     {
         private GameControllerEventType _eventType;
         private string _eventCode;
-        private ObservableCollection<ControllerAction> _controllerActions;
+        private ObservableCollection<ControllerAction> _controllerActions = new ObservableCollection<ControllerAction>();
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

@@ -6,7 +6,7 @@ namespace BrickController2.CreationManagement
 {
     public class ControllerAction : NotifyPropertyChangedSource
     {
-        private string _deviceID;
+        private string _deviceId;
         private int _channel;
         private bool _isInvert;
         private bool _isToggle;
@@ -21,10 +21,10 @@ namespace BrickController2.CreationManagement
         [ManyToOne]
         public ControllerEvent ControllerEvent { get; set; }
 
-        public string DeviceID
+        public string DeviceId
         {
-            get { return _deviceID; }
-            set { _deviceID = value; RaisePropertyChanged(); }
+            get { return _deviceId; }
+            set { _deviceId = value; RaisePropertyChanged(); }
         }
 
         public int Channel

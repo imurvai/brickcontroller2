@@ -82,11 +82,6 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                if (!(await IsControllerProfileNameAvailableAsync(creation, controllerProfileName)))
-                {
-                    throw new ArgumentException($"Controller profile already exists with name {controllerProfileName}.");
-                }
-
                 var controllerProfile = new ControllerProfile { Name = controllerProfileName };
                 await _creationRepository.InsertControllerProfileAsync(creation, controllerProfile);
                 return controllerProfile;
@@ -97,7 +92,9 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
+                var parent = controllerProfile.Creation;
                 await _creationRepository.DeleteControllerProfileAsync(controllerProfile);
+                parent.ControllerProfiles.Remove(controllerProfile);
             }
         }
 
@@ -105,11 +102,6 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                if (!(await IsControllerProfileNameAvailableAsync(controllerProfile.Creation, newName)))
-                {
-                    throw new ArgumentException($"Controller profile already exists with name {newName}.");
-                }
-
                 controllerProfile.Name = newName;
                 await _creationRepository.UpdateControllerProfileAsync(controllerProfile);
             }
@@ -134,7 +126,9 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
+                var parent = controllerEvent.ControllerProfile;
                 await _creationRepository.DeleteControllerEventAsync(controllerEvent);
+                parent.ControllerEvents.Remove(controllerEvent);
             }
         }
 
@@ -142,7 +136,7 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                var controllerAction = controllerEvent.ControllerActions.FirstOrDefault(ca => ca.DeviceID == deviceId && ca.Channel == channel);
+                var controllerAction = controllerEvent.ControllerActions.FirstOrDefault(ca => ca.DeviceId == deviceId && ca.Channel == channel);
                 if (controllerAction != null)
                 {
                     controllerAction.IsInvert = isInvert;
@@ -152,7 +146,7 @@ namespace BrickController2.CreationManagement
                 }
                 else
                 {
-                    controllerAction = new ControllerAction { DeviceID = deviceId, Channel = channel, IsInvert = isInvert, IsToggle = isToggle, MaxOutput = maxOutput };
+                    controllerAction = new ControllerAction { DeviceId = deviceId, Channel = channel, IsInvert = isInvert, IsToggle = isToggle, MaxOutput = maxOutput };
                     await _creationRepository.InsertControllerActionAsync(controllerEvent, controllerAction);
                 }
 
@@ -164,7 +158,9 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
+                var parent = controllerAction.ControllerEvent;
                 await _creationRepository.DeleteControllerActionAsync(controllerAction);
+                parent.ControllerActions.Remove(controllerAction);
             }
         }
 
@@ -172,13 +168,15 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                var otherControllerAction = controllerAction.ControllerEvent.ControllerActions.FirstOrDefault(ca => ca.DeviceID == deviceId && ca.Channel == channel);
+                var otherControllerAction = controllerAction.ControllerEvent.ControllerActions.FirstOrDefault(ca => ca.DeviceId == deviceId && ca.Channel == channel);
                 if (otherControllerAction != null)
                 {
+                    var parent = otherControllerAction.ControllerEvent;
                     await _creationRepository.DeleteControllerActionAsync(otherControllerAction);
+                    parent.ControllerActions.Remove(otherControllerAction);
                 }
 
-                controllerAction.DeviceID = deviceId;
+                controllerAction.DeviceId = deviceId;
                 controllerAction.Channel = channel;
                 controllerAction.IsInvert = isInvert;
                 controllerAction.IsToggle = isToggle;

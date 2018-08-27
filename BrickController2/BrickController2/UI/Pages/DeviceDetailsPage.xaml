@@ -14,9 +14,27 @@
     </local:PageBase.Resources>
 
     <local:PageBase.Content>
-        <StackLayout Orientation="Horizontal" Padding="10">
-            <Label Text="Name: "/>
-            <Label Text="{Binding DeviceName}"/>
-        </StackLayout>
+        <Grid Padding="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="0" Source="{Binding Device.DeviceType, Converter={StaticResource DeviceTypeToSmallImage}}" WidthRequest="50" HeightRequest="50"/>
+            
+            <StackLayout Grid.Column="1" Orientation="Vertical">
+                <Label Text="Device name" FontSize="Medium"/>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="{Binding Device.Name}" FontSize="Large" FontAttributes="Bold"/>
+                    <Button Text="Edit" Command="{Binding RenameDeviceCommand}" HorizontalOptions="End"/>
+                </StackLayout>
+                
+                <Label Text="Device type" FontSize="Medium"/>
+                <Label Text="{Binding Device.DeviceType}" FontSize="Large" FontAttributes="Bold"/>
+                
+                <Label Text="Address" FontSize="Medium"/>
+                <Label Text="{Binding Device.Address}" FontSize="Large" FontAttributes="Bold"/>
+            </StackLayout>
+        </Grid>
     </local:PageBase.Content>
 </local:PageBase>

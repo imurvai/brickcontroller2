@@ -37,6 +37,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="UI\Pages\ControllerProfileDetailsPage.xaml.cs">
+      <DependentUpon>ControllerProfileDetailsPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -47,7 +50,7 @@
     <EmbeddedResource Update="UI\Controls\FloatingActionButton.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="UI\Pages\ControllerProfileDetailesPage.xaml">
+    <EmbeddedResource Update="UI\Pages\ControllerProfileDetailsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="UI\Pages\ControllerTesterPage.xaml">

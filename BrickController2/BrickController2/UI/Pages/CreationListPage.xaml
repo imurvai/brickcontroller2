@@ -7,7 +7,7 @@
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     x:Class="BrickController2.UI.Pages.CreationListPage"
-    Title="Creation list">
+    Title="Creations">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -37,7 +37,7 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" Padding="10">
-                                <Frame WidthRequest="40" HeightRequest="40" BackgroundColor="DarkGray" CornerRadius="20" Padding="0" HasShadow="False">
+                                <Frame WidthRequest="40" HeightRequest="40" BackgroundColor="{Binding Id, Converter={StaticResource IntToColor}}" CornerRadius="20" Padding="0" HasShadow="False">
                                     <Label Text="{Binding Name, Converter={StaticResource TextToCapitalInitial}}" TextColor="White" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="Center"/>
                                 </Frame>
                                 <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>

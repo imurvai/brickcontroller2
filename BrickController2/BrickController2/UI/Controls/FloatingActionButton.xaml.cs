@@ -18,26 +18,25 @@ namespace BrickController2.UI.Controls
 
         public Color ButtonColor
         {
-            get { return (Color)GetValue(BackgroundColorProperty); }
-            set { SetValue(BackgroundColorProperty, value); }
+            get => (Color)GetValue(BackgroundColorProperty);
+            set => SetValue(BackgroundColorProperty, value);
         }
 
         public ImageSource ImageSource
         {
-            get { return (ImageSource)GetValue(ImageSourceProperty); }
-            set { SetValue(ImageSourceProperty, value); }
+            get => (ImageSource)GetValue(ImageSourceProperty);
+            set => SetValue(ImageSourceProperty, value);
         }
 
         public ICommand Command
         {
-            get { return (ICommand)GetValue(CommandProperty); }
-            set { SetValue(CommandProperty, value); }
+            get => (ICommand)GetValue(CommandProperty);
+            set => SetValue(CommandProperty, value);
         }
 
         private static void ButtonColorChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            var fab = bindable as FloatingActionButton;
-            if (fab != null)
+            if (bindable is FloatingActionButton fab)
             {
                 fab.Frame.BackgroundColor = (Color)newValue;
             }
@@ -45,8 +44,7 @@ namespace BrickController2.UI.Controls
 
         private static void ImageSourceChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            var fab = bindable as FloatingActionButton;
-            if (fab != null)
+            if (bindable is FloatingActionButton fab)
             {
                 fab.Image.Source = (ImageSource)newValue;
             }
@@ -54,8 +52,7 @@ namespace BrickController2.UI.Controls
 
         private static void CommandChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            var fab = bindable as FloatingActionButton;
-            if (fab != null)
+            if (bindable is FloatingActionButton fab)
             {
                 fab.TapGuestureRecognizer.Command = (ICommand)newValue;
             }

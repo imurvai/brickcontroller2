@@ -1,17 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace BrickController2.UI.Converters
 {
-    public class IntToColorConverter : IValueConverter
+    public class CollectionNullOrEmptyToBoolConverter : IValueConverter
     {
-        private static readonly Color[] Colors = { Color.Brown, Color.DarkGreen, Color.DarkSlateGray, Color.DarkOrchid, Color.DimGray, Color.OliveDrab };
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var intValue = (int)value;
-            return Colors[intValue % Colors.Length];
+            if (value is IEnumerable<object> collection)
+            {
+                return !collection.Any();
+            }
+
+            return true;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
