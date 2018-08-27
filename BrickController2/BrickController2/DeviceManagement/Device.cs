@@ -27,10 +27,13 @@ namespace BrickController2.DeviceManagement
 
         public abstract DeviceType DeviceType { get; }
         public abstract int NumberOfChannels { get; }
+        public abstract int NumberOfOutputLevels { get; }
+        public abstract int DefaultOutputLevel { get; }
 
         public abstract Task ConnectAsync(CancellationToken token);
         public abstract Task DisconnectAsync(CancellationToken token);
 
         public abstract Task SetOutputAsync(int channel, int value);
+        public abstract Task SetOutputLevelAsync(int value);
     }
 }

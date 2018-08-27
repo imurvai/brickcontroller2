@@ -11,8 +11,9 @@ namespace BrickController2.DeviceManagement
         }
 
         public override DeviceType DeviceType => DeviceType.SBrick;
-
         public override int NumberOfChannels => 4;
+        public override int NumberOfOutputLevels => 1;
+        public override int DefaultOutputLevel => 1;
 
         public override Task ConnectAsync(CancellationToken token)
         {
@@ -27,6 +28,11 @@ namespace BrickController2.DeviceManagement
         public override Task SetOutputAsync(int channel, int value)
         {
             throw new System.NotImplementedException();
+        }
+
+        public async override Task SetOutputLevelAsync(int value)
+        {
+            return;
         }
     }
 }
