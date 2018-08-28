@@ -7,32 +7,29 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/title_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:paddingBottom="8sp"
+        android:textSize="18sp"
+		android:textStyle="bold"
+        android:text="Title"/>
+
+    <TextView
         android:id="@+id/message_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+		android:paddingBottom="8sp"
+        android:textSize="16sp"
         android:text="Message"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="#ffa0a0a0"/>
 
     <EditText
         android:id="@+id/value_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+		android:paddingBottom="8sp"
         android:inputType="textCapWords"
         android:singleLine="true" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="#ffa0a0a0"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"

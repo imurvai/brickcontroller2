@@ -7,22 +7,17 @@ namespace BrickController2.iOS.UI.Services
 {
     public class DialogService : IDialogService
     {
-        public Task<IInputDialogResult> ShowInputDialogAsync(string message, string initialValue, string positiveButtonText, string negativeButtonText)
+        public Task<IInputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string positiveButtonText, string negativeButtonText)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IDisposable> ShowProgressDialogAsync(string message, string cancelButtonText, CancellationTokenSource tokenSource)
+        public Task<IProgress> ShowProgressDialogAsync(string title, string message, string cancelButtonText, CancellationTokenSource tokenSource, int minValue, int maxValue)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IDeterministicProgressDialog> ShowProgressDialogAsync(string message, string cancelButtonText, CancellationTokenSource tokenSource, int minValue, int maxValue)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IGameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string message, string cancelButtonText)
+        public Task<IGameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
         {
             throw new NotImplementedException();
         }
