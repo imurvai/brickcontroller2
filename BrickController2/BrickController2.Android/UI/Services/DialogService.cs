@@ -58,9 +58,35 @@ namespace BrickController2.Droid.UI.Services
             return completionSource.Task;
         }
 
-        public Task<IProgress> ShowProgressDialogAsync(string title, string message, string cancelButtonText, CancellationTokenSource tokenSource, int minValue, int maxValue)
+        public IProgress ShowProgressDialogAsync(string title, string message, string cancelButtonText, CancellationTokenSource tokenSource, int minValue, int maxValue)
         {
-            throw new NotImplementedException();
+            var dialog = new Dialog(_context);
+            dialog.SetContentView(Resource.Layout.ProgressDialog);
+
+            var titleTextView = dialog.FindViewById<TextView>(Resource.Id.title_textview);
+            titleTextView.Text = title ?? string.Empty;
+            titleTextView.Visibility = string.IsNullOrEmpty(title) ? ViewStates.Gone : ViewStates.Visible;
+
+            var messageTextView = dialog.FindViewById<TextView>(Resource.Id.message_textview);
+            messageTextView.Text = message ?? string.Empty;
+            messageTextView.Visibility = string.IsNullOrEmpty(message) ? ViewStates.Gone : ViewStates.Visible;
+
+            var progressBar = dialog.FindViewById<ProgressBar>(Resource.Id.progressbar);
+            progressBar.Min = minValue;
+            progressBar.Max = maxValue;
+            progressBar.Progress = 0;
+            progressBar.Indeterminate = minValue == maxValue;
+
+            var cancelButton = dialog.FindViewById<Button>(Resource.Id.cancel_button);
+            cancelButton.Text = cancelButtonText ?? "Cancel";
+            cancelButton.Visibility = tokenSource != null ? ViewStates.Visible : ViewStates.Gone;
+            cancelButton.Click += (sender, e) =>
+            {
+                dialog.Dismiss();
+                tokenSource?.Cancel();
+            };
+
+            return new ProgressImpl(dialog, titleTextView, messageTextView, progressBar);
         }
 
         public Task<IGameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
@@ -76,13 +102,29 @@ namespace BrickController2.Droid.UI.Services
 
         private class ProgressImpl : IProgress
         {
+            private readonly TextView _title;
+            private readonly TextView _message;
+            private readonly ProgressBar _progressBar;
             private Dialog _progressDialog;
-            private ProgressBar _progressBar;
 
-            public ProgressImpl(Dialog progressDialog, ProgressBar progressBar)
+            public ProgressImpl(Dialog progressDialog, TextView title, TextView message, ProgressBar progressBar)
             {
                 _progressDialog = progressDialog;
+                _title = title;
+                _message = message;
                 _progressBar = progressBar;
+            }
+
+            public string Title
+            {
+                get => _title.Text;
+                set => _title.Text = value ?? string.Empty;
+            }
+
+            public string Message
+            {
+                get => _message.Text;
+                set => _message.Text = value ?? string.Empty;
             }
 
             public int Progress
