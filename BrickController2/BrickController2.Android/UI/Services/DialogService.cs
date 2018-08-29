@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Views;
+using Android.Views.InputMethods;
 using Android.Widget;
 using BrickController2.HardwareServices;
 using BrickController2.UI.Services;
@@ -12,48 +14,50 @@ namespace BrickController2.Droid.UI.Services
 {
     public class DialogService : IDialogService
     {
-        private readonly Context _context;
+        private readonly Activity _context;
+        private readonly IGameControllerService _gameControllerService;
 
-        public DialogService(Context context)
+        public DialogService(Activity context, IGameControllerService gameControllerService)
         {
             _context = context;
+            _gameControllerService = gameControllerService;
         }
 
-        public Task<IInputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string positiveButtonText, string negativeButtonText)
+        public Task<IInputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText)
         {
             var completionSource = new TaskCompletionSource<IInputDialogResult>();
 
-            var dialog = new Dialog(_context);
-            dialog.SetContentView(Resource.Layout.InputDialog);
+            var inputMethodManager = (InputMethodManager)_context.GetSystemService(Context.InputMethodService);
 
-            var titleTextView = dialog.FindViewById<TextView>(Resource.Id.title_textview);
-            titleTextView.Text = title ?? string.Empty;
-            titleTextView.Visibility = string.IsNullOrEmpty(title) ? ViewStates.Gone : ViewStates.Visible;
-
-            var messageTextView = dialog.FindViewById<TextView>(Resource.Id.message_textview);
-            messageTextView.Text = message ?? string.Empty;
-            messageTextView.Visibility = string.IsNullOrEmpty(message) ? ViewStates.Gone : ViewStates.Visible;
-
-            var valueEditText = dialog.FindViewById<EditText>(Resource.Id.value_edittext);
+            var view = _context.LayoutInflater.Inflate(Resource.Layout.InputDialog, null);
+            var valueEditText = view.FindViewById<EditText>(Resource.Id.value_edittext);
             valueEditText.Text = initialValue ?? string.Empty;
+            valueEditText.Hint = placeHolder ?? string.Empty;
+            valueEditText.SetSelection(valueEditText.Text.Length);
 
-            var positiveButton = dialog.FindViewById<Button>(Resource.Id.positive_button);
-            positiveButton.Text = positiveButtonText ?? "Ok";
-            positiveButton.Click += (sender, e) =>
-            {
-                dialog.Dismiss();
-                completionSource.SetResult(new InputDialogResult { IsPositive = true, Result = valueEditText.Text });
-            };
-
-            var negativeButton = dialog.FindViewById<Button>(Resource.Id.negative_button);
-            negativeButton.Text = negativeButtonText ?? "Cancel";
-            negativeButton.Click += (sender, e) =>
-            {
-                dialog.Dismiss();
-                completionSource.SetResult(new InputDialogResult { IsPositive = false, Result = valueEditText.Text });
-            };
+            AlertDialog dialog = null;
+            dialog = new AlertDialog.Builder(_context)
+                .SetTitle(title)
+                .SetMessage(message)
+                .SetView(view)
+                .SetPositiveButton(positiveButtonText ?? "Ok", (sender, args) =>
+                {
+                    inputMethodManager.HideSoftInputFromWindow(valueEditText.ApplicationWindowToken, 0);
+                    dialog.Dismiss();
+                    completionSource.SetResult(new InputDialogResult { IsPositive = true, Result = valueEditText.Text });
+                })
+                .SetNegativeButton(negativeButtonText ?? "Cancel", (sender, args) =>
+                {
+                    inputMethodManager.HideSoftInputFromWindow(valueEditText.ApplicationWindowToken, 0);
+                    dialog.Dismiss();
+                    completionSource.SetResult(new InputDialogResult { IsPositive = false, Result = valueEditText.Text });
+                })
+                .Create();
 
             dialog.Show();
+
+            valueEditText.RequestFocus();
+            inputMethodManager.ToggleSoftInput(ShowFlags.Forced, HideSoftInputFlags.ImplicitOnly);
 
             return completionSource.Task;
         }
@@ -91,7 +95,39 @@ namespace BrickController2.Droid.UI.Services
 
         public Task<IGameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
         {
-            throw new NotImplementedException();
+            // TODO: fix this method!!!
+            var completionSource = new TaskCompletionSource<IGameControllerEventDialogResult>();
+
+            AlertDialog dialog = null;
+            dialog = new AlertDialog.Builder(_context)
+                .SetTitle(title)
+                .SetMessage(message)
+                .SetNegativeButton(cancelButtonText ?? "Cancel", (sender, args) =>
+                {
+                    _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
+                    dialog.Dismiss();
+                    completionSource.SetResult(new GameControllerDialogResult { IsOk = false, EventType = GameControllerEventType.Button, EventCode = null });
+                })
+                .Create();
+
+            _gameControllerService.GameControllerEvent += GameControllerEventHandler;
+
+            dialog.Show();
+
+            return completionSource.Task;
+
+            void GameControllerEventHandler(object sender, GameControllerEventArgs args)
+            {
+                var controllerEvent = args.ControllerEvents.First();
+                if (controllerEvent.Key.EventType == GameControllerEventType.Button && 0.0F < controllerEvent.Value)
+                {
+                    return;
+                }
+
+                _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
+                dialog.Dismiss();
+                completionSource.SetResult(new GameControllerDialogResult { IsOk = true, EventType = controllerEvent.Key.EventType, EventCode = controllerEvent.Key.EventCode });
+            }
         }
 
         private class InputDialogResult : IInputDialogResult

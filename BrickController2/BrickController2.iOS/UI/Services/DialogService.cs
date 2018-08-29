@@ -17,12 +17,16 @@ namespace BrickController2.iOS.UI.Services
             _gameControllerService = gameControllerService;
         }
 
-        public Task<IInputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string positiveButtonText, string negativeButtonText)
+        public Task<IInputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText)
         {
             var completionSource = new TaskCompletionSource<IInputDialogResult>();
             var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
 
-            alert.AddTextField(textField => textField.Text = initialValue);
+            alert.AddTextField(textField =>
+            {
+                textField.Text = initialValue ?? string.Empty;
+                textField.Placeholder = placeHolder ?? string.Empty;
+            });
 
             alert.AddAction(UIAlertAction.Create(positiveButtonText ?? "Ok", UIAlertActionStyle.Default, action =>
             {

@@ -76,7 +76,7 @@ namespace BrickController2.Droid
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterInstance(Application).As<Context>();
+            builder.RegisterInstance(this).As<Context>().As<Activity>();
             builder.RegisterModule(new HardwareServicesModule());
             builder.RegisterModule(new UIServicesModule());
 

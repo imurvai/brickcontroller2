@@ -5,6 +5,7 @@ using Acr.UserDialogs;
 using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
 using BrickController2.UI.Navigation;
+using BrickController2.UI.Services;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Xamarin.Forms;
@@ -15,6 +16,7 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
+        private readonly IDialogService _dialogService;
         private readonly IUserDialogs _userDialogs;
         private bool _isLoaded = false;
 
@@ -22,11 +24,13 @@ namespace BrickController2.UI.ViewModels
             INavigationService navigationService,
             ICreationManager creationManager,
             IDeviceManager deviceManager,
+            IDialogService dialogService,
             IUserDialogs userDialogs)
             : base(navigationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;
+            _dialogService = dialogService;
             _userDialogs = userDialogs;
 
             AddCreationCommand = new Command(async () => await AddCreation());
@@ -94,10 +98,10 @@ namespace BrickController2.UI.ViewModels
 
         private async Task AddCreation()
         {
-            var result = await _userDialogs.PromptAsync("New creation name", null, "Create", "Cancel", "Name", InputType.Default, null);
-            if (result.Ok)
+            var result = await _dialogService.ShowInputDialogAsync("Creation name", "Please enter a name", null, "Creation name", "Create", "Cancel");
+            if (result.IsPositive)
             {
-                if (string.IsNullOrWhiteSpace(result.Text))
+                if (string.IsNullOrWhiteSpace(result.Result))
                 {
                     await DisplayAlertAsync("Warning", "Creation name can not be empty.", "Ok");
                     return;
@@ -110,7 +114,7 @@ namespace BrickController2.UI.ViewModels
                 Creation creation;
                 using (_userDialogs.Progress(progressConfig))
                 {
-                    creation = await _creationManager.AddCreationAsync(result.Text);
+                    creation = await _creationManager.AddCreationAsync(result.Result);
                 }
 
                 await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation)));

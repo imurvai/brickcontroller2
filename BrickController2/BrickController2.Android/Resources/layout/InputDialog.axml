@@ -6,23 +6,6 @@
     android:padding="16dp"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-		android:paddingBottom="8sp"
-        android:textSize="18sp"
-		android:textStyle="bold"
-        android:text="Title"/>
-
-    <TextView
-        android:id="@+id/message_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-		android:paddingBottom="8sp"
-        android:textSize="16sp"
-        android:text="Message"/>
-
     <EditText
         android:id="@+id/value_edittext"
         android:layout_width="match_parent"
@@ -30,24 +13,5 @@
 		android:paddingBottom="8sp"
         android:inputType="textCapWords"
         android:singleLine="true" />
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/negative_button"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="Cancel"/>
-
-        <Button
-            android:id="@+id/positive_button"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/negative_button"
-            android:text="Ok"/>
-    </RelativeLayout>
 
 </LinearLayout>
