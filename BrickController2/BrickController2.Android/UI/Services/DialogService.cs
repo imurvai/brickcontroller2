@@ -63,10 +63,13 @@ namespace BrickController2.Droid.UI.Services
 
         public IProgress ShowProgressDialogAsync(string title, string message, string cancelButtonText, CancellationTokenSource tokenSource, int minValue, int maxValue)
         {
-            var view = _context.LayoutInflater.Inflate(Resource.Layout.InputDialog, null);
+            var view = _context.LayoutInflater.Inflate(Resource.Layout.ProgressDialog, null);
             var progressBar = view.FindViewById<ProgressBar>(Resource.Id.progressbar);
 
-            // TODO: setup progressbar
+            progressBar.Indeterminate = minValue == maxValue;
+            progressBar.Min = minValue;
+            progressBar.Max = maxValue;
+            progressBar.Progress = minValue;
 
             var dialogBuilder = new AlertDialog.Builder(_context)
                 .SetTitle(title)
@@ -86,7 +89,6 @@ namespace BrickController2.Droid.UI.Services
 
         public Task<IGameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
         {
-            // TODO: fix this method!!!
             var completionSource = new TaskCompletionSource<IGameControllerEventDialogResult>();
 
             var dialog = new GameControllerEventDialog(_context, _gameControllerService);
