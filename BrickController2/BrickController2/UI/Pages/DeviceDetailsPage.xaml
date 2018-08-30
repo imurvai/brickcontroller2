@@ -13,6 +13,10 @@
         </ResourceDictionary>
     </local:PageBase.Resources>
 
+    <local:PageBase.ToolbarItems>
+        <ToolbarItem Icon="ic_menu.png" Order="Primary" Command="{Binding MenuCommand}"/>
+    </local:PageBase.ToolbarItems>
+
     <local:PageBase.Content>
         <Grid Padding="10">
             <Grid.ColumnDefinitions>
@@ -24,10 +28,7 @@
             
             <StackLayout Grid.Column="1" Orientation="Vertical">
                 <Label Text="Device name" FontSize="Medium"/>
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="{Binding Device.Name}" FontSize="Large" FontAttributes="Bold"/>
-                    <Button Text="Edit" Command="{Binding RenameDeviceCommand}" HorizontalOptions="End"/>
-                </StackLayout>
+                <Label Text="{Binding Device.Name}" FontSize="Large" FontAttributes="Bold"/>
                 
                 <Label Text="Device type" FontSize="Medium"/>
                 <Label Text="{Binding Device.DeviceType}" FontSize="Large" FontAttributes="Bold"/>

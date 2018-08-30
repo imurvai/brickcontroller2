@@ -43,11 +43,12 @@ namespace BrickController2.iOS.UI.Services
             }
         }
 
-        public async void Dispose()
+        public void Dispose()
         {
             if (_alertController != null)
             {
-                await _alertController.DismissViewControllerAsync(true);
+                // TODO: somehow wait for the completion of the dismiss
+                _alertController.DismissViewController(true, null);
                 _alertController = null;
             }
         }
