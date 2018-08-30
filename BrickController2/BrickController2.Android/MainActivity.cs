@@ -1,5 +1,4 @@
-﻿using Acr.UserDialogs;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
@@ -38,7 +37,6 @@ namespace BrickController2.Droid
             base.OnCreate(bundle);
 
             CrossCurrentActivity.Current.Init(this, bundle);
-            UserDialogs.Init(this);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
 

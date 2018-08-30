@@ -4,7 +4,7 @@
     {
         public InputDialogResult(bool isOk, string result)
         {
-            IsOk = IsOk;
+            IsOk = isOk;
             Result = result;
         }
 

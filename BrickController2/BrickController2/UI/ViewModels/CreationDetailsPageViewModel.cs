@@ -1,26 +1,26 @@
 ﻿using System.Threading.Tasks;
-using Acr.UserDialogs;
 using BrickController2.CreationManagement;
 using BrickController2.UI.Navigation;
 using System.Windows.Input;
 using Xamarin.Forms;
+using BrickController2.UI.Services;
 
 namespace BrickController2.UI.ViewModels
 {
     public class CreationDetailsPageViewModel : PageViewModelBase
     {
         private readonly ICreationManager _creationManager;
-        private readonly IUserDialogs _userDialogs;
+        private readonly IDialogService _dialogService;
 
         public CreationDetailsPageViewModel(
             INavigationService navigationService,
             ICreationManager creationManager,
-            IUserDialogs userDialogs,
+            IDialogService dialogService,
             NavigationParameters parameters)
             : base(navigationService)
         {
             _creationManager = creationManager;
-            _userDialogs = userDialogs;
+            _dialogService = dialogService;
 
             Creation = parameters.Get<Creation>("creation");
 
@@ -52,42 +52,27 @@ namespace BrickController2.UI.ViewModels
 
         private async Task RenameCreation()
         {
-            var promptConfig = new PromptConfig()
-                .SetText(Creation.Name)
-                .SetMessage("Rename the creation")
-                .SetMaxLength(32)
-                .SetOkText("Rename")
-                .SetCancelText("Cancel");
-
-            var result = await _userDialogs.PromptAsync(promptConfig);
-            if (result.Ok)
+            var result = await _dialogService.ShowInputDialogAsync("Rename", "Enter a new creation name", Creation.Name, "Creation name", "Rename", "Cancel");
+            if (result.IsOk)
             {
-                if (string.IsNullOrWhiteSpace(result.Text))
+                if (string.IsNullOrWhiteSpace(result.Result))
                 {
                     await DisplayAlertAsync("Warning", "Creation name can not be empty.", "Ok");
                     return;
                 }
 
-                var progressConfig = new ProgressDialogConfig()
-                    .SetIsDeterministic(false)
-                    .SetTitle("Renaming...");
-
-                using (_userDialogs.Progress(progressConfig))
+                using (_dialogService.ShowProgressDialog(false, "Renaming..."))
                 {
-                    await _creationManager.RenameCreationAsync(Creation, result.Text);
+                    await _creationManager.RenameCreationAsync(Creation, result.Result);
                 }
             }
         }
 
         private async Task DeleteCreation()
         {
-            if (await _userDialogs.ConfirmAsync("Are you sure to delete this creation?", "Question", "Yes", "No"))
+            if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this creation?", "Yes", "No"))
             {
-                var progressConfig = new ProgressDialogConfig()
-                    .SetIsDeterministic(false)
-                    .SetTitle("Deleting...");
-
-                using (_userDialogs.Progress(progressConfig))
+                using (_dialogService.ShowProgressDialog(false, "Deleting..."))
                 {
                     await _creationManager.DeleteCreationAsync(Creation);
                 }
@@ -98,23 +83,19 @@ namespace BrickController2.UI.ViewModels
 
         private async Task AddControllerProfile()
         {
-            var result = await _userDialogs.PromptAsync("New profile name", null, "Create", "Cancel", "Name", InputType.Default, null);
-            if (result.Ok)
+            var result = await _dialogService.ShowInputDialogAsync("Controller profile", "Enter a profile name", null, "Profile name", "Create", "Cancel");
+            if (result.IsOk)
             {
-                if (string.IsNullOrWhiteSpace(result.Text))
+                if (string.IsNullOrWhiteSpace(result.Result))
                 {
                     await DisplayAlertAsync("Warning", "Controller profile name can not be empty.", "Ok");
                     return;
                 }
 
-                var progressConfig = new ProgressDialogConfig()
-                    .SetIsDeterministic(false)
-                    .SetTitle("Creating...");
-
                 ControllerProfile controllerProfile;
-                using (_userDialogs.Progress(progressConfig))
+                using (_dialogService.ShowProgressDialog(false, "Creating..."))
                 {
-                    controllerProfile = await _creationManager.AddControllerProfileAsync(Creation, result.Text);
+                    controllerProfile = await _creationManager.AddControllerProfileAsync(Creation, result.Result);
                 }
 
                 await NavigationService.NavigateToAsync<ControllerProfileDetailsPageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile)));

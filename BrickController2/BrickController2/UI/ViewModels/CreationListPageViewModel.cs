@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Acr.UserDialogs;
 using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
 using BrickController2.UI.Navigation;
@@ -17,21 +16,18 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
-        private readonly IUserDialogs _userDialogs;
         private bool _isLoaded = false;
 
         public CreationListPageViewModel(
             INavigationService navigationService,
             ICreationManager creationManager,
             IDeviceManager deviceManager,
-            IDialogService dialogService,
-            IUserDialogs userDialogs)
+            IDialogService dialogService)
             : base(navigationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;
             _dialogService = dialogService;
-            _userDialogs = userDialogs;
 
             AddCreationCommand = new Command(async () => await AddCreation());
             CreationTappedCommand = new Command<Creation>(async creation => await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation))));
@@ -83,14 +79,11 @@ namespace BrickController2.UI.ViewModels
         {
             if (!_isLoaded)
             {
-                var progressDialogConfig = new ProgressDialogConfig()
-                    .SetTitle("Loading...")
-                    .SetIsDeterministic(false);
-
-                using (_userDialogs.Progress(progressDialogConfig))
+                using (_dialogService.ShowProgressDialog(false, "Loading..."))
                 {
                     await _creationManager.LoadCreationsAsync();
                     await _deviceManager.LoadDevicesAsync();
+                    await Task.Delay(5000);
                     _isLoaded = true;
                 }
             }
@@ -98,7 +91,7 @@ namespace BrickController2.UI.ViewModels
 
         private async Task AddCreation()
         {
-            var result = await _dialogService.ShowInputDialogAsync("Creation name", "Please enter a name", null, "Creation name", "Create", "Cancel");
+            var result = await _dialogService.ShowInputDialogAsync("Creation", "Enter a creation name", null, "Creation name", "Create", "Cancel");
             if (result.IsOk)
             {
                 if (string.IsNullOrWhiteSpace(result.Result))
@@ -107,12 +100,8 @@ namespace BrickController2.UI.ViewModels
                     return;
                 }
 
-                var progressConfig = new ProgressDialogConfig()
-                    .SetIsDeterministic(false)
-                    .SetTitle("Creating...");
-
                 Creation creation;
-                using (_userDialogs.Progress(progressConfig))
+                using (_dialogService.ShowProgressDialog(false, "Creating..."))
                 {
                     creation = await _creationManager.AddCreationAsync(result.Result);
                 }

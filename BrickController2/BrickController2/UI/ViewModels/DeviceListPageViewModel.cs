@@ -1,6 +1,6 @@
-﻿using Acr.UserDialogs;
-using BrickController2.DeviceManagement;
+﻿using BrickController2.DeviceManagement;
 using BrickController2.UI.Navigation;
+using BrickController2.UI.Services;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,18 +13,18 @@ namespace BrickController2.UI.ViewModels
     public class DeviceListPageViewModel : PageViewModelBase
     {
         private readonly IDeviceManager _deviceManager;
-        private readonly IUserDialogs _userDialogs;
+        private readonly IDialogService _dialogService;
 
         private CancellationTokenSource _scanTokenSource;
 
         public DeviceListPageViewModel(
             INavigationService navigationService,
             IDeviceManager deviceManager,
-            IUserDialogs userDialogs) 
+            IDialogService dialogService) 
             : base(navigationService)
         {
             _deviceManager = deviceManager;
-            _userDialogs = userDialogs;
+            _dialogService = dialogService;
 
             ScanCommand = new Command(async () => await Scan());
             DeviceTappedCommand = new Command<Device>(async device => await NavigationService.NavigateToAsync<DeviceDetailsPageViewModel>(new NavigationParameters(("device", device))));
@@ -44,19 +44,15 @@ namespace BrickController2.UI.ViewModels
         private async Task Scan()
         {
             _scanTokenSource = new CancellationTokenSource();
-            var progressConfig = new ProgressDialogConfig()
-                .SetTitle("Scanning...")
-                .SetIsDeterministic(true)
-                .SetCancel("Cancel", () => _scanTokenSource.Cancel());
 
             var percent = 0;
-            using (var progressDialog = _userDialogs.Progress(progressConfig))
+            using (var progress = _dialogService.ShowProgressDialog(true, "Scanning...", "Searching for device.", "Cancel", _scanTokenSource))
             {
                 var scanTask = _deviceManager.ScanAsync(_scanTokenSource.Token);
 
                 while (!_scanTokenSource.Token.IsCancellationRequested && percent <= 100)
                 {
-                    progressDialog.PercentComplete = percent;
+                    progress.Percent = percent;
                     await Task.Delay(100);
                     percent += 1;
                 }

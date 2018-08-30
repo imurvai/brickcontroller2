@@ -26,7 +26,7 @@ namespace BrickController2.Droid.UI.Services
             set => _progressDialog.SetMessage(value);
         }
 
-        public int Progress
+        public int Percent
         {
             get => _progressBar.Progress;
             set => _progressBar.Progress = Math.Min(_progressBar.Max, Math.Max(0, value));

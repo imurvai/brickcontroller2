@@ -22,6 +22,55 @@ namespace BrickController2.Droid.UI.Services
             _gameControllerService = gameControllerService;
         }
 
+        public Task ShowMessageBoxAsync(string title, string message, string buttonText)
+        {
+            var completionSource = new TaskCompletionSource<bool>();
+
+            AlertDialog dialog = null;
+            dialog = new AlertDialog.Builder(_context)
+                .SetTitle(title)
+                .SetMessage(message)
+                .SetPositiveButton(buttonText ?? "Ok", (sender, args) =>
+                {
+                    dialog.Dismiss();
+                    completionSource.SetResult(true);
+                })
+                .Create();
+
+            dialog.SetCancelable(false);
+            dialog.SetCanceledOnTouchOutside(false);
+            dialog.Show();
+
+            return completionSource.Task;
+        }
+
+        public Task<bool> ShowQuestionDialogAsync(string title, string message, string positiveButtonText, string negativeButtonText)
+        {
+            var completionSource = new TaskCompletionSource<bool>();
+
+            AlertDialog dialog = null;
+            dialog = new AlertDialog.Builder(_context)
+                .SetTitle(title)
+                .SetMessage(message)
+                .SetPositiveButton(positiveButtonText ?? "Ok", (sender, args) =>
+                {
+                    dialog.Dismiss();
+                    completionSource.SetResult(true);
+                })
+                .SetNegativeButton(negativeButtonText ?? "Cancel", (sender, args) =>
+                {
+                    dialog.Dismiss();
+                    completionSource.SetResult(false);
+                })
+                .Create();
+
+            dialog.SetCancelable(false);
+            dialog.SetCanceledOnTouchOutside(false);
+            dialog.Show();
+
+            return completionSource.Task;
+        }
+
         public Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText)
         {
             var completionSource = new TaskCompletionSource<InputDialogResult>();
@@ -53,6 +102,8 @@ namespace BrickController2.Droid.UI.Services
                 })
                 .Create();
 
+            dialog.SetCancelable(false);
+            dialog.SetCanceledOnTouchOutside(false);
             dialog.Show();
 
             valueEditText.RequestFocus();
@@ -61,15 +112,15 @@ namespace BrickController2.Droid.UI.Services
             return completionSource.Task;
         }
 
-        public IProgress ShowProgressDialog(string title, string message, string cancelButtonText, CancellationTokenSource tokenSource, int maxValue)
+        public IProgress ShowProgressDialog(bool isDeterministic, string title, string message, string cancelButtonText, CancellationTokenSource tokenSource)
         {
             var view = _context.LayoutInflater.Inflate(Resource.Layout.ProgressDialog, null);
             var linearLayout = view.FindViewById<LinearLayout>(Resource.Id.linearlayout);
 
-            var progressBar = new ProgressBar(_context, null, maxValue > 0 ? Android.Resource.Attribute.ProgressBarStyleHorizontal : Android.Resource.Attribute.ProgressBarStyle);
-            progressBar.Indeterminate = maxValue <= 0;
+            var progressBar = new ProgressBar(_context, null, isDeterministic ? Android.Resource.Attribute.ProgressBarStyleHorizontal : Android.Resource.Attribute.ProgressBarStyle);
+            progressBar.Indeterminate = !isDeterministic;
             progressBar.Progress = 0;
-            progressBar.Max = maxValue;
+            progressBar.Max = 100;
 
             linearLayout.AddView(progressBar);
 
@@ -82,8 +133,10 @@ namespace BrickController2.Droid.UI.Services
             {
                 dialogBuilder.SetNegativeButton(cancelButtonText ?? "Cancel", (sender, args) => tokenSource.Cancel());
             }
-                
+
             var dialog = dialogBuilder.Create();
+            dialog.SetCancelable(false);
+            dialog.SetCanceledOnTouchOutside(false);
             dialog.Show();
 
             return new ProgressImpl(dialog, progressBar);
@@ -105,7 +158,10 @@ namespace BrickController2.Droid.UI.Services
 
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
 
+            dialog.SetCancelable(false);
+            dialog.SetCanceledOnTouchOutside(false);
             dialog.Show();
+
             return completionSource.Task;
 
             void GameControllerEventHandler(object sender, GameControllerEventArgs args)

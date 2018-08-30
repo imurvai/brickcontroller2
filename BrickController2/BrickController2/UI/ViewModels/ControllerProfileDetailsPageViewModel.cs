@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
-using Acr.UserDialogs;
 using BrickController2.CreationManagement;
 using BrickController2.UI.Navigation;
+using BrickController2.UI.Services;
 using Xamarin.Forms;
 
 namespace BrickController2.UI.ViewModels
@@ -10,17 +10,17 @@ namespace BrickController2.UI.ViewModels
     public class ControllerProfileDetailsPageViewModel : PageViewModelBase
     {
         private readonly ICreationManager _creationManager;
-        private readonly IUserDialogs _userDialogs;
+        private readonly IDialogService _dialogService;
 
         public ControllerProfileDetailsPageViewModel(
             INavigationService navigationService,
             ICreationManager creationManager,
-            IUserDialogs userDialogs,
+            IDialogService dialogService,
             NavigationParameters parameters)
             : base(navigationService)
         {
             _creationManager = creationManager;
-            _userDialogs = userDialogs;
+            _dialogService = dialogService;
 
             ControllerProfile = parameters.Get<ControllerProfile>("controllerprofile");
 
@@ -52,42 +52,27 @@ namespace BrickController2.UI.ViewModels
 
         private async Task RenameControllerProfile()
         {
-            var promptConfig = new PromptConfig()
-                .SetText(ControllerProfile.Name)
-                .SetMessage("Rename the profile")
-                .SetMaxLength(32)
-                .SetOkText("Rename")
-                .SetCancelText("Cancel");
-
-            var result = await _userDialogs.PromptAsync(promptConfig);
-            if (result.Ok)
+            var result = await _dialogService.ShowInputDialogAsync("Rename", "Enter a new profile name", ControllerProfile.Name, "Profile name", "Rename", "Cancel");
+            if (result.IsOk)
             {
-                if (string.IsNullOrWhiteSpace(result.Text))
+                if (string.IsNullOrWhiteSpace(result.Result))
                 {
                     await DisplayAlertAsync("Warning", "Profile name can not be empty.", "Ok");
                     return;
                 }
 
-                var progressConfig = new ProgressDialogConfig()
-                    .SetIsDeterministic(false)
-                    .SetTitle("Renaming...");
-
-                using (_userDialogs.Progress(progressConfig))
+                using (_dialogService.ShowProgressDialog(false, "Renaming..."))
                 {
-                    await _creationManager.RenameControllerProfileAsync(ControllerProfile, result.Text);
+                    await _creationManager.RenameControllerProfileAsync(ControllerProfile, result.Result);
                 }
             }
         }
 
         private async Task DeleteControllerProfile()
         {
-            if (await _userDialogs.ConfirmAsync("Are you sure to delete this profile?", "Question", "Yes", "No"))
+            if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this profile?", "Yes", "No"))
             {
-                var progressConfig = new ProgressDialogConfig()
-                    .SetIsDeterministic(false)
-                    .SetTitle("Deleting...");
-
-                using (_userDialogs.Progress(progressConfig))
+                using (_dialogService.ShowProgressDialog(false, "Deleting..."))
                 {
                     await _creationManager.DeleteControllerProfileAsync(ControllerProfile);
                 }

@@ -6,6 +6,6 @@ namespace BrickController2.UI.Services
     {
         string Title { set; }
         string Message { set; }
-        int Progress { get; set; }
+        int Percent { get; set; }
     }
 }

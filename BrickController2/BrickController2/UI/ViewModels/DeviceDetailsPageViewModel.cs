@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
-using Acr.UserDialogs;
 using BrickController2.DeviceManagement;
 using BrickController2.UI.Navigation;
+using BrickController2.UI.Services;
 using Xamarin.Forms;
 using Device = BrickController2.DeviceManagement.Device;
 
@@ -14,7 +14,7 @@ namespace BrickController2.UI.ViewModels
         public DeviceDetailsPageViewModel(
             INavigationService navigationService,
             IDeviceManager deviceManager,
-            IUserDialogs userDialogs,
+            IDialogService dialogService,
             NavigationParameters parameters)
             : base(navigationService)
         {
@@ -23,29 +23,18 @@ namespace BrickController2.UI.ViewModels
 
             RenameDeviceCommand = new Command(async () =>
             {
-                var promptConfig = new PromptConfig()
-                    .SetText(Device.Name)
-                    .SetMessage("Rename the device")
-                    .SetMaxLength(32)
-                    .SetOkText("Rename")
-                    .SetCancelText("Cancel");
-
-                var result = await userDialogs.PromptAsync(promptConfig);
-                if (result.Ok)
+                var result = await dialogService.ShowInputDialogAsync("Rename", "Enter a new name for the device", Device.Name, "Device name", "Rename", "Cancel");
+                if (result.IsOk)
                 {
-                    if (string.IsNullOrWhiteSpace(result.Text))
+                    if (string.IsNullOrWhiteSpace(result.Result))
                     {
                         await DisplayAlertAsync("Warning", "Device name can not be empty.", "Ok");
                         return;
                     }
 
-                    var progressConfig = new ProgressDialogConfig()
-                        .SetIsDeterministic(false)
-                        .SetTitle("Renaming...");
-
-                    using (userDialogs.Progress(progressConfig))
+                    using (dialogService.ShowProgressDialog(false, "Renaming..."))
                     {
-                        await _deviceManager.RenameDeviceAsync(Device, result.Text);
+                        await _deviceManager.RenameDeviceAsync(Device, result.Result);
                     }
                 }
             });

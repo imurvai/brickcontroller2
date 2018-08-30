@@ -6,14 +6,12 @@ namespace BrickController2.iOS.UI.Services
     public class ProgressImpl : IProgress
     {
         private readonly UIProgressView _progressView;
-        private readonly int _maxValue;
         private UIAlertController _alertController;
 
-        public ProgressImpl(UIAlertController alertController, UIProgressView progressView, int maxValue)
+        public ProgressImpl(UIAlertController alertController, UIProgressView progressView)
         {
             _alertController = alertController;
             _progressView = progressView;
-            _maxValue = maxValue;
         }
 
         public string Title
@@ -26,22 +24,22 @@ namespace BrickController2.iOS.UI.Services
             set => _alertController.Message = value;
         }
 
-        public int Progress
+        public int Percent
         {
-            get => (int)(_progressView.Progress * _maxValue);
+            get => (int)(_progressView != null ? _progressView.Progress * 100 : 0);
             set
             {
-                if (_maxValue <= 0)
+                if (_progressView == null)
                 {
                     return;
                 }
 
-                if (_maxValue <= value)
+                if (value >= 100)
                 {
-                    _progressView.Progress = 1;
+                    _progressView.SetProgress(1F, true);
                 }
 
-                _progressView.Progress = (float)value / _maxValue;
+                _progressView.SetProgress((float)value / 100, true);
             }
         }
 
@@ -54,12 +52,4 @@ namespace BrickController2.iOS.UI.Services
             }
         }
     }
-
-    private class GameControllerDialogResult : IGameControllerEventDialogResult
-    {
-        public bool IsOk { get; set; }
-        public GameControllerEventType EventType { get; set; }
-        public string EventCode { get; set; }
-    }
-}
 }
