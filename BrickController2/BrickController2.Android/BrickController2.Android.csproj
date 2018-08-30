@@ -80,6 +80,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Services\DialogService.cs" />
     <Compile Include="UI\Services\DI\UIServicesModule.cs" />
+    <Compile Include="UI\Services\GameControllerEventDialog.cs" />
+    <Compile Include="UI\Services\GameControllerEventDialogResult.cs" />
+    <Compile Include="UI\Services\InputDialogResult.cs" />
+    <Compile Include="UI\Services\ProgressImpl.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -205,11 +209,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\InputDialog.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\layout\ControllerEventDialog.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

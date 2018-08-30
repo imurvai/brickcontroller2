@@ -117,13 +117,11 @@ namespace BrickController2.iOS.UI.Services
 
             public string Title
             {
-                get => _alertController.Title;
                 set => _alertController.Title = value;
             }
 
             public string Message
             {
-                get => _alertController.Message;
                 set => _alertController.Message = value;
             }
 
