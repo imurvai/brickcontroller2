@@ -98,14 +98,8 @@ namespace BrickController2.UI.ViewModels
 
         private async Task AddCreation()
         {
-
-            //using (_dialogService.ShowProgressDialogAsync("progress", "let's wait...", "kancel"))
-            //{
-            //    await Task.Delay(5);
-            //}
-
             var result = await _dialogService.ShowInputDialogAsync("Creation name", "Please enter a name", null, "Creation name", "Create", "Cancel");
-            if (result.IsPositive)
+            if (result.IsOk)
             {
                 if (string.IsNullOrWhiteSpace(result.Result))
                 {

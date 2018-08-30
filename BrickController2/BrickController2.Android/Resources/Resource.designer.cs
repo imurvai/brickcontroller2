@@ -3388,6 +3388,9 @@ namespace BrickController2.Droid
 			// aapt resource value: 0x7f090018
 			public const int line3 = 2131296280;
 			
+			// aapt resource value: 0x7f0900cb
+			public const int linearlayout = 2131296459;
+			
 			// aapt resource value: 0x7f09001d
 			public const int listMode = 2131296285;
 			
@@ -3534,9 +3537,6 @@ namespace BrickController2.Droid
 			
 			// aapt resource value: 0x7f090007
 			public const int progress_horizontal = 2131296263;
-			
-			// aapt resource value: 0x7f0900cb
-			public const int progressbar = 2131296459;
 			
 			// aapt resource value: 0x7f090075
 			public const int radio = 2131296373;

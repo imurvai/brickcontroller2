@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BrickController2.HardwareServices;
@@ -17,9 +16,9 @@ namespace BrickController2.iOS.UI.Services
             _gameControllerService = gameControllerService;
         }
 
-        public Task<IInputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText)
+        public Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText)
         {
-            var completionSource = new TaskCompletionSource<IInputDialogResult>();
+            var completionSource = new TaskCompletionSource<InputDialogResult>();
             var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
 
             alert.AddTextField(textField =>
@@ -30,12 +29,12 @@ namespace BrickController2.iOS.UI.Services
 
             alert.AddAction(UIAlertAction.Create(positiveButtonText ?? "Ok", UIAlertActionStyle.Default, action =>
             {
-                completionSource.SetResult(new InputDialogResult { IsPositive = true, Result = alert.TextFields.First().Text });
+                completionSource.SetResult(new InputDialogResult(true, alert.TextFields.First().Text));
             }));
 
             alert.AddAction(UIAlertAction.Create(negativeButtonText ?? "Cancel", UIAlertActionStyle.Cancel, action =>
             {
-                completionSource.SetResult(new InputDialogResult { IsPositive = false, Result = alert.TextFields.First().Text });
+                completionSource.SetResult(new InputDialogResult(false, alert.TextFields.First().Text));
             }));
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
@@ -43,7 +42,7 @@ namespace BrickController2.iOS.UI.Services
             return completionSource.Task;
         }
 
-        public IProgress ShowProgressDialogAsync(string title, string message, string cancelButtonText, CancellationTokenSource tokenSource, int minValue, int maxValue)
+        public IProgress ShowProgressDialog(string title, string message, string cancelButtonText, CancellationTokenSource tokenSource, int maxValue)
         {
             var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
 
@@ -60,12 +59,12 @@ namespace BrickController2.iOS.UI.Services
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
 
-            return new ProgressImpl(alert, progressView, minValue, maxValue);
+            return new ProgressImpl(alert, progressView, maxValue);
         }
 
-        public Task<IGameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
+        public Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
         {
-            var completionSource = new TaskCompletionSource<IGameControllerEventDialogResult>();
+            var completionSource = new TaskCompletionSource<GameControllerEventDialogResult>();
             var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
 
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
@@ -73,7 +72,7 @@ namespace BrickController2.iOS.UI.Services
             alert.AddAction(UIAlertAction.Create(cancelButtonText ?? "Cancel", UIAlertActionStyle.Cancel, action =>
             {
                 _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
-                completionSource.SetResult(new GameControllerDialogResult { IsOk = false, EventType = GameControllerEventType.Button, EventCode = null });
+                completionSource.SetResult(new GameControllerEventDialogResult(false, GameControllerEventType.Button, null));
             }));
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
@@ -90,80 +89,8 @@ namespace BrickController2.iOS.UI.Services
 
                 _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
                 await alert.DismissViewControllerAsync(true);
-                completionSource.SetResult(new GameControllerDialogResult { IsOk = true, EventType = controllerEvent.Key.EventType, EventCode = controllerEvent.Key.EventCode });
+                completionSource.SetResult(new GameControllerEventDialogResult(true, controllerEvent.Key.EventType, controllerEvent.Key.EventCode));
             }
-        }
-
-        private class InputDialogResult : IInputDialogResult
-        {
-            public bool IsPositive { get; set; }
-            public string Result { get; set; }
-        }
-
-        private class ProgressImpl : IProgress
-        {
-            private readonly UIProgressView _progressView;
-            private readonly int _minValue;
-            private readonly int _maxValue;
-            private UIAlertController _alertController;
-
-            public ProgressImpl(UIAlertController alertController, UIProgressView progressView, int minValue, int maxValue)
-            {
-                _alertController = alertController;
-                _progressView = progressView;
-                _minValue = minValue;
-                _maxValue = maxValue;
-            }
-
-            public string Title
-            {
-                set => _alertController.Title = value;
-            }
-
-            public string Message
-            {
-                set => _alertController.Message = value;
-            }
-
-            public int Progress
-            {
-                get => (int)(_minValue + _progressView.Progress * (_maxValue - _minValue));
-                set
-                {
-                    if (_minValue == _maxValue)
-                    {
-                        return;
-                    }
-
-                    if (value < _minValue)
-                    {
-                        _progressView.Progress = 0;
-                    }
-
-                    if (_maxValue <= value)
-                    {
-                        _progressView.Progress = 1;
-                    }
-
-                    _progressView.Progress = (float)value / (_maxValue - _minValue);
-                }
-            }
-
-            public async void Dispose()
-            {
-                if (_alertController != null)
-                {
-                    await _alertController.DismissViewControllerAsync(true);
-                    _alertController = null;
-                }
-            }
-        }
-
-        private class GameControllerDialogResult : IGameControllerEventDialogResult
-        {
-            public bool IsOk { get; set; }
-            public GameControllerEventType EventType { get; set; }
-            public string EventCode { get; set; }
         }
     }
 }

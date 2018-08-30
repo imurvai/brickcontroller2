@@ -5,10 +5,10 @@ namespace BrickController2.UI.Services
 {
     public interface IDialogService
     {
-        Task<IInputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText);
+        Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText);
 
-        IProgress ShowProgressDialogAsync(string title, string message, string cancelButtonText = null, CancellationTokenSource tokenSource = null, int minValue = 0, int maxValue = 0);
+        IProgress ShowProgressDialog(string title, string message = null, string cancelButtonText = null, CancellationTokenSource tokenSource = null, int maxValue = 0);
 
-        Task<IGameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText);
+        Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText);
     }
 }

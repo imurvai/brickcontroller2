@@ -81,8 +81,6 @@
     <Compile Include="UI\Services\DialogService.cs" />
     <Compile Include="UI\Services\DI\UIServicesModule.cs" />
     <Compile Include="UI\Services\GameControllerEventDialog.cs" />
-    <Compile Include="UI\Services\GameControllerEventDialogResult.cs" />
-    <Compile Include="UI\Services\InputDialogResult.cs" />
     <Compile Include="UI\Services\ProgressImpl.cs" />
   </ItemGroup>
   <ItemGroup>

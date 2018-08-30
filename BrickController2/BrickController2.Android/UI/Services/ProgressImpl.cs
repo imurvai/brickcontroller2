@@ -29,7 +29,7 @@ namespace BrickController2.Droid.UI.Services
         public int Progress
         {
             get => _progressBar.Progress;
-            set => _progressBar.Progress = Math.Min(_progressBar.Max, Math.Max(_progressBar.Min, value));
+            set => _progressBar.Progress = Math.Min(_progressBar.Max, Math.Max(0, value));
         }
 
         public void Dispose()

@@ -22,9 +22,9 @@ namespace BrickController2.Droid.UI.Services
             _gameControllerService = gameControllerService;
         }
 
-        public Task<IInputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText)
+        public Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText)
         {
-            var completionSource = new TaskCompletionSource<IInputDialogResult>();
+            var completionSource = new TaskCompletionSource<InputDialogResult>();
 
             var inputMethodManager = (InputMethodManager)_context.GetSystemService(Context.InputMethodService);
 
@@ -43,13 +43,13 @@ namespace BrickController2.Droid.UI.Services
                 {
                     inputMethodManager.HideSoftInputFromWindow(valueEditText.ApplicationWindowToken, 0);
                     dialog.Dismiss();
-                    completionSource.SetResult(new InputDialogResult { IsPositive = true, Result = valueEditText.Text });
+                    completionSource.SetResult(new InputDialogResult(true, valueEditText.Text));
                 })
                 .SetNegativeButton(negativeButtonText ?? "Cancel", (sender, args) =>
                 {
                     inputMethodManager.HideSoftInputFromWindow(valueEditText.ApplicationWindowToken, 0);
                     dialog.Dismiss();
-                    completionSource.SetResult(new InputDialogResult { IsPositive = false, Result = valueEditText.Text });
+                    completionSource.SetResult(new InputDialogResult(false, valueEditText.Text));
                 })
                 .Create();
 
@@ -61,15 +61,17 @@ namespace BrickController2.Droid.UI.Services
             return completionSource.Task;
         }
 
-        public IProgress ShowProgressDialogAsync(string title, string message, string cancelButtonText, CancellationTokenSource tokenSource, int minValue, int maxValue)
+        public IProgress ShowProgressDialog(string title, string message, string cancelButtonText, CancellationTokenSource tokenSource, int maxValue)
         {
             var view = _context.LayoutInflater.Inflate(Resource.Layout.ProgressDialog, null);
-            var progressBar = view.FindViewById<ProgressBar>(Resource.Id.progressbar);
+            var linearLayout = view.FindViewById<LinearLayout>(Resource.Id.linearlayout);
 
-            progressBar.Indeterminate = minValue == maxValue;
-            progressBar.Min = minValue;
+            var progressBar = new ProgressBar(_context, null, maxValue > 0 ? Android.Resource.Attribute.ProgressBarStyleHorizontal : Android.Resource.Attribute.ProgressBarStyle);
+            progressBar.Indeterminate = maxValue <= 0;
+            progressBar.Progress = 0;
             progressBar.Max = maxValue;
-            progressBar.Progress = minValue;
+
+            linearLayout.AddView(progressBar);
 
             var dialogBuilder = new AlertDialog.Builder(_context)
                 .SetTitle(title)
@@ -87,9 +89,9 @@ namespace BrickController2.Droid.UI.Services
             return new ProgressImpl(dialog, progressBar);
         }
 
-        public Task<IGameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
+        public Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
         {
-            var completionSource = new TaskCompletionSource<IGameControllerEventDialogResult>();
+            var completionSource = new TaskCompletionSource<GameControllerEventDialogResult>();
 
             var dialog = new GameControllerEventDialog(_context, _gameControllerService);
             dialog.SetTitle(title);
@@ -98,7 +100,7 @@ namespace BrickController2.Droid.UI.Services
             {
                 _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
                 dialog.Dismiss();
-                completionSource.SetResult(new GameControllerEventDialogResult { IsOk = false, EventType = GameControllerEventType.Button, EventCode = null });
+                completionSource.SetResult(new GameControllerEventDialogResult(false, GameControllerEventType.Button, null));
             });
 
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
@@ -116,7 +118,7 @@ namespace BrickController2.Droid.UI.Services
 
                 _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
                 dialog.Dismiss();
-                completionSource.SetResult(new GameControllerEventDialogResult { IsOk = true, EventType = controllerEvent.Key.EventType, EventCode = controllerEvent.Key.EventCode });
+                completionSource.SetResult(new GameControllerEventDialogResult(true, controllerEvent.Key.EventType, controllerEvent.Key.EventCode));
             }
         }
     }
