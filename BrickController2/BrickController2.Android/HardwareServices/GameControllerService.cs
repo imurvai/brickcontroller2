@@ -8,6 +8,8 @@ namespace BrickController2.Droid.HardwareServices
 {
     public class GameControllerService : IGameControllerService
     {
+        private readonly IDictionary<Axis, float> _lastAxisValues = new Dictionary<Axis, float>();
+
         public event EventHandler<GameControllerEventArgs> GameControllerEvent;
 
         public bool OnKeyDown([GeneratedEnum] Keycode keyCode, KeyEvent e)
@@ -40,12 +42,20 @@ namespace BrickController2.Droid.HardwareServices
                 foreach (Axis axisCode in Enum.GetValues(typeof(Axis)))
                 {
                     var axisValue = e.GetAxisValue(axisCode);
-
-                    if (Math.Abs(axisValue) < 0.1F)
+                    if (Math.Abs(axisValue) < 0.05F)
                     {
                         axisValue = 0.0F;
                     }
 
+                    if (_lastAxisValues.TryGetValue(axisCode, out float lastValue))
+                    {
+                        if (axisValue == lastValue)
+                        {
+                            continue;
+                        }
+                    }
+
+                    _lastAxisValues[axisCode] = axisValue;
                     events[(GameControllerEventType.Axis, axisCode.ToString())] = axisValue;
                 }
 

@@ -9,8 +9,10 @@ namespace BrickController2.CreationManagement
         private string _deviceId;
         private int _channel;
         private bool _isInvert;
-        private bool _isToggle;
-        private int _maxOutput;
+        private ControllerButtonType _buttonType;
+        private ControllerAxisCharacteristic _axisCharacteristic;
+        private int _maxOutputPercent;
+        private int _axisDeadZonePercent;
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -39,16 +41,28 @@ namespace BrickController2.CreationManagement
             set { _isInvert = value; RaisePropertyChanged(); }
         }
 
-        public bool IsToggle
+        public ControllerButtonType ButtonType
         {
-            get { return _isToggle; }
-            set { _isToggle = value; RaisePropertyChanged(); }
+            get { return _buttonType; }
+            set { _buttonType = value; RaisePropertyChanged(); }
         }
 
-        public int MaxOutput
+        public ControllerAxisCharacteristic AxisCharacteristic
         {
-            get { return _maxOutput; }
-            set { _maxOutput = value; RaisePropertyChanged(); }
+            get { return _axisCharacteristic; }
+            set { _axisCharacteristic = value; RaisePropertyChanged(); }
+        }
+
+        public int MaxOutputPercent
+        {
+            get { return _maxOutputPercent; }
+            set { _maxOutputPercent = value; RaisePropertyChanged(); }
+        }
+
+        public int AxisDeadZonePercent
+        {
+            get { return _axisDeadZonePercent; }
+            set { _axisDeadZonePercent = value; RaisePropertyChanged(); }
         }
     }
 }
