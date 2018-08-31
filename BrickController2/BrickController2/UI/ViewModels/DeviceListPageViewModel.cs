@@ -38,6 +38,7 @@ namespace BrickController2.UI.ViewModels
         public override void OnDisappearing()
         {
             _scanTokenSource?.Cancel();
+            _scanTokenSource?.Dispose();
             base.OnDisappearing();
         }
 
