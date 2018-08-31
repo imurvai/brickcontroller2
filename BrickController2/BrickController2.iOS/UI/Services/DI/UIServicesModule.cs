@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using BrickController2.UI.Services;
+using BrickController2.UI.Services.Dialog;
 
 namespace BrickController2.iOS.UI.Services.DI
 {

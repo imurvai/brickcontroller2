@@ -78,7 +78,7 @@
     <Compile Include="UI\Services\DialogService.cs" />
     <Compile Include="UI\Services\DI\UIServicesModule.cs" />
     <Compile Include="UI\Services\GameControllerEventDialog.cs" />
-    <Compile Include="UI\Services\ProgressImpl.cs" />
+    <Compile Include="UI\Services\ProgressDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

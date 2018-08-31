@@ -5,7 +5,7 @@ using BrickController2.UI.DI;
 using BrickController2.UI.ViewModels;
 using Xamarin.Forms;
 
-namespace BrickController2.UI.Navigation
+namespace BrickController2.UI.Services.Navigation
 {
     public class NavigationService : INavigationService
     {

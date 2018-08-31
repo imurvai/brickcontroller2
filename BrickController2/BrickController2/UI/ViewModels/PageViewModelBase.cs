@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using BrickController2.Helpers;
-using BrickController2.UI.Navigation;
+using BrickController2.UI.Services.Navigation;
 
 namespace BrickController2.UI.ViewModels
 {

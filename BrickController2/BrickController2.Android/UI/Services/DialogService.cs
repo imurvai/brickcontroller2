@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
@@ -7,7 +8,7 @@ using Android.Views.InputMethods;
 using Android.Widget;
 using BrickController2.Droid.HardwareServices;
 using BrickController2.HardwareServices;
-using BrickController2.UI.Services;
+using BrickController2.UI.Services.Dialog;
 
 namespace BrickController2.Droid.UI.Services
 {
@@ -112,7 +113,7 @@ namespace BrickController2.Droid.UI.Services
             return completionSource.Task;
         }
 
-        public IProgress ShowProgressDialog(bool isDeterministic, string title, string message, string cancelButtonText, CancellationTokenSource tokenSource)
+        public async Task ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText, CancellationTokenSource tokenSource)
         {
             var view = _context.LayoutInflater.Inflate(Resource.Layout.ProgressDialog, null);
             var linearLayout = view.FindViewById<LinearLayout>(Resource.Id.linearlayout);
@@ -139,7 +140,16 @@ namespace BrickController2.Droid.UI.Services
             dialog.SetCanceledOnTouchOutside(false);
             dialog.Show();
 
-            return new ProgressImpl(dialog, progressBar);
+            try
+            {
+                var progressDialog = new ProgressDialog(dialog, progressBar);
+                var cancelationToken = tokenSource?.Token ?? CancellationToken.None;
+                await action(progressDialog, cancelationToken);
+            }
+            finally
+            {
+                dialog.Dismiss();
+            }
         }
 
         public Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)

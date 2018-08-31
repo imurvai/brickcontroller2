@@ -1,4 +1,4 @@
-﻿namespace BrickController2.UI.Services
+﻿namespace BrickController2.UI.Services.Dialog
 {
     public class InputDialogResult
     {

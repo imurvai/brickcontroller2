@@ -110,7 +110,7 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="UI\Services\DialogService.cs" />
     <Compile Include="UI\Services\DI\UIServicesModule.cs" />
-    <Compile Include="UI\Services\ProgressImpl.cs" />
+    <Compile Include="UI\Services\ProgressDialog.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />

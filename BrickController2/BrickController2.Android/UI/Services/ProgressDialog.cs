@@ -1,16 +1,16 @@
 ﻿using System;
 using Android.App;
 using Android.Widget;
-using BrickController2.UI.Services;
+using BrickController2.UI.Services.Dialog;
 
 namespace BrickController2.Droid.UI.Services
 {
-    public class ProgressImpl : IProgress
+    public class ProgressDialog : IProgressDialog
     {
         private readonly ProgressBar _progressBar;
-        private AlertDialog _progressDialog;
+        private readonly AlertDialog _progressDialog;
 
-        public ProgressImpl(AlertDialog progressDialog, ProgressBar progressBar)
+        public ProgressDialog(AlertDialog progressDialog, ProgressBar progressBar)
         {
             _progressDialog = progressDialog;
             _progressBar = progressBar;
@@ -30,15 +30,6 @@ namespace BrickController2.Droid.UI.Services
         {
             get => _progressBar.Progress;
             set => _progressBar.Progress = Math.Min(_progressBar.Max, Math.Max(0, value));
-        }
-
-        public void Dispose()
-        {
-            if (_progressDialog != null)
-            {
-                _progressDialog.Dismiss();
-                _progressDialog = null;
-            }
         }
     }
 }

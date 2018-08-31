@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
-using BrickController2.UI.Navigation;
-using BrickController2.UI.Services;
+using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Services.Dialog;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Xamarin.Forms;
@@ -16,7 +16,7 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
-        private bool _isLoaded = false;
+        private bool _isLoaded;
 
         public CreationListPageViewModel(
             INavigationService navigationService,
@@ -79,13 +79,15 @@ namespace BrickController2.UI.ViewModels
         {
             if (!_isLoaded)
             {
-                using (_dialogService.ShowProgressDialog(false, "Loading..."))
-                {
-                    await _creationManager.LoadCreationsAsync();
-                    await _deviceManager.LoadDevicesAsync();
-                    await Task.Delay(5000);
-                    _isLoaded = true;
-                }
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) =>
+                    {
+                        await _creationManager.LoadCreationsAsync();
+                        await _deviceManager.LoadDevicesAsync();
+                        _isLoaded = true;
+                    },
+                    "Loading...");
             }
         }
 
@@ -100,11 +102,11 @@ namespace BrickController2.UI.ViewModels
                     return;
                 }
 
-                Creation creation;
-                using (_dialogService.ShowProgressDialog(false, "Creating..."))
-                {
-                    creation = await _creationManager.AddCreationAsync(result.Result);
-                }
+                Creation creation = null;
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => creation = await _creationManager.AddCreationAsync(result.Result),
+                    "Creating...");
 
                 await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation)));
             }

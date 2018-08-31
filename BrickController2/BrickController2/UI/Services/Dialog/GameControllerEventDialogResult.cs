@@ -1,6 +1,6 @@
 ﻿using BrickController2.HardwareServices;
 
-namespace BrickController2.UI.Services
+namespace BrickController2.UI.Services.Dialog
 {
     public class GameControllerEventDialogResult
     {

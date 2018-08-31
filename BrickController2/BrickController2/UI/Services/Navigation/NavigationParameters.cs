@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BrickController2.UI.Navigation
+namespace BrickController2.UI.Services.Navigation
 {
     public class NavigationParameters
     {

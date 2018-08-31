@@ -1,7 +1,7 @@
 ﻿using BrickController2.UI.ViewModels;
 using System.Threading.Tasks;
 
-namespace BrickController2.UI.Navigation
+namespace BrickController2.UI.Services.Navigation
 {
     public interface INavigationService
     {

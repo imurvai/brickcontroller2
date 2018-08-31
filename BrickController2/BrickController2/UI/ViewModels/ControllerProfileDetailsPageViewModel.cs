@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
 using BrickController2.CreationManagement;
-using BrickController2.UI.Navigation;
-using BrickController2.UI.Services;
+using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Services.Dialog;
 using Xamarin.Forms;
 
 namespace BrickController2.UI.ViewModels
@@ -61,10 +61,10 @@ namespace BrickController2.UI.ViewModels
                     return;
                 }
 
-                using (_dialogService.ShowProgressDialog(false, "Renaming..."))
-                {
-                    await _creationManager.RenameControllerProfileAsync(ControllerProfile, result.Result);
-                }
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => await _creationManager.RenameControllerProfileAsync(ControllerProfile, result.Result),
+                    "Renaming...");
             }
         }
 
@@ -72,10 +72,10 @@ namespace BrickController2.UI.ViewModels
         {
             if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this profile?", "Yes", "No"))
             {
-                using (_dialogService.ShowProgressDialog(false, "Deleting..."))
-                {
-                    await _creationManager.DeleteControllerProfileAsync(ControllerProfile);
-                }
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => await _creationManager.DeleteControllerProfileAsync(ControllerProfile),
+                    "Deleting...");
 
                 await NavigationService.NavigateBackAsync();
             }

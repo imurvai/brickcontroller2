@@ -1,14 +1,14 @@
-﻿using BrickController2.UI.Services;
+﻿using BrickController2.UI.Services.Dialog;
 using UIKit;
 
 namespace BrickController2.iOS.UI.Services
 {
-    public class ProgressImpl : IProgress
+    public class ProgressDialog : IProgressDialog
     {
         private readonly UIProgressView _progressView;
-        private UIAlertController _alertController;
+        private readonly UIAlertController _alertController;
 
-        public ProgressImpl(UIAlertController alertController, UIProgressView progressView)
+        public ProgressDialog(UIAlertController alertController, UIProgressView progressView)
         {
             _alertController = alertController;
             _progressView = progressView;
@@ -26,7 +26,7 @@ namespace BrickController2.iOS.UI.Services
 
         public int Percent
         {
-            get => (int)(_progressView != null ? _progressView.Progress * 100 : 0);
+            get => (int)(_progressView?.Progress * 100 ?? 0);
             set
             {
                 if (_progressView == null)
@@ -40,16 +40,6 @@ namespace BrickController2.iOS.UI.Services
                 }
 
                 _progressView.SetProgress((float)value / 100, true);
-            }
-        }
-
-        public void Dispose()
-        {
-            if (_alertController != null)
-            {
-                // TODO: somehow wait for the completion of the dismiss
-                _alertController.DismissViewController(true, null);
-                _alertController = null;
             }
         }
     }

@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace BrickController2.UI.Services
+﻿namespace BrickController2.UI.Services.Dialog
 {
-    public interface IProgress : IDisposable
+    public interface IProgressDialog
     {
         string Title { set; }
         string Message { set; }

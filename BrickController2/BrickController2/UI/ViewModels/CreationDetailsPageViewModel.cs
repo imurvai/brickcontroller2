@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using BrickController2.CreationManagement;
-using BrickController2.UI.Navigation;
+using BrickController2.UI.Services.Navigation;
 using System.Windows.Input;
 using Xamarin.Forms;
-using BrickController2.UI.Services;
+using BrickController2.UI.Services.Dialog;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -61,10 +61,10 @@ namespace BrickController2.UI.ViewModels
                     return;
                 }
 
-                using (_dialogService.ShowProgressDialog(false, "Renaming..."))
-                {
-                    await _creationManager.RenameCreationAsync(Creation, result.Result);
-                }
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => await _creationManager.RenameCreationAsync(Creation, result.Result),
+                    "Renaming...");
             }
         }
 
@@ -72,10 +72,10 @@ namespace BrickController2.UI.ViewModels
         {
             if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this creation?", "Yes", "No"))
             {
-                using (_dialogService.ShowProgressDialog(false, "Deleting..."))
-                {
-                    await _creationManager.DeleteCreationAsync(Creation);
-                }
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => await _creationManager.DeleteCreationAsync(Creation),
+                    "Deleting...");
 
                 await NavigationService.NavigateBackAsync();
             }
@@ -92,11 +92,11 @@ namespace BrickController2.UI.ViewModels
                     return;
                 }
 
-                ControllerProfile controllerProfile;
-                using (_dialogService.ShowProgressDialog(false, "Creating..."))
-                {
-                    controllerProfile = await _creationManager.AddControllerProfileAsync(Creation, result.Result);
-                }
+                ControllerProfile controllerProfile = null;
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => controllerProfile = await _creationManager.AddControllerProfileAsync(Creation, result.Result),
+                    "Creating...");
 
                 await NavigationService.NavigateToAsync<ControllerProfileDetailsPageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile)));
             }

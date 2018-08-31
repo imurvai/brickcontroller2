@@ -1,4 +1,4 @@
-﻿using BrickController2.UI.Navigation;
+﻿using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.ViewModels;
 using System;
 

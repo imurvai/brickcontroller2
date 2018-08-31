@@ -1,8 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BrickController2.HardwareServices;
-using BrickController2.UI.Services;
+using BrickController2.UI.Services.Dialog;
 using CoreGraphics;
 using UIKit;
 
@@ -78,7 +79,7 @@ namespace BrickController2.iOS.UI.Services
             return completionSource.Task;
         }
 
-        public IProgress ShowProgressDialog(bool isDeterministic, string title, string message, string cancelButtonText, CancellationTokenSource tokenSource)
+        public async Task ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText, CancellationTokenSource tokenSource)
         {
             // TODO: make the alert view bigger somehow
             var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
@@ -101,7 +102,7 @@ namespace BrickController2.iOS.UI.Services
 
             if (tokenSource != null)
             {
-                alert.AddAction(UIAlertAction.Create(cancelButtonText ?? "Cancel", UIAlertActionStyle.Cancel, action =>
+                alert.AddAction(UIAlertAction.Create(cancelButtonText ?? "Cancel", UIAlertActionStyle.Cancel, _ =>
                 {
                     tokenSource.Cancel();
                 }));
@@ -109,7 +110,16 @@ namespace BrickController2.iOS.UI.Services
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
 
-            return new ProgressImpl(alert, progressView);
+            try
+            {
+                var progressDialog = new ProgressDialog(alert, progressView);
+                var cancelationToken = tokenSource?.Token ?? CancellationToken.None;
+                await action(progressDialog, cancelationToken);
+            }
+            finally
+            {
+                await alert.DismissViewControllerAsync(true);
+            }
         }
 
         public Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
