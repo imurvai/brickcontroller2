@@ -7,21 +7,24 @@ using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
-    public class DeviceManager : IDeviceManager
+    internal class DeviceManager : IDeviceManager
     {
         private readonly IBluetoothDeviceManager _bluetoothDeviceManager;
         private readonly IInfraredDeviceManager _infraredDeviceManager;
         private readonly IDeviceRepository _deviceRepository;
+        private readonly DeviceFactory _deviceFactory;
         private readonly AsyncLock _asyncLock = new AsyncLock();
 
         public DeviceManager(
             IBluetoothDeviceManager bluetoothDeviceManager,
             IInfraredDeviceManager infraredDeviceManager,
-            IDeviceRepository deviceRepository)
+            IDeviceRepository deviceRepository,
+            DeviceFactory deviceFactory)
         {
             _bluetoothDeviceManager = bluetoothDeviceManager;
             _infraredDeviceManager = infraredDeviceManager;
             _deviceRepository = deviceRepository;
+            _deviceFactory = deviceFactory;
         }
 
         public ObservableCollection<Device> Devices { get; } = new ObservableCollection<Device>();
@@ -35,7 +38,7 @@ namespace BrickController2.DeviceManagement
                 var deviceDTOs = await _deviceRepository.GetDevicesAsync();
                 foreach (var deviceDTO in deviceDTOs)
                 {
-                    var device = CreateDevice(deviceDTO.DeviceType, deviceDTO.Name, deviceDTO.Address, deviceDTO.DeviceSpecificData);
+                    var device = _deviceFactory(deviceDTO.DeviceType, deviceDTO.Name, deviceDTO.Address);
                     if (device != null)
                     {
                         Devices.Add(device);
@@ -61,10 +64,10 @@ namespace BrickController2.DeviceManagement
                     return;
                 }
 
-                var device = CreateDevice(deviceType, deviceName, deviceAddress, null);
+                var device = _deviceFactory(deviceType, deviceName, deviceAddress);
                 if (device != null)
                 {
-                    await _deviceRepository.InsertDeviceAsync(device.DeviceType, device.Name, device.Address, device.DeviceSpecificData);
+                    await _deviceRepository.InsertDeviceAsync(device.DeviceType, device.Name, device.Address);
                     Devices.Add(device);
                 }
             }
@@ -95,23 +98,7 @@ namespace BrickController2.DeviceManagement
             using (await _asyncLock.LockAsync())
             {
                 await _deviceRepository.DeleteDeviceAsync(device.DeviceType, device.Address);
-            }
-        }
-
-        private Device CreateDevice(DeviceType deviceType, string deviceName, string deviceAddress, string deviceSpecificData)
-        {
-            switch (deviceType)
-            {
-                case DeviceType.BuWizz:
-                case DeviceType.BuWizz2:
-                case DeviceType.SBrick:
-                    return _bluetoothDeviceManager.CreateDevice(deviceType, deviceName, deviceAddress, deviceSpecificData);
-
-                case DeviceType.Infrared:
-                    return _infraredDeviceManager.CreateDevice(deviceType, deviceName, deviceAddress, deviceSpecificData);
-
-                default:
-                    return null;
+                Devices.Remove(device);
             }
         }
     }

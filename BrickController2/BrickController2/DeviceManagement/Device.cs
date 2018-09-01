@@ -1,4 +1,5 @@
 ﻿using BrickController2.Helpers;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,28 +8,38 @@ namespace BrickController2.DeviceManagement
     public abstract class Device : NotifyPropertyChangedSource
     {
         private string _name;
+        protected DeviceState _deviceState;
+        protected int _output;
+        protected int _outputLevel;
 
         protected Device(string name, string address)
         {
-            Name = name;
+            _name = name;
             Address = address;
+            _deviceState = DeviceState.Disconnected;
+            _output = 0;
+            _outputLevel = DefaultOutputLevel;
         }
 
+        public abstract DeviceType DeviceType { get; }
+        public string Address { get; }
         public string Id => $"{DeviceType}#{Address}";
 
         public string Name
         {
-            get => _name;
+            get { return _name; }
             set { _name = value; RaisePropertyChanged(); }
         }
 
-        public string Address { get; }
-        public string DeviceSpecificData => string.Empty;
+        public DeviceState DeviceState => _deviceState;
+        public int Output => _output;
+        public int OutputLevel => _outputLevel;
 
-        public abstract DeviceType DeviceType { get; }
+        public event EventHandler<DeviceStateChangedEventArgs> DeviceStateChanged;
+
         public abstract int NumberOfChannels { get; }
-        public abstract int NumberOfOutputLevels { get; }
-        public abstract int DefaultOutputLevel { get; }
+        public virtual int NumberOfOutputLevels => 1;
+        public virtual int DefaultOutputLevel => 1;
 
         public abstract Task ConnectAsync(CancellationToken token);
         public abstract Task DisconnectAsync(CancellationToken token);

@@ -1,6 +1,5 @@
 ﻿using BrickController2.HardwareServices;
 using BrickController2.Helpers;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;

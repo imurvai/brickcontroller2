@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
-    public class BuWizzDevice : BluetoothDevice
+    internal class BuWizzDevice : BluetoothDevice
     {
         public BuWizzDevice(string name, string address)
             : base(name, address)

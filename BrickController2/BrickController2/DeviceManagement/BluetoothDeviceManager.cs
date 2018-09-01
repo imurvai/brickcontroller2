@@ -9,7 +9,7 @@ using Plugin.BLE.Abstractions.EventArgs;
 
 namespace BrickController2.DeviceManagement
 {
-    public class BluetoothDeviceManager : IBluetoothDeviceManager
+    internal class BluetoothDeviceManager : IBluetoothDeviceManager
     {
         private readonly IBluetoothLE _ble;
         private readonly IAdapter _adapter;
@@ -47,30 +47,12 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public Device CreateDevice(DeviceType deviceType, string name, string address, string deviceSpecificData)
-        {
-            switch (deviceType)
-            {
-                case DeviceType.BuWizz:
-                    return new BuWizzDevice(name, address);
-
-                case DeviceType.BuWizz2:
-                    return new BuWizz2Device(name, address);
-
-                case DeviceType.SBrick:
-                    return new SBrickDevice(name, address);
-
-                default:
-                    throw new InvalidOperationException($"Invalid device type: {deviceType}.");
-            }
-        }
-
-        private bool DeviceFilter(IDevice device)
+        private bool DeviceFilter(Plugin.BLE.Abstractions.Contracts.IDevice device)
         {
             return GetDeviceType(device) != DeviceType.Unknown;
         }
 
-        private DeviceType GetDeviceType(IDevice device)
+        private DeviceType GetDeviceType(Plugin.BLE.Abstractions.Contracts.IDevice device)
         {
             var manufacturerData = device.AdvertisementRecords.FirstOrDefault(ar => ar.Type == AdvertisementRecordType.ManufacturerSpecificData);
 

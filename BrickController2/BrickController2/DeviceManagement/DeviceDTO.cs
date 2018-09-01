@@ -3,7 +3,7 @@
 namespace BrickController2.DeviceManagement
 {
     [Table("Device")]
-    public class DeviceDTO
+    internal class DeviceDTO
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -11,6 +11,5 @@ namespace BrickController2.DeviceManagement
         public DeviceType DeviceType { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
-        public string DeviceSpecificData { get; set; }
     }
 }

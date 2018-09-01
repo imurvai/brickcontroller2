@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
-    public class DeviceRepository : IDeviceRepository
+    internal class DeviceRepository : IDeviceRepository
     {
         private const string CreationDatabaseName = "devices.db3";
         private readonly SQLiteAsyncConnection _databaseConnection;
@@ -38,11 +38,11 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task InsertDeviceAsync(DeviceType type, string name, string address, string deviceSpecificData)
+        public async Task InsertDeviceAsync(DeviceType type, string name, string address)
         {
             using (await _lock.LockAsync())
             {
-                var device = new DeviceDTO { DeviceType = type, Address = address, Name = name, DeviceSpecificData = deviceSpecificData };
+                var device = new DeviceDTO { DeviceType = type, Address = address, Name = name };
                 await InitAsync();
                 await _databaseConnection.InsertAsync(device);
             }

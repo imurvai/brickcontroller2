@@ -4,12 +4,47 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:templateSelectors="clr-namespace:BrickController2.UI.DataTemplateSelectors"
     x:Class="BrickController2.UI.Pages.DeviceDetailsPage"
     Title="Device details">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
+            <!-- Converters -->
             <converters:DeviceTypeToSmallImageConverter x:Key="DeviceTypeToSmallImage"/>
+            
+            <!-- Data templates -->
+            <DataTemplate x:Key="EptyOutputLevelSelectorTemplate">
+                <ViewCell>
+                </ViewCell>
+            </DataTemplate>
+            
+            <DataTemplate x:Key="BuWizzOutputLevelSelectorTemplate">
+                <Picker SelectedIndex="{Binding SelectedOutputLevelIndex}">
+                    <Picker.Items>
+                        <x:String>Low</x:String>
+                        <x:String>Normal</x:String>
+                        <x:String>High</x:String>
+                    </Picker.Items>
+                </Picker>     
+            </DataTemplate>
+            
+            <DataTemplate x:Key="BuWizz2OutputLevelSelectorTemplate">
+                <Picker SelectedIndex="{Binding SelectedOutputLevelIndex}">
+                    <Picker.Items>
+                        <x:String>Low</x:String>
+                        <x:String>Normal</x:String>
+                        <x:String>High</x:String>
+                        <x:String>Ludicrous</x:String>
+                    </Picker.Items>
+                </Picker>
+            </DataTemplate>
+            
+            <templateSelectors:DeviceOutputLevelDataTemplateSelector
+                x:Key="DeviceOutputLevelDataTemplateSelector"
+                EmptyOutputLevelSelectorTemplate="{StaticResource EptyOutputLevelSelectorTemplate}"
+                BuWizzOutputLevelSelectorTemplate="{StaticResource BuWizzOutputLevelSelectorTemplate}"
+                BuWizz2OutputLevelSelectorTemplate="{StaticResource BuWizz2OutputLevelSelectorTemplate}"/>
         </ResourceDictionary>
     </local:PageBase.Resources>
 
@@ -19,23 +54,55 @@
 
     <local:PageBase.Content>
         <Grid Padding="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <Image Grid.Column="0" Source="{Binding Device.DeviceType, Converter={StaticResource DeviceTypeToSmallImage}}" WidthRequest="50" HeightRequest="50"/>
+            <!-- Device info -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Source="{Binding Device.DeviceType, Converter={StaticResource DeviceTypeToSmallImage}}" WidthRequest="50" HeightRequest="50" VerticalOptions="Start"/>
+
+                <StackLayout Grid.Column="1" Orientation="Vertical">
+                    <Label Text="Device name" FontSize="Small"/>
+                    <Label Text="{Binding Device.Name}" FontSize="Medium" FontAttributes="Bold"/>
+
+                    <Label Text="Device type" FontSize="Small"/>
+                    <Label Text="{Binding Device.DeviceType}" FontSize="Medium" FontAttributes="Bold"/>
+
+                    <Label Text="Address" FontSize="Small"/>
+                    <Label Text="{Binding Device.Address}" FontSize="Medium" FontAttributes="Bold"/>
+                </StackLayout>
+            </Grid>
+
+            <!-- Outputs -->
+            <ListView Grid.Row="1" ItemsSource="{Binding Outputs}" HasUnevenRows="True" SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Channel}"/>
+                                <Slider Value="{Binding Output}" Minimum="-255" Maximum="255"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Connect -->
+            <Frame Grid.Row="2" BackgroundColor="Green" HorizontalOptions="Fill" HeightRequest="40" WidthRequest="300" CornerRadius="10" Padding="0" Margin="0, 8, 0, 8">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ConnectCommand}"/>
+                </Frame.GestureRecognizers>
+                <Label Text="Connect" TextColor="White" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Frame>
             
-            <StackLayout Grid.Column="1" Orientation="Vertical">
-                <Label Text="Device name" FontSize="Medium"/>
-                <Label Text="{Binding Device.Name}" FontSize="Large" FontAttributes="Bold"/>
-                
-                <Label Text="Device type" FontSize="Medium"/>
-                <Label Text="{Binding Device.DeviceType}" FontSize="Large" FontAttributes="Bold"/>
-                
-                <Label Text="Address" FontSize="Medium"/>
-                <Label Text="{Binding Device.Address}" FontSize="Large" FontAttributes="Bold"/>
-            </StackLayout>
         </Grid>
     </local:PageBase.Content>
 </local:PageBase>

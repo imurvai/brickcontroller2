@@ -5,7 +5,7 @@ using BrickController2.HardwareServices;
 
 namespace BrickController2.DeviceManagement
 {
-    public class InfraredDeviceManager : IInfraredDeviceManager
+    internal class InfraredDeviceManager : IInfraredDeviceManager
     {
         private const int IR_FREQUENCY = 38000;
         private readonly IInfraredService _infraredService;
@@ -24,16 +24,6 @@ namespace BrickController2.DeviceManagement
                 await deviceFoundCallback(DeviceType.Infrared, "PF Infra red 3", "Infrared-3");
                 await deviceFoundCallback(DeviceType.Infrared, "PF Infra red 4", "Infrared-4");
             }
-        }
-
-        public Device CreateDevice(DeviceType deviceType, string name, string address, string deviceSpecificData)
-        {
-            if (deviceType != DeviceType.Infrared)
-            {
-                throw new InvalidOperationException($"Invalid device type: {deviceType}");
-            }
-
-            return new InfraredDevice(name, address);
         }
     }
 }

@@ -39,6 +39,8 @@ namespace BrickController2.UI.ViewModels
         {
             _scanTokenSource?.Cancel();
             _scanTokenSource?.Dispose();
+            _scanTokenSource = null;
+
             base.OnDisappearing();
         }
 
@@ -67,6 +69,9 @@ namespace BrickController2.UI.ViewModels
                 "Searching for devices.",
                 "Cancel",
                 _scanTokenSource);
+
+            _scanTokenSource.Dispose();
+            _scanTokenSource = null;
         }
     }
 }

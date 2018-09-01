@@ -16,6 +16,17 @@ namespace BrickController2.DeviceManagement.DI
 
             builder.RegisterType<DeviceRepository>().As<IDeviceRepository>().SingleInstance();
             builder.RegisterType<DeviceManager>().As<IDeviceManager>().SingleInstance();
+
+            builder.RegisterType<SBrickDevice>().Keyed<Device>(DeviceType.SBrick);
+            builder.RegisterType<BuWizzDevice>().Keyed<Device>(DeviceType.BuWizz);
+            builder.RegisterType<BuWizz2Device>().Keyed<Device>(DeviceType.BuWizz2);
+            builder.RegisterType<InfraredDevice>().Keyed<Device>(DeviceType.Infrared);
+
+            builder.Register<DeviceFactory>(c =>
+            {
+                IComponentContext ctx = c.Resolve<IComponentContext>();
+                return (deviceType, name, address) => ctx.ResolveKeyed<Device>(deviceType, new NamedParameter("name", name), new NamedParameter("address", address));
+            });
         }
     }
 }

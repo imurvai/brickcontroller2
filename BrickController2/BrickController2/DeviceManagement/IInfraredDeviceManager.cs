@@ -1,6 +1,6 @@
 ﻿namespace BrickController2.DeviceManagement
 {
-    public interface IInfraredDeviceManager : ISpecificDeviceManager
+    internal interface IInfraredDeviceManager : ISpecificDeviceManager
     {
     }
 }
