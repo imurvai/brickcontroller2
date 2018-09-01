@@ -132,7 +132,7 @@ namespace BrickController2.CreationManagement
             }
         }
 
-        public async Task<ControllerAction> AddOrUpdateControllerActionAsync(ControllerEvent controllerEvent, string deviceId, int channel, bool isInvert, bool isToggle, int maxOutput)
+        public async Task<ControllerAction> AddOrUpdateControllerActionAsync(ControllerEvent controllerEvent, string deviceId, int channel, bool isInvert, ControllerButtonType buttonType, ControllerAxisCharacteristic axisCharacteristic, int maxOutputPercent, int axisDeadZonePercent)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -140,13 +140,24 @@ namespace BrickController2.CreationManagement
                 if (controllerAction != null)
                 {
                     controllerAction.IsInvert = isInvert;
-                    controllerAction.IsToggle = isToggle;
-                    controllerAction.MaxOutput = maxOutput;
+                    controllerAction.ButtonType = buttonType;
+                    controllerAction.AxisCharacteristic = axisCharacteristic;
+                    controllerAction.MaxOutputPercent = maxOutputPercent;
+                    controllerAction.AxisDeadZonePercent = axisDeadZonePercent;
                     await _creationRepository.UpdateControllerActionAsync(controllerAction);
                 }
                 else
                 {
-                    controllerAction = new ControllerAction { DeviceId = deviceId, Channel = channel, IsInvert = isInvert, IsToggle = isToggle, MaxOutput = maxOutput };
+                    controllerAction = new ControllerAction
+                    {
+                        DeviceId = deviceId,
+                        Channel = channel,
+                        IsInvert = isInvert,
+                        ButtonType = buttonType,
+                        AxisCharacteristic = axisCharacteristic,
+                        MaxOutputPercent = maxOutputPercent,
+                        AxisDeadZonePercent = axisDeadZonePercent
+                    };
                     await _creationRepository.InsertControllerActionAsync(controllerEvent, controllerAction);
                 }
 
@@ -164,7 +175,7 @@ namespace BrickController2.CreationManagement
             }
         }
 
-        public async Task UpdateControllerActionAsync(ControllerAction controllerAction, string deviceId, int channel, bool isInvert, bool isToggle, int maxOutput)
+        public async Task UpdateControllerActionAsync(ControllerAction controllerAction, string deviceId, int channel, bool isInvert, ControllerButtonType buttonType, ControllerAxisCharacteristic axisCharacteristic, int maxOutputPercent, int axisDeadZonePercent)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -179,8 +190,10 @@ namespace BrickController2.CreationManagement
                 controllerAction.DeviceId = deviceId;
                 controllerAction.Channel = channel;
                 controllerAction.IsInvert = isInvert;
-                controllerAction.IsToggle = isToggle;
-                controllerAction.MaxOutput = maxOutput;
+                controllerAction.ButtonType = buttonType;
+                controllerAction.AxisCharacteristic = axisCharacteristic;
+                controllerAction.MaxOutputPercent = maxOutputPercent;
+                controllerAction.AxisDeadZonePercent = axisDeadZonePercent;
                 await _creationRepository.UpdateControllerActionAsync(controllerAction);
             }
         }

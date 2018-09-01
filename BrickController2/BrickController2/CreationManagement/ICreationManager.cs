@@ -23,8 +23,8 @@ namespace BrickController2.CreationManagement
         Task<ControllerEvent> AddOrGetControllerEventAsync(ControllerProfile controllerProfile, GameControllerEventType eventType, string eventCode);
         Task DeleteControllerEventAsync(ControllerEvent controllerEvent);
 
-        Task<ControllerAction> AddOrUpdateControllerActionAsync(ControllerEvent controllerEvent, string deviceId, int channel, bool isInvert, bool isToggle, int maxOutput);
+        Task<ControllerAction> AddOrUpdateControllerActionAsync(ControllerEvent controllerEvent, string deviceId, int channel, bool isInvert, ControllerButtonType buttonType, ControllerAxisCharacteristic axisCharacteristic, int maxOutputPercent, int axisDeadZonePercent);
         Task DeleteControllerActionAsync(ControllerAction controllerAction);
-        Task UpdateControllerActionAsync(ControllerAction controllerAction, string deviceId, int channel, bool isInvert, bool isToggle, int maxOutput);
+        Task UpdateControllerActionAsync(ControllerAction controllerAction, string deviceId, int channel, bool isInvert, ControllerButtonType buttonType, ControllerAxisCharacteristic axisCharacteristic, int maxOutputPercent, int axisDeadZonePercent);
     }
 }
