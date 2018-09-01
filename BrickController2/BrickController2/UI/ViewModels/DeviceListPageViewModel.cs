@@ -53,12 +53,12 @@ namespace BrickController2.UI.ViewModels
                 true,
                 async (progressDialog, token) =>
                 {
-                    var scanTask = _deviceManager.ScanAsync(_scanTokenSource.Token);
+                    var scanTask = _deviceManager.ScanAsync(token);
 
                     while (!token.IsCancellationRequested && percent <= 100)
                     {
                         progressDialog.Percent = percent;
-                        await Task.Delay(100);
+                        await Task.Delay(100, token);
                         percent += 1;
                     }
 

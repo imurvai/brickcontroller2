@@ -7,8 +7,8 @@ namespace BrickController2.DeviceManagement
     {
         private readonly IInfraredDeviceManager _infraredDeviceManager;
 
-        public InfraredDevice(string name, string address, IInfraredDeviceManager infraredDeviceManager)
-            : base(name, address)
+        public InfraredDevice(string name, string address, IInfraredDeviceManager infraredDeviceManager, IDeviceRepository deviceRepository)
+            : base(name, address, deviceRepository)
         {
             _infraredDeviceManager = infraredDeviceManager;
         }
@@ -16,24 +16,21 @@ namespace BrickController2.DeviceManagement
         public override DeviceType DeviceType => DeviceType.Infrared;
         public override int NumberOfChannels => 2;
 
-        public override Task ConnectAsync(CancellationToken token)
+        public override async Task<DeviceConnectionResult> ConnectAsync(CancellationToken token)
         {
-            throw new System.NotImplementedException();
+            return await _infraredDeviceManager.ConnectDevice(this);
         }
 
-        public override Task DisconnectAsync(CancellationToken token)
+        public override async Task DisconnectAsync()
         {
-            throw new System.NotImplementedException();
+            await _infraredDeviceManager.DisconnectDevice(this);
         }
 
-        public override Task SetOutputAsync(int channel, int value)
+        public override async Task SetOutputAsync(int channel, int value)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public async override Task SetOutputLevelAsync(int value)
-        {
-            return;
+            CheckChannel(channel);
+            value = CutOutputValue(value);
+            await _infraredDeviceManager.SetOutput(this, channel, value);
         }
     }
 }

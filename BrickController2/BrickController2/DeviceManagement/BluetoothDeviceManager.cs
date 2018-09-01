@@ -34,25 +34,29 @@ namespace BrickController2.DeviceManagement
 
             using (await _asyncLock.LockAsync())
             {
-                _adapter.ScanMode = ScanMode.LowLatency;
-                _adapter.DeviceDiscovered += deviceDiscoveredHandler;
-
-                token.Register(async () =>
+                try
                 {
-                    await _adapter.StopScanningForDevicesAsync();
-                    _adapter.DeviceDiscovered -= deviceDiscoveredHandler;
-                });
+                    _adapter.ScanMode = ScanMode.LowLatency;
+                    _adapter.DeviceDiscovered += deviceDiscoveredHandler;
 
-                await _adapter.StartScanningForDevicesAsync(null, DeviceFilter, false, CancellationToken.None);
+                    await _adapter.StartScanningForDevicesAsync(null, DeviceFilter, false, token);
+                }
+                catch (OperationCanceledException)
+                {
+                }
+                finally
+                {
+                    _adapter.DeviceDiscovered -= deviceDiscoveredHandler;
+                }
             }
         }
 
-        private bool DeviceFilter(Plugin.BLE.Abstractions.Contracts.IDevice device)
+        private bool DeviceFilter(IDevice device)
         {
             return GetDeviceType(device) != DeviceType.Unknown;
         }
 
-        private DeviceType GetDeviceType(Plugin.BLE.Abstractions.Contracts.IDevice device)
+        private DeviceType GetDeviceType(IDevice device)
         {
             var manufacturerData = device.AdvertisementRecords.FirstOrDefault(ar => ar.Type == AdvertisementRecordType.ManufacturerSpecificData);
 

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using BrickController2.Helpers;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -16,6 +17,8 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
+
+        private CancellationTokenSource _connectCancellationTokenSource;
 
         public DeviceDetailsPageViewModel(
             INavigationService navigationService,
@@ -45,6 +48,26 @@ namespace BrickController2.UI.ViewModels
 
         public ObservableCollection<DeviceOutputViewModel> Outputs { get; } = new ObservableCollection<DeviceOutputViewModel>();
 
+        public override void OnAppearing()
+        {
+            Device.DeviceStateChanged += DeviceStateChangedHandler;
+
+            base.OnAppearing();
+        }
+
+        public override async void OnDisappearing()
+        {
+            Device.DeviceStateChanged -= DeviceStateChangedHandler;
+
+            _connectCancellationTokenSource?.Cancel();
+            _connectCancellationTokenSource?.Dispose();
+            _connectCancellationTokenSource = null;
+
+            await Device.DisconnectAsync();
+
+            base.OnDisappearing();
+        }
+
         private async Task SelectMenuItem()
         {
             var menuActions = new Dictionary<string, Func<Task>>
@@ -73,7 +96,7 @@ namespace BrickController2.UI.ViewModels
 
                 await _dialogService.ShowProgressDialogAsync(
                     false,
-                    async (progressDialog, token) => await _deviceManager.RenameDeviceAsync(Device, result.Result),
+                    async (progressDialog, token) => await Device.RenameDeviceAsync(Device, result.Result),
                     "Renaming...");
             }
         }
@@ -93,7 +116,44 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectAsync()
         {
-            await DisplayAlertAsync("Connect clicked.", null, "Ok");
+            _connectCancellationTokenSource = new CancellationTokenSource();
+
+            DeviceConnectionResult connectionSuccess = DeviceConnectionResult.Ok;
+            await _dialogService.ShowProgressDialogAsync(
+                false,
+                async (progressDialog, token) =>
+                {
+                    connectionSuccess = await Device.ConnectAsync(token);
+                },
+                "Connecting...",
+                null,
+                "Cancel",
+                _connectCancellationTokenSource);
+
+            _connectCancellationTokenSource.Dispose();
+            _connectCancellationTokenSource = null;
+
+            if (connectionSuccess == DeviceConnectionResult.Error)
+            {
+                await DisplayAlertAsync("Warning", "Failed to connect to device.", "Ok");
+            }
+        }
+
+        private async Task DisconnectAsync()
+        {
+
+        }
+
+        private async void DeviceStateChangedHandler(object sender, DeviceStateChangedEventArgs args)
+        {
+            if (args.OldState == DeviceState.Connected && args.NewState == DeviceState.Disconnected && args.IsError)
+            {
+                var result = await _dialogService.ShowQuestionDialogAsync("Device connection lost", "Do you want to reconnect?", "Yes", "No");
+                if (result)
+                {
+                    await ConnectAsync();
+                }
+            }
         }
     }
 }

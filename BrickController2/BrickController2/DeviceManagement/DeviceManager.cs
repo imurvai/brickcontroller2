@@ -84,15 +84,6 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task RenameDeviceAsync(Device device, string newName)
-        {
-            using (await _asyncLock.LockAsync())
-            {
-                await _deviceRepository.UpdateDeviceAsync(device.DeviceType, device.Address, newName);
-                device.Name = newName;
-            }
-        }
-
         public async Task DeleteDeviceAsync(Device device)
         {
             using (await _asyncLock.LockAsync())

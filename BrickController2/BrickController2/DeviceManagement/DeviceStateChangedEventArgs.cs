@@ -4,11 +4,15 @@ namespace BrickController2.DeviceManagement
 {
     public class DeviceStateChangedEventArgs : EventArgs
     {
-        public DeviceStateChangedEventArgs(DeviceState deviceState)
+        internal DeviceStateChangedEventArgs(DeviceState oldState, DeviceState newState, bool isError)
         {
-            DeviceState = deviceState;
+            OldState = oldState;
+            NewState = newState;
+            IsError = isError;
         }
 
-        public DeviceState DeviceState { get; }
+        public DeviceState OldState { get; }
+        public DeviceState NewState { get; }
+        public bool IsError { get; }
     }
 }

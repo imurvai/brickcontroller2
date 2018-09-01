@@ -1,4 +1,6 @@
-﻿namespace BrickController2.UI.Services.Dialog
+﻿using System;
+
+namespace BrickController2.UI.Services.Dialog
 {
     public interface IProgressDialog
     {

@@ -7,13 +7,18 @@ namespace BrickController2.DeviceManagement
 {
     public abstract class Device : NotifyPropertyChangedSource
     {
+        private readonly IDeviceRepository _deviceRepository;
+        protected readonly AsyncLock _asyncLock = new AsyncLock();
+
         private string _name;
-        protected DeviceState _deviceState;
+        private DeviceState _deviceState;
         protected int _output;
         protected int _outputLevel;
 
-        protected Device(string name, string address)
+        internal Device(string name, string address, IDeviceRepository deviceRepository)
         {
+            _deviceRepository = deviceRepository;
+
             _name = name;
             Address = address;
             _deviceState = DeviceState.Disconnected;
@@ -31,7 +36,12 @@ namespace BrickController2.DeviceManagement
             set { _name = value; RaisePropertyChanged(); }
         }
 
-        public DeviceState DeviceState => _deviceState;
+        public DeviceState DeviceState
+        {
+            get { return _deviceState; }
+            set { _deviceState = value; RaisePropertyChanged(); }
+        }
+
         public int Output => _output;
         public int OutputLevel => _outputLevel;
 
@@ -41,10 +51,43 @@ namespace BrickController2.DeviceManagement
         public virtual int NumberOfOutputLevels => 1;
         public virtual int DefaultOutputLevel => 1;
 
-        public abstract Task ConnectAsync(CancellationToken token);
-        public abstract Task DisconnectAsync(CancellationToken token);
+        public abstract Task<DeviceConnectionResult> ConnectAsync(CancellationToken token);
+        public abstract Task DisconnectAsync();
 
         public abstract Task SetOutputAsync(int channel, int value);
-        public abstract Task SetOutputLevelAsync(int value);
+
+        public virtual Task SetOutputLevelAsync(int value)
+        {
+            return Task.FromResult(true);
+        }
+
+        public async Task RenameDeviceAsync(Device device, string newName)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                await _deviceRepository.UpdateDeviceAsync(device.DeviceType, device.Address, newName);
+                device.Name = newName;
+            }
+        }
+
+        protected void SetState(DeviceState newState, bool isError)
+        {
+            var oldState = DeviceState;
+            DeviceState = newState;
+            DeviceStateChanged?.Invoke(this, new DeviceStateChangedEventArgs(oldState, newState, isError));
+        }
+
+        protected void CheckChannel(int channel)
+        {
+            if (channel < 0 || channel >= NumberOfChannels)
+            {
+                throw new ArgumentOutOfRangeException($"Invalid channel value: {channel}.");
+            }
+        }
+
+        protected int CutOutputValue(int outputValue)
+        {
+            return Math.Max(-255, Math.Min(255, outputValue));
+        }
     }
 }

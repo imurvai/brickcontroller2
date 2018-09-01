@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Android.App;
 using Android.Widget;
 using BrickController2.UI.Services.Dialog;
@@ -9,7 +10,7 @@ namespace BrickController2.Droid.UI.Services
     {
         private readonly ProgressBar _progressBar;
         private readonly AlertDialog _progressDialog;
-
+        
         public ProgressDialog(AlertDialog progressDialog, ProgressBar progressBar)
         {
             _progressDialog = progressDialog;

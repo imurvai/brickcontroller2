@@ -132,7 +132,7 @@ namespace BrickController2.Droid.UI.Services
 
             if (tokenSource != null)
             {
-                dialogBuilder.SetNegativeButton(cancelButtonText ?? "Cancel", (sender, args) => tokenSource.Cancel());
+                dialogBuilder.SetNegativeButton(cancelButtonText, (sender, args) => tokenSource.Cancel());
             }
 
             var dialog = dialogBuilder.Create();
@@ -143,8 +143,10 @@ namespace BrickController2.Droid.UI.Services
             try
             {
                 var progressDialog = new ProgressDialog(dialog, progressBar);
-                var cancelationToken = tokenSource?.Token ?? CancellationToken.None;
-                await action(progressDialog, cancelationToken);
+                await action(progressDialog, tokenSource?.Token ?? CancellationToken.None);
+            }
+            catch (OperationCanceledException)
+            {
             }
             finally
             {

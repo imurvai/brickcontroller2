@@ -1,12 +1,12 @@
-﻿using System.Threading;
+﻿using Plugin.BLE.Abstractions.Contracts;
 using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
     internal class BuWizz2Device : BluetoothDevice
     {
-        public BuWizz2Device(string name, string address)
-            : base(name, address)
+        public BuWizz2Device(string name, string address, IDeviceRepository deviceRepository, IAdapter adapter)
+            : base(name, address, deviceRepository, adapter)
         {
         }
 
@@ -14,16 +14,6 @@ namespace BrickController2.DeviceManagement
         public override int NumberOfChannels => 4;
         public override int NumberOfOutputLevels => 4;
         public override int DefaultOutputLevel => 2;
-
-        public override Task ConnectAsync(CancellationToken token)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override Task DisconnectAsync(CancellationToken token)
-        {
-            throw new System.NotImplementedException();
-        }
 
         public override Task SetOutputAsync(int channel, int value)
         {
