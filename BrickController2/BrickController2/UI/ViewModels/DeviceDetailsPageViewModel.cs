@@ -59,10 +59,6 @@ namespace BrickController2.UI.ViewModels
         {
             Device.DeviceStateChanged -= DeviceStateChangedHandler;
 
-            _connectCancellationTokenSource?.Cancel();
-            _connectCancellationTokenSource?.Dispose();
-            _connectCancellationTokenSource = null;
-
             await Device.DisconnectAsync();
 
             base.OnDisappearing();
@@ -116,8 +112,6 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectAsync()
         {
-            _connectCancellationTokenSource = new CancellationTokenSource();
-
             DeviceConnectionResult connectionSuccess = DeviceConnectionResult.Ok;
             await _dialogService.ShowProgressDialogAsync(
                 false,
@@ -127,11 +121,7 @@ namespace BrickController2.UI.ViewModels
                 },
                 "Connecting...",
                 null,
-                "Cancel",
-                _connectCancellationTokenSource);
-
-            _connectCancellationTokenSource.Dispose();
-            _connectCancellationTokenSource = null;
+                "Cancel");
 
             if (connectionSuccess == DeviceConnectionResult.Error)
             {

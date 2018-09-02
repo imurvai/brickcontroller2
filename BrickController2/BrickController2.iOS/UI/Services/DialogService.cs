@@ -79,46 +79,50 @@ namespace BrickController2.iOS.UI.Services
             return completionSource.Task;
         }
 
-        public async Task ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText, CancellationTokenSource tokenSource)
+        public async Task ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText)
         {
-            // TODO: make the alert view bigger somehow
-            var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
-
-            UIProgressView progressView = null;
-            if (isDeterministic)
+            using (var tokenSource = new CancellationTokenSource())
             {
-                progressView = new UIProgressView(new CGRect(30F, 80F, 225F, 90F));
-                progressView.Style = UIProgressViewStyle.Bar;
-                progressView.Progress = 0.0F;
-                alert.View.AddSubview(progressView);
-            }
-            else
-            {
-                var activityIndicator = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.Gray);
-                activityIndicator.Frame = new CGRect(121F, 60F, 37F, 37F);
-                activityIndicator.StartAnimating();
-                alert.View.AddSubview(activityIndicator);
-            }
-
-            if (tokenSource != null)
-            {
-                alert.AddAction(UIAlertAction.Create(cancelButtonText ?? "Cancel", UIAlertActionStyle.Cancel, _ =>
+                // TODO: make the alert view bigger somehow
+                using (var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert))
                 {
-                    tokenSource.Cancel();
-                }));
-            }
+                    UIProgressView progressView = null;
+                    if (isDeterministic)
+                    {
+                        progressView = new UIProgressView(new CGRect(30F, 80F, 225F, 90F));
+                        progressView.Style = UIProgressViewStyle.Bar;
+                        progressView.Progress = 0.0F;
+                        alert.View.AddSubview(progressView);
+                    }
+                    else
+                    {
+                        var activityIndicator = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.Gray);
+                        activityIndicator.Frame = new CGRect(121F, 60F, 37F, 37F);
+                        activityIndicator.StartAnimating();
+                        alert.View.AddSubview(activityIndicator);
+                    }
 
-            UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
+                    if (!string.IsNullOrEmpty(cancelButtonText))
+                    {
+                        alert.AddAction(UIAlertAction.Create(cancelButtonText, UIAlertActionStyle.Cancel, _ => tokenSource.Cancel()));
+                    }
 
-            try
-            {
-                var progressDialog = new ProgressDialog(alert, progressView);
-                var cancelationToken = tokenSource?.Token ?? CancellationToken.None;
-                await action(progressDialog, cancelationToken);
-            }
-            finally
-            {
-                await alert.DismissViewControllerAsync(true);
+                    UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, () => tokenSource.Cancel());
+
+                    try
+                    {
+                        var progressDialog = new ProgressDialog(alert, progressView);
+                        var cancelationToken = tokenSource.Token;
+                        await action(progressDialog, cancelationToken);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                    }
+                    finally
+                    {
+                        await alert.DismissViewControllerAsync(true);
+                    }
+                }
             }
         }
 

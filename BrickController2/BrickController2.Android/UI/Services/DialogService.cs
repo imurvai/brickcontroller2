@@ -113,44 +113,56 @@ namespace BrickController2.Droid.UI.Services
             return completionSource.Task;
         }
 
-        public async Task ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText, CancellationTokenSource tokenSource)
+        public async Task ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText)
         {
-            var view = _context.LayoutInflater.Inflate(Resource.Layout.ProgressDialog, null);
-            var linearLayout = view.FindViewById<LinearLayout>(Resource.Id.linearlayout);
-
-            var progressBar = new ProgressBar(_context, null, isDeterministic ? Android.Resource.Attribute.ProgressBarStyleHorizontal : Android.Resource.Attribute.ProgressBarStyle);
-            progressBar.Indeterminate = !isDeterministic;
-            progressBar.Progress = 0;
-            progressBar.Max = 100;
-
-            linearLayout.AddView(progressBar);
-
-            var dialogBuilder = new AlertDialog.Builder(_context)
-                .SetTitle(title)
-                .SetMessage(message)
-                .SetView(view);
-
-            if (tokenSource != null)
+            using (var tokenSource = new CancellationTokenSource())
             {
-                dialogBuilder.SetNegativeButton(cancelButtonText, (sender, args) => tokenSource.Cancel());
-            }
+                var view = _context.LayoutInflater.Inflate(Resource.Layout.ProgressDialog, null);
+                var linearLayout = view.FindViewById<LinearLayout>(Resource.Id.linearlayout);
 
-            var dialog = dialogBuilder.Create();
-            dialog.SetCancelable(false);
-            dialog.SetCanceledOnTouchOutside(false);
-            dialog.Show();
+                var progressBar = new ProgressBar(_context, null, isDeterministic ? Android.Resource.Attribute.ProgressBarStyleHorizontal : Android.Resource.Attribute.ProgressBarStyle);
+                progressBar.Indeterminate = !isDeterministic;
+                progressBar.Progress = 0;
+                progressBar.Max = 100;
 
-            try
-            {
-                var progressDialog = new ProgressDialog(dialog, progressBar);
-                await action(progressDialog, tokenSource?.Token ?? CancellationToken.None);
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            finally
-            {
-                dialog.Dismiss();
+                linearLayout.AddView(progressBar);
+
+                var dialogBuilder = new AlertDialog.Builder(_context)
+                    .SetTitle(title)
+                    .SetMessage(message)
+                    .SetView(view);
+
+                if (!string.IsNullOrEmpty(cancelButtonText))
+                {
+                    dialogBuilder.SetNegativeButton(cancelButtonText, (sender, args) => tokenSource.Cancel());
+                }
+
+                using (var dialog = dialogBuilder.Create())
+                {
+                    dialog.CancelEvent += DialogCanceledHandler;
+                    dialog.SetCancelable(false);
+                    dialog.SetCanceledOnTouchOutside(false);
+                    dialog.Show();
+
+                    try
+                    {
+                        var progressDialog = new ProgressDialog(dialog, progressBar);
+                        await action(progressDialog, tokenSource.Token);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                    }
+                    finally
+                    {
+                        dialog.CancelEvent -= DialogCanceledHandler;
+                        dialog.Dismiss();
+                    }
+
+                    void DialogCanceledHandler(object sender, EventArgs args)
+                    {
+                        tokenSource.Cancel();
+                    }
+                }
             }
         }
 

@@ -1,7 +1,6 @@
 ﻿using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
-using Plugin.BLE.Abstractions.Exceptions;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -46,7 +45,7 @@ namespace BrickController2.DeviceManagement
                     await DisconnectInternalAsync();
                     return DeviceConnectionResult.Canceled;
                 }
-                catch (DeviceConnectionException)
+                catch (Exception)
                 {
                     SetState(DeviceState.Disconnected, true);
                     return DeviceConnectionResult.Error;
@@ -77,13 +76,18 @@ namespace BrickController2.DeviceManagement
 
                 await _adapter.DisconnectDeviceAsync(_bleDevice);
                 _bleDevice = null;
-
-                SetState(DeviceState.Disconnected, false);
             }
+
+            SetState(DeviceState.Disconnected, false);
         }
 
         private void DeviceConnectionLostHandler(object sender, DeviceErrorEventArgs e)
         {
+            if (e.Device != _bleDevice)
+            {
+                return;
+            }
+
             Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
             {
                 Debug.WriteLine("Device connection lost.");

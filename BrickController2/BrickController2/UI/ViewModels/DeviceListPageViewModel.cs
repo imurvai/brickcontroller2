@@ -15,8 +15,6 @@ namespace BrickController2.UI.ViewModels
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
 
-        private CancellationTokenSource _scanTokenSource;
-
         public DeviceListPageViewModel(
             INavigationService navigationService,
             IDeviceManager deviceManager,
@@ -35,19 +33,8 @@ namespace BrickController2.UI.ViewModels
         public ICommand ScanCommand { get; }
         public ICommand DeviceTappedCommand { get; }
 
-        public override void OnDisappearing()
-        {
-            _scanTokenSource?.Cancel();
-            _scanTokenSource?.Dispose();
-            _scanTokenSource = null;
-
-            base.OnDisappearing();
-        }
-
         private async Task ScanAsync()
         {
-            _scanTokenSource = new CancellationTokenSource();
-
             var percent = 0;
             await _dialogService.ShowProgressDialogAsync(
                 true,
@@ -62,16 +49,11 @@ namespace BrickController2.UI.ViewModels
                         percent += 1;
                     }
 
-                    _scanTokenSource.Cancel();
                     await scanTask;
                 },
                 "Scanning...",
                 "Searching for devices.",
-                "Cancel",
-                _scanTokenSource);
-
-            _scanTokenSource.Dispose();
-            _scanTokenSource = null;
+                "Cancel");
         }
     }
 }
