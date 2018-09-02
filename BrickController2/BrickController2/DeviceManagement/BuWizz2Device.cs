@@ -115,9 +115,9 @@ namespace BrickController2.DeviceManagement
                         else if (_sendAttemptsLeft > 0)
                         {
                             int v0 = _outputValues[0];
-                            int v1 = _outputValues[0];
-                            int v2 = _outputValues[0];
-                            int v3 = _outputValues[0];
+                            int v1 = _outputValues[1];
+                            int v2 = _outputValues[2];
+                            int v3 = _outputValues[3];
 
                             if (await SendOutputValuesAsync(v0, v1, v2, v3, _outputTaskTokenSource.Token))
                             {
@@ -135,7 +135,7 @@ namespace BrickController2.DeviceManagement
                                 _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                             }
 
-                            await Task.Delay(60, _outputTaskTokenSource.Token);
+                            //await Task.Delay(60, _outputTaskTokenSource.Token);
                         }
                     }
                     catch (OperationCanceledException)

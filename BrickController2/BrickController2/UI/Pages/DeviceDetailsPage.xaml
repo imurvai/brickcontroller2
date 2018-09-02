@@ -3,6 +3,7 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:templateSelectors="clr-namespace:BrickController2.UI.DataTemplateSelectors"
     x:Class="BrickController2.UI.Pages.DeviceDetailsPage"
@@ -100,7 +101,7 @@
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout>
-                                    <Slider Value="{Binding Output}" Minimum="-255" Maximum="255" HeightRequest="40"/>
+                                    <controls:ExtendedSlider Value="{Binding Output}" TouchUpCommand="{Binding TouchUpCommand}" Minimum="-255" Maximum="255" HeightRequest="40"/>
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>

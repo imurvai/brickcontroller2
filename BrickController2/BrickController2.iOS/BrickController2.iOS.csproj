@@ -108,6 +108,7 @@
     <Compile Include="HardwareServices\InfraredService.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="UI\CustomRenderers\ExtendedSliderRenderer.cs" />
     <Compile Include="UI\Services\DialogService.cs" />
     <Compile Include="UI\Services\DI\UIServicesModule.cs" />
     <Compile Include="UI\Services\ProgressDialog.cs" />

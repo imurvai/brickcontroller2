@@ -1,5 +1,7 @@
 ﻿using BrickController2.DeviceManagement;
 using BrickController2.Helpers;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -7,14 +9,16 @@ namespace BrickController2.UI.ViewModels
     {
         private int _output;
 
-        public DeviceOutputViewModel(Device device, int channel)
+        public DeviceOutputViewModel(DeviceManagement.Device device, int channel)
         {
             Device = device;
             Channel = channel;
             Output = 0;
+
+            TouchUpCommand = new Command(() => Output = 0);
         }
 
-        public Device Device { get; }
+        public DeviceManagement.Device Device { get; }
         public int Channel { get; }
 
         public int Output
@@ -23,9 +27,11 @@ namespace BrickController2.UI.ViewModels
             set
             {
                 _output = value;
-                //Device.SetOutputAsync(Channel, value);
+                Device.SetOutputAsync(Channel, value);
                 RaisePropertyChanged();
             }
         }
+
+        public ICommand TouchUpCommand { get; }
     }
 }

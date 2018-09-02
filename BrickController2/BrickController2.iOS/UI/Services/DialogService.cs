@@ -107,7 +107,7 @@ namespace BrickController2.iOS.UI.Services
                         alert.AddAction(UIAlertAction.Create(cancelButtonText, UIAlertActionStyle.Cancel, _ => tokenSource.Cancel()));
                     }
 
-                    UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, () => tokenSource.Cancel());
+                    UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
 
                     try
                     {
