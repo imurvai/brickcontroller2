@@ -8,7 +8,7 @@ namespace BrickController2.DeviceManagement
     public abstract class Device : NotifyPropertyChangedSource
     {
         private readonly IDeviceRepository _deviceRepository;
-        protected readonly AsyncLock _asyncLock = new AsyncLock();
+        private readonly AsyncLock _asyncLock = new AsyncLock();
 
         private string _name;
         private DeviceState _deviceState;

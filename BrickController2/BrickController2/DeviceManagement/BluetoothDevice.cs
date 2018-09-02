@@ -1,7 +1,9 @@
-﻿using Plugin.BLE.Abstractions;
+﻿using BrickController2.Helpers;
+using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ namespace BrickController2.DeviceManagement
     internal abstract class BluetoothDevice : Device
     {
         protected readonly IAdapter _adapter;
+        protected readonly AsyncLock _asyncLock = new AsyncLock();
 
         protected IDevice _bleDevice;
 
@@ -20,6 +23,10 @@ namespace BrickController2.DeviceManagement
             _adapter = adapter;
             _adapter.DeviceConnectionLost += DeviceConnectionLostHandler;
         }
+
+        protected abstract Task<bool> ProcessServices(IList<IService> services);
+        protected abstract Task<bool> ConnectPostActionAsync();
+        protected abstract Task DisconnectPreActionAsync();
 
         public async override Task<DeviceConnectionResult> ConnectAsync(CancellationToken token)
         {
@@ -34,11 +41,19 @@ namespace BrickController2.DeviceManagement
                 {
                     SetState(DeviceState.Connecting, false);
 
-                    var guid = new Guid(Address);
+                    var guid = Guid.Parse(Address);
                     _bleDevice = await _adapter.ConnectToKnownDeviceAsync(guid, ConnectParameters.None, token);
-                    await _bleDevice.GetServicesAsync(token);
+                    var services = await _bleDevice.GetServicesAsync(token);
 
-                    SetState(DeviceState.Connected, false);
+                    if (await ProcessServices(services))
+                    {
+                        await ConnectPostActionAsync();
+                        SetState(DeviceState.Connected, false);
+                    }
+                    else
+                    {
+                        await DisconnectInternalAsync();
+                    }
                 }
                 catch (OperationCanceledException)
                 {
@@ -73,6 +88,8 @@ namespace BrickController2.DeviceManagement
             if (_bleDevice != null)
             {
                 SetState(DeviceState.Disconnecting, false);
+
+                await DisconnectPreActionAsync();
 
                 await _adapter.DisconnectDeviceAsync(_bleDevice);
                 _bleDevice = null;
