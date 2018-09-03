@@ -13,7 +13,9 @@
         <ResourceDictionary>
             <!-- Converters -->
             <converters:DeviceTypeToSmallImageConverter x:Key="DeviceTypeToSmallImage"/>
-            
+            <converters:DeviceConnectedToBoolConverter x:Key="DeviceConnectedToBool"/>
+            <converters:DeviceDisconnectedToBoolConverter x:Key="DeviceDisconnectedToBool"/>
+
             <!-- Data templates -->
             <DataTemplate x:Key="EptyOutputLevelSelectorTemplate">
                 <ViewCell>
@@ -101,7 +103,7 @@
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout>
-                                    <controls:ExtendedSlider Value="{Binding Output}" TouchUpCommand="{Binding TouchUpCommand}" Minimum="-255" Maximum="255" HeightRequest="40"/>
+                                    <controls:ExtendedSlider Value="{Binding Output}" TouchUpCommand="{Binding TouchUpCommand}" IsEnabled="{Binding Device.DeviceType, Converter={StaticResource DeviceConnectedToBool}}"  Minimum="-255" Maximum="255" HeightRequest="40"/>
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>
@@ -111,7 +113,7 @@
             </StackLayout> 
 
             <!-- Connect -->
-            <Frame Grid.Row="2" BackgroundColor="Green" HorizontalOptions="Fill" HeightRequest="40" WidthRequest="300" CornerRadius="10" Padding="0" Margin="0, 8, 0, 8">
+            <Frame Grid.Row="2" IsVisible="{Binding Device.DeviceState, Converter={StaticResource DeviceDisconnectedToBool}}" BackgroundColor="Green" HorizontalOptions="Fill" HeightRequest="40" WidthRequest="300" CornerRadius="10" Padding="0" Margin="0, 8, 0, 8">
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ConnectCommand}"/>
                 </Frame.GestureRecognizers>
