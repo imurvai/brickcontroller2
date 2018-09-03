@@ -91,7 +91,12 @@ namespace BrickController2.DeviceManagement
 
                 await DisconnectPreActionAsync();
 
-                await _adapter.DisconnectDeviceAsync(_bleDevice);
+                if (_bleDevice.State != Plugin.BLE.Abstractions.DeviceState.Disconnected)
+                {
+                    await _adapter.DisconnectDeviceAsync(_bleDevice);
+                }
+
+                _bleDevice.Dispose();
                 _bleDevice = null;
             }
 

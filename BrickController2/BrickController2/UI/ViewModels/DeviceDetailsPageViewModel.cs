@@ -32,7 +32,8 @@ namespace BrickController2.UI.ViewModels
 
             Device = parameters.Get<Device>("device");
 
-            MenuCommand = new Command(async () => await SelectMenuItem());
+            RenameCommand = new Command(async () => await RenameDeviceAsync());
+            DeleteCommand = new Command(async () => await DeleteDeviceAsync());
             ConnectCommand = new Command(async () => await ConnectAsync());
 
             for (int i = 0; i < Device.NumberOfChannels; i++)
@@ -43,7 +44,8 @@ namespace BrickController2.UI.ViewModels
 
         public Device Device { get; }
 
-        public ICommand MenuCommand { get; }
+        public ICommand RenameCommand { get; }
+        public ICommand DeleteCommand { get; }
         public ICommand ConnectCommand { get; }
 
         public ObservableCollection<DeviceOutputViewModel> Outputs { get; } = new ObservableCollection<DeviceOutputViewModel>();

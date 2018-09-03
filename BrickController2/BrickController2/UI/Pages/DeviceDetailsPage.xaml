@@ -15,44 +15,13 @@
             <converters:DeviceTypeToSmallImageConverter x:Key="DeviceTypeToSmallImage"/>
             <converters:DeviceConnectedToBoolConverter x:Key="DeviceConnectedToBool"/>
             <converters:DeviceDisconnectedToBoolConverter x:Key="DeviceDisconnectedToBool"/>
-
-            <!-- Data templates -->
-            <DataTemplate x:Key="EptyOutputLevelSelectorTemplate">
-                <ViewCell>
-                </ViewCell>
-            </DataTemplate>
-            
-            <DataTemplate x:Key="BuWizzOutputLevelSelectorTemplate">
-                <Picker SelectedIndex="{Binding SelectedOutputLevelIndex}">
-                    <Picker.Items>
-                        <x:String>Low</x:String>
-                        <x:String>Normal</x:String>
-                        <x:String>High</x:String>
-                    </Picker.Items>
-                </Picker>     
-            </DataTemplate>
-            
-            <DataTemplate x:Key="BuWizz2OutputLevelSelectorTemplate">
-                <Picker SelectedIndex="{Binding SelectedOutputLevelIndex}">
-                    <Picker.Items>
-                        <x:String>Low</x:String>
-                        <x:String>Normal</x:String>
-                        <x:String>High</x:String>
-                        <x:String>Ludicrous</x:String>
-                    </Picker.Items>
-                </Picker>
-            </DataTemplate>
-            
-            <templateSelectors:DeviceOutputLevelDataTemplateSelector
-                x:Key="DeviceOutputLevelDataTemplateSelector"
-                EmptyOutputLevelSelectorTemplate="{StaticResource EptyOutputLevelSelectorTemplate}"
-                BuWizzOutputLevelSelectorTemplate="{StaticResource BuWizzOutputLevelSelectorTemplate}"
-                BuWizz2OutputLevelSelectorTemplate="{StaticResource BuWizz2OutputLevelSelectorTemplate}"/>
         </ResourceDictionary>
     </local:PageBase.Resources>
 
     <local:PageBase.ToolbarItems>
-        <ToolbarItem Icon="ic_menu.png" Order="Primary" Command="{Binding MenuCommand}"/>
+        <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameCommand}"/>
+        <ToolbarItem Icon="ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteCommand}"/>
+        <!--<ToolbarItem Icon="ic_menu.png" Order="Primary" Command="{Binding MenuCommand}"/>-->
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>
@@ -103,7 +72,7 @@
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout>
-                                    <controls:ExtendedSlider Value="{Binding Output}" TouchUpCommand="{Binding TouchUpCommand}" IsEnabled="{Binding Device.DeviceType, Converter={StaticResource DeviceConnectedToBool}}"  Minimum="-255" Maximum="255" HeightRequest="40"/>
+                                    <controls:ExtendedSlider Value="{Binding Output, Mode=TwoWay}" TouchUpCommand="{Binding TouchUpCommand}" IsEnabled="{Binding Device.DeviceState, Converter={StaticResource DeviceConnectedToBool}}"  Minimum="-255" Maximum="255" HeightRequest="50"/>
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>

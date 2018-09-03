@@ -12,11 +12,12 @@ namespace BrickController2.iOS.UI.CustomRenderers
         {
             base.OnElementChanged(e);
 
-            var extendedSlider = (ExtendedSlider)Element;
-
-            Control.TouchDown += (sender, args) => extendedSlider.TouchDown();
-            Control.TouchUpInside += (sender, args) => extendedSlider.TouchUp();
-            Control.TouchUpOutside += (sender, args) => extendedSlider.TouchUp();
+            if (Element is ExtendedSlider extendedSlider && Control != null)
+            {
+                Control.TouchDown += (sender, args) => extendedSlider.TouchDown();
+                Control.TouchUpInside += (sender, args) => extendedSlider.TouchUp();
+                Control.TouchUpOutside += (sender, args) => extendedSlider.TouchUp();
+            }
         }
     }
 }
