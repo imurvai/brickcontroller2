@@ -1,6 +1,10 @@
 ﻿using Autofac;
+using BrickController2.HardwareServices.Bluetooth;
 using BrickController2.HardwareServices.GameController;
 using BrickController2.HardwareServices.Infrared;
+using BrickController2.iOS.HardwareServices.Bluetooth;
+using BrickController2.iOS.HardwareServices.GameController;
+using BrickController2.iOS.HardwareServices.Infrared;
 
 namespace BrickController2.iOS.HardwareServices.DI
 {
@@ -10,6 +14,7 @@ namespace BrickController2.iOS.HardwareServices.DI
         {
             builder.RegisterType<InfraredService>().As<IInfraredService>().SingleInstance();
             builder.RegisterType<GameControllerService>().AsSelf().As<IGameControllerService>().SingleInstance();
+            //builder.RegisterType<BleService>().As<IBleService>().SingleInstance();
         }
     }
 }

@@ -4,7 +4,7 @@ using BrickController2.HardwareServices.Infrared;
 using System;
 using System.Threading.Tasks;
 
-namespace BrickController2.Droid.HardwareServices
+namespace BrickController2.Droid.HardwareServices.Infrared
 {
     public class InfraredService : IInfraredService
     {

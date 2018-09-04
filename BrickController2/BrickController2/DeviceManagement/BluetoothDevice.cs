@@ -1,10 +1,9 @@
 ﻿using BrickController2.Helpers;
-using Plugin.BLE.Abstractions;
-using Plugin.BLE.Abstractions.Contracts;
-using Plugin.BLE.Abstractions.EventArgs;
+using Plugin.BluetoothLE;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,10 +20,9 @@ namespace BrickController2.DeviceManagement
             : base(name, address, deviceRepository)
         {
             _adapter = adapter;
-            _adapter.DeviceConnectionLost += DeviceConnectionLostHandler;
         }
 
-        protected abstract Task<bool> ProcessServices(IList<IService> services);
+        protected abstract Task<bool> ProcessServices(IList<IGattService> services);
         protected abstract Task<bool> ConnectPostActionAsync();
         protected abstract Task DisconnectPreActionAsync();
 
@@ -42,8 +40,12 @@ namespace BrickController2.DeviceManagement
                     SetState(DeviceState.Connecting, false);
 
                     var guid = Guid.Parse(Address);
-                    _bleDevice = await _adapter.ConnectToKnownDeviceAsync(guid, ConnectParameters.None, token);
-                    var services = await _bleDevice.GetServicesAsync(token);
+                    _bleDevice = await _adapter.GetKnownDevice(guid).FirstAsync().ToTask();
+                    // TODO: Setup the state changed event!!!
+
+                    await _bleDevice.ConnectWait().ToTask(token);
+
+                    var services = await _bleDevice.DiscoverServices().ToList().ToTask();
 
                     if (await ProcessServices(services))
                     {
@@ -74,7 +76,7 @@ namespace BrickController2.DeviceManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                if (DeviceState == DeviceState.Disconnected || DeviceState == DeviceState.Disconnecting)
+                if (DeviceState == DeviceState.Disconnected)
                 {
                     return;
                 }
@@ -91,30 +93,12 @@ namespace BrickController2.DeviceManagement
 
                 await DisconnectPreActionAsync();
 
-                if (_bleDevice.State != Plugin.BLE.Abstractions.DeviceState.Disconnected)
-                {
-                    await _adapter.DisconnectDeviceAsync(_bleDevice);
-                }
-
-                _bleDevice.Dispose();
+                _bleDevice.CancelConnection();
                 _bleDevice = null;
             }
 
             SetState(DeviceState.Disconnected, false);
         }
 
-        private void DeviceConnectionLostHandler(object sender, DeviceErrorEventArgs e)
-        {
-            if (e.Device != _bleDevice)
-            {
-                return;
-            }
-
-            Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
-            {
-                Debug.WriteLine("Device connection lost.");
-                SetState(DeviceState.Disconnected, true);
-            });
-        }
     }
 }

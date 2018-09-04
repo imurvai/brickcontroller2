@@ -8,10 +8,11 @@ namespace BrickController2.HardwareServices.Bluetooth
     public interface IBleDevice
     {
         string Address { get; }
-        string Rssi { get; }
-        byte[] ManufacturerData { get; }
+        BleDeviceState State { get; }
 
-        Task ConnectAsync(CancellationToken token);
+        event EventHandler<BleDeviceStateChangedEventArgs> DeviceStateChanged;
+
+        Task<bool> ConnectAsync(CancellationToken token);
         Task DisconnectAsync();
 
         Task<IEnumerable<Guid>> DiscoverServicesAsync(CancellationToken token);

@@ -5,7 +5,7 @@ using BrickController2.HardwareServices.GameController;
 using Foundation;
 using GameController;
 
-namespace BrickController2.iOS.HardwareServices
+namespace BrickController2.iOS.HardwareServices.GameController
 {
     public class GameControllerService : IGameControllerService
     {

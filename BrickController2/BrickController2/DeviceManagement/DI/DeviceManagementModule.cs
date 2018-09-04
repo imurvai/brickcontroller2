@@ -1,6 +1,5 @@
 ﻿using Autofac;
-using Plugin.BLE;
-using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BluetoothLE;
 
 namespace BrickController2.DeviceManagement.DI
 {
@@ -8,8 +7,7 @@ namespace BrickController2.DeviceManagement.DI
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance(CrossBluetoothLE.Current).As<IBluetoothLE>().SingleInstance();
-            builder.RegisterInstance(CrossBluetoothLE.Current.Adapter).As<IAdapter>().SingleInstance();
+            builder.RegisterInstance(CrossBleAdapter.Current).As<IAdapter>().SingleInstance();
 
             builder.RegisterType<BluetoothDeviceManager>().As<IBluetoothDeviceManager>().SingleInstance();
             builder.RegisterType<InfraredDeviceManager>().As<IInfraredDeviceManager>().SingleInstance();

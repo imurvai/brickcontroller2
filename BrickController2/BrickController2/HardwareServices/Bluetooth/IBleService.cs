@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BrickController2.HardwareServices.Bluetooth
 {
     public interface IBleService
     {
-        Guid Id { get; }
+        bool IsBleSupported { get; }
+        bool IsBluetoothOn { get; }
 
-        Task<IBleCharacteristic> GetCharacteristicAsync(Guid characteristicId);
+        Task ScanAsync(Func<IBleDevice, Task> foundDeviceAsync, CancellationToken token);
     }
 }

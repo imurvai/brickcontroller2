@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BrickController2.HardwareServices.Bluetooth
 {
@@ -7,6 +7,6 @@ namespace BrickController2.HardwareServices.Bluetooth
     {
         Guid Id { get; }
 
-        IEnumerable<Guid> GetCharacteristicsAsync();
+        Task<IBleCharacteristic> GetCharacteristicAsync(Guid characteristicId);
     }
 }

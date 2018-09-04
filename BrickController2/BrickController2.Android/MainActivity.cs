@@ -8,7 +8,7 @@ using Autofac;
 using BrickController2.CreationManagement.DI;
 using BrickController2.Database.DI;
 using BrickController2.DeviceManagement.DI;
-using BrickController2.Droid.HardwareServices;
+using BrickController2.Droid.HardwareServices.GameController;
 using BrickController2.Droid.HardwareServices.DI;
 using BrickController2.Droid.UI.Services.DI;
 using BrickController2.UI.DI;

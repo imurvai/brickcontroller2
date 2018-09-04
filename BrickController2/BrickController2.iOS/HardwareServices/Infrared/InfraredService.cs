@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace BrickController2.iOS.HardwareServices
+namespace BrickController2.iOS.HardwareServices.Infrared
 {
     public class InfraredService : IInfraredService
     {

@@ -1,4 +1,8 @@
 ﻿using Autofac;
+using BrickController2.Droid.HardwareServices.Bluetooth;
+using BrickController2.Droid.HardwareServices.GameController;
+using BrickController2.Droid.HardwareServices.Infrared;
+using BrickController2.HardwareServices.Bluetooth;
 using BrickController2.HardwareServices.GameController;
 using BrickController2.HardwareServices.Infrared;
 
@@ -10,6 +14,7 @@ namespace BrickController2.Droid.HardwareServices.DI
         {
             builder.RegisterType<InfraredService>().As<IInfraredService>().SingleInstance();
             builder.RegisterType<GameControllerService>().AsSelf().As<IGameControllerService>().SingleInstance();
+            //builder.RegisterType<BleService>().As<IBleService>().SingleInstance();
         }
     }
 }

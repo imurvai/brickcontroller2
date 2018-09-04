@@ -1,7 +1,9 @@
 ﻿using BrickController2.Helpers;
-using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BluetoothLE;
 using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace BrickController2.DeviceManagement
         private readonly int[] _outputValues = new int[4];
         private int _outputLevelValue;
 
-        private ICharacteristic _characteristic;
+        private IGattCharacteristic _characteristic;
 
         private Task _outputTask;
         private CancellationTokenSource _outputTaskTokenSource;
@@ -55,14 +57,14 @@ namespace BrickController2.DeviceManagement
             _outputLevelValue = Math.Max(0, Math.Min(NumberOfOutputLevels - 1, value));
         }
 
-        protected override async Task<bool> ProcessServices(IList<IService> services)
+        protected override async Task<bool> ProcessServices(IList<IGattService> services)
         {
             _characteristic = null;
             foreach (var service in services)
             {
-                if (service.Id == SERVICE_UUID_REMOTE_CONTROL)
+                if (service.Uuid == SERVICE_UUID_REMOTE_CONTROL)
                 {
-                    _characteristic = await service.GetCharacteristicAsync(CHARACTERISTIC_UUID_QUICK_DRIVE);
+                    _characteristic = await service.GetKnownCharacteristics(CHARACTERISTIC_UUID_QUICK_DRIVE).FirstAsync().ToTask();
                 }
             }
 
@@ -172,8 +174,8 @@ namespace BrickController2.DeviceManagement
                     (byte)0x00
                 };
 
-                _characteristic.WriteType = Plugin.BLE.Abstractions.CharacteristicWriteType.Default;
-                return await _characteristic.WriteAsync(buffer, token);
+                await _characteristic.Write(buffer).ToTask(token);
+                return true;
             }
             catch (Exception)
             {
@@ -191,8 +193,8 @@ namespace BrickController2.DeviceManagement
                     (byte)(outputLevelValue + 1)
                 };
 
-                _characteristic.WriteType = Plugin.BLE.Abstractions.CharacteristicWriteType.Default;
-                return await _characteristic.WriteAsync(buffer, token);
+                await _characteristic.Write(buffer).ToTask(token);
+                return true;
             }
             catch (Exception)
             {

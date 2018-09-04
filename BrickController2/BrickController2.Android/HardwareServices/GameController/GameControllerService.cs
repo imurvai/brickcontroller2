@@ -4,7 +4,7 @@ using Android.Runtime;
 using Android.Views;
 using BrickController2.HardwareServices.GameController;
 
-namespace BrickController2.Droid.HardwareServices
+namespace BrickController2.Droid.HardwareServices.GameController
 {
     public class GameControllerService : IGameControllerService
     {
