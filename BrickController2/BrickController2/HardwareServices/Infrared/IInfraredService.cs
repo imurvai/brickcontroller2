@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace BrickController2.HardwareServices
+namespace BrickController2.HardwareServices.Infrared
 {
     public interface IInfraredService
     {

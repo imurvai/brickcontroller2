@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace BrickController2.HardwareServices
+namespace BrickController2.HardwareServices.GameController
 {
     public class GameControllerEventArgs : EventArgs
     {

@@ -1,5 +1,6 @@
 ﻿using Autofac;
-using BrickController2.HardwareServices;
+using BrickController2.HardwareServices.GameController;
+using BrickController2.HardwareServices.Infrared;
 
 namespace BrickController2.iOS.HardwareServices.DI
 {

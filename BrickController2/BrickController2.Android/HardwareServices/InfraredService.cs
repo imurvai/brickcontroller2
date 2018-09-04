@@ -1,6 +1,6 @@
 ﻿using Android.Content;
 using Android.Hardware;
-using BrickController2.HardwareServices;
+using BrickController2.HardwareServices.Infrared;
 using System;
 using System.Threading.Tasks;
 

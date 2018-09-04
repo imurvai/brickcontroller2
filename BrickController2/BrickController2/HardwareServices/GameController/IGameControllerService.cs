@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BrickController2.HardwareServices
+namespace BrickController2.HardwareServices.GameController
 {
     public interface IGameControllerService
     {

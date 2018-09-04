@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BrickController2.HardwareServices;
+using BrickController2.HardwareServices.GameController;
 using Foundation;
 using GameController;
 

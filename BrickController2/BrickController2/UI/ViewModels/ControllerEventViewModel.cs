@@ -1,4 +1,4 @@
-﻿using BrickController2.HardwareServices;
+﻿using BrickController2.HardwareServices.GameController;
 using BrickController2.Helpers;
 
 namespace BrickController2.UI.ViewModels

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BrickController2.HardwareServices;
+using BrickController2.HardwareServices.GameController;
 using BrickController2.UI.Services.Dialog;
 using CoreGraphics;
 using UIKit;

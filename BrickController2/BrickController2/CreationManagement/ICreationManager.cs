@@ -1,4 +1,4 @@
-﻿using BrickController2.HardwareServices;
+﻿using BrickController2.HardwareServices.GameController;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
