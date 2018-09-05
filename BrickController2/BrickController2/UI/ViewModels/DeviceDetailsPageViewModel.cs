@@ -5,11 +5,7 @@ using BrickController2.UI.Services.Dialog;
 using Xamarin.Forms;
 using Device = BrickController2.DeviceManagement.Device;
 using System.Threading.Tasks;
-using System;
-using System.Collections.Generic;
-using BrickController2.Helpers;
 using System.Collections.ObjectModel;
-using System.Threading;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -17,8 +13,6 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
-
-        private CancellationTokenSource _connectCancellationTokenSource;
 
         public DeviceDetailsPageViewModel(
             INavigationService navigationService,
@@ -64,21 +58,6 @@ namespace BrickController2.UI.ViewModels
             await Device.DisconnectAsync();
 
             base.OnDisappearing();
-        }
-
-        private async Task SelectMenuItem()
-        {
-            var menuActions = new Dictionary<string, Func<Task>>
-            {
-                { "Rename device", RenameDeviceAsync },
-                { "Delete device", DeleteDeviceAsync }
-            };
-
-            var selectedItem = await DisplayActionSheetAsync("Select an option", "Cancel", null, menuActions.GetKeyArray());
-            if (menuActions.ContainsKey(selectedItem))
-            {
-                await menuActions[selectedItem].Invoke();
-            }
         }
 
         private async Task RenameDeviceAsync()
@@ -129,11 +108,6 @@ namespace BrickController2.UI.ViewModels
             {
                 await DisplayAlertAsync("Warning", "Failed to connect to device.", "Ok");
             }
-        }
-
-        private async Task DisconnectAsync()
-        {
-
         }
 
         private async void DeviceStateChangedHandler(object sender, DeviceStateChangedEventArgs args)
