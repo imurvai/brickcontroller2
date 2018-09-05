@@ -2,18 +2,19 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
-    internal class DeviceManager : IDeviceManager
+    internal class DeviceManager : NotifyPropertyChangedSource, IDeviceManager
     {
         private readonly IBluetoothDeviceManager _bluetoothDeviceManager;
         private readonly IInfraredDeviceManager _infraredDeviceManager;
         private readonly IDeviceRepository _deviceRepository;
         private readonly DeviceFactory _deviceFactory;
         private readonly AsyncLock _asyncLock = new AsyncLock();
+
+        private bool _isScanning;
 
         public DeviceManager(
             IBluetoothDeviceManager bluetoothDeviceManager,
@@ -28,6 +29,12 @@ namespace BrickController2.DeviceManagement
         }
 
         public ObservableCollection<Device> Devices { get; } = new ObservableCollection<Device>();
+
+        public bool IsScanning
+        {
+            get { return _isScanning; }
+            set { _isScanning = value; RaisePropertyChanged(); }
+        }
 
         public async Task LoadDevicesAsync()
         {
@@ -47,12 +54,14 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task ScanAsync(CancellationToken token)
+        public async Task StartScanAsync()
         {
             using (await _asyncLock.LockAsync())
             {
-                var infraScan = _infraredDeviceManager.ScanAsync(FoundDevice, token);
-                var bluetoothScan = _bluetoothDeviceManager.ScanAsync(FoundDevice, token);
+                IsScanning = true;
+
+                var infraScan = _infraredDeviceManager.StartScanAsync(FoundDevice);
+                var bluetoothScan = _bluetoothDeviceManager.StartScanAsync(FoundDevice);
 
                 await Task.WhenAll(infraScan, bluetoothScan);
             }
@@ -70,6 +79,19 @@ namespace BrickController2.DeviceManagement
                     await _deviceRepository.InsertDeviceAsync(device.DeviceType, device.Name, device.Address);
                     Devices.Add(device);
                 }
+            }
+        }
+
+        public async Task StopScanAsync()
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var infraScan = _infraredDeviceManager.StopScanAsync();
+                var bluetoothScan = _bluetoothDeviceManager.StopScanAsync();
+
+                await Task.WhenAll(infraScan, bluetoothScan);
+
+                IsScanning = false;
             }
         }
 

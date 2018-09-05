@@ -34,15 +34,22 @@ namespace BrickController2.DeviceManagement
             _infraredService = infraredService;
         }
 
-        public async Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
+        public async Task StartScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback)
         {
-            if (_infraredService.IsInfraredSupported && _infraredService.IsCarrierFrequencySupported(IR_FREQUENCY))
+            using (await _asyncLock.LockAsync())
             {
-                await deviceFoundCallback(DeviceType.Infrared, "PF Infra 1", "0");
-                await deviceFoundCallback(DeviceType.Infrared, "PF Infra 2", "1");
-                await deviceFoundCallback(DeviceType.Infrared, "PF Infra 3", "2");
-                await deviceFoundCallback(DeviceType.Infrared, "PF Infra 4", "3");
+                if (_infraredService.IsInfraredSupported && _infraredService.IsCarrierFrequencySupported(IR_FREQUENCY))
+                {
+                    await deviceFoundCallback(DeviceType.Infrared, "PF Infra 1", "0");
+                    await deviceFoundCallback(DeviceType.Infrared, "PF Infra 2", "1");
+                    await deviceFoundCallback(DeviceType.Infrared, "PF Infra 3", "2");
+                    await deviceFoundCallback(DeviceType.Infrared, "PF Infra 4", "3");
+                }
             }
+        }
+
+        public async Task StopScanAsync()
+        {
         }
 
         public async Task<DeviceConnectionResult> ConnectDevice(InfraredDevice device)

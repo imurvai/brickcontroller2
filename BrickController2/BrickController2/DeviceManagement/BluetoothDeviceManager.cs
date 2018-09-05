@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using BrickController2.Helpers;
 using Plugin.BluetoothLE;
@@ -11,18 +10,25 @@ namespace BrickController2.DeviceManagement
         private readonly IAdapter _adapter;
         private readonly AsyncLock _asyncLock = new AsyncLock();
 
+        public IDisposable _scanObservable;
+
         public BluetoothDeviceManager(IAdapter adapter)
         {
             _adapter = adapter;
         }
 
-        public async Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
+        public async Task StartScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback)
         {
             using (await _asyncLock.LockAsync())
             {
                 try
                 {
-                    using (_adapter.ScanExtra(new ScanConfig { ScanType = BleScanType.LowLatency })
+                    if (_scanObservable != null)
+                    {
+                        _adapter.StopScan();
+                    }
+
+                    _scanObservable = _adapter.ScanExtra(new ScanConfig { ScanType = BleScanType.LowLatency }, true)
                         .Subscribe(async scanResult =>
                         {
                             var deviceType = GetDeviceType(scanResult.AdvertisementData);
@@ -30,17 +36,24 @@ namespace BrickController2.DeviceManagement
                             {
                                 await deviceFoundCallback(deviceType, scanResult.Device.Name, scanResult.Device.Uuid.ToString());
                             }
-                        }))
-                    {
-                        await token.WaitAsync();
-                    }
+                        });
                 }
-                catch (OperationCanceledException)
-                {
-                }
-                finally
+                catch (Exception)
                 {
                     _adapter.StopScan();
+                }
+            }
+        }
+
+        public async Task StopScanAsync()
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                if (_scanObservable != null)
+                {
+                    _adapter.StopScan();
+                    _scanObservable.Dispose();
+                    _scanObservable = null;
                 }
             }
         }

@@ -13,7 +13,6 @@ namespace BrickController2.UI.ViewModels
 {
     public class DeviceListPageViewModel : PageViewModelBase
     {
-        private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
 
         public DeviceListPageViewModel(
@@ -22,44 +21,45 @@ namespace BrickController2.UI.ViewModels
             IDialogService dialogService) 
             : base(navigationService)
         {
-            _deviceManager = deviceManager;
+            DeviceManager = deviceManager;
             _dialogService = dialogService;
 
-            ScanCommand = new Command(async () => await ScanAsync());
+            ScanCommand = new Command(async () => await ScanAsync(), () => !DeviceManager.IsScanning);
             DeviceTappedCommand = new Command<Device>(async device => await NavigationService.NavigateToAsync<DeviceDetailsPageViewModel>(new NavigationParameters(("device", device))));
         }
 
-        public ObservableCollection<Device> Devices => _deviceManager.Devices;
+        public IDeviceManager DeviceManager { get; }
 
         public ICommand ScanCommand { get; }
         public ICommand DeviceTappedCommand { get; }
 
         private async Task ScanAsync()
         {
+            if (DeviceManager.IsScanning)
+            {
+                return;
+            }
+
             var percent = 0;
             await _dialogService.ShowProgressDialogAsync(
                 true,
                 async (progressDialog, token) =>
                 {
-                    using (var cts = new CancellationTokenSource())
+                    await DeviceManager.StartScanAsync();
+
+                    try
                     {
-                        var scanTask = _deviceManager.ScanAsync(cts.Token);
-
-                        try
+                        while (!token.IsCancellationRequested && percent <= 100)
                         {
-                            while (!token.IsCancellationRequested && percent <= 100)
-                            {
-                                progressDialog.Percent = percent;
-                                await Task.Delay(100, token);
-                                percent += 1;
-                            }
+                            progressDialog.Percent = percent;
+                            await Task.Delay(100, token);
+                            percent += 1;
                         }
-                        catch (OperationCanceledException)
-                        { }
-
-                        cts.Cancel();
-                        await scanTask;
                     }
+                    catch (Exception)
+                    { }
+
+                    await DeviceManager.StopScanAsync();
                 },
                 "Scanning...",
                 "Searching for devices.",

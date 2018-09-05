@@ -19,9 +19,9 @@
         <Grid>
 
             <!-- Device list -->
-            <ListView ItemsSource="{Binding Devices}" SelectionMode="None" HasUnevenRows="True">
+            <ListView ItemsSource="{Binding DeviceManager.Devices}" SelectionMode="None" HasUnevenRows="True">
                 <ListView.Triggers>
-                    <DataTrigger TargetType="ListView" Binding="{Binding Devices.Count}" Value="0">
+                    <DataTrigger TargetType="ListView" Binding="{Binding DeviceManager.Devices.Count}" Value="0">
                         <Setter Property="IsVisible" Value="False"/>
                     </DataTrigger>
                 </ListView.Triggers>
