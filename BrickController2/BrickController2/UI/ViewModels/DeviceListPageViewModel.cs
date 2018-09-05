@@ -40,16 +40,20 @@ namespace BrickController2.UI.ViewModels
                 true,
                 async (progressDialog, token) =>
                 {
-                    var scanTask = _deviceManager.ScanAsync(token);
-
-                    while (!token.IsCancellationRequested && percent <= 100)
+                    using (var cts = new CancellationTokenSource())
                     {
-                        progressDialog.Percent = percent;
-                        await Task.Delay(100, token);
-                        percent += 1;
-                    }
+                        var scanTask = _deviceManager.ScanAsync(cts.Token);
 
-                    await scanTask;
+                        while (!token.IsCancellationRequested && percent <= 100)
+                        {
+                            progressDialog.Percent = percent;
+                            await Task.Delay(100, token);
+                            percent += 1;
+                        }
+
+                        cts.Cancel();
+                        await scanTask;
+                    }
                 },
                 "Scanning...",
                 "Searching for devices.",
