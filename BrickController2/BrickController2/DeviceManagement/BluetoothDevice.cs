@@ -40,12 +40,13 @@ namespace BrickController2.DeviceManagement
                     SetState(DeviceState.Connecting, false);
 
                     var guid = Guid.Parse(Address);
-                    _bleDevice = await _adapter.GetKnownDevice(guid).FirstAsync().ToTask();
+                    _bleDevice = await _adapter.GetKnownDevice(guid).FirstAsync().ToTask(token);
+
                     // TODO: Setup the state changed event!!!
 
                     await _bleDevice.ConnectWait().ToTask(token);
 
-                    var services = await _bleDevice.DiscoverServices().ToList().ToTask();
+                    var services = await _bleDevice.DiscoverServices().ToList().ToTask(token);
 
                     if (await ProcessServices(services))
                     {
@@ -55,6 +56,7 @@ namespace BrickController2.DeviceManagement
                     else
                     {
                         await DisconnectInternalAsync();
+                        return DeviceConnectionResult.Error;
                     }
                 }
                 catch (OperationCanceledException)

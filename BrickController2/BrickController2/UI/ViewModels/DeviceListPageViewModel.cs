@@ -1,4 +1,5 @@
-﻿using BrickController2.DeviceManagement;
+﻿using System;
+using BrickController2.DeviceManagement;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
 using System.Collections.ObjectModel;
@@ -44,12 +45,17 @@ namespace BrickController2.UI.ViewModels
                     {
                         var scanTask = _deviceManager.ScanAsync(cts.Token);
 
-                        while (!token.IsCancellationRequested && percent <= 100)
+                        try
                         {
-                            progressDialog.Percent = percent;
-                            await Task.Delay(100, token);
-                            percent += 1;
+                            while (!token.IsCancellationRequested && percent <= 100)
+                            {
+                                progressDialog.Percent = percent;
+                                await Task.Delay(100, token);
+                                percent += 1;
+                            }
                         }
+                        catch (OperationCanceledException)
+                        { }
 
                         cts.Cancel();
                         await scanTask;

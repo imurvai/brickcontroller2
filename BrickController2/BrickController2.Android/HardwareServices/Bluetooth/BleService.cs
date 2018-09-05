@@ -59,7 +59,7 @@ namespace BrickController2.Droid.HardwareServices.Bluetooth
                 try
                 {
                     _bluetoothAdapter.StartLeScan(oldScanCallback);
-                    await Task.Run(() => token.WaitHandle.WaitOne());
+                    await token.WaitAsync();
                 }
                 catch (Exception)
                 {

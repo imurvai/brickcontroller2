@@ -32,7 +32,7 @@ namespace BrickController2.DeviceManagement
                             }
                         }))
                     {
-                        await Task.Run(() => token.WaitHandle.WaitOne());
+                        await token.WaitAsync();
                     }
                 }
                 catch (OperationCanceledException)
