@@ -2,12 +2,11 @@
 using BrickController2.DeviceManagement;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
-using System.Collections.ObjectModel;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Device = BrickController2.DeviceManagement.Device;
+using BrickController2.UI.Commands;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -24,8 +23,8 @@ namespace BrickController2.UI.ViewModels
             DeviceManager = deviceManager;
             _dialogService = dialogService;
 
-            ScanCommand = new Command(async () => await ScanAsync(), () => !DeviceManager.IsScanning);
-            DeviceTappedCommand = new Command<Device>(async device => await NavigationService.NavigateToAsync<DeviceDetailsPageViewModel>(new NavigationParameters(("device", device))));
+            ScanCommand = new SafeCommand(async () => await ScanAsync(), () => !DeviceManager.IsScanning);
+            DeviceTappedCommand = new SafeCommand<Device>(async device => await NavigationService.NavigateToAsync<DeviceDetailsPageViewModel>(new NavigationParameters(("device", device))));
         }
 
         public IDeviceManager DeviceManager { get; }

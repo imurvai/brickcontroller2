@@ -120,10 +120,12 @@ namespace BrickController2.Droid.UI.Services
                 var view = _context.LayoutInflater.Inflate(Resource.Layout.ProgressDialog, null);
                 var linearLayout = view.FindViewById<LinearLayout>(Resource.Id.linearlayout);
 
-                var progressBar = new ProgressBar(_context, null, isDeterministic ? Android.Resource.Attribute.ProgressBarStyleHorizontal : Android.Resource.Attribute.ProgressBarStyle);
-                progressBar.Indeterminate = !isDeterministic;
-                progressBar.Progress = 0;
-                progressBar.Max = 100;
+                var progressBar = new ProgressBar(_context, null, isDeterministic ? Android.Resource.Attribute.ProgressBarStyleHorizontal : Android.Resource.Attribute.ProgressBarStyle)
+                {
+                    Indeterminate = !isDeterministic,
+                    Progress = 0,
+                    Max = 100
+                };
 
                 linearLayout.AddView(progressBar);
 
@@ -139,6 +141,8 @@ namespace BrickController2.Droid.UI.Services
 
                 using (var dialog = dialogBuilder.Create())
                 {
+                    void DialogCanceledHandler(object sender, EventArgs args) => tokenSource.Cancel();
+
                     dialog.CancelEvent += DialogCanceledHandler;
                     dialog.SetCancelable(false);
                     dialog.SetCanceledOnTouchOutside(false);
@@ -156,11 +160,6 @@ namespace BrickController2.Droid.UI.Services
                     {
                         dialog.CancelEvent -= DialogCanceledHandler;
                         dialog.Dismiss();
-                    }
-
-                    void DialogCanceledHandler(object sender, EventArgs args)
-                    {
-                        tokenSource.Cancel();
                     }
                 }
             }

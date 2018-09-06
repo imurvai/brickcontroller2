@@ -13,14 +13,21 @@ namespace BrickController2.Droid.UI.CustomRenderers
         {
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<Slider> e)
+        protected override void OnLayout(bool changed, int l, int t, int r, int b)
         {
-            base.OnElementChanged(e);
+            base.OnLayout(changed, l, t, r, b);
 
             if (Element is ExtendedSlider extendedSlider && Control != null)
             {
                 Control.StartTrackingTouch += (sender, args) => extendedSlider.TouchDown();
                 Control.StopTrackingTouch += (sender, args) => extendedSlider.TouchUp();
+                Control.ProgressChanged += (sender, args) =>
+                {
+                    if (args.FromUser)
+                    {
+                        extendedSlider.Value = extendedSlider.Minimum + ((extendedSlider.Maximum - extendedSlider.Minimum) * args.Progress / 1000);
+                    }
+                };
             }
         }
     }
