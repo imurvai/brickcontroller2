@@ -2,7 +2,7 @@
 
 namespace BrickController2.DeviceManagement
 {
-    internal interface IInfraredDeviceManager : ISpecificDeviceManager
+    internal interface IInfraredDeviceManager : IDeviceScanner
     {
         Task<DeviceConnectionResult> ConnectDevice(InfraredDevice device);
         Task DisconnectDevice(InfraredDevice device);

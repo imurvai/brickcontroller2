@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
-    internal interface ISpecificDeviceManager
+    internal interface IDeviceScanner
     {
         Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token);
     }

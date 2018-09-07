@@ -1,6 +1,6 @@
 ﻿namespace BrickController2.DeviceManagement
 {
-    internal interface IBluetoothDeviceManager : ISpecificDeviceManager
+    internal interface IBluetoothDeviceManager : IDeviceScanner
     {
     }
 }

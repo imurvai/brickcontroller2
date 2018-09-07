@@ -83,7 +83,17 @@ namespace BrickController2.UI.ViewModels
 
         private async Task AddControllerEvent()
         {
-            await DisplayAlertAsync(null, "Add will be here", "Ok");
+            var result = await _dialogService.ShowGameControllerEventDialogAsync("Controller", "Press a button or move a joy on the game controller", "Cancel");
+            if (result.IsOk)
+            {
+                ControllerEvent controllerEvent = null;
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => controllerEvent = await _creationManager.AddOrGetControllerEventAsync(ControllerProfile, result.EventType, result.EventCode),
+                    "Creating...");
+
+                //await NavigationService.NavigateToAsync<ControllerEventDetailsPageViewModel>(new NavigationParameters(("controllerevent", controllerEvent)));
+            }
         }
     }
 }
