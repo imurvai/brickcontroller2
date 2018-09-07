@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using BrickController2.Helpers;
 using Plugin.BluetoothLE;
@@ -10,50 +11,44 @@ namespace BrickController2.DeviceManagement
         private readonly IAdapter _adapter;
         private readonly AsyncLock _asyncLock = new AsyncLock();
 
-        public IDisposable _scanObservable;
-
         public BluetoothDeviceManager(IAdapter adapter)
         {
             _adapter = adapter;
         }
 
-        public async Task StartScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback)
+        public async Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
+                if (_adapter.IsScanning)
+                {
+                    return;
+                }
+
                 try
                 {
-                    if (_scanObservable != null)
+                    await Task.Run(async () =>
                     {
-                        _adapter.StopScan();
-                    }
-
-                    _scanObservable = _adapter.ScanExtra(new ScanConfig { ScanType = BleScanType.LowLatency }, true)
-                        .Subscribe(async scanResult =>
-                        {
-                            var deviceType = GetDeviceType(scanResult.AdvertisementData);
-                            if (deviceType != DeviceType.Unknown)
+                        using (_adapter.Scan(new ScanConfig { ScanType = BleScanType.LowLatency })
+                            .Subscribe(async scanResult =>
                             {
-                                await deviceFoundCallback(deviceType, scanResult.Device.Name, scanResult.Device.Uuid.ToString());
-                            }
-                        });
+                                var deviceType = GetDeviceType(scanResult.AdvertisementData);
+                                if (deviceType != DeviceType.Unknown)
+                                {
+                                    await deviceFoundCallback(deviceType, scanResult.Device.Name, scanResult.Device.Uuid.ToString());
+                                }
+                            }))
+                        {
+                            await token.WaitAsync();
+                        }
+                    });
                 }
                 catch (Exception)
                 {
-                    _adapter.StopScan();
                 }
-            }
-        }
-
-        public async Task StopScanAsync()
-        {
-            using (await _asyncLock.LockAsync())
-            {
-                if (_scanObservable != null)
+                finally
                 {
                     _adapter.StopScan();
-                    _scanObservable.Dispose();
-                    _scanObservable = null;
                 }
             }
         }

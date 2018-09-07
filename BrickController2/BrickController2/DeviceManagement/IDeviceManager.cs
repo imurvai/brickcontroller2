@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
@@ -10,8 +11,7 @@ namespace BrickController2.DeviceManagement
         bool IsScanning { get; }
 
         Task LoadDevicesAsync();
-        Task StartScanAsync();
-        Task StopScanAsync();
+        Task ScanAsync(CancellationToken token);
         Task<Device> GetDeviceById(string Id);
         Task DeleteDeviceAsync(Device device);
     }

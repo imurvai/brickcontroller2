@@ -6,11 +6,21 @@ using Xamarin.Forms.Xaml;
 namespace BrickController2.UI.MarkupExtensions
 {
     [ContentProperty(nameof(Source))]
-    public class ImageResourceExtension : IMarkupExtension
+    public class ImageResourceExtension : IMarkupExtension<ImageSource>
     {
         public string Source { get; set; }
 
-        public object ProvideValue(IServiceProvider serviceProvider)
+        public ImageSource ProvideValue(IServiceProvider serviceProvider)
+        {
+            return ProvideValueInternal(serviceProvider);
+        }
+
+        object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider)
+        {
+            return ProvideValueInternal(serviceProvider);
+        }
+
+        private ImageSource ProvideValueInternal(IServiceProvider serviceProvider)
         {
             if (string.IsNullOrEmpty(Source))
             {

@@ -1,7 +1,9 @@
 ﻿using BrickController2.Helpers;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
@@ -13,6 +15,7 @@ namespace BrickController2.DeviceManagement
         private readonly IDeviceRepository _deviceRepository;
         private readonly DeviceFactory _deviceFactory;
         private readonly AsyncLock _asyncLock = new AsyncLock();
+        private readonly AsyncLock _foundDeviceLock = new AsyncLock();
 
         private bool _isScanning;
 
@@ -54,44 +57,42 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task StartScanAsync()
+        public async Task ScanAsync(CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
                 IsScanning = true;
 
-                var infraScan = _infraredDeviceManager.StartScanAsync(FoundDevice);
-                var bluetoothScan = _bluetoothDeviceManager.StartScanAsync(FoundDevice);
+                try
+                {
+                    var infraScan = _infraredDeviceManager.ScanAsync(FoundDevice, token);
+                    var bluetoothScan = _bluetoothDeviceManager.ScanAsync(FoundDevice, token);
 
-                await Task.WhenAll(infraScan, bluetoothScan);
+                    await Task.WhenAll(infraScan, bluetoothScan);
+                }
+                catch (Exception e)
+                {
+                }
+
+                IsScanning = false;
             }
 
             async Task FoundDevice(DeviceType deviceType, string deviceName, string deviceAddress)
             {
-                if (Devices.Any(d => d.DeviceType == deviceType && d.Address == deviceAddress))
+                using (await _foundDeviceLock.LockAsync())
                 {
-                    return;
+                    if (Devices.Any(d => d.DeviceType == deviceType && d.Address == deviceAddress))
+                    {
+                        return;
+                    }
+
+                    var device = _deviceFactory(deviceType, deviceName, deviceAddress);
+                    if (device != null)
+                    {
+                        await _deviceRepository.InsertDeviceAsync(device.DeviceType, device.Name, device.Address);
+                        Devices.Add(device);
+                    }
                 }
-
-                var device = _deviceFactory(deviceType, deviceName, deviceAddress);
-                if (device != null)
-                {
-                    await _deviceRepository.InsertDeviceAsync(device.DeviceType, device.Name, device.Address);
-                    Devices.Add(device);
-                }
-            }
-        }
-
-        public async Task StopScanAsync()
-        {
-            using (await _asyncLock.LockAsync())
-            {
-                var infraScan = _infraredDeviceManager.StopScanAsync();
-                var bluetoothScan = _bluetoothDeviceManager.StopScanAsync();
-
-                await Task.WhenAll(infraScan, bluetoothScan);
-
-                IsScanning = false;
             }
         }
 

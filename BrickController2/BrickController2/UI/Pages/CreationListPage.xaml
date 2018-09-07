@@ -2,10 +2,11 @@
 <local:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:BrickController2.UI.Pages"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
-    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     x:Class="BrickController2.UI.Pages.CreationListPage"
     Title="Creations">
 
@@ -72,7 +73,7 @@
                         <TapGestureRecognizer Command="{Binding NavigateToDevicesCommand}"/>
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-                        <Image Source="ic_link.png" WidthRequest="20" HeightRequest="20"/>
+                        <Image Source="{extensions:ImageResource Source=ic_link.png}" WidthRequest="20" HeightRequest="20"/>
                         <Label Text="Devices" FontSize="Small"/>
                     </StackLayout>
                 </Frame>
@@ -81,7 +82,7 @@
                         <TapGestureRecognizer Command="{Binding NavigateToControllerTesterCommand}"/>
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-                        <Image Source="ic_console.png" WidthRequest="20" HeightRequest="20"/>
+                        <Image Source="{extensions:ImageResource Source=ic_console.png}" WidthRequest="20" HeightRequest="20"/>
                         <Label Text="Controller" FontSize="Small"/>
                     </StackLayout>
                 </Frame>
@@ -90,7 +91,7 @@
                         <TapGestureRecognizer Command="{Binding NavigateToAboutCommand}"/>
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-                        <Image Source="ic_info.png" WidthRequest="20" HeightRequest="20"/>
+                        <Image Source="{extensions:ImageResource Source=ic_info.png}" WidthRequest="20" HeightRequest="20"/>
                         <Label Text="About" FontSize="Small"/>
                     </StackLayout>
                 </Frame>

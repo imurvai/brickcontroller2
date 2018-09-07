@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Device = BrickController2.DeviceManagement.Device;
 using BrickController2.UI.Commands;
+using System.Threading;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -33,31 +34,35 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ScanAsync()
         {
-            if (DeviceManager.IsScanning)
-            {
-                return;
-            }
-
             var percent = 0;
             await _dialogService.ShowProgressDialogAsync(
                 true,
                 async (progressDialog, token) =>
                 {
-                    await DeviceManager.StartScanAsync();
-
-                    try
+                    using (var cts = new CancellationTokenSource())
                     {
-                        while (!token.IsCancellationRequested && percent <= 100)
+                        Task scanTask = null;
+                        try
                         {
-                            progressDialog.Percent = percent;
-                            await Task.Delay(100, token);
-                            percent += 1;
+                            scanTask = DeviceManager.ScanAsync(cts.Token);
+
+                            while (!token.IsCancellationRequested && percent <= 100)
+                            {
+                                progressDialog.Percent = percent;
+                                await Task.Delay(100, token);
+                                percent += 1;
+                            }
+                        }
+                        catch (Exception)
+                        { }
+
+                        cts.Cancel();
+
+                        if (scanTask != null)
+                        {
+                            await scanTask;
                         }
                     }
-                    catch (Exception)
-                    { }
-
-                    await DeviceManager.StopScanAsync();
                 },
                 "Scanning...",
                 "Searching for devices.",
