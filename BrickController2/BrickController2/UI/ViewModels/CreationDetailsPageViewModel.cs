@@ -2,11 +2,11 @@
 using BrickController2.CreationManagement;
 using BrickController2.UI.Services.Navigation;
 using System.Windows.Input;
-using Xamarin.Forms;
 using BrickController2.UI.Services.Dialog;
 using System.Collections.Generic;
 using System;
 using BrickController2.Helpers;
+using BrickController2.UI.Commands;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -27,9 +27,9 @@ namespace BrickController2.UI.ViewModels
 
             Creation = parameters.Get<Creation>("creation");
 
-            MenuCommand = new Command(async () => await SelectMenuItemAsync());
-            AddControllerProfileCommand = new Command(async () => await AddControllerProfileAsync());
-            ControllerProfileTappedCommand = new Command<ControllerProfile>(async controllerProfile => await NavigationService.NavigateToAsync<ControllerProfileDetailsPageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile))));
+            MenuCommand = new SafeCommand(async () => await SelectMenuItemAsync());
+            AddControllerProfileCommand = new SafeCommand(async () => await AddControllerProfileAsync());
+            ControllerProfileTappedCommand = new SafeCommand<ControllerProfile>(async controllerProfile => await NavigationService.NavigateToAsync<ControllerProfileDetailsPageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile))));
         }
 
         public Creation Creation { get; }

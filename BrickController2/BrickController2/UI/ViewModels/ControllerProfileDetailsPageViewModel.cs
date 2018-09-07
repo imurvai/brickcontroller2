@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
 using BrickController2.CreationManagement;
+using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
-using Xamarin.Forms;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -24,9 +24,9 @@ namespace BrickController2.UI.ViewModels
 
             ControllerProfile = parameters.Get<ControllerProfile>("controllerprofile");
 
-            MenuCommand = new Command(async () => await SelectMenuItem());
-            AddControllerEventCommand = new Command(async () => await AddControllerEvent());
-            ControllerEventTappedCommand = new Command<ControllerEvent>(async controllerEvent => await DisplayAlertAsync(controllerEvent.EventCode, "Navigation will be here.", "Ok"));
+            MenuCommand = new SafeCommand(async () => await SelectMenuItem());
+            AddControllerEventCommand = new SafeCommand(async () => await AddControllerEvent());
+            ControllerEventTappedCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await DisplayAlertAsync(controllerEvent.EventCode, "Navigation will be here.", "Ok"));
         }
 
         public ControllerProfile ControllerProfile { get; }

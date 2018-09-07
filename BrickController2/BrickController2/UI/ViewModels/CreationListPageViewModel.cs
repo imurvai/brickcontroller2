@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
+using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
-using Xamarin.Forms;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -29,11 +29,11 @@ namespace BrickController2.UI.ViewModels
             _deviceManager = deviceManager;
             _dialogService = dialogService;
 
-            AddCreationCommand = new Command(async () => await AddCreation());
-            CreationTappedCommand = new Command<Creation>(async creation => await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation))));
-            NavigateToDevicesCommand = new Command(async () => await NavigationService.NavigateToAsync<DeviceListPageViewModel>());
-            NavigateToControllerTesterCommand = new Command(async () => await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>());
-            NavigateToAboutCommand = new Command(async () => await DisplayAlertAsync(null, "About selected", "Ok"));
+            AddCreationCommand = new SafeCommand(async () => await AddCreation());
+            CreationTappedCommand = new SafeCommand<Creation>(async creation => await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation))));
+            NavigateToDevicesCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<DeviceListPageViewModel>());
+            NavigateToControllerTesterCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>());
+            NavigateToAboutCommand = new SafeCommand(async () => await DisplayAlertAsync(null, "About selected", "Ok"));
         }
 
         public ObservableCollection<Creation> Creations => _creationManager.Creations;

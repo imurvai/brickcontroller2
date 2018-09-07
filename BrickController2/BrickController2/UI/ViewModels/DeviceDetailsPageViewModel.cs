@@ -2,10 +2,10 @@
 using BrickController2.DeviceManagement;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
-using Xamarin.Forms;
 using Device = BrickController2.DeviceManagement.Device;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using BrickController2.UI.Commands;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -26,9 +26,9 @@ namespace BrickController2.UI.ViewModels
 
             Device = parameters.Get<Device>("device");
 
-            RenameCommand = new Command(async () => await RenameDeviceAsync());
-            DeleteCommand = new Command(async () => await DeleteDeviceAsync());
-            ConnectCommand = new Command(async () => await ConnectAsync());
+            RenameCommand = new SafeCommand(async () => await RenameDeviceAsync());
+            DeleteCommand = new SafeCommand(async () => await DeleteDeviceAsync());
+            ConnectCommand = new SafeCommand(async () => await ConnectAsync());
 
             for (int i = 0; i < Device.NumberOfChannels; i++)
             {

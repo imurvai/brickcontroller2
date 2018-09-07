@@ -4,7 +4,6 @@ using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Forms;
 using Device = BrickController2.DeviceManagement.Device;
 using BrickController2.UI.Commands;
 

@@ -1,5 +1,4 @@
-﻿using BrickController2.DeviceManagement;
-using BrickController2.Helpers;
+﻿using BrickController2.Helpers;
 using System.Windows.Input;
 using Xamarin.Forms;
 
