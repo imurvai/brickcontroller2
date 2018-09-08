@@ -3,9 +3,6 @@ using BrickController2.CreationManagement;
 using BrickController2.UI.Services.Navigation;
 using System.Windows.Input;
 using BrickController2.UI.Services.Dialog;
-using System.Collections.Generic;
-using System;
-using BrickController2.Helpers;
 using BrickController2.UI.Commands;
 
 namespace BrickController2.UI.ViewModels
@@ -27,31 +24,18 @@ namespace BrickController2.UI.ViewModels
 
             Creation = parameters.Get<Creation>("creation");
 
-            MenuCommand = new SafeCommand(async () => await SelectMenuItemAsync());
+            RenameCreationCommand = new SafeCommand(async () => await RenameCreationAsync());
+            DeleteCreationCommand = new SafeCommand(async () => await DeleteCreationAsync());
             AddControllerProfileCommand = new SafeCommand(async () => await AddControllerProfileAsync());
             ControllerProfileTappedCommand = new SafeCommand<ControllerProfile>(async controllerProfile => await NavigationService.NavigateToAsync<ControllerProfileDetailsPageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile))));
         }
 
         public Creation Creation { get; }
 
-        public ICommand MenuCommand { get; }
+        public ICommand RenameCreationCommand { get; }
+        public ICommand DeleteCreationCommand { get; }
         public ICommand AddControllerProfileCommand { get; }
         public ICommand ControllerProfileTappedCommand { get; }
-
-        private async Task SelectMenuItemAsync()
-        {
-            var menuActions = new Dictionary<string, Func<Task>>
-            {
-                { "Rename creation", RenameCreationAsync },
-                { "Delete creation", DeleteCreationAsync }
-            };
-
-            var selectedItem = await DisplayActionSheetAsync("Select an option", "Cancel", null, menuActions.GetKeyArray());
-            if (menuActions.ContainsKey(selectedItem))
-            {
-                await menuActions[selectedItem].Invoke();
-            }
-        }
 
         private async Task RenameCreationAsync()
         {

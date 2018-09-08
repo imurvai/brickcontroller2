@@ -9,7 +9,8 @@
     Title="Creation details">
 
     <local:PageBase.ToolbarItems>
-        <ToolbarItem Icon="ic_menu.png" Order="Primary" Command="{Binding MenuCommand}"/>
+        <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameCreationCommand}"/>
+        <ToolbarItem Icon="ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteCreationCommand}"/>
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>

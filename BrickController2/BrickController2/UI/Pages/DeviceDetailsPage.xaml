@@ -21,7 +21,6 @@
     <local:PageBase.ToolbarItems>
         <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameCommand}"/>
         <ToolbarItem Icon="ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteCommand}"/>
-        <!--<ToolbarItem Icon="ic_menu.png" Order="Primary" Command="{Binding MenuCommand}"/>-->
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>

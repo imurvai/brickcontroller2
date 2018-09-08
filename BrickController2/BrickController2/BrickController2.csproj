@@ -14,11 +14,13 @@
     <None Remove="UI\Images\buwizz_image.png" />
     <None Remove="UI\Images\buwizz_image_small.png" />
     <None Remove="UI\Images\ic_add.png" />
+    <None Remove="UI\Images\ic_buttons.png" />
     <None Remove="UI\Images\ic_console.png" />
     <None Remove="UI\Images\ic_delete_black.png" />
     <None Remove="UI\Images\ic_edit_black.png" />
     <None Remove="UI\Images\ic_edit_white.png" />
     <None Remove="UI\Images\ic_info.png" />
+    <None Remove="UI\Images\ic_joystick.png" />
     <None Remove="UI\Images\ic_link.png" />
     <None Remove="UI\Images\ic_link_white.png" />
     <None Remove="UI\Images\ic_menu.png" />
@@ -36,11 +38,13 @@
     <EmbeddedResource Include="UI\Images\buwizz_image.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image_small.png" />
     <EmbeddedResource Include="UI\Images\ic_add.png" />
+    <EmbeddedResource Include="UI\Images\ic_buttons.png" />
     <EmbeddedResource Include="UI\Images\ic_console.png" />
     <EmbeddedResource Include="UI\Images\ic_delete_black.png" />
     <EmbeddedResource Include="UI\Images\ic_edit_black.png" />
     <EmbeddedResource Include="UI\Images\ic_edit_white.png" />
     <EmbeddedResource Include="UI\Images\ic_info.png" />
+    <EmbeddedResource Include="UI\Images\ic_joystick.png" />
     <EmbeddedResource Include="UI\Images\ic_link.png" />
     <EmbeddedResource Include="UI\Images\ic_link_white.png" />
     <EmbeddedResource Include="UI\Images\ic_menu.png" />

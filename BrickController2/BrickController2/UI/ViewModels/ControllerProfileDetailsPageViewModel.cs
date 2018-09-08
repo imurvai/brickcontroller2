@@ -24,33 +24,20 @@ namespace BrickController2.UI.ViewModels
 
             ControllerProfile = parameters.Get<ControllerProfile>("controllerprofile");
 
-            MenuCommand = new SafeCommand(async () => await SelectMenuItem());
-            AddControllerEventCommand = new SafeCommand(async () => await AddControllerEvent());
+            RenameProfileCommand = new SafeCommand(async () => await RenameControllerProfileAsync());
+            DeleteProfileCommand = new SafeCommand(async () => await DeleteControllerProfileAsync());
+            AddControllerEventCommand = new SafeCommand(async () => await AddControllerEventAsync());
             ControllerEventTappedCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await DisplayAlertAsync(controllerEvent.EventCode, "Navigation will be here.", "Ok"));
         }
 
         public ControllerProfile ControllerProfile { get; }
 
-        public ICommand MenuCommand { get; }
+        public ICommand RenameProfileCommand { get; }
+        public ICommand DeleteProfileCommand { get; }
         public ICommand AddControllerEventCommand { get; }
         public ICommand ControllerEventTappedCommand { get; }
 
-        private async Task SelectMenuItem()
-        {
-            var result = await DisplayActionSheetAsync("Select an option", "Cancel", "Delete profile", "Rename profile");
-            switch (result)
-            {
-                case "Delete profile":
-                    await DeleteControllerProfile();
-                    break;
-
-                case "Rename profile":
-                    await RenameControllerProfile();
-                    break;
-            }
-        }
-
-        private async Task RenameControllerProfile()
+        private async Task RenameControllerProfileAsync()
         {
             var result = await _dialogService.ShowInputDialogAsync("Rename", "Enter a new profile name", ControllerProfile.Name, "Profile name", "Rename", "Cancel");
             if (result.IsOk)
@@ -68,7 +55,7 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private async Task DeleteControllerProfile()
+        private async Task DeleteControllerProfileAsync()
         {
             if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this profile?", "Yes", "No"))
             {
@@ -81,7 +68,7 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private async Task AddControllerEvent()
+        private async Task AddControllerEventAsync()
         {
             var result = await _dialogService.ShowGameControllerEventDialogAsync("Controller", "Press a button or move a joy on the game controller", "Cancel");
             if (result.IsOk)
