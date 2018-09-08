@@ -5,14 +5,20 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     x:Class="BrickController2.UI.Pages.ControllerProfileDetailsPage"
     Title="Controller profile">
 
-    <local:PageBase.ToolbarItems>
-        <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameProfileCommand}"/>
-        <ToolbarItem Icon="ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteProfileCommand}"/>
-    </local:PageBase.ToolbarItems>
+    <local:PageBase.Resources>
+        <ResourceDictionary>
+            <converters:GameControllerEventTypeToImageConverter x:Key="EventTypeToImage"/>
+        </ResourceDictionary>
+    </local:PageBase.Resources>
 
+    <local:PageBase.ToolbarItems>
+        <ToolbarItem Icon="Source=ic_edit_white.png" Order="Primary" Command="{Binding RenameProfileCommand}"/>
+        <ToolbarItem Icon="Source=ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteProfileCommand}"/>
+    </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>
         <Grid>
@@ -45,7 +51,8 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" Padding="10">
-                                <Label Text="{Binding EventCode}" FontSize="Large" FontAttributes="Bold"/>
+                                <Image Source="{Binding EventType, Converter={StaticResource EventTypeToImage}}" WidthRequest="40" HeightRequest="40"/>
+                                <Label Text="{Binding EventCode}" FontSize="Large" FontAttributes="Bold" VerticalOptions="Center"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

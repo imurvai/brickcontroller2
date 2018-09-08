@@ -14,7 +14,7 @@ namespace BrickController2.UI.Converters
             switch (eventType)
             {
                 case GameControllerEventType.Button:
-                    return ImageSource.FromResource($"{ImageHelper.ImageResourceRootNameSpace}.ic_button.png");
+                    return ImageSource.FromResource($"{ImageHelper.ImageResourceRootNameSpace}.ic_buttons.png");
 
                 case GameControllerEventType.Axis:
                     return ImageSource.FromResource($"{ImageHelper.ImageResourceRootNameSpace}.ic_joystick.png");

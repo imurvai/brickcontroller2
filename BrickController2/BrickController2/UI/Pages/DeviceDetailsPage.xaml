@@ -5,7 +5,6 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
-    xmlns:templateSelectors="clr-namespace:BrickController2.UI.DataTemplateSelectors"
     x:Class="BrickController2.UI.Pages.DeviceDetailsPage"
     Title="Device details">
 
