@@ -2,9 +2,9 @@
 
 namespace BrickController2.UI.Pages
 {
-	public partial class CreationDetailsPage
+	public partial class CreationPage
 	{
-		public CreationDetailsPage(PageViewModelBase vm)
+		public CreationPage(PageViewModelBase vm)
 		{
 			InitializeComponent();
             BindingContext = vm;

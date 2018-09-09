@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:PageBase
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    x:Class="BrickController2.UI.Pages.ControllerActionPage">
+    
+    <local:PageBase.Content>
+        <StackLayout>
+            <Label Text="controller action"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+    </local:PageBase.Content>
+</local:PageBase>

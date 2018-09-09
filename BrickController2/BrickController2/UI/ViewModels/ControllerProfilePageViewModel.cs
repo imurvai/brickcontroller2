@@ -7,12 +7,12 @@ using BrickController2.UI.Services.Dialog;
 
 namespace BrickController2.UI.ViewModels
 {
-    public class ControllerProfileDetailsPageViewModel : PageViewModelBase
+    public class ControllerProfilePageViewModel : PageViewModelBase
     {
         private readonly ICreationManager _creationManager;
         private readonly IDialogService _dialogService;
 
-        public ControllerProfileDetailsPageViewModel(
+        public ControllerProfilePageViewModel(
             INavigationService navigationService,
             ICreationManager creationManager,
             IDialogService dialogService,
@@ -27,7 +27,7 @@ namespace BrickController2.UI.ViewModels
             RenameProfileCommand = new SafeCommand(async () => await RenameControllerProfileAsync());
             DeleteProfileCommand = new SafeCommand(async () => await DeleteControllerProfileAsync());
             AddControllerEventCommand = new SafeCommand(async () => await AddControllerEventAsync());
-            ControllerEventTappedCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await DisplayAlertAsync(controllerEvent.EventCode, "Navigation will be here.", "Ok"));
+            ControllerEventTappedCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await NavigationService.NavigateToAsync<ControllerEventPageViewModel>(new NavigationParameters(("controllerevent", controllerEvent))));
         }
 
         public ControllerProfile ControllerProfile { get; }
@@ -70,7 +70,10 @@ namespace BrickController2.UI.ViewModels
 
         private async Task AddControllerEventAsync()
         {
-            var result = await _dialogService.ShowGameControllerEventDialogAsync("Controller", "Press a button or move a joy on the game controller", "Cancel");
+            //var result = await _dialogService.ShowGameControllerEventDialogAsync("Controller", "Press a button or move a joy on the game controller", "Cancel");
+
+            var result = new GameControllerEventDialogResult(true, HardwareServices.GameController.GameControllerEventType.Button, "ButtonA");
+
             if (result.IsOk)
             {
                 ControllerEvent controllerEvent = null;
@@ -79,7 +82,7 @@ namespace BrickController2.UI.ViewModels
                     async (progressDialog, token) => controllerEvent = await _creationManager.AddOrGetControllerEventAsync(ControllerProfile, result.EventType, result.EventCode),
                     "Creating...");
 
-                //await NavigationService.NavigateToAsync<ControllerEventDetailsPageViewModel>(new NavigationParameters(("controllerevent", controllerEvent)));
+                await NavigationService.NavigateToAsync<ControllerEventPageViewModel>(new NavigationParameters(("controllerevent", controllerEvent)));
             }
         }
     }

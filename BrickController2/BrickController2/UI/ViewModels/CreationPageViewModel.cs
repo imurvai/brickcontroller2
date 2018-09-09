@@ -7,12 +7,12 @@ using BrickController2.UI.Commands;
 
 namespace BrickController2.UI.ViewModels
 {
-    public class CreationDetailsPageViewModel : PageViewModelBase
+    public class CreationPageViewModel : PageViewModelBase
     {
         private readonly ICreationManager _creationManager;
         private readonly IDialogService _dialogService;
 
-        public CreationDetailsPageViewModel(
+        public CreationPageViewModel(
             INavigationService navigationService,
             ICreationManager creationManager,
             IDialogService dialogService,
@@ -27,7 +27,7 @@ namespace BrickController2.UI.ViewModels
             RenameCreationCommand = new SafeCommand(async () => await RenameCreationAsync());
             DeleteCreationCommand = new SafeCommand(async () => await DeleteCreationAsync());
             AddControllerProfileCommand = new SafeCommand(async () => await AddControllerProfileAsync());
-            ControllerProfileTappedCommand = new SafeCommand<ControllerProfile>(async controllerProfile => await NavigationService.NavigateToAsync<ControllerProfileDetailsPageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile))));
+            ControllerProfileTappedCommand = new SafeCommand<ControllerProfile>(async controllerProfile => await NavigationService.NavigateToAsync<ControllerProfilePageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile))));
         }
 
         public Creation Creation { get; }
@@ -85,7 +85,7 @@ namespace BrickController2.UI.ViewModels
                     async (progressDialog, token) => controllerProfile = await _creationManager.AddControllerProfileAsync(Creation, result.Result),
                     "Creating...");
 
-                await NavigationService.NavigateToAsync<ControllerProfileDetailsPageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile)));
+                await NavigationService.NavigateToAsync<ControllerProfilePageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile)));
             }
         }
     }

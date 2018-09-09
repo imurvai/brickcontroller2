@@ -24,7 +24,7 @@ namespace BrickController2.UI.ViewModels
             _dialogService = dialogService;
 
             ScanCommand = new SafeCommand(async () => await ScanAsync(), () => !DeviceManager.IsScanning);
-            DeviceTappedCommand = new SafeCommand<Device>(async device => await NavigationService.NavigateToAsync<DeviceDetailsPageViewModel>(new NavigationParameters(("device", device))));
+            DeviceTappedCommand = new SafeCommand<Device>(async device => await NavigationService.NavigateToAsync<DevicePageViewModel>(new NavigationParameters(("device", device))));
         }
 
         public IDeviceManager DeviceManager { get; }

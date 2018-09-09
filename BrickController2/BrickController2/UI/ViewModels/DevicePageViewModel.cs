@@ -9,12 +9,12 @@ using BrickController2.UI.Commands;
 
 namespace BrickController2.UI.ViewModels
 {
-    public class DeviceDetailsPageViewModel : PageViewModelBase
+    public class DevicePageViewModel : PageViewModelBase
     {
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
 
-        public DeviceDetailsPageViewModel(
+        public DevicePageViewModel(
             INavigationService navigationService,
             IDeviceManager deviceManager,
             IDialogService dialogService,

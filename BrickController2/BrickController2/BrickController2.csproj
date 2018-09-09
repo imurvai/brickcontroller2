@@ -18,16 +18,12 @@
     <None Remove="UI\Images\ic_console.png" />
     <None Remove="UI\Images\ic_delete_black.png" />
     <None Remove="UI\Images\ic_edit_black.png" />
-    <None Remove="UI\Images\ic_edit_white.png" />
     <None Remove="UI\Images\ic_info.png" />
     <None Remove="UI\Images\ic_joystick.png" />
     <None Remove="UI\Images\ic_link.png" />
-    <None Remove="UI\Images\ic_link_white.png" />
     <None Remove="UI\Images\ic_menu.png" />
     <None Remove="UI\Images\ic_play_black.png" />
-    <None Remove="UI\Images\ic_play_white.png" />
     <None Remove="UI\Images\ic_search.png" />
-    <None Remove="UI\Images\ic_trashbin_white.png" />
     <None Remove="UI\Images\infra_image.png" />
     <None Remove="UI\Images\infra_image_small.png" />
     <None Remove="UI\Images\sbrick_image.png" />
@@ -42,16 +38,12 @@
     <EmbeddedResource Include="UI\Images\ic_console.png" />
     <EmbeddedResource Include="UI\Images\ic_delete_black.png" />
     <EmbeddedResource Include="UI\Images\ic_edit_black.png" />
-    <EmbeddedResource Include="UI\Images\ic_edit_white.png" />
     <EmbeddedResource Include="UI\Images\ic_info.png" />
     <EmbeddedResource Include="UI\Images\ic_joystick.png" />
     <EmbeddedResource Include="UI\Images\ic_link.png" />
-    <EmbeddedResource Include="UI\Images\ic_link_white.png" />
     <EmbeddedResource Include="UI\Images\ic_menu.png" />
     <EmbeddedResource Include="UI\Images\ic_play_black.png" />
-    <EmbeddedResource Include="UI\Images\ic_play_white.png" />
     <EmbeddedResource Include="UI\Images\ic_search.png" />
-    <EmbeddedResource Include="UI\Images\ic_trashbin_white.png" />
     <EmbeddedResource Include="UI\Images\infra_image.png" />
     <EmbeddedResource Include="UI\Images\infra_image_small.png" />
     <EmbeddedResource Include="UI\Images\sbrick_image.png" />
@@ -72,8 +64,14 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="UI\Pages\ControllerProfileDetailsPage.xaml.cs">
-      <DependentUpon>ControllerProfileDetailsPage.xaml</DependentUpon>
+    <Compile Update="UI\Pages\ControllerProfilePage.xaml.cs">
+      <DependentUpon>ControllerProfilePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="UI\Pages\CreationPage.xaml.cs">
+      <DependentUpon>CreationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="UI\Pages\DevicePage.xaml.cs">
+      <DependentUpon>DevicePage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -85,22 +83,34 @@
     <EmbeddedResource Update="UI\Controls\FloatingActionButton.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="UI\Pages\ControllerProfileDetailsPage.xaml">
+    <EmbeddedResource Update="UI\Pages\AboutPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="UI\Pages\ControllerActionPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="UI\Pages\ControllerEventPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="UI\Pages\ControllerProfilePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="UI\Pages\ControllerTesterPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="UI\Pages\CreationDetailsPage.xaml">
+    <EmbeddedResource Update="UI\Pages\CreationPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="UI\Pages\CreationListPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="UI\Pages\DeviceDetailsPage.xaml">
+    <EmbeddedResource Update="UI\Pages\DevicePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="UI\Pages\DeviceListPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="UI\Pages\PlayerPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

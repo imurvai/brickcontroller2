@@ -70,7 +70,7 @@ namespace BrickController2.DeviceManagement
 
                     await Task.WhenAll(infraScan, bluetoothScan);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
 

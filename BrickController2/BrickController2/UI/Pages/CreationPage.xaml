@@ -2,10 +2,11 @@
 <local:PageBase 
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:BrickController2.UI.Pages"
     xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
-    x:Class="BrickController2.UI.Pages.CreationDetailsPage"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    x:Class="BrickController2.UI.Pages.CreationPage"
     Title="Creation details">
 
     <local:PageBase.ToolbarItems>
@@ -61,7 +62,7 @@
             </Label>
 
             <!-- FAB -->
-            <controls:FloatingActionButton Grid.Row="1" ButtonColor="Red" ImageSource="ic_add.png" Command="{Binding AddControllerProfileCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
+            <controls:FloatingActionButton Grid.Row="1" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddControllerProfileCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
         </Grid>
     </local:PageBase.Content>

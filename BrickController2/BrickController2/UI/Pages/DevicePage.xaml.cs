@@ -2,9 +2,9 @@
 
 namespace BrickController2.UI.Pages
 {
-	public partial class DeviceDetailsPage
+	public partial class DevicePage
 	{
-		public DeviceDetailsPage(PageViewModelBase vm)
+		public DevicePage(PageViewModelBase vm)
 		{
 		    InitializeComponent();
 		    BindingContext = vm;

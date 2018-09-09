@@ -30,10 +30,10 @@ namespace BrickController2.UI.ViewModels
             _dialogService = dialogService;
 
             AddCreationCommand = new SafeCommand(async () => await AddCreation());
-            CreationTappedCommand = new SafeCommand<Creation>(async creation => await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation))));
+            CreationTappedCommand = new SafeCommand<Creation>(async creation => await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation))));
             NavigateToDevicesCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<DeviceListPageViewModel>());
             NavigateToControllerTesterCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>());
-            NavigateToAboutCommand = new SafeCommand(async () => await DisplayAlertAsync(null, "About selected", "Ok"));
+            NavigateToAboutCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<AboutPageViewModel>());
         }
 
         public ObservableCollection<Creation> Creations => _creationManager.Creations;
@@ -108,7 +108,7 @@ namespace BrickController2.UI.ViewModels
                     async (progressDialog, token) => creation = await _creationManager.AddCreationAsync(result.Result),
                     "Creating...");
 
-                await NavigationService.NavigateToAsync<CreationDetailsPageViewModel>(new NavigationParameters(("creation", creation)));
+                await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation)));
             }
         }
     }

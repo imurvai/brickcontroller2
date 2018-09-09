@@ -5,8 +5,8 @@
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
-    xmlns:local="clr-namespace:BrickController2.UI.Pages"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationListPage"
     Title="Creations">
 
@@ -58,7 +58,7 @@
             </Label>
 
             <!-- FAB -->
-            <controls:FloatingActionButton Grid.Row="0" ButtonColor="Red" ImageSource="ic_add.png" Command="{Binding AddCreationCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
+            <controls:FloatingActionButton Grid.Row="0" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddCreationCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
             <!-- Bottom buttons -->
             <Grid Grid.Row="1" BackgroundColor="#E0E0E0" Padding="4">
