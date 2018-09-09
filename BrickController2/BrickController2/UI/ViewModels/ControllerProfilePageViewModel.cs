@@ -70,10 +70,7 @@ namespace BrickController2.UI.ViewModels
 
         private async Task AddControllerEventAsync()
         {
-            //var result = await _dialogService.ShowGameControllerEventDialogAsync("Controller", "Press a button or move a joy on the game controller", "Cancel");
-
-            var result = new GameControllerEventDialogResult(true, HardwareServices.GameController.GameControllerEventType.Button, "ButtonA");
-
+            var result = await _dialogService.ShowGameControllerEventDialogAsync("Controller", "Press a button or move a joy on the game controller", "Cancel");
             if (result.IsOk)
             {
                 ControllerEvent controllerEvent = null;

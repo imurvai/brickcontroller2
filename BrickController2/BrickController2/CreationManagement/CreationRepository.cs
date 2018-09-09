@@ -39,7 +39,7 @@ namespace BrickController2.CreationManagement
             using (await _lock.LockAsync())
             {
                 await InitAsync();
-                return await _databaseConnection.GetAllWithChildrenAsync<Creation>();
+                return await _databaseConnection.GetAllWithChildrenAsync<Creation>(null, true);
             }
         }
 
@@ -64,7 +64,7 @@ namespace BrickController2.CreationManagement
         {
             using (await _lock.LockAsync())
             {
-                await _databaseConnection.DeleteAsync(creation);
+                await _databaseConnection.DeleteAsync(creation, true);
             }
         }
 
@@ -96,7 +96,7 @@ namespace BrickController2.CreationManagement
         {
             using (await _lock.LockAsync())
             {
-                await _databaseConnection.DeleteAsync(controllerProfile);
+                await _databaseConnection.DeleteAsync(controllerProfile, true);
             }
         }
 
@@ -128,7 +128,7 @@ namespace BrickController2.CreationManagement
         {
             using (await _lock.LockAsync())
             {
-                await _databaseConnection.DeleteAsync(controllerEvent);
+                await _databaseConnection.DeleteAsync(controllerEvent, true);
             }
         }
 

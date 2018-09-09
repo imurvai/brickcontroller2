@@ -17,8 +17,8 @@
     </local:PageBase.Resources>
 
     <local:PageBase.ToolbarItems>
-        <ToolbarItem Icon="Source=ic_edit_white.png" Order="Primary" Command="{Binding RenameProfileCommand}"/>
-        <ToolbarItem Icon="Source=ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteProfileCommand}"/>
+        <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameProfileCommand}"/>
+        <ToolbarItem Icon="ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteProfileCommand}"/>
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>

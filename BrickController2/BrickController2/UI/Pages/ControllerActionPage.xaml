@@ -7,7 +7,8 @@
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
-    x:Class="BrickController2.UI.Pages.ControllerActionPage">
+    x:Class="BrickController2.UI.Pages.ControllerActionPage"
+    Title="Controller Action">
     
     <local:PageBase.Content>
         <StackLayout>

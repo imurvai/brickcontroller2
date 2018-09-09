@@ -21,6 +21,7 @@
     <None Remove="UI\Images\ic_info.png" />
     <None Remove="UI\Images\ic_joystick.png" />
     <None Remove="UI\Images\ic_link.png" />
+    <None Remove="UI\Images\ic_link_white.png" />
     <None Remove="UI\Images\ic_menu.png" />
     <None Remove="UI\Images\ic_play_black.png" />
     <None Remove="UI\Images\ic_search.png" />
@@ -41,6 +42,7 @@
     <EmbeddedResource Include="UI\Images\ic_info.png" />
     <EmbeddedResource Include="UI\Images\ic_joystick.png" />
     <EmbeddedResource Include="UI\Images\ic_link.png" />
+    <EmbeddedResource Include="UI\Images\ic_link_white.png" />
     <EmbeddedResource Include="UI\Images\ic_menu.png" />
     <EmbeddedResource Include="UI\Images\ic_play_black.png" />
     <EmbeddedResource Include="UI\Images\ic_search.png" />

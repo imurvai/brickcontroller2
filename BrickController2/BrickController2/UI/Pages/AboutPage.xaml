@@ -9,11 +9,11 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.AboutPage">
 
-    <local:PageBase>
+    <local:PageBase.Content>
         <StackLayout>
             <Label Text="About"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
         </StackLayout>
-    </local:PageBase>
+    </local:PageBase.Content>
 </local:PageBase>

@@ -96,15 +96,12 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task<Device> GetDeviceById(string Id)
+        public Device GetDeviceById(string Id)
         {
-            using (await _asyncLock.LockAsync())
-            {
-                var deviceTypeAndAddress = Id.Split('#');
-                var deviceType = (DeviceType)Enum.Parse(typeof(DeviceType), deviceTypeAndAddress[0]);
-                var deviceAddress = deviceTypeAndAddress[1];
-                return Devices.FirstOrDefault(d => d.DeviceType == deviceType && d.Address == deviceAddress);
-            }
+            var deviceTypeAndAddress = Id.Split('#');
+            var deviceType = (DeviceType)Enum.Parse(typeof(DeviceType), deviceTypeAndAddress[0]);
+            var deviceAddress = deviceTypeAndAddress[1];
+            return Devices.FirstOrDefault(d => d.DeviceType == deviceType && d.Address == deviceAddress);
         }
 
         public async Task DeleteDeviceAsync(Device device)
