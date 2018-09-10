@@ -1,33 +1,41 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.Generic;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace BrickController2.UI.Controls
 {
-    public class RadioButtonGroup : ContentView
+    public class RadioButtonGroup : StackLayout
     {
+        public static BindableProperty ButtonTextsPropery = BindableProperty.Create(nameof(ButtonTexts), typeof(IEnumerable<string>), typeof(RadioButtonGroup), null, BindingMode.OneWay, null, ButtonTextsChanged);
+        public static BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(RadioButtonGroup), 0, BindingMode.TwoWay, null, SelectedIndexChanged);
+        public static BindableProperty SelectionChangedCommandProperty = BindableProperty.Create(nameof(SelectionChangedCommand), typeof(ICommand), typeof(RadioButtonGroup));
 
-        public string ItemsCsv
+        public IEnumerable<string> ButtonTexts
         {
-            get;
-            set;
-        }
-
-        public StackOrientation Orientation
-        {
-            get;
-            set;
+            get => (IEnumerable<string>)GetValue(ButtonTextsPropery);
+            set => SetValue(ButtonTextsPropery, value);
         }
 
         public int SelectedIndex
         {
-            get;
-            set;
+            get => (int)GetValue(SelectedIndexProperty);
+            set => SetValue(SelectedIndexProperty, value);
         }
 
         public ICommand SelectionChangedCommand
         {
-            get;
-            set;
+            get => (ICommand)GetValue(SelectionChangedCommandProperty);
+            set => SetValue(SelectionChangedCommandProperty, value);
+        }
+
+        private static void ButtonTextsChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+
+        }
+
+        private static void SelectedIndexChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+
         }
     }
 }
