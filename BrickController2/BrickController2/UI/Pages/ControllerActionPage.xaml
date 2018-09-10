@@ -12,9 +12,22 @@
     
     <local:PageBase.Content>
         <StackLayout>
-            <Label Text="controller action"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            
+            <!-- Device selector -->
+            <Picker ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"></Picker>
+            
+            <!-- Device channel selector -->
+            
+            <!-- Revert switch -->
+            
+            <!-- Button type selector -->
+            
+            <!-- Axis characteristic selector -->
+            
+            <!-- Max output percent -->
+            
+            <!-- Axis dead zone percent -->
+            
         </StackLayout>
     </local:PageBase.Content>
 </local:PageBase>

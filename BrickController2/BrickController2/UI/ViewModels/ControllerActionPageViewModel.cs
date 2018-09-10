@@ -2,6 +2,7 @@
 using BrickController2.DeviceManagement;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
+using System.Collections.ObjectModel;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -27,5 +28,7 @@ namespace BrickController2.UI.ViewModels
         }
 
         public ControllerAction ControllerAction { get; }
+        public ObservableCollection<Device> Devices => _deviceManager.Devices;
+        public Device SelectedDevice { get; set; }
     }
 }
