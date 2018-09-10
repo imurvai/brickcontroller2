@@ -5,25 +5,38 @@
     xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:creationManagement="clr-namespace:BrickController2.CreationManagement"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerActionPage"
     Title="Controller Action">
     
     <local:PageBase.Content>
-        <StackLayout>
+        <StackLayout Orientation="Vertical" Padding="20">
             
             <!-- Device selector -->
-            <Picker ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"></Picker>
+            <Picker Title="Select device" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"></Picker>
             
             <!-- Device channel selector -->
             
-            <!-- Revert switch -->
+            <!-- Invert switch -->
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Invert"/>
+                <Switch IsToggled="{Binding IsInvert}"/>
+            </StackLayout>
             
             <!-- Button type selector -->
-            
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Button type"/>
+                <controls:EnumPicker x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding ButtonType}"/>
+            </StackLayout>
+
             <!-- Axis characteristic selector -->
-            
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Axis characteristic"/>
+                <controls:EnumPicker x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding AxisCharacteristic}"/>
+            </StackLayout>
+
             <!-- Max output percent -->
             
             <!-- Axis dead zone percent -->
