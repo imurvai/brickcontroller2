@@ -70,6 +70,11 @@ namespace BrickController2.DeviceManagement
             }
         }
 
+        public override string ToString()
+        {
+            return $"{DeviceType} - {Name}";
+        }
+
         protected void SetState(DeviceState newState, bool isError)
         {
             var oldState = DeviceState;

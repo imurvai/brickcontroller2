@@ -39,5 +39,10 @@ namespace BrickController2.CreationManagement
             get { return _controllerActions; }
             set { _controllerActions = value; RaisePropertyChanged(); }
         }
+
+        public override string ToString()
+        {
+            return $"{EventType} - {EventCode}";
+        }
     }
 }

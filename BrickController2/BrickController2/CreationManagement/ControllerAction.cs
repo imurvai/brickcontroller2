@@ -64,5 +64,10 @@ namespace BrickController2.CreationManagement
             get { return _axisDeadZonePercent; }
             set { _axisDeadZonePercent = value; RaisePropertyChanged(); }
         }
+
+        public override string ToString()
+        {
+            return $"{DeviceId} - {Channel}";
+        }
     }
 }
