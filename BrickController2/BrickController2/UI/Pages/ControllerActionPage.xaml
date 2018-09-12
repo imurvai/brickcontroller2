@@ -12,35 +12,54 @@
     Title="Controller Action">
     
     <local:PageBase.Content>
-        <StackLayout Orientation="Vertical" Padding="20">
+        <Grid Padding="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             
             <!-- Device selector -->
-            <Picker Title="Select device" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"></Picker>
+            <Label Grid.Column="0" Grid.Row="0" Text="Device"/>
+            <Picker Grid.Column="1" Grid.Row="0" Title="Select device" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"></Picker>
             
             <!-- Device channel selector -->
             
             <!-- Invert switch -->
-            <StackLayout Orientation="Horizontal">
-                <Label Text="Invert"/>
-                <Switch IsToggled="{Binding IsInvert}"/>
-            </StackLayout>
+            <Label Grid.Column="0" Grid.Row="1" Text="Invert"/>
+            <Switch Grid.Column="1" Grid.Row="1" IsToggled="{Binding IsInvert}"/>
             
             <!-- Button type selector -->
-            <StackLayout Orientation="Horizontal">
-                <Label Text="Button type"/>
-                <controls:EnumPicker x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding ButtonType}"/>
-            </StackLayout>
+            <Label Grid.Column="0" Grid.Row="2" Text="Button type"/>
+            <controls:EnumPicker Grid.Column="1" Grid.Row="2" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding ButtonType}"/>
 
             <!-- Axis characteristic selector -->
-            <StackLayout Orientation="Horizontal">
-                <Label Text="Axis characteristic"/>
-                <controls:EnumPicker x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding AxisCharacteristic}"/>
-            </StackLayout>
+            <Label Grid.Column="0" Grid.Row="3" Text="Axis characteristic"/>
+            <controls:EnumPicker Grid.Column="1" Grid.Row="3" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding AxisCharacteristic}"/>
 
             <!-- Max output percent -->
-            
+            <Label Grid.Column="0" Grid.Row="4" Text="Max output"/>
+            <StackLayout Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
+                <Label Text="{Binding MaxOutputPercent}"/>
+                <Label Text="%"/>
+                <Slider Value="{Binding MaxOutputPercent}" Minimum="0" Maximum="100"/>
+            </StackLayout>
+
             <!-- Axis dead zone percent -->
-            
-        </StackLayout>
+            <Label Grid.Column="0" Grid.Row="5" Text="Axis dead zone"/>
+            <StackLayout Grid.Column="1" Grid.Row="5" Orientation="Horizontal">
+                <Label Text="{Binding AxisDeadZonePercent}"/>
+                <Label Text="%"/>
+                <Slider Value="{Binding AxisDeadZonePercent}" Minimum="0" Maximum="100"/>
+            </StackLayout>
+
+        </Grid>
     </local:PageBase.Content>
 </local:PageBase>
