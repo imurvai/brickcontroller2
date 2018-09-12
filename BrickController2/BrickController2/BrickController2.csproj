@@ -66,6 +66,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="UI\Controls\DeviceChannelSelector.xaml.cs">
+      <DependentUpon>DeviceChannelSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Update="UI\Pages\ControllerProfilePage.xaml.cs">
       <DependentUpon>ControllerProfilePage.xaml</DependentUpon>
     </Compile>
@@ -81,6 +84,9 @@
     <EmbeddedResource Update="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="UI\Controls\DeviceChannelSelector.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="UI\Controls\FloatingActionButton.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>

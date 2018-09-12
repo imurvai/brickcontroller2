@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    x:Class="BrickController2.UI.Controls.DeviceChannelSelector">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:DeviceTypeToSmallImageConverter x:Key="DeviceTypeToImage"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <Grid>
+            
+        </Grid>
+    </ContentView.Content>
+</ContentView>
