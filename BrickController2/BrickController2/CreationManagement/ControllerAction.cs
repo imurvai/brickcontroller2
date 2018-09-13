@@ -8,11 +8,13 @@ namespace BrickController2.CreationManagement
     {
         private string _deviceId;
         private int _channel;
+        private ChannelOutputType _channelOutputType;
         private bool _isInvert;
         private ControllerButtonType _buttonType;
         private ControllerAxisCharacteristic _axisCharacteristic;
         private int _maxOutputPercent;
         private int _axisDeadZonePercent;
+        private int _maxServoAngle;
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -33,6 +35,12 @@ namespace BrickController2.CreationManagement
         {
             get { return _channel; }
             set { _channel = value; RaisePropertyChanged(); }
+        }
+
+        public ChannelOutputType ChannelOutputType
+        {
+            get { return _channelOutputType; }
+            set { _channelOutputType = value; RaisePropertyChanged(); }
         }
 
         public bool IsInvert
@@ -63,6 +71,12 @@ namespace BrickController2.CreationManagement
         {
             get { return _axisDeadZonePercent; }
             set { _axisDeadZonePercent = value; RaisePropertyChanged(); }
+        }
+
+        public int MaxServoAngle
+        {
+            get { return _maxServoAngle; }
+            set { _maxServoAngle = value; RaisePropertyChanged(); }
         }
 
         public override string ToString()

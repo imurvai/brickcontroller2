@@ -19,11 +19,13 @@ namespace BrickController2.UI.ViewModels
 
         private Device _selectedDevice;
         private int _channel;
+        private ChannelOutputType _channelOutputType;
         private bool _isInvert;
         private ControllerButtonType _buttonType;
         private ControllerAxisCharacteristic _axisCharacteristic;
         private int _maxOutputPercent;
         private int _axisDeadZonePercent;
+        private int _maxServoAngle;
 
         public ControllerActionPageViewModel(
             INavigationService navigationService,
@@ -86,6 +88,12 @@ namespace BrickController2.UI.ViewModels
             set { _channel = value; RaisePropertyChanged(); }
         }
 
+        public ChannelOutputType ChannelOutputType
+        {
+            get { return _channelOutputType; }
+            set { _channelOutputType = value; RaisePropertyChanged(); }
+        }
+
         public bool IsInvert
         {
             get { return _isInvert; }
@@ -114,6 +122,12 @@ namespace BrickController2.UI.ViewModels
         {
             get { return _axisDeadZonePercent; }
             set { _axisDeadZonePercent = value; RaisePropertyChanged(); }
+        }
+
+        public int MaxServoAngle
+        {
+            get { return _maxServoAngle; }
+            set { _maxServoAngle = value; RaisePropertyChanged(); }
         }
 
         public ICommand SaveControllerActionCommand { get; }

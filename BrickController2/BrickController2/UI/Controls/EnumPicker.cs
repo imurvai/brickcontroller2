@@ -14,6 +14,8 @@ namespace BrickController2.UI.Controls
             {
                 Items.Add(item.ToString());
             }
+
+            SelectedIndex = 0;
         }
 
         public new static BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(T), typeof(EnumPicker<T>), default(T), BindingMode.TwoWay, null, OnSelectedItemChanged);

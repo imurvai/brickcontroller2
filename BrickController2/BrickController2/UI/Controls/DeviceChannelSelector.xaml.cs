@@ -27,12 +27,12 @@ namespace BrickController2.UI.Controls
             set => SetValue(SelectedChannelProperty, value);
         }
 
-        private void OnDeviceTypeChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnDeviceTypeChanged(BindableObject bindable, object oldValue, object newValue)
         {
 
         }
 
-        private void OnSelectedChannelChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnSelectedChannelChanged(BindableObject bindable, object oldValue, object newValue)
         {
 
         }

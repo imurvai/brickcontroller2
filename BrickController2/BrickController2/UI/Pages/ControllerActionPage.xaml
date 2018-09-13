@@ -12,54 +12,140 @@
     Title="Controller Action">
     
     <local:PageBase.Content>
-        <Grid Padding="20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <ScrollView>
+            <StackLayout Orientation="Vertical" Padding="20">
             
-            <!-- Device selector -->
-            <Label Grid.Column="0" Grid.Row="0" Text="Device"/>
-            <Picker Grid.Column="1" Grid.Row="0" Title="Select device" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"></Picker>
-            
-            <!-- Device channel selector -->
-            
-            <!-- Invert switch -->
-            <Label Grid.Column="0" Grid.Row="1" Text="Invert"/>
-            <Switch Grid.Column="1" Grid.Row="1" IsToggled="{Binding IsInvert}"/>
-            
-            <!-- Button type selector -->
-            <Label Grid.Column="0" Grid.Row="2" Text="Button type"/>
-            <controls:EnumPicker Grid.Column="1" Grid.Row="2" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding ButtonType}"/>
+                <!-- Device selector -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
 
-            <!-- Axis characteristic selector -->
-            <Label Grid.Column="0" Grid.Row="3" Text="Axis characteristic"/>
-            <controls:EnumPicker Grid.Column="1" Grid.Row="3" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding AxisCharacteristic}"/>
+                    <Label Grid.Column="0" Text="Device" VerticalOptions="Center"/>
+                    <Picker Grid.Column="1" Title="Select device" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"></Picker>
+                </Grid>
 
-            <!-- Max output percent -->
-            <Label Grid.Column="0" Grid.Row="4" Text="Max output"/>
-            <StackLayout Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
-                <Label Text="{Binding MaxOutputPercent}"/>
-                <Label Text="%"/>
-                <Slider Value="{Binding MaxOutputPercent}" Minimum="0" Maximum="100"/>
+                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+
+                <!-- Device channel selector -->
+
+                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+
+                <!-- Channel output type selector -->
+                <StackLayout x:Name="ChannelOutputTypeSelector" Orientation="Vertical">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="0" Text="Channel type" VerticalOptions="Center"/>
+                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ChannelOutputType" SelectedItem="{Binding ChannelOutputType}"/>
+                    </Grid>
+
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                </StackLayout>
+
+                <!-- Axis dead zone percent -->
+                <StackLayout x:Name="ServoMaxAngleSetting" Orientation="Vertical">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="0" Text="Servo angle"/>
+                        <StackLayout Grid.Column="1" Orientation="Horizontal">
+                            <Slider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="360" HorizontalOptions="FillAndExpand"/>
+                            <Label Text="{Binding MaxServoAngle}" WidthRequest="30"/>
+                            <Label Text="%"/>
+                        </StackLayout>
+                    </Grid>
+
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                </StackLayout>
+
+                <!-- Button type selector -->
+                <StackLayout x:Name="ButtonTypeSelector" Orientation="Vertical">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="0" Text="Button type" VerticalOptions="Center"/>
+                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding ButtonType}"/>
+                    </Grid>
+
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                </StackLayout>
+
+                <!-- Axis characteristic selector -->
+                <StackLayout x:Name="AxisCharacteristicSelector" Orientation="Vertical">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="0" Text="Axis characteristic" VerticalOptions="Center"/>
+                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding AxisCharacteristic}"/>
+                    </Grid>
+
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                </StackLayout>
+
+                <!-- Invert switch -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Text="Invert" VerticalOptions="Center"/>
+                    <Switch Grid.Column="1" IsToggled="{Binding IsInvert}" HorizontalOptions="Start"/>
+                </Grid>
+
+                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+
+                <!-- Max output percent -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Text="Max output"/>
+                    <StackLayout Grid.Column="1" Orientation="Horizontal">
+                        <Slider Value="{Binding MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand"/>
+                        <Label Text="{Binding MaxOutputPercent}" WidthRequest="30"/>
+                        <Label Text="%"/>
+                    </StackLayout>
+                </Grid>
+
+                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+
+                <!-- Axis dead zone percent -->
+                <StackLayout x:Name="AxisDeadZoneSetting" Orientation="Vertical">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="0" Text="Axis dead zone"/>
+                        <StackLayout Grid.Column="1" Orientation="Horizontal">
+                            <Slider Value="{Binding AxisDeadZonePercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand"/>
+                            <Label Text="{Binding AxisDeadZonePercent}" WidthRequest="30"/>
+                            <Label Text="%"/>
+                        </StackLayout>
+                    </Grid>
+
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                </StackLayout>
+
             </StackLayout>
-
-            <!-- Axis dead zone percent -->
-            <Label Grid.Column="0" Grid.Row="5" Text="Axis dead zone"/>
-            <StackLayout Grid.Column="1" Grid.Row="5" Orientation="Horizontal">
-                <Label Text="{Binding AxisDeadZonePercent}"/>
-                <Label Text="%"/>
-                <Slider Value="{Binding AxisDeadZonePercent}" Minimum="0" Maximum="100"/>
-            </StackLayout>
-
-        </Grid>
+        </ScrollView>
     </local:PageBase.Content>
 </local:PageBase>

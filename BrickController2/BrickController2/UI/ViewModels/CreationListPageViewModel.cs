@@ -105,7 +105,11 @@ namespace BrickController2.UI.ViewModels
                 Creation creation = null;
                 await _dialogService.ShowProgressDialogAsync(
                     false,
-                    async (progressDialog, token) => creation = await _creationManager.AddCreationAsync(result.Result),
+                    async (progressDialog, token) =>
+                    {
+                        creation = await _creationManager.AddCreationAsync(result.Result);
+                        await _creationManager.AddControllerProfileAsync(creation, "Default profile");
+                    },
                     "Creating...");
 
                 await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation)));

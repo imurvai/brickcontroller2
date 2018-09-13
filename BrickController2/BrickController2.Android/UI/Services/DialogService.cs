@@ -189,8 +189,13 @@ namespace BrickController2.Droid.UI.Services
 
             void GameControllerEventHandler(object sender, GameControllerEventArgs args)
             {
+                if (args.ControllerEvents.Count == 0)
+                {
+                    return;
+                }
+
                 var controllerEvent = args.ControllerEvents.First();
-                if (controllerEvent.Key.EventType == GameControllerEventType.Button && 0.0F < controllerEvent.Value)
+                if (controllerEvent.Key.EventType == GameControllerEventType.Button && 0.1F < Math.Abs(controllerEvent.Value))
                 {
                     return;
                 }

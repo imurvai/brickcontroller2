@@ -65,7 +65,7 @@
 
                 <!-- Outputs -->
                 <StackLayout Grid.Row="1">
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,8,0,8"/>
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,8,10,8"/>
                     <ListView ItemsSource="{Binding Outputs}" HasUnevenRows="True" SelectionMode="None">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -77,7 +77,6 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,8,0,8"/>
                 </StackLayout> 
             
             </Grid>
