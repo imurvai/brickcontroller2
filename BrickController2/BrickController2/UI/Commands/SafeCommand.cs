@@ -11,6 +11,18 @@ namespace BrickController2.UI.Commands
 
         private bool _allowExecute = true;
 
+        public SafeCommand(Action execute, Func<bool> canExecute = null)
+        {
+            _execute = async o => execute?.Invoke();
+            _canExecute = o => canExecute?.Invoke() ?? true;
+        }
+
+        public SafeCommand(Action<object> execute, Func<bool> canExecute = null)
+        {
+            _execute = async o => execute?.Invoke(o);
+            _canExecute = o => canExecute?.Invoke() ?? true;
+        }
+
         public SafeCommand(Func<Task> execute, Func<bool> canExecute = null)
         {
             _execute = async o => await execute?.Invoke();
@@ -58,6 +70,12 @@ namespace BrickController2.UI.Commands
         private readonly Predicate<object> _canExecute;
 
         private bool _allowExecute = true;
+
+        public SafeCommand(Action<TExecute> execute, Func<bool> canExecute = null)
+        {
+            _execute = async o => execute?.Invoke(o);
+            _canExecute = o => canExecute?.Invoke() ?? true;
+        }
 
         public SafeCommand(Func<TExecute, Task> execute, Predicate<object> canExecute = null)
         {

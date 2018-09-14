@@ -29,8 +29,23 @@
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
 
                 <!-- Device channel selector -->
+                <controls:DeviceChannelSelector DeviceType="{Binding SelectedDevice.DeviceType}" SelectedChannel="{Binding Channel}"/>
+                
+                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+
+                <!-- Invert switch -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Text="Invert" VerticalOptions="Center"/>
+                    <Switch Grid.Column="1" IsToggled="{Binding IsInvert}" HorizontalOptions="Start"/>
+                </Grid>
 
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                <Label Text="Advanced settings" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
 
                 <!-- Channel output type selector -->
                 <StackLayout x:Name="ChannelOutputTypeSelector" Orientation="Vertical">
@@ -47,7 +62,7 @@
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
                 </StackLayout>
 
-                <!-- Axis dead zone percent -->
+                <!-- Max servo angle setting -->
                 <StackLayout x:Name="ServoMaxAngleSetting" Orientation="Vertical">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -95,19 +110,6 @@
 
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
                 </StackLayout>
-
-                <!-- Invert switch -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="3*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Label Grid.Column="0" Text="Invert" VerticalOptions="Center"/>
-                    <Switch Grid.Column="1" IsToggled="{Binding IsInvert}" HorizontalOptions="Start"/>
-                </Grid>
-
-                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
 
                 <!-- Max output percent -->
                 <Grid>

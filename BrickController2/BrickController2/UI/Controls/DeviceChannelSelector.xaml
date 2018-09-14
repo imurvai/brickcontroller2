@@ -3,6 +3,8 @@
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     x:Class="BrickController2.UI.Controls.DeviceChannelSelector">
 
     <ContentView.Resources>
@@ -12,8 +14,68 @@
     </ContentView.Resources>
 
     <ContentView.Content>
-        <Grid>
+        <Grid x:Name="ControlContent">
             
+            <!-- SBrick -->
+            <Grid x:Name="SbrickSection">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <controls:ChannelSelectorRadioButton Channel="0" SelectedChannel="{Binding SelectedChannel}" Text="1" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton Channel="1" SelectedChannel="{Binding SelectedChannel}" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
+                </Grid>
+
+                <Image Grid.Column="1" Source="{extensions:ImageResource Source=sbrick_image.png}" WidthRequest="150" HeightRequest="150"/>
+
+                <Grid Grid.Column="2">
+                    <controls:ChannelSelectorRadioButton Channel="2" SelectedChannel="{Binding SelectedChannel}" Text="3" HorizontalOptions="Start" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton Channel="3" SelectedChannel="{Binding SelectedChannel}" Text="4" HorizontalOptions="Start" VerticalOptions="End"/>
+                </Grid>
+            </Grid>
+
+            <!-- BuWizz -->
+            <Grid x:Name="BuWizzSection">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <controls:ChannelSelectorRadioButton Channel="0" SelectedChannel="{Binding SelectedChannel}" Text="1" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton Channel="1" SelectedChannel="{Binding SelectedChannel}" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
+                </Grid>
+
+                <Image Grid.Column="1" Source="{extensions:ImageResource Source=buwizz_image.png}" WidthRequest="150" HeightRequest="150"/>
+
+                <Grid Grid.Column="2">
+                    <controls:ChannelSelectorRadioButton Channel="3" SelectedChannel="{Binding SelectedChannel}" Text="4" HorizontalOptions="Start" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton Channel="2" SelectedChannel="{Binding SelectedChannel}" Text="3" HorizontalOptions="Start" VerticalOptions="End"/>
+                </Grid>
+            </Grid>
+
+            <!-- Infrared -->
+            <Grid x:Name="InfraredSection">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <controls:ChannelSelectorRadioButton Channel="0" SelectedChannel="{Binding SelectedChannel}" Text="Blue" HorizontalOptions="End" VerticalOptions="End"/>
+                </Grid>
+
+                <Image Grid.Column="1" Source="{extensions:ImageResource Source=infra_image.png}" WidthRequest="150" HeightRequest="150"/>
+
+                <Grid Grid.Column="2">
+                    <controls:ChannelSelectorRadioButton Channel="1" SelectedChannel="{Binding SelectedChannel}" Text="Red" HorizontalOptions="Start" VerticalOptions="End"/>
+                </Grid>
+            </Grid>
         </Grid>
     </ContentView.Content>
 </ContentView>

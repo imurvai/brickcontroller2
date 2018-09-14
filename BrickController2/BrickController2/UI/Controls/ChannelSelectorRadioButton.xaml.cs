@@ -14,8 +14,8 @@ namespace BrickController2.UI.Controls
 
         public static BindableProperty ChannelProperty = BindableProperty.Create(nameof(Channel), typeof(int), typeof(ChannelSelectorRadioButton), 0, BindingMode.OneWay, null, OnChannelChanged);
         public static BindableProperty SelectedChannelProperty = BindableProperty.Create(nameof(SelectedChannel), typeof(int), typeof(ChannelSelectorRadioButton), 0, BindingMode.OneWay, null, OnSelectedChannelChanged);
-        public static BindableProperty TextProperty = BindableProperty.Create(nameof(Text), typeof(string), typeof(ChannelSelectorRadioButton), null, BindingMode.OneWay);
-        public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ChannelSelectorRadioButton), null, BindingMode.OneWay);
+        public static BindableProperty TextProperty = BindableProperty.Create(nameof(Text), typeof(string), typeof(ChannelSelectorRadioButton), null, BindingMode.OneWay, null, OnTextChanged);
+        public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ChannelSelectorRadioButton), null, BindingMode.OneWay, null, OnCommandChanged);
 
         public int Channel
         {
