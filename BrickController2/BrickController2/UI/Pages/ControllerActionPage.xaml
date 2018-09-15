@@ -2,11 +2,8 @@
 <local:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
-    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:creationManagement="clr-namespace:BrickController2.CreationManagement"
-    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerActionPage"
     Title="Controller Action">
@@ -48,7 +45,18 @@
                 <Label Text="Advanced settings" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
 
                 <!-- Channel output type selector -->
-                <StackLayout x:Name="ChannelOutputTypeSelector" Orientation="Vertical">
+                <StackLayout x:Name="ChannelOutputTypeSelector" Orientation="Vertical" IsVisible="True">
+                    <StackLayout.Triggers>
+                        <MultiTrigger TargetType="StackLayout">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.SBrick"/>
+                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.BuWizz"/>
+                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.BuWizz2"/>
+                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.Infrared"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="IsVisible" Value="False"/>
+                        </MultiTrigger>
+                    </StackLayout.Triggers>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
@@ -63,7 +71,18 @@
                 </StackLayout>
 
                 <!-- Max servo angle setting -->
-                <StackLayout x:Name="ServoMaxAngleSetting" Orientation="Vertical">
+                <StackLayout x:Name="ServoMaxAngleSetting" Orientation="Vertical" IsVisible="True">
+                    <StackLayout.Triggers>
+                        <MultiTrigger TargetType="StackLayout">
+                            <MultiTrigger.Conditions>
+                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.SBrick"/>
+                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.BuWizz"/>
+                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.BuWizz2"/>
+                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.Infrared"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="IsVisible" Value="False"/>
+                        </MultiTrigger>
+                    </StackLayout.Triggers>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
@@ -73,8 +92,8 @@
                         <Label Grid.Column="0" Text="Servo angle"/>
                         <StackLayout Grid.Column="1" Orientation="Horizontal">
                             <Slider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="360" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="{Binding MaxServoAngle}" WidthRequest="30"/>
-                            <Label Text="%"/>
+                            <Label Text="{Binding MaxServoAngle}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                            <Label Text="°"/>
                         </StackLayout>
                     </Grid>
 
@@ -83,6 +102,11 @@
 
                 <!-- Button type selector -->
                 <StackLayout x:Name="ButtonTypeSelector" Orientation="Vertical">
+                    <StackLayout.Triggers>
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="GameControllerEventType.Button">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger>
+                    </StackLayout.Triggers>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
@@ -97,7 +121,12 @@
                 </StackLayout>
 
                 <!-- Axis characteristic selector -->
-                <StackLayout x:Name="AxisCharacteristicSelector" Orientation="Vertical">
+                <StackLayout x:Name="AxisCharacteristicSelector" Orientation="Vertical" IsVisible="False">
+                    <StackLayout.Triggers>
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="GameControllerEventType.Axis">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger>
+                    </StackLayout.Triggers>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
@@ -121,7 +150,7 @@
                     <Label Grid.Column="0" Text="Max output"/>
                     <StackLayout Grid.Column="1" Orientation="Horizontal">
                         <Slider Value="{Binding MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand"/>
-                        <Label Text="{Binding MaxOutputPercent}" WidthRequest="30"/>
+                        <Label Text="{Binding MaxOutputPercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                         <Label Text="%"/>
                     </StackLayout>
                 </Grid>
@@ -130,6 +159,11 @@
 
                 <!-- Axis dead zone percent -->
                 <StackLayout x:Name="AxisDeadZoneSetting" Orientation="Vertical">
+                    <StackLayout.Triggers>
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="GameControllerEventType.Axis">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger>
+                    </StackLayout.Triggers>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
@@ -139,7 +173,7 @@
                         <Label Grid.Column="0" Text="Axis dead zone"/>
                         <StackLayout Grid.Column="1" Orientation="Horizontal">
                             <Slider Value="{Binding AxisDeadZonePercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="{Binding AxisDeadZonePercent}" WidthRequest="30"/>
+                            <Label Text="{Binding AxisDeadZonePercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                             <Label Text="%"/>
                         </StackLayout>
                     </Grid>

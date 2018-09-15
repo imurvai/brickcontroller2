@@ -45,7 +45,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is ChannelSelectorRadioButton csrb)
             {
-                csrb.TapGuestureRecognizer.CommandParameter = (int)newValue;
+                csrb.CheckedIndicatorFrame.IsVisible = csrb.SelectedChannel == (int)newValue;
             }
         }
 
@@ -53,7 +53,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is ChannelSelectorRadioButton csrb)
             {
-                csrb.Frame.IsVisible = csrb.Channel == csrb.SelectedChannel;
+                csrb.CheckedIndicatorFrame.IsVisible = csrb.Channel == (int)newValue;
             }
         }
 
@@ -61,7 +61,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is ChannelSelectorRadioButton csrb)
             {
-                csrb.Label.Text = (string)newValue;
+                csrb.TextLabel.Text = (string)newValue;
             }
         }
 
@@ -69,7 +69,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is ChannelSelectorRadioButton csrb)
             {
-                csrb.TapGuestureRecognizer.Command = (ICommand)newValue;
+                csrb.TapRecognizer.Command = (ICommand)newValue;
             }
         }
     }

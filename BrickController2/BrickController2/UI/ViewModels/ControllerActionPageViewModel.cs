@@ -15,7 +15,6 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
-        private readonly ControllerEvent _controllerEvent;
 
         private Device _selectedDevice;
         private int _channel;
@@ -38,7 +37,8 @@ namespace BrickController2.UI.ViewModels
             _creationManager = creationManager;
             _deviceManager = deviceManager;
             _dialogService = dialogService;
-            _controllerEvent = parameters.Get<ControllerEvent>("controllerevent");
+
+            ControllerEvent = parameters.Get<ControllerEvent>("controllerevent");
 
             var controllerAction = parameters.Get<ControllerAction>("controlleraction", null);
             if (controllerAction != null)
@@ -46,6 +46,8 @@ namespace BrickController2.UI.ViewModels
                 SelectedDevice = _deviceManager.GetDeviceById(controllerAction.DeviceId);
                 Channel = controllerAction.Channel;
                 IsInvert = controllerAction.IsInvert;
+                ChannelOutputType = controllerAction.ChannelOutputType;
+                MaxServoAngle = controllerAction.MaxServoAngle;
                 ButtonType = controllerAction.ButtonType;
                 AxisCharacteristic = controllerAction.AxisCharacteristic;
                 MaxOutputPercent = controllerAction.MaxOutputPercent;
@@ -56,6 +58,8 @@ namespace BrickController2.UI.ViewModels
                 SelectedDevice = _deviceManager.Devices.FirstOrDefault();
                 Channel = 0;
                 IsInvert = false;
+                ChannelOutputType = ChannelOutputType.NormalMotor;
+                MaxServoAngle = 90;
                 ButtonType = ControllerButtonType.Normal;
                 AxisCharacteristic = ControllerAxisCharacteristic.Linear;
                 MaxOutputPercent = 100;
@@ -66,6 +70,8 @@ namespace BrickController2.UI.ViewModels
         }
 
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
+
+        public ControllerEvent ControllerEvent { get; }
 
         public Device SelectedDevice
         {
@@ -88,16 +94,28 @@ namespace BrickController2.UI.ViewModels
             set { _channel = value; RaisePropertyChanged(); }
         }
 
+        public bool IsInvert
+        {
+            get { return _isInvert; }
+            set { _isInvert = value; RaisePropertyChanged(); }
+        }
+
+        public int MaxOutputPercent
+        {
+            get { return _maxOutputPercent; }
+            set { _maxOutputPercent = value; RaisePropertyChanged(); }
+        }
+
         public ChannelOutputType ChannelOutputType
         {
             get { return _channelOutputType; }
             set { _channelOutputType = value; RaisePropertyChanged(); }
         }
 
-        public bool IsInvert
+        public int MaxServoAngle
         {
-            get { return _isInvert; }
-            set { _isInvert = value; RaisePropertyChanged(); }
+            get { return _maxServoAngle; }
+            set { _maxServoAngle = value; RaisePropertyChanged(); }
         }
 
         public ControllerButtonType ButtonType
@@ -112,22 +130,10 @@ namespace BrickController2.UI.ViewModels
             set { _axisCharacteristic = value; RaisePropertyChanged(); }
         }
 
-        public int MaxOutputPercent
-        {
-            get { return _maxOutputPercent; }
-            set { _maxOutputPercent = value; RaisePropertyChanged(); }
-        }
-
         public int AxisDeadZonePercent
         {
             get { return _axisDeadZonePercent; }
             set { _axisDeadZonePercent = value; RaisePropertyChanged(); }
-        }
-
-        public int MaxServoAngle
-        {
-            get { return _maxServoAngle; }
-            set { _maxServoAngle = value; RaisePropertyChanged(); }
         }
 
         public ICommand SaveControllerActionCommand { get; }
@@ -144,7 +150,7 @@ namespace BrickController2.UI.ViewModels
                 false,
                 async (progressDialog, token) =>
                 {
-                    await _creationManager.AddOrUpdateControllerActionAsync(_controllerEvent, SelectedDevice.Id, Channel, IsInvert, ButtonType, AxisCharacteristic, MaxOutputPercent, AxisDeadZonePercent);
+                    await _creationManager.AddOrUpdateControllerActionAsync(ControllerEvent, SelectedDevice.Id, Channel, IsInvert, ButtonType, AxisCharacteristic, MaxOutputPercent, AxisDeadZonePercent);
                 },
                 "Saving...");
 

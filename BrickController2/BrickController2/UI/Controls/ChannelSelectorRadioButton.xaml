@@ -1,19 +1,21 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BrickController2.UI.Controls.ChannelSelectorRadioButton">
+<ContentView
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="BrickController2.UI.Controls.ChannelSelectorRadioButton">
+
     <ContentView.Content>
         <StackLayout Orientation="Horizontal">
             <Grid WidthRequest="25" HeightRequest="25" VerticalOptions="Center">
                 <Frame BackgroundColor="Black" HasShadow="False" WidthRequest="20" HeightRequest="20" CornerRadius="10" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Frame BackgroundColor="White" HasShadow="False" WidthRequest="18" HeightRequest="18" CornerRadius="9" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Frame x:Name="Frame" BackgroundColor="Red" HasShadow="False" WidthRequest="14" HeightRequest="14" CornerRadius="7" Padding="0" HorizontalOptions="Center" VerticalOptions="Center">
+                <Frame x:Name="SwitchFrame" BackgroundColor="White" HasShadow="False" WidthRequest="18" HeightRequest="18" CornerRadius="9" Padding="0" HorizontalOptions="Center" VerticalOptions="Center">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer x:Name="TapGuestureRecognizer"/>
+                        <TapGestureRecognizer x:Name="TapRecognizer"/>
                     </Frame.GestureRecognizers>
                 </Frame>
+                <Frame x:Name="CheckedIndicatorFrame" BackgroundColor="Red" HasShadow="False" WidthRequest="14" HeightRequest="14" CornerRadius="7" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
             </Grid>
-            <Label x:Name="Label" />
+            <Label x:Name="TextLabel"/>
         </StackLayout>
     </ContentView.Content>
 </ContentView>

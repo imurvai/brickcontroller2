@@ -25,15 +25,15 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <controls:ChannelSelectorRadioButton Channel="0" SelectedChannel="{Binding SelectedChannel}" Text="1" HorizontalOptions="End" VerticalOptions="Start"/>
-                    <controls:ChannelSelectorRadioButton Channel="1" SelectedChannel="{Binding SelectedChannel}" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel0" Channel="0" Text="1" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel1" Channel="1" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
                 </Grid>
 
                 <Image Grid.Column="1" Source="{extensions:ImageResource Source=sbrick_image.png}" WidthRequest="150" HeightRequest="150"/>
 
                 <Grid Grid.Column="2">
-                    <controls:ChannelSelectorRadioButton Channel="2" SelectedChannel="{Binding SelectedChannel}" Text="3" HorizontalOptions="Start" VerticalOptions="Start"/>
-                    <controls:ChannelSelectorRadioButton Channel="3" SelectedChannel="{Binding SelectedChannel}" Text="4" HorizontalOptions="Start" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel2" Channel="2" Text="3" HorizontalOptions="Start" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel3" Channel="3" Text="4" HorizontalOptions="Start" VerticalOptions="End"/>
                 </Grid>
             </Grid>
 
@@ -46,15 +46,15 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <controls:ChannelSelectorRadioButton Channel="0" SelectedChannel="{Binding SelectedChannel}" Text="1" HorizontalOptions="End" VerticalOptions="Start"/>
-                    <controls:ChannelSelectorRadioButton Channel="1" SelectedChannel="{Binding SelectedChannel}" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel0" Channel="0" Text="1" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel1" Channel="1" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
                 </Grid>
 
                 <Image Grid.Column="1" Source="{extensions:ImageResource Source=buwizz_image.png}" WidthRequest="150" HeightRequest="150"/>
 
                 <Grid Grid.Column="2">
-                    <controls:ChannelSelectorRadioButton Channel="3" SelectedChannel="{Binding SelectedChannel}" Text="4" HorizontalOptions="Start" VerticalOptions="Start"/>
-                    <controls:ChannelSelectorRadioButton Channel="2" SelectedChannel="{Binding SelectedChannel}" Text="3" HorizontalOptions="Start" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel3" Channel="3" Text="4" HorizontalOptions="Start" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel2" Channel="2" Text="3" HorizontalOptions="Start" VerticalOptions="End"/>
                 </Grid>
             </Grid>
 
@@ -67,13 +67,13 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <controls:ChannelSelectorRadioButton Channel="0" SelectedChannel="{Binding SelectedChannel}" Text="Blue" HorizontalOptions="End" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="InfraredChannel0" Channel="0" Text="Blue" HorizontalOptions="End" VerticalOptions="End"/>
                 </Grid>
 
                 <Image Grid.Column="1" Source="{extensions:ImageResource Source=infra_image.png}" WidthRequest="150" HeightRequest="150"/>
 
                 <Grid Grid.Column="2">
-                    <controls:ChannelSelectorRadioButton Channel="1" SelectedChannel="{Binding SelectedChannel}" Text="Red" HorizontalOptions="Start" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="InfraredChannel1" Channel="1" Text="Red" HorizontalOptions="Start" VerticalOptions="End"/>
                 </Grid>
             </Grid>
         </Grid>

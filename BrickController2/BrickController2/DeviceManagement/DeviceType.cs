@@ -6,6 +6,8 @@
         SBrick,
         BuWizz,
         BuWizz2,
-        Infrared
+        Infrared,
+        Boost,
+        PoweredUp
     }
 }

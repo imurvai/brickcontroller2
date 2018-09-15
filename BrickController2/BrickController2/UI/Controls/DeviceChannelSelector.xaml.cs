@@ -1,8 +1,5 @@
 ﻿using BrickController2.DeviceManagement;
 using BrickController2.UI.Commands;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -14,10 +11,18 @@ namespace BrickController2.UI.Controls
 		public DeviceChannelSelector()
 		{
 			InitializeComponent();
-            ControlContent.BindingContext = this;
 
-            ChannelSelectCommand = new SafeCommand<int>(channel => SelectedChannel = channel);
-		}
+            SBrickChannel0.Command = new SafeCommand(() => SelectedChannel = 0);
+            SBrickChannel1.Command = new SafeCommand(() => SelectedChannel = 1);
+            SBrickChannel2.Command = new SafeCommand(() => SelectedChannel = 2);
+            SBrickChannel3.Command = new SafeCommand(() => SelectedChannel = 3);
+            BuWizzChannel0.Command = new SafeCommand(() => SelectedChannel = 0);
+            BuWizzChannel1.Command = new SafeCommand(() => SelectedChannel = 1);
+            BuWizzChannel2.Command = new SafeCommand(() => SelectedChannel = 2);
+            BuWizzChannel3.Command = new SafeCommand(() => SelectedChannel = 3);
+            InfraredChannel0.Command = new SafeCommand(() => SelectedChannel = 0);
+            InfraredChannel1.Command = new SafeCommand(() => SelectedChannel = 1);
+        }
 
         public static BindableProperty DeviceTypeProperty = BindableProperty.Create(nameof(DeviceType), typeof(DeviceType), typeof(DeviceChannelSelector), default(DeviceType), BindingMode.OneWay, null, OnDeviceTypeChanged);
         public static BindableProperty SelectedChannelProperty = BindableProperty.Create(nameof(SelectedChannel), typeof(int), typeof(DeviceChannelSelector), 0, BindingMode.TwoWay, null, OnSelectedChannelChanged);
@@ -34,8 +39,6 @@ namespace BrickController2.UI.Controls
             set => SetValue(SelectedChannelProperty, value);
         }
 
-        ICommand ChannelSelectCommand { get; }
-
         private static void OnDeviceTypeChanged(BindableObject bindable, object oldValue, object newValue)
         {
             if (bindable is DeviceChannelSelector dcs)
@@ -49,7 +52,20 @@ namespace BrickController2.UI.Controls
 
         private static void OnSelectedChannelChanged(BindableObject bindable, object oldValue, object newValue)
         {
-
+            if (bindable is DeviceChannelSelector dcs)
+            {
+                int selectedChannel = (int)newValue;
+                dcs.SBrickChannel0.SelectedChannel = selectedChannel;
+                dcs.SBrickChannel1.SelectedChannel = selectedChannel;
+                dcs.SBrickChannel2.SelectedChannel = selectedChannel;
+                dcs.SBrickChannel3.SelectedChannel = selectedChannel;
+                dcs.BuWizzChannel0.SelectedChannel = selectedChannel;
+                dcs.BuWizzChannel1.SelectedChannel = selectedChannel;
+                dcs.BuWizzChannel2.SelectedChannel = selectedChannel;
+                dcs.BuWizzChannel3.SelectedChannel = selectedChannel;
+                dcs.InfraredChannel0.SelectedChannel = selectedChannel;
+                dcs.InfraredChannel1.SelectedChannel = selectedChannel;
+            }
         }
     }
 }
