@@ -3,10 +3,17 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:creationManagement="clr-namespace:BrickController2.CreationManagement"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerActionPage"
     Title="Controller Action">
+
+    <local:PageBase.Resources>
+        <ResourceDictionary>
+            <converters:DeviceTypeToChannelOutputVisibleConverter x:Key="DeviceTypeToChannelOutputVisible"/>
+        </ResourceDictionary>
+    </local:PageBase.Resources>
     
     <local:PageBase.Content>
         <ScrollView>
@@ -44,19 +51,8 @@
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
                 <Label Text="Advanced settings" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
 
-                <!-- Channel output type selector -->
-                <StackLayout x:Name="ChannelOutputTypeSelector" Orientation="Vertical" IsVisible="True">
-                    <StackLayout.Triggers>
-                        <MultiTrigger TargetType="StackLayout">
-                            <MultiTrigger.Conditions>
-                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.SBrick"/>
-                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.BuWizz"/>
-                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.BuWizz2"/>
-                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.Infrared"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="IsVisible" Value="False"/>
-                        </MultiTrigger>
-                    </StackLayout.Triggers>
+                <StackLayout Orientation="Vertical" IsVisible="{Binding SelectedDevice.DeviceType, Converter={StaticResource DeviceTypeToChannelOutputVisible}}">
+                    <!-- Channel output type selector -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
@@ -68,40 +64,34 @@
                     </Grid>
 
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
-                </StackLayout>
 
-                <!-- Max servo angle setting -->
-                <StackLayout x:Name="ServoMaxAngleSetting" Orientation="Vertical" IsVisible="True">
-                    <StackLayout.Triggers>
-                        <MultiTrigger TargetType="StackLayout">
-                            <MultiTrigger.Conditions>
-                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.SBrick"/>
-                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.BuWizz"/>
-                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.BuWizz2"/>
-                                <BindingCondition Binding="{Binding SelectedDevice.DeviceType}" Value="DeviceType.Infrared"/>
-                            </MultiTrigger.Conditions>
-                            <Setter Property="IsVisible" Value="False"/>
-                        </MultiTrigger>
-                    </StackLayout.Triggers>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="3*"/>
-                        </Grid.ColumnDefinitions>
+                    <!-- Max servo angle setting -->
+                    <StackLayout Orientation="Vertical" IsVisible="False">
+                        <StackLayout.Triggers>
+                            <DataTrigger TargetType="StackLayout" Binding="{Binding ChannelOutputType}" Value="ChannelOutputType.ServoMotor">
+                                <Setter Property="IsVisible" Value="True"/>
+                            </DataTrigger>
+                        </StackLayout.Triggers>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Text="Servo angle"/>
-                        <StackLayout Grid.Column="1" Orientation="Horizontal">
-                            <Slider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="360" HorizontalOptions="FillAndExpand"/>
-                            <Label Text="{Binding MaxServoAngle}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
-                            <Label Text="°"/>
-                        </StackLayout>
-                    </Grid>
+                            <Label Grid.Column="0" Text="Servo angle"/>
+                            <StackLayout Grid.Column="1" Orientation="Horizontal">
+                                <Slider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="360" HorizontalOptions="FillAndExpand"/>
+                                <Label Text="{Binding MaxServoAngle}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                                <Label Text="°"/>
+                            </StackLayout>
+                        </Grid>
 
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                    </StackLayout>
                 </StackLayout>
 
                 <!-- Button type selector -->
-                <StackLayout x:Name="ButtonTypeSelector" Orientation="Vertical">
+                <StackLayout Orientation="Vertical">
                     <StackLayout.Triggers>
                         <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="GameControllerEventType.Button">
                             <Setter Property="IsVisible" Value="True"/>
@@ -121,7 +111,7 @@
                 </StackLayout>
 
                 <!-- Axis characteristic selector -->
-                <StackLayout x:Name="AxisCharacteristicSelector" Orientation="Vertical" IsVisible="False">
+                <StackLayout Orientation="Vertical" IsVisible="False">
                     <StackLayout.Triggers>
                         <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="GameControllerEventType.Axis">
                             <Setter Property="IsVisible" Value="True"/>
@@ -158,7 +148,7 @@
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
 
                 <!-- Axis dead zone percent -->
-                <StackLayout x:Name="AxisDeadZoneSetting" Orientation="Vertical">
+                <StackLayout Orientation="Vertical">
                     <StackLayout.Triggers>
                         <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="GameControllerEventType.Axis">
                             <Setter Property="IsVisible" Value="True"/>
