@@ -39,19 +39,19 @@ namespace BrickController2.UI.ViewModels
             _dialogService = dialogService;
 
             ControllerEvent = parameters.Get<ControllerEvent>("controllerevent");
+            ControllerAction = parameters.Get<ControllerAction>("controlleraction", null);
 
-            var controllerAction = parameters.Get<ControllerAction>("controlleraction", null);
-            if (controllerAction != null)
+            if (ControllerAction != null)
             {
-                SelectedDevice = _deviceManager.GetDeviceById(controllerAction.DeviceId);
-                Channel = controllerAction.Channel;
-                IsInvert = controllerAction.IsInvert;
-                ChannelOutputType = controllerAction.ChannelOutputType;
-                MaxServoAngle = controllerAction.MaxServoAngle;
-                ButtonType = controllerAction.ButtonType;
-                AxisCharacteristic = controllerAction.AxisCharacteristic;
-                MaxOutputPercent = controllerAction.MaxOutputPercent;
-                AxisDeadZonePercent = controllerAction.AxisDeadZonePercent;
+                SelectedDevice = _deviceManager.GetDeviceById(ControllerAction.DeviceId);
+                Channel = ControllerAction.Channel;
+                IsInvert = ControllerAction.IsInvert;
+                ChannelOutputType = ControllerAction.ChannelOutputType;
+                MaxServoAngle = ControllerAction.MaxServoAngle;
+                ButtonType = ControllerAction.ButtonType;
+                AxisCharacteristic = ControllerAction.AxisCharacteristic;
+                MaxOutputPercent = ControllerAction.MaxOutputPercent;
+                AxisDeadZonePercent = ControllerAction.AxisDeadZonePercent;
             }
             else
             {
@@ -66,12 +66,13 @@ namespace BrickController2.UI.ViewModels
                 AxisDeadZonePercent = 0;
             }
 
-            SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerAction(), () => SelectedDevice != null);
+            SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null);
         }
 
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
 
         public ControllerEvent ControllerEvent { get; }
+        public ControllerAction ControllerAction { get; }
 
         public Device SelectedDevice
         {
@@ -137,8 +138,9 @@ namespace BrickController2.UI.ViewModels
         }
 
         public ICommand SaveControllerActionCommand { get; }
+        public ICommand DeleteControllerActionCommand { get; }
 
-        private async Task SaveControllerAction()
+        private async Task SaveControllerActionAsync()
         {
             if (SelectedDevice == null)
             {
@@ -155,6 +157,24 @@ namespace BrickController2.UI.ViewModels
                 "Saving...");
 
             await NavigationService.NavigateBackAsync();
+        }
+
+        private async Task DeleteControllerActionAsync()
+        {
+            if (ControllerAction == null)
+            {
+                return;
+            }
+
+            if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this controller action?", "Yes", "No"))
+            {
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => await _creationManager.DeleteControllerActionAsync(ControllerAction),
+                    "Deleting...");
+
+                await NavigationService.NavigateBackAsync();
+            }
         }
     }
 }

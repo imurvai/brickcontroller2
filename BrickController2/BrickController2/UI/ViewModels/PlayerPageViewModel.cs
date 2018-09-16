@@ -57,18 +57,18 @@ namespace BrickController2.UI.ViewModels
         public ICommand BuWizzOutputLevelChangedCommand { get; }
         public ICommand BuWizz2OutputLevelChangedCommand { get; }
 
-        public override void OnAppearing()
+        public override async void OnAppearing()
         {
             base.OnAppearing();
 
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
-            ConnectDevicesAsync();
+            await ConnectDevicesAsync();
         }
 
-        public override void OnDisappearing()
+        public override async void OnDisappearing()
         {
             _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
-            DisconnectDevicesAsync();
+            await DisconnectDevicesAsync();
 
             base.OnDisappearing();
         }
@@ -108,14 +108,14 @@ namespace BrickController2.UI.ViewModels
                 false,
                 async (progressDialog, token) =>
                 {
-                    var tasks = new List<Task>();
+                    var connectTasks = new List<Task>();
 
                     foreach (var device in _devices)
                     {
-                        tasks.Add(device.ConnectAsync(token));
+                        connectTasks.Add(device.ConnectAsync(token));
                     }
 
-                    await Task.WhenAll(tasks);
+                    await Task.WhenAll(connectTasks);
                 },
                 "Connecting...",
                 null,

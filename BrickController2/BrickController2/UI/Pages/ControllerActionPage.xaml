@@ -14,7 +14,12 @@
             <converters:DeviceTypeToChannelOutputVisibleConverter x:Key="DeviceTypeToChannelOutputVisible"/>
         </ResourceDictionary>
     </local:PageBase.Resources>
-    
+
+    <local:PageBase.ToolbarItems>
+        <ToolbarItem Icon="ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteControllerActionCommand}"/>
+        <ToolbarItem Text="Save" Order="Primary" Command="{Binding SaveControllerActionCommand}"/>
+    </local:PageBase.ToolbarItems>
+
     <local:PageBase.Content>
         <ScrollView>
             <StackLayout Orientation="Vertical" Padding="20">

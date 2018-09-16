@@ -72,7 +72,7 @@ namespace BrickController2.DeviceManagement
 
         public override string ToString()
         {
-            return $"{DeviceType} - {Name}";
+            return Name;
         }
 
         protected void SetState(DeviceState newState, bool isError)
