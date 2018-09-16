@@ -16,8 +16,6 @@ namespace BrickController2.DeviceManagement
         private readonly Guid SERVICE_UUID_REMOTE_CONTROL = new Guid("4e050000-74fb-4481-88b3-9919b1676e93");
         private readonly Guid CHARACTERISTIC_UUID_QUICK_DRIVE = new Guid("000092d1-0000-1000-8000-00805f9b34fb");
 
-        private readonly AsyncLock _asyncLock = new AsyncLock();
-
         private readonly int[] _outputValues = new int[4];
         private int _outputLevelValue;
 
@@ -38,7 +36,7 @@ namespace BrickController2.DeviceManagement
         public override int NumberOfOutputLevels => 4;
         public override int DefaultOutputLevel => 2;
 
-        public override async Task SetOutputAsync(int channel, int value)
+        public override void SetOutput(int channel, int value)
         {
             CheckChannel(channel);
             value = CutOutputValue(value);
@@ -52,7 +50,7 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
-        public override async Task SetOutputLevelAsync(int value)
+        public override void SetOutputLevel(int value)
         {
             _outputLevelValue = Math.Max(0, Math.Min(NumberOfOutputLevels - 1, value));
         }
@@ -73,18 +71,12 @@ namespace BrickController2.DeviceManagement
 
         protected override async Task<bool> ConnectPostActionAsync()
         {
-            using (await _asyncLock.LockAsync())
-            {
-                return await StartOutputTaskAsync();
-            }
+            return await StartOutputTaskAsync();
         }
 
         protected override async Task DisconnectPreActionAsync()
         {
-            using (await _asyncLock.LockAsync())
-            {
-                await StopOutputTaskAsync();
-            }
+            await StopOutputTaskAsync();
         }
 
         private async Task<bool> StartOutputTaskAsync()

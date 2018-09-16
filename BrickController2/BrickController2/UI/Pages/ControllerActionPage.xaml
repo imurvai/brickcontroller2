@@ -73,7 +73,7 @@
                     <!-- Max servo angle setting -->
                     <StackLayout Orientation="Vertical" IsVisible="False">
                         <StackLayout.Triggers>
-                            <DataTrigger TargetType="StackLayout" Binding="{Binding ChannelOutputType}" Value="ChannelOutputType.ServoMotor">
+                            <DataTrigger TargetType="StackLayout" Binding="{Binding ChannelOutputType}" Value="creationManagement:ChannelOutputType.ServoMotor">
                                 <Setter Property="IsVisible" Value="True"/>
                             </DataTrigger>
                         </StackLayout.Triggers>

@@ -54,11 +54,9 @@ namespace BrickController2.DeviceManagement
         public abstract Task<DeviceConnectionResult> ConnectAsync(CancellationToken token);
         public abstract Task DisconnectAsync();
 
-        public abstract Task SetOutputAsync(int channel, int value);
-
-        public virtual Task SetOutputLevelAsync(int value)
+        public abstract void SetOutput(int channel, int value);
+        public virtual void SetOutputLevel(int value)
         {
-            return Task.FromResult(true);
         }
 
         public async Task RenameDeviceAsync(Device device, string newName)

@@ -26,7 +26,7 @@ namespace BrickController2.UI.ViewModels
             set
             {
                 _output = value;
-                Device.SetOutputAsync(Channel, value);
+                Device.SetOutput(Channel, value);
                 RaisePropertyChanged();
             }
         }

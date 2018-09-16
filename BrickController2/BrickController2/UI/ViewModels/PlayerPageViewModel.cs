@@ -43,9 +43,9 @@ namespace BrickController2.UI.ViewModels
             CollectDevices();
             _activeProfile = Creation.ControllerProfiles.First();
 
-            ControllerProfileTappedCommand = new SafeCommand<ControllerProfile>(async (profile) => ControllerProfileTapped(profile));
-            BuWizzOutputLevelChangedCommand = new SafeCommand<int>(async (level) => await ChangeOutputLevel(level, _buwizzDevices));
-            BuWizz2OutputLevelChangedCommand = new SafeCommand<int>(async (level) => await ChangeOutputLevel(level, _buwizz2Devices));
+            ControllerProfileTappedCommand = new SafeCommand<ControllerProfile>(profile => ControllerProfileTapped(profile));
+            BuWizzOutputLevelChangedCommand = new SafeCommand<int>(level => ChangeOutputLevel(level, _buwizzDevices));
+            BuWizz2OutputLevelChangedCommand = new SafeCommand<int>(level => ChangeOutputLevel(level, _buwizz2Devices));
         }
 
         public Creation Creation { get; }
@@ -153,16 +153,12 @@ namespace BrickController2.UI.ViewModels
             _activeProfile = profile;
         }
 
-        private async Task ChangeOutputLevel(int level, IList<Device> devices)
+        private void ChangeOutputLevel(int level, IList<Device> devices)
         {
-            var tasks = new List<Task>();
-
             foreach (var device in devices)
             {
-                tasks.Add(device.SetOutputLevelAsync(level));
+                device.SetOutputLevel(level);
             }
-
-            await Task.WhenAll(tasks);
         }
 
         private void GameControllerEventHandler(object sender, GameControllerEventArgs e)

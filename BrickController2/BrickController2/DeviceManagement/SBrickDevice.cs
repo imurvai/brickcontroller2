@@ -1,7 +1,7 @@
-﻿using BrickController2.Helpers;
-using Plugin.BluetoothLE;
+﻿using Plugin.BluetoothLE;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading;
@@ -15,8 +15,6 @@ namespace BrickController2.DeviceManagement
 
         private readonly Guid SERVICE_UUID_REMOTE_CONTROL = new Guid("4dc591b0-857c-41de-b5f1-15abda665b0c");
         private readonly Guid CHARACTERISTIC_UUID_QUICK_DRIVE = new Guid("489a6ae0-c1ab-4c9c-bdb2-11d373c1b7fb");
-
-        private readonly AsyncLock _asyncLock = new AsyncLock();
 
         private readonly int[] _outputValues = new int[4];
 
@@ -35,7 +33,7 @@ namespace BrickController2.DeviceManagement
         public override DeviceType DeviceType => DeviceType.SBrick;
         public override int NumberOfChannels => 4;
 
-        public override async Task SetOutputAsync(int channel, int value)
+        public override void SetOutput(int channel, int value)
         {
             CheckChannel(channel);
             value = CutOutputValue(value);
@@ -65,18 +63,12 @@ namespace BrickController2.DeviceManagement
 
         protected override async Task<bool> ConnectPostActionAsync()
         {
-            using (await _asyncLock.LockAsync())
-            {
-                return await StartOutputTaskAsync();
-            }
+            return await StartOutputTaskAsync();
         }
 
         protected override async Task DisconnectPreActionAsync()
         {
-            using (await _asyncLock.LockAsync())
-            {
-                await StopOutputTaskAsync();
-            }
+            await StopOutputTaskAsync();
         }
 
         private async Task<bool> StartOutputTaskAsync()
@@ -124,6 +116,10 @@ namespace BrickController2.DeviceManagement
                     }
                     catch (OperationCanceledException)
                     {
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine("****** " + e);
                     }
                 }
             });

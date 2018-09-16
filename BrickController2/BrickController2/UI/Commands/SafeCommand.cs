@@ -13,13 +13,13 @@ namespace BrickController2.UI.Commands
 
         public SafeCommand(Action execute, Func<bool> canExecute = null)
         {
-            _execute = async o => execute?.Invoke();
+            _execute = o => { execute?.Invoke(); return Task.FromResult(true); };
             _canExecute = o => canExecute?.Invoke() ?? true;
         }
 
         public SafeCommand(Action<object> execute, Func<bool> canExecute = null)
         {
-            _execute = async o => execute?.Invoke(o);
+            _execute = o => { execute?.Invoke(o); return Task.FromResult(true); };
             _canExecute = o => canExecute?.Invoke() ?? true;
         }
 
@@ -73,7 +73,7 @@ namespace BrickController2.UI.Commands
 
         public SafeCommand(Action<TExecute> execute, Func<bool> canExecute = null)
         {
-            _execute = async o => execute?.Invoke(o);
+            _execute = o => { execute?.Invoke(o); return Task.FromResult(true); };
             _canExecute = o => canExecute?.Invoke() ?? true;
         }
 

@@ -103,7 +103,6 @@
     <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HardwareServices\Bluetooth\BleService.cs" />
     <Compile Include="HardwareServices\DI\HardwareServicesModule.cs" />
     <Compile Include="HardwareServices\GameController\GameControllerService.cs" />
     <Compile Include="HardwareServices\Infrared\InfraredService.cs" />

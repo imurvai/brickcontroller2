@@ -2,6 +2,7 @@
 using Plugin.BluetoothLE;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading;
@@ -15,6 +16,7 @@ namespace BrickController2.DeviceManagement
         protected readonly AsyncLock _asyncLock = new AsyncLock();
 
         protected IDevice _bleDevice;
+        private IDisposable _bleDeviceStateChangeSubscription;
 
         public BluetoothDevice(string name, string address, IDeviceRepository deviceRepository, IAdapter adapter)
             : base(name, address, deviceRepository)
@@ -30,7 +32,7 @@ namespace BrickController2.DeviceManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                if (DeviceState != DeviceState.Disconnected)
+                if (_bleDevice != null || DeviceState != DeviceState.Disconnected)
                 {
                     return DeviceConnectionResult.Error;
                 }
@@ -43,6 +45,30 @@ namespace BrickController2.DeviceManagement
                     _bleDevice = await _adapter.GetKnownDevice(guid).FirstAsync().ToTask(token);
 
                     // TODO: Setup the state changed event!!!
+                    _bleDeviceStateChangeSubscription = _bleDevice.WhenStatusChanged().Subscribe(connectionState =>
+                    {
+                        DeviceState state = DeviceState.Disconnected;
+                        switch (connectionState)
+                        {
+                            case ConnectionStatus.Connecting:
+                                state = DeviceState.Connecting;
+                                break;
+
+                            case ConnectionStatus.Connected:
+                                state = DeviceState.Connected;
+                                break;
+
+                            case ConnectionStatus.Disconnecting:
+                                state = DeviceState.Disconnecting;
+                                break;
+
+                            case ConnectionStatus.Disconnected:
+                                state = DeviceState.Disconnected;
+                                break;
+                        }
+
+                        Debug.WriteLine("*** Device state: " + state);
+                    });
 
                     await _bleDevice.ConnectWait().ToTask(token);
 
@@ -95,6 +121,8 @@ namespace BrickController2.DeviceManagement
 
                 await DisconnectPreActionAsync();
 
+                _bleDeviceStateChangeSubscription?.Dispose();
+                _bleDeviceStateChangeSubscription = null;
                 _bleDevice.CancelConnection();
                 _bleDevice = null;
             }

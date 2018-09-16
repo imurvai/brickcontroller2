@@ -65,7 +65,7 @@ namespace BrickController2.UI.Controls
             foreach (var buttonText in ButtonTexts)
             {
                 var frame = new Frame { BackgroundColor = Color.Transparent, HasShadow = false };
-                frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>(async (i) => await ButtonTapped(i)), CommandParameter = index });
+                frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>((i) => ButtonTapped(i)), CommandParameter = index });
                 var label = new Label { Text = buttonText };
                 frame.Content = label;
                 _labels.Add(label);
@@ -76,7 +76,7 @@ namespace BrickController2.UI.Controls
             SetSelection(SelectedIndex);
         }
 
-        private async Task ButtonTapped(int index)
+        private void ButtonTapped(int index)
         {
             if (SelectedIndex == index)
             {

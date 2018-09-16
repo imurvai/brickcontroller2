@@ -89,20 +89,17 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task SetOutput(InfraredDevice device, int channel, int value)
+        public void SetOutput(InfraredDevice device, int channel, int value)
         {
-            using (await _asyncLock.LockAsync())
+            if (int.TryParse(device.Address, out int address))
             {
-                if (int.TryParse(device.Address, out int address))
+                if (_outputValues[address, channel] == value)
                 {
-                    if (_outputValues[address, channel] == value)
-                    {
-                        return;
-                    }
-
-                    _outputValues[address, channel] = value;
-                    _sendAttemptsLeft[address] = MAX_SEND_ATTEMPTS;
+                    return;
                 }
+
+                _outputValues[address, channel] = value;
+                _sendAttemptsLeft[address] = MAX_SEND_ATTEMPTS;
             }
         }
 

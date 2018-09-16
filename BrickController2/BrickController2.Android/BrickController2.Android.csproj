@@ -68,8 +68,6 @@
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HardwareServices\Bluetooth\BleDevice.cs" />
-    <Compile Include="HardwareServices\Bluetooth\BleService.cs" />
     <Compile Include="HardwareServices\DI\HardwareServicesModule.cs" />
     <Compile Include="HardwareServices\GameController\GameControllerService.cs" />
     <Compile Include="HardwareServices\Infrared\InfraredService.cs" />

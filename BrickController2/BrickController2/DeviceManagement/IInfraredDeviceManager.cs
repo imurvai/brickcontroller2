@@ -7,6 +7,6 @@ namespace BrickController2.DeviceManagement
         Task<DeviceConnectionResult> ConnectDevice(InfraredDevice device);
         Task DisconnectDevice(InfraredDevice device);
 
-        Task SetOutput(InfraredDevice device, int channel, int value);
+        void SetOutput(InfraredDevice device, int channel, int value);
     }
 }

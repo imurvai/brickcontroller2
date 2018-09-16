@@ -35,12 +35,12 @@ namespace BrickController2.DeviceManagement
             SetState(DeviceState.Disconnected, false);
         }
 
-        public override async Task SetOutputAsync(int channel, int value)
+        public override void SetOutput(int channel, int value)
         {
             CheckChannel(channel);
             value = CutOutputValue(value);
 
-            await _infraredDeviceManager.SetOutput(this, channel, value);
+            _infraredDeviceManager.SetOutput(this, channel, value);
         }
     }
 }
