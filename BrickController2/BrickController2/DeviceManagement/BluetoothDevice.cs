@@ -43,6 +43,18 @@ namespace BrickController2.DeviceManagement
 
                     var connectionFailedTask = _bleDevice.WhenConnectionFailed().ToTask(token);
                     var connectionOkTask = _bleDevice.WhenConnected().Take(1).ToTask(token);
+                    _bleDeviceDisconnectedSubscription = _bleDevice
+                        .WhenDisconnected()
+                        .Take(1)
+                        .ObserveOn(SynchronizationContext.Current)
+                        .Subscribe(device =>
+                        {
+                            if (device == _bleDevice)
+                            {
+                                CleanUp();
+                                SetState(DeviceState.Disconnected, true);
+                            }
+                        });
 
                     _bleDevice.Connect(new ConnectionConfig { AutoConnect = false });
 
@@ -54,19 +66,6 @@ namespace BrickController2.DeviceManagement
 
                         if (await ServicesDiscovered(services) && await ConnectPostActionAsync())
                         {
-                            _bleDeviceDisconnectedSubscription = _bleDevice
-                                .WhenDisconnected()
-                                .Take(1)
-                                .ObserveOn(SynchronizationContext.Current)
-                                .Subscribe(device =>
-                            {
-                                if (device == _bleDevice)
-                                {
-                                    CleanUp();
-                                    SetState(DeviceState.Disconnected, true);
-                                }
-                            });
-
                             SetState(DeviceState.Connected, false);
                             return DeviceConnectionResult.Ok;
                         }
