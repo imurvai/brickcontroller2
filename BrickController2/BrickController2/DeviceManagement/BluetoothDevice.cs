@@ -1,8 +1,6 @@
-﻿using BrickController2.Helpers;
-using Plugin.BluetoothLE;
+﻿using Plugin.BluetoothLE;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading;
@@ -13,10 +11,9 @@ namespace BrickController2.DeviceManagement
     internal abstract class BluetoothDevice : Device
     {
         protected readonly IAdapter _adapter;
-        protected readonly AsyncLock _asyncLock = new AsyncLock();
 
         protected IDevice _bleDevice;
-        private IDisposable _bleDeviceStateChangeSubscription;
+        private IDisposable _bleDeviceDisconnectedSubscription;
 
         public BluetoothDevice(string name, string address, IDeviceRepository deviceRepository, IAdapter adapter)
             : base(name, address, deviceRepository)
@@ -24,7 +21,7 @@ namespace BrickController2.DeviceManagement
             _adapter = adapter;
         }
 
-        protected abstract Task<bool> ProcessServices(IList<IGattService> services);
+        protected abstract Task<bool> ServicesDiscovered(IList<IGattService> services);
         protected abstract Task<bool> ConnectPostActionAsync();
         protected abstract Task DisconnectPreActionAsync();
 
@@ -42,61 +39,52 @@ namespace BrickController2.DeviceManagement
                     SetState(DeviceState.Connecting, false);
 
                     var guid = Guid.Parse(Address);
-                    _bleDevice = await _adapter.GetKnownDevice(guid).FirstAsync().ToTask(token);
+                    _bleDevice = await _adapter.GetKnownDevice(guid).FirstAsync();
 
-                    // TODO: Setup the state changed event!!!
-                    _bleDeviceStateChangeSubscription = _bleDevice.WhenStatusChanged().Subscribe(connectionState =>
+                    var connectionFailedTask = _bleDevice.WhenConnectionFailed().ToTask(token);
+                    var connectionOkTask = _bleDevice.WhenConnected().Take(1).ToTask(token);
+
+                    _bleDevice.Connect(new ConnectionConfig { AutoConnect = false });
+
+                    var result = await Task.WhenAny(connectionFailedTask, connectionOkTask);
+                    if (result == connectionOkTask)
                     {
-                        DeviceState state = DeviceState.Disconnected;
-                        switch (connectionState)
+                        var services = new List<IGattService>();
+                        await _bleDevice.DiscoverServices().ForEachAsync(service => services.Add(service), token);
+
+                        if (await ServicesDiscovered(services) && await ConnectPostActionAsync())
                         {
-                            case ConnectionStatus.Connecting:
-                                state = DeviceState.Connecting;
-                                break;
+                            _bleDeviceDisconnectedSubscription = _bleDevice
+                                .WhenDisconnected()
+                                .Take(1)
+                                .ObserveOn(SynchronizationContext.Current)
+                                .Subscribe(device =>
+                            {
+                                if (device == _bleDevice)
+                                {
+                                    CleanUp();
+                                    SetState(DeviceState.Disconnected, true);
+                                }
+                            });
 
-                            case ConnectionStatus.Connected:
-                                state = DeviceState.Connected;
-                                break;
-
-                            case ConnectionStatus.Disconnecting:
-                                state = DeviceState.Disconnecting;
-                                break;
-
-                            case ConnectionStatus.Disconnected:
-                                state = DeviceState.Disconnected;
-                                break;
+                            SetState(DeviceState.Connected, false);
+                            return DeviceConnectionResult.Ok;
                         }
-
-                        Debug.WriteLine("*** Device state: " + state);
-                    });
-
-                    await _bleDevice.ConnectWait().ToTask(token);
-
-                    var services = await _bleDevice.DiscoverServices().ToList().ToTask(token);
-
-                    if (await ProcessServices(services))
-                    {
-                        await ConnectPostActionAsync();
-                        SetState(DeviceState.Connected, false);
-                    }
-                    else
-                    {
-                        await DisconnectInternalAsync();
-                        return DeviceConnectionResult.Error;
                     }
                 }
                 catch (OperationCanceledException)
                 {
-                    await DisconnectInternalAsync();
+                    CleanUp();
+                    SetState(DeviceState.Disconnected, false);
                     return DeviceConnectionResult.Canceled;
                 }
                 catch (Exception)
                 {
-                    SetState(DeviceState.Disconnected, true);
-                    return DeviceConnectionResult.Error;
                 }
 
-                return DeviceConnectionResult.Ok;
+                CleanUp();
+                SetState(DeviceState.Disconnected, true);
+                return DeviceConnectionResult.Error;
             }
         }
 
@@ -118,17 +106,19 @@ namespace BrickController2.DeviceManagement
             if (_bleDevice != null)
             {
                 SetState(DeviceState.Disconnecting, false);
-
                 await DisconnectPreActionAsync();
-
-                _bleDeviceStateChangeSubscription?.Dispose();
-                _bleDeviceStateChangeSubscription = null;
-                _bleDevice.CancelConnection();
-                _bleDevice = null;
             }
 
+            CleanUp();
             SetState(DeviceState.Disconnected, false);
         }
 
+        private void CleanUp()
+        {
+            _bleDeviceDisconnectedSubscription?.Dispose();
+            _bleDeviceDisconnectedSubscription = null;
+            _bleDevice?.CancelConnection();
+            _bleDevice = null;
+        }
     }
 }

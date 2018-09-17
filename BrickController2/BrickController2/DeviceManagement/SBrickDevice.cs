@@ -47,7 +47,7 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
-        protected override async Task<bool> ProcessServices(IList<IGattService> services)
+        protected override async Task<bool> ServicesDiscovered(IList<IGattService> services)
         {
             _characteristic = null;
             foreach (var service in services)

@@ -1,5 +1,4 @@
-﻿using BrickController2.Helpers;
-using Plugin.BluetoothLE;
+﻿using Plugin.BluetoothLE;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
@@ -55,7 +54,7 @@ namespace BrickController2.DeviceManagement
             _outputLevelValue = Math.Max(0, Math.Min(NumberOfOutputLevels - 1, value));
         }
 
-        protected override async Task<bool> ProcessServices(IList<IGattService> services)
+        protected override async Task<bool> ServicesDiscovered(IList<IGattService> services)
         {
             _characteristic = null;
             foreach (var service in services)
