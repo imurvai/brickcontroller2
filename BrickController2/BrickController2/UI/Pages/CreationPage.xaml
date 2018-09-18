@@ -22,13 +22,9 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-
-                <Label Grid.Column="0" Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold"/>
+            <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="10">
+                <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+                <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play_white.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
             </Grid>
 
             <!-- Controller profile list -->
@@ -61,7 +57,7 @@
                 </Label.Triggers>
             </Label>
 
-            <!-- FAB -->
+            <!-- FABs -->
             <controls:FloatingActionButton Grid.Row="1" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddControllerProfileCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
         </Grid>

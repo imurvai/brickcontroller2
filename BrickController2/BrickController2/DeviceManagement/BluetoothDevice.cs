@@ -43,31 +43,40 @@ namespace BrickController2.DeviceManagement
 
                     var connectionFailedTask = _bleDevice.WhenConnectionFailed().ToTask(token);
                     var connectionOkTask = _bleDevice.WhenConnected().Take(1).ToTask(token);
-                    _bleDeviceDisconnectedSubscription = _bleDevice
-                        .WhenDisconnected()
-                        .Take(1)
-                        .ObserveOn(SynchronizationContext.Current)
-                        .Subscribe(device =>
-                        {
-                            if (device == _bleDevice)
-                            {
-                                CleanUp();
-                                SetState(DeviceState.Disconnected, true);
-                            }
-                        });
-
                     _bleDevice.Connect(new ConnectionConfig { AutoConnect = false });
 
                     var result = await Task.WhenAny(connectionFailedTask, connectionOkTask);
                     if (result == connectionOkTask)
                     {
-                        var services = new List<IGattService>();
-                        await _bleDevice.DiscoverServices().ForEachAsync(service => services.Add(service), token);
-
-                        if (await ServicesDiscovered(services) && await ConnectPostActionAsync())
+                        if (!connectionOkTask.IsCanceled)
                         {
-                            SetState(DeviceState.Connected, false);
-                            return DeviceConnectionResult.Ok;
+                            _bleDeviceDisconnectedSubscription = _bleDevice
+                                .WhenDisconnected()
+                                .Take(1)
+                                .ObserveOn(SynchronizationContext.Current)
+                                .Subscribe(device =>
+                                {
+                                    if (device == _bleDevice)
+                                    {
+                                        CleanUp();
+                                        SetState(DeviceState.Disconnected, true);
+                                    }
+                                });
+
+                            var services = new List<IGattService>();
+                            await _bleDevice.DiscoverServices().ForEachAsync(service => services.Add(service), token);
+
+                            if (await ServicesDiscovered(services) && await ConnectPostActionAsync())
+                            {
+                                SetState(DeviceState.Connected, false);
+                                return DeviceConnectionResult.Ok;
+                            }
+                        }
+                        else
+                        {
+                            CleanUp();
+                            SetState(DeviceState.Disconnected, false);
+                            return DeviceConnectionResult.Canceled;
                         }
                     }
                 }

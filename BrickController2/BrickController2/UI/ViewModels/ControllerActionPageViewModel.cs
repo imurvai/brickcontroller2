@@ -67,6 +67,7 @@ namespace BrickController2.UI.ViewModels
             }
 
             SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null);
+            DeleteControllerActionCommand = new SafeCommand(async () => await DeleteControllerActionAsync());
         }
 
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
@@ -161,17 +162,15 @@ namespace BrickController2.UI.ViewModels
 
         private async Task DeleteControllerActionAsync()
         {
-            if (ControllerAction == null)
-            {
-                return;
-            }
-
             if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this controller action?", "Yes", "No"))
             {
-                await _dialogService.ShowProgressDialogAsync(
-                    false,
-                    async (progressDialog, token) => await _creationManager.DeleteControllerActionAsync(ControllerAction),
-                    "Deleting...");
+                if (ControllerAction != null)
+                {
+                    await _dialogService.ShowProgressDialogAsync(
+                        false,
+                        async (progressDialog, token) => await _creationManager.DeleteControllerActionAsync(ControllerAction),
+                        "Deleting...");
+                }
 
                 await NavigationService.NavigateBackAsync();
             }

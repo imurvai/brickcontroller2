@@ -75,28 +75,22 @@ namespace BrickController2.UI.ViewModels
 
         private void CollectDevices()
         {
-            foreach (var profile in Creation.ControllerProfiles)
+            var deviceIds = Creation.GetDeviceIds();
+            foreach (var deviceId in deviceIds)
             {
-                foreach (var controllerEvent in profile.ControllerEvents)
+                var device = _deviceManager.GetDeviceById(deviceId);
+                if (device != null && !_devices.Contains(device))
                 {
-                    foreach (var controllerAction in controllerEvent.ControllerActions)
+                    _devices.Add(device);
+
+                    if (device.DeviceType == DeviceType.BuWizz)
                     {
-                        var deviceId = controllerAction.DeviceId;
-                        var device = _deviceManager.GetDeviceById(deviceId);
-                        if (device != null && !_devices.Contains(device))
-                        {
-                            _devices.Add(device);
+                        _buwizzDevices.Add(device);
+                    }
 
-                            if (device.DeviceType == DeviceType.BuWizz)
-                            {
-                                _buwizzDevices.Add(device);
-                            }
-
-                            if (device.DeviceType == DeviceType.BuWizz2)
-                            {
-                                _buwizz2Devices.Add(device);
-                            }
-                        }
+                    if (device.DeviceType == DeviceType.BuWizz2)
+                    {
+                        _buwizz2Devices.Add(device);
                     }
                 }
             }

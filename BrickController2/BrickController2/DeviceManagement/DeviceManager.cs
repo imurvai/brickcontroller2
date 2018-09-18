@@ -112,5 +112,14 @@ namespace BrickController2.DeviceManagement
                 Devices.Remove(device);
             }
         }
+
+        public async Task DeleteDevicesAsync()
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                await _deviceRepository.DeleteDevicesAsync();
+                Devices.Clear();
+            }
+        }
     }
 }

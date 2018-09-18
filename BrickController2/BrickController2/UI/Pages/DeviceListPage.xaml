@@ -15,7 +15,11 @@
             <converters:DeviceTypeToSmallImageConverter x:Key="DeviceTypeToSmallImage"/>
         </ResourceDictionary>
     </local:PageBase.Resources>
-    
+
+    <local:PageBase.ToolbarItems>
+        <ToolbarItem Icon="ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteDevicesCommand}"/>
+    </local:PageBase.ToolbarItems>
+
     <local:PageBase.Content>
         <Grid>
 

@@ -24,6 +24,7 @@
     <None Remove="UI\Images\ic_link_white.png" />
     <None Remove="UI\Images\ic_menu.png" />
     <None Remove="UI\Images\ic_play_black.png" />
+    <None Remove="UI\Images\ic_play_white.png" />
     <None Remove="UI\Images\ic_search.png" />
     <None Remove="UI\Images\infra_image.png" />
     <None Remove="UI\Images\infra_image_small.png" />
@@ -37,14 +38,11 @@
     <EmbeddedResource Include="UI\Images\ic_add.png" />
     <EmbeddedResource Include="UI\Images\ic_buttons.png" />
     <EmbeddedResource Include="UI\Images\ic_console.png" />
-    <EmbeddedResource Include="UI\Images\ic_delete_black.png" />
-    <EmbeddedResource Include="UI\Images\ic_edit_black.png" />
     <EmbeddedResource Include="UI\Images\ic_info.png" />
     <EmbeddedResource Include="UI\Images\ic_joystick.png" />
     <EmbeddedResource Include="UI\Images\ic_link.png" />
     <EmbeddedResource Include="UI\Images\ic_link_white.png" />
-    <EmbeddedResource Include="UI\Images\ic_menu.png" />
-    <EmbeddedResource Include="UI\Images\ic_play_black.png" />
+    <EmbeddedResource Include="UI\Images\ic_play_white.png" />
     <EmbeddedResource Include="UI\Images\ic_search.png" />
     <EmbeddedResource Include="UI\Images\infra_image.png" />
     <EmbeddedResource Include="UI\Images\infra_image_small.png" />

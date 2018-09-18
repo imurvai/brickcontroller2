@@ -1,6 +1,7 @@
 ﻿using BrickController2.Helpers;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace BrickController2.CreationManagement
@@ -29,6 +30,28 @@ namespace BrickController2.CreationManagement
         public override string ToString()
         {
             return Name;
+        }
+
+        public IEnumerable<string> GetDeviceIds()
+        {
+            var deviceIds = new List<string>();
+
+            foreach (var profile in ControllerProfiles)
+            {
+                foreach (var controllerEvent in profile.ControllerEvents)
+                {
+                    foreach (var controllerAction in controllerEvent.ControllerActions)
+                    {
+                        var deviceId = controllerAction.DeviceId;
+                        if (!deviceIds.Contains(deviceId))
+                        {
+                            deviceIds.Add(deviceId);
+                        }
+                    }
+                }
+            }
+
+            return deviceIds;
         }
     }
 }

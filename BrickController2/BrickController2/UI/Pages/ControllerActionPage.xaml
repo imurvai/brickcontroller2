@@ -5,6 +5,7 @@
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:creationManagement="clr-namespace:BrickController2.CreationManagement"
+    xmlns:gameController="clr-namespace:BrickController2.HardwareServices.GameController"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerActionPage"
     Title="Controller Action">
@@ -17,7 +18,7 @@
 
     <local:PageBase.ToolbarItems>
         <ToolbarItem Icon="ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteControllerActionCommand}"/>
-        <ToolbarItem Text="Save" Order="Primary" Command="{Binding SaveControllerActionCommand}"/>
+        <ToolbarItem Icon="ic_checkmark_white.png" Order="Primary" Command="{Binding SaveControllerActionCommand}"/>
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>
@@ -73,7 +74,7 @@
                     <!-- Max servo angle setting -->
                     <StackLayout Orientation="Vertical" IsVisible="False">
                         <StackLayout.Triggers>
-                            <DataTrigger TargetType="StackLayout" Binding="{Binding ChannelOutputType}" Value="creationManagement:ChannelOutputType.ServoMotor">
+                            <DataTrigger TargetType="StackLayout" Binding="{Binding ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
                                 <Setter Property="IsVisible" Value="True"/>
                             </DataTrigger>
                         </StackLayout.Triggers>
@@ -96,9 +97,9 @@
                 </StackLayout>
 
                 <!-- Button type selector -->
-                <StackLayout Orientation="Vertical">
+                <StackLayout Orientation="Vertical" IsVisible="False">
                     <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="GameControllerEventType.Button">
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Button}">
                             <Setter Property="IsVisible" Value="True"/>
                         </DataTrigger>
                     </StackLayout.Triggers>
@@ -118,7 +119,7 @@
                 <!-- Axis characteristic selector -->
                 <StackLayout Orientation="Vertical" IsVisible="False">
                     <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="GameControllerEventType.Axis">
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
                             <Setter Property="IsVisible" Value="True"/>
                         </DataTrigger>
                     </StackLayout.Triggers>
@@ -155,7 +156,7 @@
                 <!-- Axis dead zone percent -->
                 <StackLayout Orientation="Vertical">
                     <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="GameControllerEventType.Axis">
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
                             <Setter Property="IsVisible" Value="True"/>
                         </DataTrigger>
                     </StackLayout.Triggers>

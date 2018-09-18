@@ -23,14 +23,27 @@ namespace BrickController2.UI.ViewModels
             DeviceManager = deviceManager;
             _dialogService = dialogService;
 
+            DeleteDevicesCommand = new SafeCommand(async () => await DeleteDevicesAsync());
             ScanCommand = new SafeCommand(async () => await ScanAsync(), () => !DeviceManager.IsScanning);
             DeviceTappedCommand = new SafeCommand<Device>(async device => await NavigationService.NavigateToAsync<DevicePageViewModel>(new NavigationParameters(("device", device))));
         }
 
         public IDeviceManager DeviceManager { get; }
 
+        public ICommand DeleteDevicesCommand { get; }
         public ICommand ScanCommand { get; }
         public ICommand DeviceTappedCommand { get; }
+
+        private async Task DeleteDevicesAsync()
+        {
+            if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete all the devices?", "Yes", "No"))
+            {
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => await DeviceManager.DeleteDevicesAsync(),
+                    "Deleting...");
+            }
+        }
 
         private async Task ScanAsync()
         {

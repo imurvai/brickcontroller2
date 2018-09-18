@@ -60,6 +60,14 @@ namespace BrickController2.DeviceManagement
             }
         }
 
+        public async Task DeleteDevicesAsync()
+        {
+            using (await _lock.LockAsync())
+            {
+                await _databaseConnection.ExecuteAsync("DELETE FROM Device");
+            }
+        }
+
         public async Task UpdateDeviceAsync(DeviceType type, string address, string newName)
         {
             using (await _lock.LockAsync())
