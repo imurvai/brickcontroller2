@@ -22,7 +22,7 @@ namespace BrickController2.iOS.HardwareServices.GameController
         private readonly IDictionary<string, float> _lastControllerEventValueMap = new Dictionary<string, float>();
 
         private GCController _gameController;
-        private EventHandler<GameControllerEventArgs> _gameControllerEventHandler;
+        private event EventHandler<GameControllerEventArgs> GameControllerEventInternal;
         private NSObject _didConnectNotification;
         private NSObject _didDisconnectNotification;
 
@@ -32,7 +32,7 @@ namespace BrickController2.iOS.HardwareServices.GameController
             {
                 lock (_lockObject)
                 {
-                    if (_gameControllerEventHandler == null)
+                    if (GameControllerEventInternal == null)
                     {
                         if (GCController.Controllers.Length == 0)
                         {
@@ -44,7 +44,7 @@ namespace BrickController2.iOS.HardwareServices.GameController
                         }
                     }
 
-                    _gameControllerEventHandler += value;
+                    GameControllerEventInternal += value;
                 }
             }
 
@@ -52,9 +52,9 @@ namespace BrickController2.iOS.HardwareServices.GameController
             {
                 lock (_lockObject)
                 {
-                    _gameControllerEventHandler -= value;
+                    GameControllerEventInternal -= value;
 
-                    if (_gameControllerEventHandler == null)
+                    if (GameControllerEventInternal == null)
                     {
                         GCController.StopWirelessControllerDiscovery();
                         _didConnectNotification?.Dispose();
@@ -196,7 +196,7 @@ namespace BrickController2.iOS.HardwareServices.GameController
                 if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], value))
                 {
                     _lastControllerEventValueMap[name] = value;
-                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Button, name, value));
+                    GameControllerEventInternal?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Button, name, value));
                 }
             };
         }
@@ -210,7 +210,7 @@ namespace BrickController2.iOS.HardwareServices.GameController
                 if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], value))
                 {
                     _lastControllerEventValueMap[name] = value;
-                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Axis, name, value));
+                    GameControllerEventInternal?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Axis, name, value));
                 }
             };
         }
@@ -231,7 +231,7 @@ namespace BrickController2.iOS.HardwareServices.GameController
 
                 if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], value))
                 {
-                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Axis, name, value));
+                    GameControllerEventInternal?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Axis, name, value));
                     _lastControllerEventValueMap[name] = value;
                 }
             };
@@ -251,7 +251,7 @@ namespace BrickController2.iOS.HardwareServices.GameController
 
                 if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], value))
                 {
-                    _gameControllerEventHandler?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Axis, name, value));
+                    GameControllerEventInternal?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Axis, name, value));
                     _lastControllerEventValueMap[name] = value;
                 }
             };

@@ -9,14 +9,39 @@ namespace BrickController2.Droid.HardwareServices.GameController
     public class GameControllerService : IGameControllerService
     {
         private readonly IDictionary<Axis, float> _lastAxisValues = new Dictionary<Axis, float>();
+        private readonly object _lockObject = new object();
 
-        public event EventHandler<GameControllerEventArgs> GameControllerEvent;
+        private event EventHandler<GameControllerEventArgs> GameControllerEventInternal;
+
+        public event EventHandler<GameControllerEventArgs> GameControllerEvent
+        {
+            add
+            {
+                lock (_lockObject)
+                {
+                    if (GameControllerEventInternal == null)
+                    {
+                        _lastAxisValues.Clear();
+                    }
+
+                    GameControllerEventInternal += value;
+                }
+            }
+
+            remove
+            {
+                lock (_lockObject)
+                {
+                    GameControllerEventInternal -= value;
+                }
+            }
+        }
 
         public bool OnKeyDown([GeneratedEnum] Keycode keyCode, KeyEvent e)
         {
             if ((((int)e.Source & (int)InputSourceType.Gamepad) == (int)InputSourceType.Gamepad) && e.RepeatCount == 0)
             {
-                GameControllerEvent?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Button, e.KeyCode.ToString(), 1.0F));
+                GameControllerEventInternal?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Button, e.KeyCode.ToString(), 1.0F));
                 return true;
             }
 
@@ -27,7 +52,7 @@ namespace BrickController2.Droid.HardwareServices.GameController
         {
             if ((((int)e.Source & (int)InputSourceType.Gamepad) == (int)InputSourceType.Gamepad) && e.RepeatCount == 0)
             {
-                GameControllerEvent?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Button, e.KeyCode.ToString(), 0.0F));
+                GameControllerEventInternal?.Invoke(this, new GameControllerEventArgs(GameControllerEventType.Button, e.KeyCode.ToString(), 0.0F));
                 return true;
             }
 
@@ -49,8 +74,9 @@ namespace BrickController2.Droid.HardwareServices.GameController
 
                     if (_lastAxisValues.TryGetValue(axisCode, out float lastValue))
                     {
-                        if (axisValue == lastValue)
+                        if (Math.Abs(axisValue - lastValue) < 0.05)
                         {
+                            // axisValue == lastValue
                             continue;
                         }
                     }
@@ -59,7 +85,7 @@ namespace BrickController2.Droid.HardwareServices.GameController
                     events[(GameControllerEventType.Axis, axisCode.ToString())] = axisValue;
                 }
 
-                GameControllerEvent?.Invoke(this, new GameControllerEventArgs(events));
+                GameControllerEventInternal?.Invoke(this, new GameControllerEventArgs(events));
                 return true;
             }
 
