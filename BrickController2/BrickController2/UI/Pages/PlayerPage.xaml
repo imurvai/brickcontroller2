@@ -7,7 +7,8 @@
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
-    x:Class="BrickController2.UI.Pages.PlayerPage">
+    x:Class="BrickController2.UI.Pages.PlayerPage"
+    Title="Play">
 
     <local:PageBase.Content>
         <Grid>
@@ -19,12 +20,7 @@
 
             <!-- Header -->
             <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-
-                <Label Grid.Column="0" Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold"/>
+                <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold"/>
             </Grid>
 
             <!-- Buwizz output level controls -->
@@ -33,7 +29,7 @@
             </StackLayout>
             
             <!-- Controller profiles -->
-            <ListView Grid.Row="1" ItemsSource="{Binding Creation.ControllerProfiles}" SelectionMode="None" HasUnevenRows="True">
+            <ListView Grid.Row="1" ItemsSource="{Binding Creation.ControllerProfiles}" SelectedItem="{Binding ActiveProfile, Mode=TwoWay}" SelectionMode="Single" HasUnevenRows="True">
                 <ListView.Behaviors>
                     <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerProfileTappedCommand}"/>
                 </ListView.Behaviors>

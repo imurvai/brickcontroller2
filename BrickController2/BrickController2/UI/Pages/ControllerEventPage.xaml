@@ -28,14 +28,10 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-
-                <Label Grid.Column="0" Text="{Binding ControllerEvent.EventCode}" FontSize="Large" FontAttributes="Bold"/>
-            </Grid>
+            <StackLayout Grid.Row="0" Orientation="Horizontal" BackgroundColor="LightGray" Padding="20">
+                <Image Source="{Binding ControllerEvent.EventType, Converter={StaticResource EventTypeToImage}}" WidthRequest="40" HeightRequest="40"/>
+                <Label Text="{Binding ControllerEvent.EventCode}" FontSize="Large" FontAttributes="Bold"/>
+            </StackLayout>
 
             <!-- Controller action list -->
             <ListView Grid.Row="1" ItemsSource="{Binding ControllerEvent.ControllerActions}" SelectionMode="None" HasUnevenRows="True">

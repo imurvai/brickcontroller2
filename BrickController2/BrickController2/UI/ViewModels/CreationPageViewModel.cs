@@ -77,13 +77,24 @@ namespace BrickController2.UI.ViewModels
 
         private async Task PlayAsync()
         {
-            if (IsCreationPlayable())
+            string warning = null;
+            var deviceIds = Creation.GetDeviceIds();
+            if (deviceIds == null || deviceIds.Count() == 0)
             {
-                await _dialogService.ShowMessageBoxAsync("Play!!!", null, "Ok");
+                warning = "There are no controller actions added to the creation.";
+            }
+            else if (deviceIds.Any(di => _deviceManager.GetDeviceById(di) == null))
+            {
+                warning = "There are missing devices in the creation setup.";
+            }
+
+            if (warning == null)
+            {
+                await NavigationService.NavigateToAsync<PlayerPageViewModel>(new NavigationParameters(("creation", Creation)));
             }
             else
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", "There are missing devices!", "Ok");
+                await _dialogService.ShowMessageBoxAsync("Warning", warning, "Ok");
             }
         }
 
@@ -111,7 +122,7 @@ namespace BrickController2.UI.ViewModels
         private bool IsCreationPlayable()
         {
             var deviceIds = Creation.GetDeviceIds();
-            return deviceIds.All(di => _deviceManager.GetDeviceById(di) != null);
+            return deviceIds != null && deviceIds.Count() > 0 && deviceIds.All(di => _deviceManager.GetDeviceById(di) != null);
         }
     }
 }

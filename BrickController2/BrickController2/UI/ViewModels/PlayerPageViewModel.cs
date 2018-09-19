@@ -22,8 +22,6 @@ namespace BrickController2.UI.ViewModels
         private readonly IList<Device> _buwizzDevices = new List<Device>();
         private readonly IList<Device> _buwizz2Devices = new List<Device>();
 
-        private ControllerProfile _activeProfile;
-
         public PlayerPageViewModel(
             INavigationService navigationService,
             ICreationManager creationManager,
@@ -41,14 +39,14 @@ namespace BrickController2.UI.ViewModels
 
             Creation = parameters.Get<Creation>("creation");
             CollectDevices();
-            _activeProfile = Creation.ControllerProfiles.First();
+            ActiveProfile = Creation.ControllerProfiles.First();
 
-            ControllerProfileTappedCommand = new SafeCommand<ControllerProfile>(profile => ControllerProfileTapped(profile));
             BuWizzOutputLevelChangedCommand = new SafeCommand<int>(level => ChangeOutputLevel(level, _buwizzDevices));
             BuWizz2OutputLevelChangedCommand = new SafeCommand<int>(level => ChangeOutputLevel(level, _buwizz2Devices));
         }
 
         public Creation Creation { get; }
+        public ControllerProfile ActiveProfile { get; set; }
 
         public bool HasBuWizzDevice => _buwizzDevices.Count > 0;
         public bool HasBuWizz2Device => _buwizz2Devices.Count > 0;
@@ -140,11 +138,6 @@ namespace BrickController2.UI.ViewModels
                 "Disconnecting...",
                 null,
                 "Cancel");
-        }
-
-        private void ControllerProfileTapped(ControllerProfile profile)
-        {
-            _activeProfile = profile;
         }
 
         private void ChangeOutputLevel(int level, IList<Device> devices)
