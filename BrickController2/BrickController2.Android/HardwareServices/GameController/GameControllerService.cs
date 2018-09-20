@@ -74,7 +74,7 @@ namespace BrickController2.Droid.HardwareServices.GameController
 
                     if (_lastAxisValues.TryGetValue(axisCode, out float lastValue))
                     {
-                        if (Math.Abs(axisValue - lastValue) < 0.05)
+                        if (Math.Abs(axisValue - lastValue) < 0.001)
                         {
                             // axisValue == lastValue
                             continue;

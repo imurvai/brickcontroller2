@@ -6,6 +6,7 @@ using Android.App;
 using Android.Content;
 using Android.Views.InputMethods;
 using Android.Widget;
+using BrickController2.CreationManagement;
 using BrickController2.Droid.HardwareServices.GameController;
 using BrickController2.HardwareServices.GameController;
 using BrickController2.UI.Services.Dialog;
@@ -194,15 +195,17 @@ namespace BrickController2.Droid.UI.Services
                     return;
                 }
 
-                var controllerEvent = args.ControllerEvents.First();
-                if (controllerEvent.Key.EventType == GameControllerEventType.Button && 0.1F < Math.Abs(controllerEvent.Value))
+                foreach (var controllerEvent in args.ControllerEvents)
                 {
-                    return;
+                    if ((controllerEvent.Key.EventType == GameControllerEventType.Axis && Math.Abs(controllerEvent.Value) > 0.8) ||
+                        (controllerEvent.Key.EventType == GameControllerEventType.Button && Math.Abs(controllerEvent.Value) < 0.05))
+                    {
+                        _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
+                        dialog.Dismiss();
+                        completionSource.SetResult(new GameControllerEventDialogResult(true, controllerEvent.Key.EventType, controllerEvent.Key.EventCode));
+                        return;
+                    }
                 }
-
-                _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
-                dialog.Dismiss();
-                completionSource.SetResult(new GameControllerEventDialogResult(true, controllerEvent.Key.EventType, controllerEvent.Key.EventCode));
             }
         }
     }

@@ -6,6 +6,7 @@ using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -20,6 +21,9 @@ namespace BrickController2.UI.ViewModels
         private readonly IList<Device> _devices = new List<Device>();
         private readonly IList<Device> _buwizzDevices = new List<Device>();
         private readonly IList<Device> _buwizz2Devices = new List<Device>();
+
+        private readonly IList<Task<DeviceConnectionResult>> _connectionTasks = new List<Task<DeviceConnectionResult>>();
+        private CancellationTokenSource _connectionTokenSource;
 
         public PlayerPageViewModel(
             INavigationService navigationService,
@@ -55,12 +59,22 @@ namespace BrickController2.UI.ViewModels
         {
             base.OnAppearing();
 
+            foreach(var device in _devices)
+            {
+                device.DeviceStateChanged += OnDeviceStateChanged;
+            }
+
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
             await ConnectDevicesAsync();
         }
 
         public override async void OnDisappearing()
         {
+            foreach (var device in _devices)
+            {
+                device.DeviceStateChanged -= OnDeviceStateChanged;
+            }
+
             _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
             await DisconnectDevicesAsync();
 
@@ -92,28 +106,13 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectDevicesAsync()
         {
-            await _dialogService.ShowProgressDialogAsync(
-                false,
-                async (progressDialog, token) =>
-                {
-                    var connectTasks = new List<Task>();
-
-                    foreach (var device in _devices)
-                    {
-                        connectTasks.Add(device.ConnectAsync(token));
-                    }
-
-                    await Task.WhenAll(connectTasks);
-                },
-                "Connecting...",
-                null,
-                "Cancel");
-
-            if (_devices.Any(d => d.DeviceState != DeviceState.Connected))
+            _connectionTokenSource = new CancellationTokenSource();
+            foreach (var device in _devices)
             {
-                await DisconnectDevicesAsync();
-                await NavigationService.NavigateBackAsync();
+                _connectionTasks.Add(device.ConnectAsync(_connectionTokenSource.Token));
             }
+
+            await ShowConnectionProgress();
         }
 
         private async Task DisconnectDevicesAsync()
@@ -147,6 +146,53 @@ namespace BrickController2.UI.ViewModels
         private void GameControllerEventHandler(object sender, GameControllerEventArgs e)
         {
             // TODO: implement
+        }
+
+        private async Task ShowConnectionProgress()
+        {
+            await _dialogService.ShowProgressDialogAsync(
+                false,
+                async (progressDialog, token) =>
+                {
+                    token.Register(() => _connectionTokenSource.Cancel());
+                    await Task.WhenAll(_connectionTasks);
+                },
+                "Disconnecting...",
+                null,
+                "Cancel");
+
+            _connectionTokenSource.Dispose();
+            _connectionTokenSource = null;
+            _connectionTasks.Clear();
+
+            if (_devices.Any(d => d.DeviceState != DeviceState.Connected))
+            {
+                await DisconnectDevicesAsync();
+                await NavigationService.NavigateBackAsync();
+            }
+        }
+
+        private async void OnDeviceStateChanged(object sender, DeviceStateChangedEventArgs args)
+        {
+            if (sender is Device device)
+            {
+                if (args.IsError && args.NewState == DeviceState.Disconnected)
+                {
+                    var needToShowProgress = false;
+                    if (_connectionTokenSource == null)
+                    {
+                        _connectionTokenSource = new CancellationTokenSource();
+                        needToShowProgress = true;
+                    }
+
+                    _connectionTasks.Add(device.ConnectAsync(_connectionTokenSource.Token));
+
+                    if (needToShowProgress)
+                    {
+                        await ShowConnectionProgress();
+                    }
+                }
+            }
         }
     }
 }

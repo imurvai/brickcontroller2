@@ -259,7 +259,7 @@ namespace BrickController2.iOS.HardwareServices.GameController
 
         private bool AreAlmostEqual(float a, float b)
         {
-            return Math.Abs(a - b) < 0.01;
+            return Math.Abs(a - b) < 0.001;
         }
     }
 }

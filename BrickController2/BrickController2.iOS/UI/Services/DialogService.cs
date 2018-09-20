@@ -145,15 +145,22 @@ namespace BrickController2.iOS.UI.Services
 
             async void GameControllerEventHandler(object sender, GameControllerEventArgs args)
             {
-                var controllerEvent = args.ControllerEvents.First();
-                if (controllerEvent.Key.EventType == GameControllerEventType.Button && 0.0F < controllerEvent.Value)
+                if (args.ControllerEvents.Count == 0)
                 {
                     return;
                 }
 
-                _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
-                await alert.DismissViewControllerAsync(true);
-                completionSource.SetResult(new GameControllerEventDialogResult(true, controllerEvent.Key.EventType, controllerEvent.Key.EventCode));
+                foreach (var controllerEvent in args.ControllerEvents)
+                {
+                    if ((controllerEvent.Key.EventType == GameControllerEventType.Axis && Math.Abs(controllerEvent.Value) > 0.8) ||
+                        (controllerEvent.Key.EventType == GameControllerEventType.Button && Math.Abs(controllerEvent.Value) < 0.05))
+                    {
+                        _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
+                        await alert.DismissViewControllerAsync(true);
+                        completionSource.SetResult(new GameControllerEventDialogResult(true, controllerEvent.Key.EventType, controllerEvent.Key.EventCode));
+                        return;
+                    }
+                }
             }
         }
     }
