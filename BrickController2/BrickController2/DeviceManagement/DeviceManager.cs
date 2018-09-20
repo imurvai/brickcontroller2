@@ -98,6 +98,11 @@ namespace BrickController2.DeviceManagement
 
         public Device GetDeviceById(string Id)
         {
+            if (string.IsNullOrEmpty(Id))
+            {
+                return null;
+            }
+
             var deviceTypeAndAddress = Id.Split('#');
             var deviceType = (DeviceType)Enum.Parse(typeof(DeviceType), deviceTypeAndAddress[0]);
             var deviceAddress = deviceTypeAndAddress[1];

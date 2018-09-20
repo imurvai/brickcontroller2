@@ -145,7 +145,34 @@ namespace BrickController2.UI.ViewModels
 
         private void GameControllerEventHandler(object sender, GameControllerEventArgs e)
         {
-            // TODO: implement
+            foreach (var gameControllerEvent in e.ControllerEvents)
+            {
+                foreach (var controllerEvent in ActiveProfile.ControllerEvents)
+                {
+                    if (gameControllerEvent.Key.EventType == controllerEvent.EventType &&
+                        gameControllerEvent.Key.EventCode == controllerEvent.EventCode)
+                    {
+                        foreach (var controllerAction in controllerEvent.ControllerActions)
+                        {
+                            var device = _deviceManager.GetDeviceById(controllerAction.DeviceId);
+                            var channel = controllerAction.Channel;
+
+                            if (gameControllerEvent.Key.EventType == GameControllerEventType.Button)
+                            {
+                                // TODO: handle buttontype and so on...
+                                var outputValue = gameControllerEvent.Value > 0.5 ? (controllerAction.IsInvert ? -255 : 255) : 0;
+                                device.SetOutput(channel, outputValue);
+                            }
+                            else if (gameControllerEvent.Key.EventType == GameControllerEventType.Axis)
+                            {
+                                // TODO: handle other controlleraction parameters...
+                                var outputValue = (int)(gameControllerEvent.Value * (controllerAction.IsInvert ? -255 : 255));
+                                device.SetOutput(channel, outputValue);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private async Task ShowConnectionProgress()
