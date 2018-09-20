@@ -84,7 +84,11 @@ namespace BrickController2.UI.ViewModels
             {
                 await _dialogService.ShowProgressDialogAsync(
                     false,
-                    async (progressDialog, token) => await _deviceManager.DeleteDeviceAsync(Device),
+                    async (progressDialog, token) =>
+                    {
+                        await Device.DisconnectAsync();
+                        await _deviceManager.DeleteDeviceAsync(Device);
+                    },
                     "Deleting...");
 
                 await NavigationService.NavigateBackAsync();
@@ -93,18 +97,18 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectAsync()
         {
-            DeviceConnectionResult connectionSuccess = DeviceConnectionResult.Ok;
+            DeviceConnectionResult connectionResult = DeviceConnectionResult.Ok;
             await _dialogService.ShowProgressDialogAsync(
                 false,
                 async (progressDialog, token) =>
                 {
-                    connectionSuccess = await Device.ConnectAsync(token);
+                    connectionResult = await Device.ConnectAsync(token);
                 },
                 "Connecting...",
                 null,
                 "Cancel");
 
-            if (connectionSuccess == DeviceConnectionResult.Error)
+            if (connectionResult == DeviceConnectionResult.Error)
             {
                 await DisplayAlertAsync("Warning", "Failed to connect to device.", "Ok");
             }

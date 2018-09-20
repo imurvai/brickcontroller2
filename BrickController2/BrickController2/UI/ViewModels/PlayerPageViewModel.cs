@@ -13,7 +13,6 @@ namespace BrickController2.UI.ViewModels
 {
     public class PlayerPageViewModel : PageViewModelBase
     {
-        private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
         private readonly IGameControllerService _gameControllerService;
@@ -24,7 +23,6 @@ namespace BrickController2.UI.ViewModels
 
         public PlayerPageViewModel(
             INavigationService navigationService,
-            ICreationManager creationManager,
             IDeviceManager deviceManager,
             IDialogService dialogService,
             IGameControllerService gameControllerService,
@@ -32,7 +30,6 @@ namespace BrickController2.UI.ViewModels
             )
             : base(navigationService)
         {
-            _creationManager = creationManager;
             _deviceManager = deviceManager;
             _dialogService = dialogService;
             _gameControllerService = gameControllerService;
@@ -51,7 +48,6 @@ namespace BrickController2.UI.ViewModels
         public bool HasBuWizzDevice => _buwizzDevices.Count > 0;
         public bool HasBuWizz2Device => _buwizz2Devices.Count > 0;
 
-        public ICommand ControllerProfileTappedCommand { get; }
         public ICommand BuWizzOutputLevelChangedCommand { get; }
         public ICommand BuWizz2OutputLevelChangedCommand { get; }
 
