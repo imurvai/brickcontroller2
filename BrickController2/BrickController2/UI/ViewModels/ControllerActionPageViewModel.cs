@@ -41,9 +41,10 @@ namespace BrickController2.UI.ViewModels
             ControllerEvent = parameters.Get<ControllerEvent>("controllerevent");
             ControllerAction = parameters.Get<ControllerAction>("controlleraction", null);
 
-            if (ControllerAction != null)
+            var device = _deviceManager.GetDeviceById(ControllerAction?.DeviceId);
+            if (ControllerAction != null && device != null)
             {
-                SelectedDevice = _deviceManager.GetDeviceById(ControllerAction.DeviceId);
+                SelectedDevice = device;
                 Channel = ControllerAction.Channel;
                 IsInvert = ControllerAction.IsInvert;
                 ChannelOutputType = ControllerAction.ChannelOutputType;
