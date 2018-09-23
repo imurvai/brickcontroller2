@@ -38,6 +38,7 @@
     <EmbeddedResource Include="UI\Images\ic_add.png" />
     <EmbeddedResource Include="UI\Images\ic_buttons.png" />
     <EmbeddedResource Include="UI\Images\ic_console.png" />
+    <EmbeddedResource Include="UI\Images\ic_delete_black.png" />
     <EmbeddedResource Include="UI\Images\ic_info.png" />
     <EmbeddedResource Include="UI\Images\ic_joystick.png" />
     <EmbeddedResource Include="UI\Images\ic_link.png" />

@@ -184,7 +184,7 @@ namespace BrickController2.UI.ViewModels
                     token.Register(() => _connectionTokenSource.Cancel());
                     await Task.WhenAll(_connectionTasks);
                 },
-                "Disconnecting...",
+                "Connecting...",
                 null,
                 "Cancel");
 
