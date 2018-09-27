@@ -26,6 +26,7 @@ namespace BrickController2.UI.ViewModels
             DeleteDevicesCommand = new SafeCommand(async () => await DeleteDevicesAsync());
             ScanCommand = new SafeCommand(async () => await ScanAsync(), () => !DeviceManager.IsScanning);
             DeviceTappedCommand = new SafeCommand<Device>(async device => await NavigationService.NavigateToAsync<DevicePageViewModel>(new NavigationParameters(("device", device))));
+            DeleteDeviceCommand = new SafeCommand<Device>(async device => await DeleteDeviceAsync(device));
         }
 
         public IDeviceManager DeviceManager { get; }
@@ -33,6 +34,7 @@ namespace BrickController2.UI.ViewModels
         public ICommand DeleteDevicesCommand { get; }
         public ICommand ScanCommand { get; }
         public ICommand DeviceTappedCommand { get; }
+        public ICommand DeleteDeviceCommand { get; }
 
         private async Task DeleteDevicesAsync()
         {
@@ -41,6 +43,17 @@ namespace BrickController2.UI.ViewModels
                 await _dialogService.ShowProgressDialogAsync(
                     false,
                     async (progressDialog, token) => await DeviceManager.DeleteDevicesAsync(),
+                    "Deleting...");
+            }
+        }
+
+        private async Task DeleteDeviceAsync(Device device)
+        {
+            if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete device {device.Name}?", "Yes", "No"))
+            {
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => await DeviceManager.DeleteDeviceAsync(device),
                     "Deleting...");
             }
         }

@@ -7,6 +7,7 @@
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationPage"
+    x:Name="Page"
     Title="Creation">
 
     <local:PageBase.ToolbarItems>
@@ -40,9 +41,14 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="10">
-                                <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
-                            </StackLayout>
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
+                                <controls:ImageButton Grid.Column="1" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControllerProfileCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10"/>
+                            </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

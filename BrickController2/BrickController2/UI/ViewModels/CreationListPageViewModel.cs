@@ -31,6 +31,7 @@ namespace BrickController2.UI.ViewModels
 
             AddCreationCommand = new SafeCommand(async () => await AddCreation());
             CreationTappedCommand = new SafeCommand<Creation>(async creation => await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation))));
+            DeleteCreationCommand = new SafeCommand<Creation>(async creation => await DeleteCreationAsync(creation));
             NavigateToDevicesCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<DeviceListPageViewModel>());
             NavigateToControllerTesterCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>());
             NavigateToAboutCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<AboutPageViewModel>());
@@ -40,6 +41,7 @@ namespace BrickController2.UI.ViewModels
 
         public ICommand AddCreationCommand { get; }
         public ICommand CreationTappedCommand { get; }
+        public ICommand DeleteCreationCommand { get; }
         public ICommand NavigateToDevicesCommand { get; }
         public ICommand NavigateToControllerTesterCommand { get; }
         public ICommand NavigateToAboutCommand { get; }
@@ -113,6 +115,17 @@ namespace BrickController2.UI.ViewModels
                     "Creating...");
 
                 await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation)));
+            }
+        }
+
+        private async Task DeleteCreationAsync(Creation creation)
+        {
+            if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete creation {creation.Name}?", "Yes", "No"))
+            {
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => await _creationManager.DeleteCreationAsync(creation),
+                    "Deleting...");
             }
         }
     }

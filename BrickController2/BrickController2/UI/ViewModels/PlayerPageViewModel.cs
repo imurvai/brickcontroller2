@@ -181,7 +181,7 @@ namespace BrickController2.UI.ViewModels
                 false,
                 async (progressDialog, token) =>
                 {
-                    token.Register(() => _connectionTokenSource.Cancel());
+                    token.Register(() => _connectionTokenSource?.Cancel());
                     await Task.WhenAll(_connectionTasks);
                 },
                 "Connecting...",

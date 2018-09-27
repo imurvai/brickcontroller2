@@ -34,6 +34,7 @@ namespace BrickController2.UI.ViewModels
             PlayCommand = new SafeCommand(async () => await PlayAsync());
             AddControllerProfileCommand = new SafeCommand(async () => await AddControllerProfileAsync());
             ControllerProfileTappedCommand = new SafeCommand<ControllerProfile>(async controllerProfile => await NavigationService.NavigateToAsync<ControllerProfilePageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile))));
+            DeleteControllerProfileCommand = new SafeCommand<ControllerProfile>(async controllerProfile => await DeleteControllerProfileAsync(controllerProfile));
         }
 
         public Creation Creation { get; }
@@ -43,6 +44,7 @@ namespace BrickController2.UI.ViewModels
         public ICommand PlayCommand { get; }
         public ICommand AddControllerProfileCommand { get; }
         public ICommand ControllerProfileTappedCommand { get; }
+        public ICommand DeleteControllerProfileCommand { get; }
 
         private async Task RenameCreationAsync()
         {
@@ -116,6 +118,17 @@ namespace BrickController2.UI.ViewModels
                     "Creating...");
 
                 await NavigationService.NavigateToAsync<ControllerProfilePageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile)));
+            }
+        }
+
+        private async Task DeleteControllerProfileAsync(ControllerProfile controllerProfile)
+        {
+            if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete profile {controllerProfile.Name}?", "Yes", "No"))
+            {
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => await _creationManager.DeleteControllerProfileAsync(controllerProfile),
+                    "Deleting...");
             }
         }
 

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BrickController2.UI.Controls.ImageButton">
+  <ContentView.Content>
+        <Frame x:Name="Frame" BackgroundColor="Transparent" HasShadow="False" Padding="0">
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer x:Name="TapGuestureRecognizer"/>
+            </Frame.GestureRecognizers>
+            <Image x:Name="Image" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Frame>
+    </ContentView.Content>
+</ContentView>
