@@ -28,6 +28,7 @@ namespace BrickController2.UI.ViewModels
             DeleteProfileCommand = new SafeCommand(async () => await DeleteControllerProfileAsync());
             AddControllerEventCommand = new SafeCommand(async () => await AddControllerEventAsync());
             ControllerEventTappedCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await NavigationService.NavigateToAsync<ControllerEventPageViewModel>(new NavigationParameters(("controllerevent", controllerEvent))));
+            DeleteControllerEventCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await DeleteControllerEventAsync(controllerEvent));
         }
 
         public ControllerProfile ControllerProfile { get; }
@@ -36,6 +37,7 @@ namespace BrickController2.UI.ViewModels
         public ICommand DeleteProfileCommand { get; }
         public ICommand AddControllerEventCommand { get; }
         public ICommand ControllerEventTappedCommand { get; }
+        public ICommand DeleteControllerEventCommand { get; }
 
         private async Task RenameControllerProfileAsync()
         {
@@ -80,6 +82,17 @@ namespace BrickController2.UI.ViewModels
                     "Creating...");
 
                 await NavigationService.NavigateToAsync<ControllerEventPageViewModel>(new NavigationParameters(("controllerevent", controllerEvent)));
+            }
+        }
+
+        private async Task DeleteControllerEventAsync(ControllerEvent controllerEvent)
+        {
+            if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete controller event {controllerEvent.EventCode}?", "Yes", "No"))
+            {
+                await _dialogService.ShowProgressDialogAsync(
+                    false,
+                    async (progressDialog, token) => await _creationManager.DeleteControllerEventAsync(controllerEvent),
+                    "Deleting...");
             }
         }
     }

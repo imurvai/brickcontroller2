@@ -46,7 +46,7 @@
                                 <Image Grid.Column="0" Source="{Binding DeviceType, Converter={StaticResource DeviceTypeToSmallImage}}" WidthRequest="50" HeightRequest="50"/>
                                 <StackLayout Grid.Column="1" Orientation="Vertical">
                                     <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
-                                    <Label Text="{Binding Address}" FontSize="Small"/>
+                                    <Label Text="{Binding Address}" FontSize="Micro"/>
                                 </StackLayout>
                                 <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteDeviceCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10"/>
                             </Grid>
