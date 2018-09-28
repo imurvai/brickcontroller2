@@ -120,7 +120,10 @@ namespace BrickController2.iOS.UI.Services
                     }
                     finally
                     {
-                        await alert.DismissViewControllerAsync(true);
+                        if (!tokenSource.IsCancellationRequested)
+                        {
+                            await alert.DismissViewControllerAsync(true);
+                        }
                     }
                 }
             }

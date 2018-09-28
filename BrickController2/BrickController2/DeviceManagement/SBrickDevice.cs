@@ -47,26 +47,26 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
-        protected override async Task<bool> ServicesDiscovered(IList<IGattService> services)
+        protected override async Task<bool> ServicesDiscovered(IList<IGattService> services, CancellationToken token)
         {
             _characteristic = null;
             foreach (var service in services)
             {
                 if (service.Uuid == SERVICE_UUID_REMOTE_CONTROL)
                 {
-                    _characteristic = await service.GetKnownCharacteristics(CHARACTERISTIC_UUID_QUICK_DRIVE).FirstAsync().ToTask();
+                    _characteristic = await service.GetKnownCharacteristics(CHARACTERISTIC_UUID_QUICK_DRIVE).FirstAsync().ToTask(token);
                 }
             }
 
             return _characteristic != null;
         }
 
-        protected override async Task<bool> ConnectPostActionAsync()
+        protected override async Task<bool> ConnectPostActionAsync(CancellationToken token)
         {
             return await StartOutputTaskAsync();
         }
 
-        protected override async Task DisconnectPreActionAsync()
+        protected override async Task DisconnectPreActionAsync(CancellationToken token)
         {
             await StopOutputTaskAsync();
         }

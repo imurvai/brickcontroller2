@@ -4,6 +4,7 @@
     {
         Disconnected,
         Connecting,
+        Discovering,
         Connected,
         Disconnecting
     }
