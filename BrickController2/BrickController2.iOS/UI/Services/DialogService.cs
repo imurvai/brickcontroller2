@@ -83,13 +83,14 @@ namespace BrickController2.iOS.UI.Services
         {
             using (var tokenSource = new CancellationTokenSource())
             {
-                // TODO: make the alert view bigger somehow
+                message = string.IsNullOrEmpty(message) ? "\n\n" : message + "\n\n";
+
                 using (var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert))
                 {
                     UIProgressView progressView = null;
                     if (isDeterministic)
                     {
-                        progressView = new UIProgressView(new CGRect(30F, 80F, 225F, 90F));
+                        progressView = new UIProgressView(new CGRect(30F, 80F, 200F, 2F));
                         progressView.Style = UIProgressViewStyle.Bar;
                         progressView.Progress = 0.0F;
                         alert.View.AddSubview(progressView);
@@ -97,7 +98,7 @@ namespace BrickController2.iOS.UI.Services
                     else
                     {
                         var activityIndicator = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.Gray);
-                        activityIndicator.Frame = new CGRect(121F, 60F, 37F, 37F);
+                        activityIndicator.Frame = new CGRect(121F, 56F, 37F, 37F);
                         activityIndicator.StartAnimating();
                         alert.View.AddSubview(activityIndicator);
                     }
