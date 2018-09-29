@@ -19,7 +19,11 @@ namespace BrickController2
 
             var vm = viewModelFactory(typeof(CreationListPageViewModel), null);
 		    var page = pageFactory(typeof(CreationListPage), vm);
-		    MainPage = navigationPageFactory(page);
+		    var navigationPage = navigationPageFactory(page);
+            navigationPage.BarBackgroundColor = Color.Red;
+            navigationPage.BarTextColor = Color.White;
+
+            MainPage = navigationPage;
 		}
 
 		protected override void OnStart()
