@@ -1,4 +1,4 @@
-# Brickcontroller 2
+# BrickController 2
 
 Cross platform mobile application for controlling Lego creations using a bluetooth gamepad.
 
