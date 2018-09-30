@@ -3,11 +3,11 @@ using BrickController2.Helpers;
 
 namespace BrickController2.UI.ViewModels
 {
-    public class ControllerEventViewModel : NotifyPropertyChangedSource
+    public class GameControllerEventViewModel : NotifyPropertyChangedSource
     {
         private float _value;
 
-        public ControllerEventViewModel(GameControllerEventType eventType, string eventCode, float value)
+        public GameControllerEventViewModel(GameControllerEventType eventType, string eventCode, float value)
         {
             EventType = eventType;
             EventCode = eventCode;

@@ -30,7 +30,7 @@ namespace BrickController2.UI.ViewModels
 
             DeleteControllerEventCommand = new SafeCommand(async () => await DeleteControllerEventAsync());
             AddControllerActionCommand = new SafeCommand(async () => await AddControllerActionAsync());
-            ControllerActionTappedCommand = new SafeCommand<ControllerAction>(async controllerAction => await ControllerActionTapped(controllerAction));
+            ControllerActionTappedCommand = new SafeCommand<ControllerAction>(async controllerAction => await ControllerActionTappedAsync(controllerAction));
         }
 
         public ControllerEvent ControllerEvent { get; }
@@ -63,7 +63,7 @@ namespace BrickController2.UI.ViewModels
             await NavigationService.NavigateToAsync<ControllerActionPageViewModel>(new NavigationParameters(("controllerevent", ControllerEvent)));
         }
 
-        private async Task ControllerActionTapped(ControllerAction controllerAction)
+        private async Task ControllerActionTappedAsync(ControllerAction controllerAction)
         {
             await NavigationService.NavigateToAsync<ControllerActionPageViewModel>(new NavigationParameters(("controllerevent", ControllerEvent), ("controlleraction", controllerAction)));
         }

@@ -38,8 +38,8 @@ namespace BrickController2.UI.ViewModels
             _deviceManager = deviceManager;
             _dialogService = dialogService;
 
-            ControllerEvent = parameters.Get<ControllerEvent>("controllerevent");
             ControllerAction = parameters.Get<ControllerAction>("controlleraction", null);
+            ControllerEvent = parameters.Get<ControllerEvent>("controllerevent", null) ?? ControllerAction.ControllerEvent;
 
             var device = _deviceManager.GetDeviceById(ControllerAction?.DeviceId);
             if (ControllerAction != null && device != null)

@@ -52,16 +52,20 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Grid Padding="10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" Source="{Binding EventType, Converter={StaticResource EventTypeToImage}}" WidthRequest="30" HeightRequest="30"/>
-                                <Label Grid.Column="1" Text="{Binding EventCode}" FontSize="Large" FontAttributes="Bold" VerticalOptions="Center"/>
-                                <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControllerEventCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10"/>
-                            </Grid>
+                            <StackLayout Orientation="Vertical" Padding="10">
+                                <!-- Controller event -->
+                                <Grid BackgroundColor="#F0F0F0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Column="0" Source="{Binding EventType, Converter={StaticResource EventTypeToImage}}" WidthRequest="30" HeightRequest="30"/>
+                                    <Label Grid.Column="1" Text="{Binding EventCode}" FontSize="Large" FontAttributes="Bold" VerticalOptions="Center"/>
+                                    <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControllerEventCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10"/>
+                                </Grid>
+                                
+                            </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

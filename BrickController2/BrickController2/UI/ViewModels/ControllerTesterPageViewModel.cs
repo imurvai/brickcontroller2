@@ -30,7 +30,7 @@ namespace BrickController2.UI.ViewModels
             base.OnDisappearing();
         }
 
-        public ObservableCollection<ControllerEventViewModel> ControllerEventList { get; } = new ObservableCollection<ControllerEventViewModel>(); 
+        public ObservableCollection<GameControllerEventViewModel> ControllerEventList { get; } = new ObservableCollection<GameControllerEventViewModel>(); 
 
         private void GameControllerEventHandler(object sender, GameControllerEventArgs args)
         {
@@ -45,7 +45,7 @@ namespace BrickController2.UI.ViewModels
                     }
                     else
                     {
-                        ControllerEventList.Add(new ControllerEventViewModel(controllerEvent.Key.EventType, controllerEvent.Key.EventCode, controllerEvent.Value));
+                        ControllerEventList.Add(new GameControllerEventViewModel(controllerEvent.Key.EventType, controllerEvent.Key.EventCode, controllerEvent.Value));
                     }
                 }
                 else
