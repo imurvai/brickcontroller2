@@ -165,12 +165,14 @@ namespace BrickController2.UI.ViewModels
             {
                 ControllerAction = controllerAction;
                 var device = deviceManager.GetDeviceById(controllerAction.DeviceId);
+                DeviceMissing = device == null;
                 DeviceName = device != null ? device.Name : "Missing";
                 ChannelName = (device == null || device.DeviceType != DeviceType.Infrared) ? $"{controllerAction.Channel + 1}" : (controllerAction.Channel == 0 ? "Blue" : "Red");
                 InvertName = controllerAction.IsInvert ? "Inv" : string.Empty;
             }
 
             public ControllerAction ControllerAction { get; }
+            public bool DeviceMissing { get; }
             public string DeviceName { get; }
             public string ChannelName { get; }
             public string InvertName { get; }

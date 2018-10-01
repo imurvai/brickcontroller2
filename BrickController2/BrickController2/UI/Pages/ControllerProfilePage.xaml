@@ -40,7 +40,7 @@
             </Grid>
 
             <!-- Controller event list -->
-            <ListView Grid.Row="1" ItemsSource="{Binding ControllerEvents}" IsGroupingEnabled="true" SelectionMode="None" HasUnevenRows="True">
+            <ListView Grid.Row="1" ItemsSource="{Binding ControllerEvents}" IsGroupingEnabled="true" SelectionMode="None" HasUnevenRows="True" SeparatorColor="#F0F0F0">
                 <ListView.Triggers>
                     <DataTrigger TargetType="ListView" Binding="{Binding ControllerEvents.Count}" Value="0">
                         <Setter Property="IsVisible" Value="False"/>
@@ -76,10 +76,12 @@
                         <ViewCell>
                             <Grid Padding="10">
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <StackLayout Grid.Column="0" Orientation="Horizontal" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="{extensions:ImageResource Source=ic_exclamation_mark_red.png}" IsVisible="{Binding DeviceMissing}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center"/>
+                                <StackLayout Grid.Column="1" Orientation="Horizontal" VerticalOptions="Center">
                                     <Label Text="Device: "/>
                                     <Label Text="{Binding DeviceName}" FontAttributes="Bold"/>
                                     <Label Text="Ch: "/>
@@ -87,7 +89,7 @@
                                     <Label Text=" - "/>
                                     <Label Text="{Binding InvertName}" FontAttributes="Bold"/>
                                 </StackLayout>
-                                <controls:ImageButton Grid.Column="1" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControllerActionCommand, Source={x:Reference Page}}" CommandParameter="{Binding ControllerAction}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="4"/>
+                                <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControllerActionCommand, Source={x:Reference Page}}" CommandParameter="{Binding ControllerAction}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10,0,10,0"/>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
