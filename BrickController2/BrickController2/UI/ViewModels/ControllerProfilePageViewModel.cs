@@ -6,12 +6,14 @@ using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.DeviceManagement;
 using System.Collections.ObjectModel;
+using System;
 
 namespace BrickController2.UI.ViewModels
 {
     public class ControllerProfilePageViewModel : PageViewModelBase
     {
         private readonly ICreationManager _creationManager;
+        private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
 
         public ControllerProfilePageViewModel(
@@ -23,7 +25,7 @@ namespace BrickController2.UI.ViewModels
             : base(navigationService)
         {
             _creationManager = creationManager;
-            DeviceManager = deviceManager;
+            _deviceManager = deviceManager;
             _dialogService = dialogService;
 
             ControllerProfile = parameters.Get<ControllerProfile>("controllerprofile");
@@ -31,19 +33,33 @@ namespace BrickController2.UI.ViewModels
             RenameProfileCommand = new SafeCommand(async () => await RenameControllerProfileAsync());
             DeleteProfileCommand = new SafeCommand(async () => await DeleteControllerProfileAsync());
             AddControllerEventCommand = new SafeCommand(async () => await AddControllerEventAsync());
-            ControllerEventTappedCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await NavigationService.NavigateToAsync<ControllerEventPageViewModel>(new NavigationParameters(("controllerevent", controllerEvent))));
             ControllerActionTappedCommand = new SafeCommand<ControllerAction>(async controllerAction => await NavigationService.NavigateToAsync<ControllerActionPageViewModel>(new NavigationParameters(("controlleraction", controllerAction))));
             DeleteControllerEventCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await DeleteControllerEventAsync(controllerEvent));
             DeleteControllerActionCommand = new SafeCommand<ControllerAction>(async controllerAction => await DeleteControllerActionAsync(controllerAction));
         }
 
-        public IDeviceManager DeviceManager { get; }
+        public override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            OnControllerEventsChanged(null, null);
+            ControllerProfile.ControllerEvents.CollectionChanged += OnControllerEventsChanged;
+        }
+
+        public override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            ControllerProfile.ControllerEvents.CollectionChanged -= OnControllerEventsChanged;
+            CleanupControllerEvents();
+        }
+
         public ControllerProfile ControllerProfile { get; }
+        public ObservableCollection<ControllerEventViewModel> ControllerEvents { get; } = new ObservableCollection<ControllerEventViewModel>();
 
         public ICommand RenameProfileCommand { get; }
         public ICommand DeleteProfileCommand { get; }
         public ICommand AddControllerEventCommand { get; }
-        public ICommand ControllerEventTappedCommand { get; }
         public ICommand ControllerActionTappedCommand { get; }
         public ICommand DeleteControllerEventCommand { get; }
         public ICommand DeleteControllerActionCommand { get; }
@@ -124,6 +140,25 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
+        private void OnControllerEventsChanged(object sender, EventArgs args)
+        {
+            CleanupControllerEvents();
+            foreach (var controllerEvent in ControllerProfile.ControllerEvents)
+            {
+                ControllerEvents.Add(new ControllerEventViewModel(controllerEvent, _deviceManager));
+            }
+        }
+
+        private void CleanupControllerEvents()
+        {
+            foreach (var controllerEventViewModel in ControllerEvents)
+            {
+                controllerEventViewModel.Dispose();
+            }
+
+            ControllerEvents.Clear();
+        }
+
         public class ControllerActionViewModel
         {
             public ControllerActionViewModel(ControllerAction controllerAction, IDeviceManager deviceManager)
@@ -141,11 +176,39 @@ namespace BrickController2.UI.ViewModels
             public string InvertName { get; }
         }
 
-        public class ControllerActionGroupViewModel : ObservableCollection<ControllerActionViewModel>
+        public class ControllerEventViewModel : ObservableCollection<ControllerActionViewModel>, IDisposable
         {
-            public ControllerActionGroupViewModel(ControllerEvent controllerEvent, IDeviceManager deviceManager)
+            private readonly IDeviceManager _deviceManager;
+
+            public ControllerEventViewModel(ControllerEvent controllerEvent, IDeviceManager deviceManager)
             {
-                // TODO...
+                ControllerEvent = controllerEvent;
+                _deviceManager = deviceManager;
+
+                PopulateGroup(controllerEvent, deviceManager);
+                controllerEvent.ControllerActions.CollectionChanged += OnCollectionChanged;
+            }
+
+            public ControllerEvent ControllerEvent { get; }
+
+            public void Dispose()
+            {
+                ControllerEvent.ControllerActions.CollectionChanged -= OnCollectionChanged;
+                Clear();
+            }
+
+            private void OnCollectionChanged(object sender, EventArgs args)
+            {
+                PopulateGroup(ControllerEvent, _deviceManager);
+            }
+
+            private void PopulateGroup(ControllerEvent controllerEvent, IDeviceManager deviceManager)
+            {
+                Clear();
+                foreach (var controllerAction in controllerEvent.ControllerActions)
+                {
+                    Add(new ControllerActionViewModel(controllerAction, deviceManager));
+                }
             }
         }
     }
