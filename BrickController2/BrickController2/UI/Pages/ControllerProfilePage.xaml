@@ -46,6 +46,9 @@
                         <Setter Property="IsVisible" Value="False"/>
                     </DataTrigger>
                 </ListView.Triggers>
+                <ListView.Behaviors>
+                    <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerActionTappedCommand}"/>
+                </ListView.Behaviors>
 
                 <!-- Controller event -->
                 <ListView.GroupHeaderTemplate>

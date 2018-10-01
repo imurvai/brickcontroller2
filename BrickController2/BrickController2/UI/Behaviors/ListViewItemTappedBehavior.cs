@@ -8,8 +8,8 @@ namespace BrickController2.UI.Behaviors
     {
         private ListView _target;
 
-        public static readonly BindableProperty CommandProperty = BindableProperty.Create("Command", typeof(ICommand), typeof(ListViewItemTappedBehavior));
-        public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create("CommandParameter", typeof(object), typeof(ListViewItemTappedBehavior));
+        public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ListViewItemTappedBehavior), null, BindingMode.OneWay, null, OnCommandChanged);
+        public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ListViewItemTappedBehavior), null, BindingMode.OneWay, null, OnCommandParameterChanged);
 
         public ICommand Command
         {
@@ -61,6 +61,22 @@ namespace BrickController2.UI.Behaviors
             if (Command.CanExecute(parameter))
             {
                 Command.Execute(parameter);
+            }
+        }
+
+        private static void OnCommandChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (bindable is ListViewItemTappedBehavior behavior)
+            {
+                behavior.Command = (ICommand)newValue;
+            }
+        }
+
+        private static void OnCommandParameterChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (bindable is ListViewItemTappedBehavior behavior)
+            {
+                behavior.CommandParameter = newValue;
             }
         }
     }
