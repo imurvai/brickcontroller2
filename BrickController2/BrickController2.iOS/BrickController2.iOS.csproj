@@ -222,4 +222,13 @@
   <ItemGroup>
     <BundleResource Include="Resources\ic_add_white%403x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ic_search_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ic_search_white%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ic_search_white%403x.png" />
+  </ItemGroup>
 </Project>

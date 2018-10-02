@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
-    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.DevicePage"
     Title="Device">
@@ -20,7 +19,6 @@
 
     <local:PageBase.ToolbarItems>
         <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameCommand}"/>
-        <ToolbarItem Icon="ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteCommand}"/>
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>
@@ -80,10 +78,6 @@
                 </StackLayout> 
             
             </Grid>
-
-            <!-- FAB -->
-            <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link_white.png}" Command="{Binding ConnectCommand}" IsVisible="{Binding Device.DeviceState, Converter={StaticResource DeviceDisconnectedToBool}}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
-
         </Grid>
     </local:PageBase.Content>
 </local:PageBase>

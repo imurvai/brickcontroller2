@@ -19,7 +19,7 @@
 
     <local:PageBase.ToolbarItems>
         <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameProfileCommand}"/>
-        <ToolbarItem Icon="ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteProfileCommand}"/>
+        <ToolbarItem Icon="ic_add_white.png" Order="Primary" Command="{Binding AddControllerEventCommand}"/>
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>
@@ -104,9 +104,6 @@
                     </DataTrigger>
                 </Label.Triggers>
             </Label>
-
-            <!-- FAB -->
-            <controls:FloatingActionButton Grid.Row="1" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddControllerEventCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
         </Grid>
     </local:PageBase.Content>

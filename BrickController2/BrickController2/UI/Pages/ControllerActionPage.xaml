@@ -154,7 +154,7 @@
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
 
                 <!-- Axis dead zone percent -->
-                <StackLayout Orientation="Vertical">
+                <StackLayout Orientation="Vertical" IsVisible="False">
                     <StackLayout.Triggers>
                         <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
                             <Setter Property="IsVisible" Value="True"/>

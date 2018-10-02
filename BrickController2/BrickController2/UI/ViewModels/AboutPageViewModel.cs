@@ -9,5 +9,7 @@ namespace BrickController2.UI.ViewModels
             : base(navigationService)
         {
         }
+
+        public string Version { get; } = "1.0";
     }
 }

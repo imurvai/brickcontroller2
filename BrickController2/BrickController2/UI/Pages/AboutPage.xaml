@@ -2,18 +2,45 @@
 <local:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
-    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
-    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
-    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
-    x:Class="BrickController2.UI.Pages.AboutPage">
+    x:Class="BrickController2.UI.Pages.AboutPage"
+    Title="About">
 
     <local:PageBase.Content>
-        <StackLayout>
-            <Label Text="About"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <ScrollView>
+            <StackLayout Padding="20">
+
+                <Label Text="BrickController 2" FontSize="Medium" FontAttributes="Bold"/>
+
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Version  "/>
+                    <Label Text="{Binding Version}"/>
+                </StackLayout>
+
+                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+
+                <Label Text="Copyright © 2018, István Murvai (SCN)"/>
+
+                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+
+                <Label Text="3rd party libraries" FontAttributes="Bold"/>
+                <Label Text="Autofac"/>
+                <Label Text="Plugin.BluetoothLE"/>
+                <Label Text="Plugin.Permissions"/>
+                <Label Text="SQLiteNetExtensionsAsync"/>
+                <Label Text="Xamarin.Forms"/>
+
+                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+
+                <Label Text="Icon set" FontAttributes="Bold"/>
+                <Label Text="FlatIcon"/>
+
+                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+
+                <Label Text="Disclaimer" FontAttributes="Bold"/>
+                <Label Text="LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this application" FontSize="Small"/>
+
+            </StackLayout>
+        </ScrollView>
     </local:PageBase.Content>
 </local:PageBase>

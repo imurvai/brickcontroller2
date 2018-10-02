@@ -18,6 +18,10 @@
         </ResourceDictionary>
     </local:PageBase.Resources>
 
+    <local:PageBase.ToolbarItems>
+        <ToolbarItem Icon="ic_add_white.png" Order="Primary" Command="{Binding AddCreationCommand}"/>
+    </local:PageBase.ToolbarItems>
+
     <local:PageBase.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -63,9 +67,6 @@
                     </DataTrigger>
                 </Label.Triggers>
             </Label>
-
-            <!-- FAB -->
-            <controls:FloatingActionButton Grid.Row="0" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddCreationCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
             <!-- Bottom buttons -->
             <Grid Grid.Row="1" BackgroundColor="#E0E0E0" Padding="4">

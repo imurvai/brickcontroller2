@@ -30,7 +30,6 @@ namespace BrickController2.UI.ViewModels
             Creation = parameters.Get<Creation>("creation");
 
             RenameCreationCommand = new SafeCommand(async () => await RenameCreationAsync());
-            DeleteCreationCommand = new SafeCommand(async () => await DeleteCreationAsync());
             PlayCommand = new SafeCommand(async () => await PlayAsync());
             AddControllerProfileCommand = new SafeCommand(async () => await AddControllerProfileAsync());
             ControllerProfileTappedCommand = new SafeCommand<ControllerProfile>(async controllerProfile => await NavigationService.NavigateToAsync<ControllerProfilePageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile))));
@@ -40,7 +39,6 @@ namespace BrickController2.UI.ViewModels
         public Creation Creation { get; }
 
         public ICommand RenameCreationCommand { get; }
-        public ICommand DeleteCreationCommand { get; }
         public ICommand PlayCommand { get; }
         public ICommand AddControllerProfileCommand { get; }
         public ICommand ControllerProfileTappedCommand { get; }
@@ -61,19 +59,6 @@ namespace BrickController2.UI.ViewModels
                     false,
                     async (progressDialog, token) => await _creationManager.RenameCreationAsync(Creation, result.Result),
                     "Renaming...");
-            }
-        }
-
-        private async Task DeleteCreationAsync()
-        {
-            if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this creation?", "Yes", "No"))
-            {
-                await _dialogService.ShowProgressDialogAsync(
-                    false,
-                    async (progressDialog, token) => await _creationManager.DeleteCreationAsync(Creation),
-                    "Deleting...");
-
-                await NavigationService.NavigateBackAsync();
             }
         }
 

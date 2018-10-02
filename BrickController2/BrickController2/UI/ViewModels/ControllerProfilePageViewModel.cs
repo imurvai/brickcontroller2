@@ -31,7 +31,6 @@ namespace BrickController2.UI.ViewModels
             ControllerProfile = parameters.Get<ControllerProfile>("controllerprofile");
 
             RenameProfileCommand = new SafeCommand(async () => await RenameControllerProfileAsync());
-            DeleteProfileCommand = new SafeCommand(async () => await DeleteControllerProfileAsync());
             AddControllerEventCommand = new SafeCommand(async () => await AddControllerEventAsync());
             ControllerActionTappedCommand = new SafeCommand<ControllerActionViewModel>(async controllerActionViewModel => await NavigationService.NavigateToAsync<ControllerActionPageViewModel>(new NavigationParameters(("controlleraction", controllerActionViewModel.ControllerAction))));
             DeleteControllerEventCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await DeleteControllerEventAsync(controllerEvent));
@@ -58,7 +57,6 @@ namespace BrickController2.UI.ViewModels
         public ObservableCollection<ControllerEventViewModel> ControllerEvents { get; } = new ObservableCollection<ControllerEventViewModel>();
 
         public ICommand RenameProfileCommand { get; }
-        public ICommand DeleteProfileCommand { get; }
         public ICommand AddControllerEventCommand { get; }
         public ICommand ControllerActionTappedCommand { get; }
         public ICommand DeleteControllerEventCommand { get; }
@@ -79,19 +77,6 @@ namespace BrickController2.UI.ViewModels
                     false,
                     async (progressDialog, token) => await _creationManager.RenameControllerProfileAsync(ControllerProfile, result.Result),
                     "Renaming...");
-            }
-        }
-
-        private async Task DeleteControllerProfileAsync()
-        {
-            if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this profile?", "Yes", "No"))
-            {
-                await _dialogService.ShowProgressDialogAsync(
-                    false,
-                    async (progressDialog, token) => await _creationManager.DeleteControllerProfileAsync(ControllerProfile),
-                    "Deleting...");
-
-                await NavigationService.NavigateBackAsync();
             }
         }
 

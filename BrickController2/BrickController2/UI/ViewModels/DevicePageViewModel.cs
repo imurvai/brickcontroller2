@@ -27,8 +27,6 @@ namespace BrickController2.UI.ViewModels
             Device = parameters.Get<Device>("device");
 
             RenameCommand = new SafeCommand(async () => await RenameDeviceAsync());
-            DeleteCommand = new SafeCommand(async () => await DeleteDeviceAsync());
-            ConnectCommand = new SafeCommand(async () => await ConnectAsync());
 
             for (int i = 0; i < Device.NumberOfChannels; i++)
             {
@@ -39,14 +37,13 @@ namespace BrickController2.UI.ViewModels
         public Device Device { get; }
 
         public ICommand RenameCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand ConnectCommand { get; }
 
         public ObservableCollection<DeviceOutputViewModel> Outputs { get; } = new ObservableCollection<DeviceOutputViewModel>();
 
-        public override void OnAppearing()
+        public override async void OnAppearing()
         {
             Device.DeviceStateChanged += DeviceStateChangedHandler;
+            await ConnectAsync();
 
             base.OnAppearing();
         }
@@ -54,7 +51,6 @@ namespace BrickController2.UI.ViewModels
         public override async void OnDisappearing()
         {
             Device.DeviceStateChanged -= DeviceStateChangedHandler;
-
             await Device.DisconnectAsync();
 
             base.OnDisappearing();
@@ -78,23 +74,6 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private async Task DeleteDeviceAsync()
-        {
-            if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this device?", "Yes", "No"))
-            {
-                await _dialogService.ShowProgressDialogAsync(
-                    false,
-                    async (progressDialog, token) =>
-                    {
-                        await Device.DisconnectAsync();
-                        await _deviceManager.DeleteDeviceAsync(Device);
-                    },
-                    "Deleting...");
-
-                await NavigationService.NavigateBackAsync();
-            }
-        }
-
         private async Task ConnectAsync()
         {
             DeviceConnectionResult connectionResult = DeviceConnectionResult.Ok;
@@ -108,9 +87,14 @@ namespace BrickController2.UI.ViewModels
                 null,
                 "Cancel");
 
-            if (connectionResult == DeviceConnectionResult.Error)
+            if (connectionResult != DeviceConnectionResult.Ok)
             {
-                await DisplayAlertAsync("Warning", "Failed to connect to device.", "Ok");
+                if (connectionResult == DeviceConnectionResult.Error)
+                {
+                    await DisplayAlertAsync("Warning", "Failed to connect to device.", "Ok");
+                }
+
+                await NavigationService.NavigateBackAsync();
             }
         }
 
@@ -122,6 +106,10 @@ namespace BrickController2.UI.ViewModels
                 if (result)
                 {
                     await ConnectAsync();
+                }
+                else
+                {
+                    await NavigationService.NavigateBackAsync();
                 }
             }
         }

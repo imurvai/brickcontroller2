@@ -18,7 +18,7 @@
     </local:PageBase.Resources>
 
     <local:PageBase.ToolbarItems>
-        <ToolbarItem Icon="ic_trashbin_white.png" Order="Primary" Command="{Binding DeleteDevicesCommand}"/>
+        <ToolbarItem Icon="ic_search_white.png" Order="Primary" Command="{Binding ScanCommand}"/>
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>
@@ -63,9 +63,6 @@
                     </DataTrigger>
                 </Label.Triggers>
             </Label>
-
-            <!-- FAB -->
-            <controls:FloatingActionButton ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_search.png}" Command="{Binding ScanCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
         </Grid>
     </local:PageBase.Content>
