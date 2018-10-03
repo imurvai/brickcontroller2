@@ -5,7 +5,6 @@
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
-		<integer>2</integer>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
@@ -32,13 +31,15 @@
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
 	<string>BrickController2</string>
-	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Allow the application to access Bluetooth.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>New Entry</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>New Entry</string>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>XSLaunchImageAssets</key>
+	<string>Assets.xcassets/LaunchImages.launchimage</string>
 </dict>
 </plist>
