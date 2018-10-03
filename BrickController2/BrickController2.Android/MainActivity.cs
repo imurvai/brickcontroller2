@@ -19,9 +19,9 @@ namespace BrickController2.Droid
 {
     [Activity(
         Label = "BrickController2",
-        Icon = "@mipmap/icon",
+        Icon = "@mipmap/ic_launcher",
         Theme = "@style/MainTheme",
-        MainLauncher = true,
+        MainLauncher = false,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
