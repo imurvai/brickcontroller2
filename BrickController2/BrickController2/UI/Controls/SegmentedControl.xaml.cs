@@ -4,27 +4,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace BrickController2.UI.Controls
 {
-    public class RadioButtonGroup : StackLayout
-    {
+	[XamlCompilation(XamlCompilationOptions.Compile)]
+	public partial class SegmentedControl : ContentView
+	{
         private readonly IList<Label> _labels = new List<Label>();
 
-        public static BindableProperty ButtonTextsPropery = BindableProperty.Create(nameof(ButtonTexts), typeof(IEnumerable<string>), typeof(RadioButtonGroup), null, BindingMode.OneWay, null, ButtonTextsChanged);
-        public static BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(RadioButtonGroup), 0, BindingMode.TwoWay, null, SelectedIndexChanged);
-        public static BindableProperty SelectionChangedCommandProperty = BindableProperty.Create(nameof(SelectionChangedCommand), typeof(ICommand), typeof(RadioButtonGroup));
+        public SegmentedControl ()
+		{
+			InitializeComponent ();
+		}
 
-        public IEnumerable<string> ButtonTexts
+        public static BindableProperty ItemsPropery = BindableProperty.Create(nameof(Items), typeof(IEnumerable<string>), typeof(SegmentedControl), null, BindingMode.OneWay, null, ItemsChanged);
+        public static BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(SegmentedControl), 0, BindingMode.TwoWay, null, SelectedIndexChanged);
+        public static BindableProperty SelectionChangedCommandProperty = BindableProperty.Create(nameof(SelectionChangedCommand), typeof(ICommand), typeof(SegmentedControl));
+
+        public IEnumerable<string> Items
         {
-            get => (IEnumerable<string>)GetValue(ButtonTextsPropery);
-            set => SetValue(ButtonTextsPropery, value);
+            get => (IEnumerable<string>)GetValue(ItemsPropery);
+            set => SetValue(ItemsPropery, value);
         }
 
         public int SelectedIndex
         {
             get => (int)GetValue(SelectedIndexProperty);
-            set => SetValue(SelectedIndexProperty, value);
+            set => SetValue(SelectedIndexProperty, Math.Max(0, Math.Min(value, (Items?.Count() ?? 0) - 1)));
         }
 
         public ICommand SelectionChangedCommand
@@ -33,9 +40,9 @@ namespace BrickController2.UI.Controls
             set => SetValue(SelectionChangedCommandProperty, value);
         }
 
-        private static void ButtonTextsChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void ItemsChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is RadioButtonGroup rbg)
+            if (bindable is SegmentedControl rbg)
             {
                 rbg.Build();
             }
@@ -43,7 +50,7 @@ namespace BrickController2.UI.Controls
 
         private static void SelectedIndexChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is RadioButtonGroup rbg)
+            if (bindable is SegmentedControl rbg)
             {
                 var index = (int)newValue;
                 rbg.SetSelection(index);
@@ -52,30 +59,31 @@ namespace BrickController2.UI.Controls
 
         private void Build()
         {
-            Children.Clear();
+            StackLayout.Children.Clear();
             _labels.Clear();
 
-            if (ButtonTexts == null || ButtonTexts.Count() == 0)
+            if (Items == null || Items.Count() == 0)
             {
                 return;
             }
 
-            int index = 0;
-            foreach (var buttonText in ButtonTexts)
+            for (int index = 0; index < Items.Count(); index++)
             {
+                var buttonText = Items.ElementAt(index);
+
                 var frame = new Frame { BackgroundColor = Color.Transparent, HasShadow = false };
-                frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>((i) => ButtonTapped(i)), CommandParameter = index });
+                frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>((i) => ItemTapped(i)), CommandParameter = index });
                 var label = new Label { Text = buttonText };
                 frame.Content = label;
                 _labels.Add(label);
 
-                Children.Add(frame);
+                StackLayout.Children.Add(frame);
             }
 
             SetSelection(SelectedIndex);
         }
 
-        private void ButtonTapped(int index)
+        private void ItemTapped(int index)
         {
             if (SelectedIndex == index)
             {
@@ -92,14 +100,14 @@ namespace BrickController2.UI.Controls
 
         private void SetSelection(int selectedIndex)
         {
-            if (ButtonTexts == null || ButtonTexts.Count() == 0)
+            if (Items == null || Items.Count() == 0)
             {
                 return;
             }
 
-            selectedIndex = Math.Max(0, Math.Min(ButtonTexts.Count() - 1, selectedIndex));
+            selectedIndex = Math.Max(0, Math.Min(Items.Count() - 1, selectedIndex));
 
-            for(int i = 0; i < _labels.Count; i++)
+            for (int i = 0; i < _labels.Count; i++)
             {
                 _labels[i].FontAttributes = i == selectedIndex ? FontAttributes.Bold : FontAttributes.None;
             }
