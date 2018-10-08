@@ -84,7 +84,7 @@ namespace BrickController2.UI.Controls
                         BackgroundColor = Color.FromHex("#E0E0E0"),
                         WidthRequest = 1,
                         HorizontalOptions = LayoutOptions.Center,
-                        VerticalOptions = LayoutOptions.Fill,
+                        VerticalOptions = LayoutOptions.Center,
                         Margin = new Thickness(5)
                     };
 
@@ -100,7 +100,11 @@ namespace BrickController2.UI.Controls
                 };
                 _labels.Add(label);
 
-                var frame = new Frame { BackgroundColor = Color.Transparent, HasShadow = false };
+                var frame = new Frame
+                {
+                    BackgroundColor = Color.Transparent,
+                    HasShadow = false
+                };
                 frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>(i => ItemTapped(i)), CommandParameter = index });
                 frame.Content = label;
 

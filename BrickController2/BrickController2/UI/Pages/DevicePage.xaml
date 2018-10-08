@@ -64,7 +64,7 @@
                 <!-- BuWizz 1 output level -->
                 <StackLayout Grid.Row="1" Orientation="Vertical">
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,8,10,8"/>
-                    <controls:SegmentedControl ItemsCsv="Low,Normal,High"/>
+                    <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectedIndex="1" HorizontalOptions="Fill" VerticalOptions="Start"/>
                 </StackLayout>
 
                 <!-- Outputs -->
