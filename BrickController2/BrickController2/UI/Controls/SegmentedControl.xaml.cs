@@ -18,20 +18,20 @@ namespace BrickController2.UI.Controls
 			InitializeComponent ();
 		}
 
-        public static BindableProperty ItemsPropery = BindableProperty.Create(nameof(Items), typeof(IEnumerable<string>), typeof(SegmentedControl), null, BindingMode.OneWay, null, ItemsChanged);
-        public static BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(SegmentedControl), 0, BindingMode.TwoWay, null, SelectedIndexChanged);
+        public static BindableProperty ItemsCsvPropery = BindableProperty.Create(nameof(ItemsCsv), typeof(string), typeof(SegmentedControl), default(string), propertyChanged: ItemsCsvChanged);
+        public static BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(SegmentedControl), -1, BindingMode.TwoWay, propertyChanged: SelectedIndexChanged, coerceValue: CoerceSelectedIndex);
         public static BindableProperty SelectionChangedCommandProperty = BindableProperty.Create(nameof(SelectionChangedCommand), typeof(ICommand), typeof(SegmentedControl));
 
-        public IEnumerable<string> Items
+        public string ItemsCsv
         {
-            get => (IEnumerable<string>)GetValue(ItemsPropery);
-            set => SetValue(ItemsPropery, value);
+            get => (string)GetValue(ItemsCsvPropery);
+            set => SetValue(ItemsCsvPropery, value);
         }
 
         public int SelectedIndex
         {
             get => (int)GetValue(SelectedIndexProperty);
-            set => SetValue(SelectedIndexProperty, Math.Max(0, Math.Min(value, (Items?.Count() ?? 0) - 1)));
+            set => SetValue(SelectedIndexProperty, value);
         }
 
         public ICommand SelectionChangedCommand
@@ -40,42 +40,69 @@ namespace BrickController2.UI.Controls
             set => SetValue(SelectionChangedCommandProperty, value);
         }
 
-        private static void ItemsChanged(BindableObject bindable, object oldValue, object newValue)
+        private static object CoerceSelectedIndex(BindableObject bindable, object newValue)
         {
-            if (bindable is SegmentedControl rbg)
-            {
-                rbg.Build();
-            }
+            var segmentedControl = (SegmentedControl)bindable;
+            var intValue = (int)newValue;
+            return Math.Max(-1, Math.Min(segmentedControl._labels.Count - 1, intValue));
+        }
+
+        private static void ItemsCsvChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var segmentedControl = (SegmentedControl)bindable;
+            var itemsCsv = (string)newValue;
+
+            var items = itemsCsv?.Split(',').Select(i => i.Trim()).ToList() ?? new List<string>();
+            segmentedControl.Build(items);
         }
 
         private static void SelectedIndexChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is SegmentedControl rbg)
-            {
-                var index = (int)newValue;
-                rbg.SetSelection(index);
-            }
+            var segmentedControl = (SegmentedControl)bindable;
+            var index = (int)newValue;
+            segmentedControl.SetSelection(index);
         }
 
-        private void Build()
+        private void Build(IList<string> items)
         {
             StackLayout.Children.Clear();
             _labels.Clear();
 
-            if (Items == null || Items.Count() == 0)
+            if (items == null || items.Count() == 0)
             {
                 return;
             }
 
-            for (int index = 0; index < Items.Count(); index++)
+            for (int index = 0; index < items.Count(); index++)
             {
-                var buttonText = Items.ElementAt(index);
+                var buttonText = items.ElementAt(index);
+
+                if (index != 0)
+                {
+                    var separator = new BoxView
+                    {
+                        BackgroundColor = Color.FromHex("#E0E0E0"),
+                        WidthRequest = 1,
+                        HorizontalOptions = LayoutOptions.Center,
+                        VerticalOptions = LayoutOptions.Fill,
+                        Margin = new Thickness(5)
+                    };
+
+                    StackLayout.Children.Add(separator);
+                }
+
+                var label = new Label
+                {
+                    Text = buttonText,
+                    FontAttributes = FontAttributes.None,
+                    HorizontalOptions = LayoutOptions.FillAndExpand,
+                    VerticalOptions = LayoutOptions.Center
+                };
+                _labels.Add(label);
 
                 var frame = new Frame { BackgroundColor = Color.Transparent, HasShadow = false };
-                frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>((i) => ItemTapped(i)), CommandParameter = index });
-                var label = new Label { Text = buttonText };
+                frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>(i => ItemTapped(i)), CommandParameter = index });
                 frame.Content = label;
-                _labels.Add(label);
 
                 StackLayout.Children.Add(frame);
             }
@@ -100,12 +127,12 @@ namespace BrickController2.UI.Controls
 
         private void SetSelection(int selectedIndex)
         {
-            if (Items == null || Items.Count() == 0)
+            if (_labels.Count == 0)
             {
                 return;
             }
 
-            selectedIndex = Math.Max(0, Math.Min(Items.Count() - 1, selectedIndex));
+            selectedIndex = Math.Max(-1, Math.Min(_labels.Count() - 1, selectedIndex));
 
             for (int i = 0; i < _labels.Count; i++)
             {
