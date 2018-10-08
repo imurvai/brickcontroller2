@@ -27,6 +27,8 @@ namespace BrickController2.UI.ViewModels
             Device = parameters.Get<Device>("device");
 
             RenameCommand = new SafeCommand(async () => await RenameDeviceAsync());
+            BuWizzOutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
+            BuWizz2OutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
 
             for (int i = 0; i < Device.NumberOfChannels; i++)
             {
@@ -35,8 +37,12 @@ namespace BrickController2.UI.ViewModels
         }
 
         public Device Device { get; }
+        public bool IsBuWizzDevice => Device.DeviceType == DeviceType.BuWizz;
+        public bool IsBuWizz2Device => Device.DeviceType == DeviceType.BuWizz2;
 
         public ICommand RenameCommand { get; }
+        public ICommand BuWizzOutputLevelChangedCommand { get; }
+        public ICommand BuWizz2OutputLevelChangedCommand { get; }
 
         public ObservableCollection<DeviceOutputViewModel> Outputs { get; } = new ObservableCollection<DeviceOutputViewModel>();
 
@@ -112,6 +118,11 @@ namespace BrickController2.UI.ViewModels
                     await NavigationService.NavigateBackAsync();
                 }
             }
+        }
+
+        private void SetBuWizzOutputLevel(int level)
+        {
+            Device.SetOutputLevel(level);
         }
     }
 }

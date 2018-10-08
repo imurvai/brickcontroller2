@@ -5,6 +5,6 @@
     x:Class="BrickController2.UI.Controls.SegmentedControl">
 
     <ContentView.Content>
-        <StackLayout x:Name="StackLayout" Orientation="Horizontal" HorizontalOptions="FillAndExpand" VerticalOptions="Start"/>
+        <StackLayout x:Name="StackLayout" Orientation="Horizontal"/>
     </ContentView.Content>
 </ContentView>

@@ -85,7 +85,7 @@ namespace BrickController2.UI.Controls
                         WidthRequest = 1,
                         HorizontalOptions = LayoutOptions.Center,
                         VerticalOptions = LayoutOptions.Center,
-                        Margin = new Thickness(5)
+                        Margin = new Thickness(1)
                     };
 
                     StackLayout.Children.Add(separator);
@@ -103,6 +103,7 @@ namespace BrickController2.UI.Controls
                 var frame = new Frame
                 {
                     BackgroundColor = Color.Transparent,
+                    Padding = new Thickness(1),
                     HasShadow = false
                 };
                 frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>(i => ItemTapped(i)), CommandParameter = index });
@@ -121,12 +122,12 @@ namespace BrickController2.UI.Controls
                 return;
             }
 
+            SelectedIndex = index;
+
             if (SelectionChangedCommand != null && SelectionChangedCommand.CanExecute(index))
             {
                 SelectionChangedCommand.Execute(index);
             }
-
-            SetSelection(index);
         }
 
         private void SetSelection(int selectedIndex)
