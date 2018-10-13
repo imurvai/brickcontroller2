@@ -8,6 +8,8 @@ namespace BrickController2.Droid.HardwareServices.GameController
 {
     public class GameControllerService : IGameControllerService
     {
+        private const string DualShock4HackKey = "DualShock4Hack";
+
         private readonly IDictionary<Axis, float> _lastAxisValues = new Dictionary<Axis, float>();
         private readonly object _lockObject = new object();
 
@@ -67,6 +69,15 @@ namespace BrickController2.Droid.HardwareServices.GameController
                 foreach (Axis axisCode in Enum.GetValues(typeof(Axis)))
                 {
                     var axisValue = e.GetAxisValue(axisCode);
+
+                    if ((axisCode == Axis.Rx || axisCode == Axis.Ry) && 
+                        e.Device.VendorId == 1356 && 
+                        (e.Device.ProductId == 2508 || e.Device.ProductId == 1476))
+                    {
+                        // DualShock 4 hack for the triggers
+                        axisValue = (axisValue + 1) / 2;
+                    }
+
                     if (Math.Abs(axisValue) < 0.05F)
                     {
                         axisValue = 0.0F;
