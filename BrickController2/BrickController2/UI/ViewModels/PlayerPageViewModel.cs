@@ -4,6 +4,7 @@ using BrickController2.HardwareServices.GameController;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -156,19 +157,45 @@ namespace BrickController2.UI.ViewModels
                         {
                             var device = _deviceManager.GetDeviceById(controllerAction.DeviceId);
                             var channel = controllerAction.Channel;
+                            int outputValue = 0;
 
                             if (gameControllerEvent.Key.EventType == GameControllerEventType.Button)
                             {
-                                // TODO: handle buttontype and so on...
-                                var outputValue = gameControllerEvent.Value > 0.5 ? (controllerAction.IsInvert ? -255 : 255) : 0;
-                                device.SetOutput(channel, outputValue);
+                                // TODO: handle buttontype
+                                outputValue = gameControllerEvent.Value > 0.5 ? (controllerAction.IsInvert ? -255 : 255) : 0;
                             }
                             else if (gameControllerEvent.Key.EventType == GameControllerEventType.Axis)
                             {
-                                // TODO: handle other controlleraction parameters...
-                                var outputValue = (int)(gameControllerEvent.Value * (controllerAction.IsInvert ? -255 : 255));
-                                device.SetOutput(channel, outputValue);
+                                var gameControllerValue = gameControllerEvent.Value;
+
+                                var axisDeadZone = controllerAction.AxisDeadZonePercent / 100F;
+                                if (axisDeadZone > 0)
+                                {
+                                    if (gameControllerValue <= axisDeadZone)
+                                    {
+                                        gameControllerValue = 0;
+                                    }
+
+                                    // TODO: adjust the controller value
+                                }
+
+                                if (controllerAction.AxisCharacteristic == ControllerAxisCharacteristic.Exponential)
+                                {
+                                    // Cheat :)
+                                    gameControllerValue = gameControllerValue * Math.Abs(gameControllerValue);
+                                }
+                                else if (controllerAction.AxisCharacteristic == ControllerAxisCharacteristic.Logarithmic)
+                                {
+                                    // Another cheat :)
+                                    gameControllerValue = (float)Math.Sqrt(Math.Abs(gameControllerValue)) * (gameControllerValue < 0 ? -1 : 1); 
+                                }
+
+                                outputValue = (int)(gameControllerValue * (controllerAction.IsInvert ? -255 : 255));
                             }
+
+                            // TODO: handle max output percent
+
+                            device.SetOutput(channel, outputValue);
                         }
                     }
                 }
