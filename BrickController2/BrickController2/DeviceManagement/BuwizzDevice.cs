@@ -13,8 +13,8 @@ namespace BrickController2.DeviceManagement
     {
         private const int MAX_SEND_ATTEMPTS = 4;
 
-        private readonly Guid SERVICE_UUID_REMOTE_CONTROL = new Guid("0000ffe0-0000-1000-8000-00805f9b34fb");
-        private readonly Guid CHARACTERISTIC_UUID_QUICK_DRIVE = new Guid("0000ffe1-0000-1000-8000-00805f9b34fb");
+        private readonly Guid SERVICE_UUID = new Guid("0000ffe0-0000-1000-8000-00805f9b34fb");
+        private readonly Guid CHARACTERISTIC_UUID = new Guid("0000ffe1-0000-1000-8000-00805f9b34fb");
 
         private readonly int[] _outputValues = new int[4];
         private int _outputLevelValue;
@@ -60,9 +60,9 @@ namespace BrickController2.DeviceManagement
             _characteristic = null;
             foreach (var service in services)
             {
-                if (service.Uuid == SERVICE_UUID_REMOTE_CONTROL)
+                if (service.Uuid == SERVICE_UUID)
                 {
-                    _characteristic = await service.GetKnownCharacteristics(CHARACTERISTIC_UUID_QUICK_DRIVE).FirstAsync().ToTask(token);
+                    _characteristic = await service.GetKnownCharacteristics(CHARACTERISTIC_UUID).FirstAsync().ToTask(token);
                 }
             }
 

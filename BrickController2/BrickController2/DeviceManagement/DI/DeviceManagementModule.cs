@@ -19,6 +19,7 @@ namespace BrickController2.DeviceManagement.DI
             builder.RegisterType<BuWizzDevice>().Keyed<Device>(DeviceType.BuWizz);
             builder.RegisterType<BuWizz2Device>().Keyed<Device>(DeviceType.BuWizz2);
             builder.RegisterType<InfraredDevice>().Keyed<Device>(DeviceType.Infrared);
+            builder.RegisterType<PoweredUpDevice>().Keyed<Device>(DeviceType.PoweredUp);
 
             builder.Register<DeviceFactory>(c =>
             {

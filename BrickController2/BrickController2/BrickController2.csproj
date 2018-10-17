@@ -29,6 +29,8 @@
     <None Remove="UI\Images\ic_search.png" />
     <None Remove="UI\Images\infra_image.png" />
     <None Remove="UI\Images\infra_image_small.png" />
+    <None Remove="UI\Images\poweredup_image.png" />
+    <None Remove="UI\Images\poweredup_small_image.png" />
     <None Remove="UI\Images\sbrick_image.png" />
     <None Remove="UI\Images\sbrick_image_small.png" />
   </ItemGroup>
@@ -49,6 +51,8 @@
     <EmbeddedResource Include="UI\Images\ic_search.png" />
     <EmbeddedResource Include="UI\Images\infra_image.png" />
     <EmbeddedResource Include="UI\Images\infra_image_small.png" />
+    <EmbeddedResource Include="UI\Images\poweredup_image.png" />
+    <EmbeddedResource Include="UI\Images\poweredup_small_image.png" />
     <EmbeddedResource Include="UI\Images\sbrick_image.png" />
     <EmbeddedResource Include="UI\Images\sbrick_image_small.png" />
   </ItemGroup>
