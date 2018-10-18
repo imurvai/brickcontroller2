@@ -80,6 +80,21 @@ namespace BrickController2.DeviceManagement
                 return DeviceType.BuWizz2;
             }
 
+            if (data1 == 0x97 && data2 == 0x03)
+            {
+                if (manufacturerData.Length >= 4)
+                {
+                    if (manufacturerData[3] == 0x40)
+                    {
+                        //return DeviceType.Boost;
+                    }
+                    else if (manufacturerData[3] == 0x41)
+                    {
+                        return DeviceType.PoweredUp;
+                    }
+                }
+            }
+
             return DeviceType.Unknown;
         }
     }

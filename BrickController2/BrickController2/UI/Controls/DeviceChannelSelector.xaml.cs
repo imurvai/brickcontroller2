@@ -22,6 +22,8 @@ namespace BrickController2.UI.Controls
             BuWizzChannel3.Command = new SafeCommand(() => SelectedChannel = 3);
             InfraredChannel0.Command = new SafeCommand(() => SelectedChannel = 0);
             InfraredChannel1.Command = new SafeCommand(() => SelectedChannel = 1);
+            PoweredUpChannel0.Command = new SafeCommand(() => SelectedChannel = 0);
+            PoweredUpChannel1.Command = new SafeCommand(() => SelectedChannel = 1);
         }
 
         public static BindableProperty DeviceTypeProperty = BindableProperty.Create(nameof(DeviceType), typeof(DeviceType), typeof(DeviceChannelSelector), default(DeviceType), BindingMode.OneWay, null, OnDeviceTypeChanged);
@@ -47,6 +49,7 @@ namespace BrickController2.UI.Controls
                 dcs.SbrickSection.IsVisible = deviceType == DeviceType.SBrick;
                 dcs.BuWizzSection.IsVisible = deviceType == DeviceType.BuWizz || deviceType == DeviceType.BuWizz2;
                 dcs.InfraredSection.IsVisible = deviceType == DeviceType.Infrared;
+                dcs.PoweredUpSection.IsVisible = deviceType == DeviceType.PoweredUp;
             }
         }
 
@@ -65,6 +68,8 @@ namespace BrickController2.UI.Controls
                 dcs.BuWizzChannel3.SelectedChannel = selectedChannel;
                 dcs.InfraredChannel0.SelectedChannel = selectedChannel;
                 dcs.InfraredChannel1.SelectedChannel = selectedChannel;
+                dcs.PoweredUpChannel0.SelectedChannel = selectedChannel;
+                dcs.PoweredUpChannel1.SelectedChannel = selectedChannel;
             }
         }
     }

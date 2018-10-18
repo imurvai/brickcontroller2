@@ -1,7 +1,6 @@
 ﻿using Plugin.BluetoothLE;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading;
@@ -16,6 +15,7 @@ namespace BrickController2.DeviceManagement
         private readonly Guid SERVICE_UUID_REMOTE_CONTROL = new Guid("4dc591b0-857c-41de-b5f1-15abda665b0c");
         private readonly Guid CHARACTERISTIC_UUID_QUICK_DRIVE = new Guid("489a6ae0-c1ab-4c9c-bdb2-11d373c1b7fb");
 
+        private readonly byte[] _sendBuffer = new byte[4];
         private readonly int[] _outputValues = new int[4];
 
         private IGattCharacteristic _characteristic;
@@ -110,16 +110,10 @@ namespace BrickController2.DeviceManagement
                             {
                                 _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                             }
-
-                            //await Task.Delay(60, _outputTaskTokenSource.Token);
                         }
                     }
                     catch (OperationCanceledException)
                     {
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.WriteLine("****** " + e);
                     }
                 }
             });
@@ -142,15 +136,12 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                byte[] buffer = new[]
-                {
-                    (byte)((Math.Abs(v0) & 0xfe) | 0x02 | (v0 < 0 ? 1 : 0)),
-                    (byte)((Math.Abs(v1) & 0xfe) | 0x02 | (v1 < 0 ? 1 : 0)),
-                    (byte)((Math.Abs(v2) & 0xfe) | 0x02 | (v2 < 0 ? 1 : 0)),
-                    (byte)((Math.Abs(v3) & 0xfe) | 0x02 | (v3 < 0 ? 1 : 0)),
-                };
+                _sendBuffer[0] = (byte)((Math.Abs(v0) & 0xfe) | 0x02 | (v0 < 0 ? 1 : 0));
+                _sendBuffer[1] = (byte)((Math.Abs(v1) & 0xfe) | 0x02 | (v1 < 0 ? 1 : 0));
+                _sendBuffer[2] = (byte)((Math.Abs(v2) & 0xfe) | 0x02 | (v2 < 0 ? 1 : 0));
+                _sendBuffer[3] = (byte)((Math.Abs(v3) & 0xfe) | 0x02 | (v3 < 0 ? 1 : 0));
 
-                await _characteristic.Write(buffer).ToTask(token);
+                await _characteristic.Write(_sendBuffer).ToTask(token);
                 return true;
             }
             catch (Exception)

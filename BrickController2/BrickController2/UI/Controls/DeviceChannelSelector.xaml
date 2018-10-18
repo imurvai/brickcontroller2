@@ -76,6 +76,26 @@
                     <controls:ChannelSelectorRadioButton x:Name="InfraredChannel1" Channel="1" Text="Red" HorizontalOptions="Start" VerticalOptions="End"/>
                 </Grid>
             </Grid>
+            
+            <!-- PoweredUp section -->
+            <Grid x:Name="PoweredUpSection">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <controls:ChannelSelectorRadioButton x:Name="PoweredUpChannel0" Channel="0" Text="1" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="PoweredUpChannel1" Channel="1" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
+                </Grid>
+
+                <Image Grid.Column="1" Source="{extensions:ImageResource Source=poweredup_image.png}" WidthRequest="150" HeightRequest="150"/>
+
+                <Grid Grid.Column="2">
+                </Grid>
+            </Grid>
+
         </Grid>
     </ContentView.Content>
 </ContentView>

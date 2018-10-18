@@ -16,6 +16,7 @@ namespace BrickController2.DeviceManagement
         private readonly Guid SERVICE_UUID = new Guid("0000ffe0-0000-1000-8000-00805f9b34fb");
         private readonly Guid CHARACTERISTIC_UUID = new Guid("0000ffe1-0000-1000-8000-00805f9b34fb");
 
+        private readonly byte[] _sendBuffer = new byte[5];
         private readonly int[] _outputValues = new int[4];
         private int _outputLevelValue;
 
@@ -119,8 +120,6 @@ namespace BrickController2.DeviceManagement
                             {
                                 _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                             }
-
-                            await Task.Delay(60, _outputTaskTokenSource.Token);
                         }
                     }
                     catch (OperationCanceledException)
@@ -147,16 +146,14 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                byte[] buffer = new[]
-                {
-                    (byte)((Math.Abs(v0) >> 2) | (v0 < 0 ? 0x40 : 0) | 0x80),
-                    (byte)((Math.Abs(v1) >> 2) | (v1 < 0 ? 0x40 : 0)),
-                    (byte)((Math.Abs(v2) >> 2) | (v2 < 0 ? 0x40 : 0)),
-                    (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0)),
-                    (byte)_outputLevelValue
-                };
+                _sendBuffer[0] = (byte)((Math.Abs(v0) >> 2) | (v0 < 0 ? 0x40 : 0) | 0x80);
+                _sendBuffer[1] = (byte)((Math.Abs(v1) >> 2) | (v1 < 0 ? 0x40 : 0));
+                _sendBuffer[2] = (byte)((Math.Abs(v2) >> 2) | (v2 < 0 ? 0x40 : 0));
+                _sendBuffer[3] = (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0));
+                _sendBuffer[4] = (byte)_outputLevelValue;
 
-                await _characteristic.WriteWithoutResponse(buffer).ToTask(token);
+                await _characteristic.WriteWithoutResponse(_sendBuffer).ToTask(token);
+                await Task.Delay(60, token);
                 return true;
             }
             catch (Exception)

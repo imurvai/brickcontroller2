@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 using Plugin.BluetoothLE;
@@ -13,8 +15,8 @@ namespace BrickController2.DeviceManagement
         private readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
         private readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
 
+        private readonly byte[] _sendBuffer = new byte[] { 0x0a, 0x00, 0x81, 0x00, 0x11, 0x60, 0x00, 0x00, 0x00, 0x00 };
         private readonly int[] _outputValues = new int[2];
-        private int _outputLevelValue;
 
         private IGattCharacteristic _characteristic;
 
@@ -34,22 +36,121 @@ namespace BrickController2.DeviceManagement
 
         public override void SetOutput(int channel, int value)
         {
-            throw new System.NotImplementedException();
+            CheckChannel(channel);
+            value = (100 * CutOutputValue(value)) / 255;
+
+            if (_outputValues[channel] == value)
+            {
+                return;
+            }
+
+            _outputValues[channel] = value;
+            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
-        protected override Task<bool> ConnectPostActionAsync(CancellationToken token)
+        protected override async Task<bool> ServicesDiscovered(IList<IGattService> services, CancellationToken token)
         {
-            throw new System.NotImplementedException();
+            _characteristic = null;
+            foreach (var service in services)
+            {
+                if (service.Uuid == SERVICE_UUID)
+                {
+                    _characteristic = await service.GetKnownCharacteristics(CHARACTERISTIC_UUID).FirstAsync().ToTask(token);
+                }
+            }
+
+            return _characteristic != null;
         }
 
-        protected override Task DisconnectPreActionAsync(CancellationToken token)
+        protected override async Task<bool> ConnectPostActionAsync(CancellationToken token)
         {
-            throw new System.NotImplementedException();
+            return await StartOutputTaskAsync();
         }
 
-        protected override Task<bool> ServicesDiscovered(IList<IGattService> services, CancellationToken token)
+        protected override async Task DisconnectPreActionAsync(CancellationToken token)
         {
-            throw new System.NotImplementedException();
+            await StopOutputTaskAsync();
+        }
+
+        private async Task<bool> StartOutputTaskAsync()
+        {
+            await StopOutputTaskAsync();
+
+            _outputValues[0] = 0;
+            _outputValues[1] = 0;
+            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+
+            _outputTaskTokenSource = new CancellationTokenSource();
+            _outputTask = Task.Run(async () =>
+            {
+                while (!_outputTaskTokenSource.Token.IsCancellationRequested)
+                {
+                    try
+                    {
+                        if (_sendAttemptsLeft > 0)
+                        {
+                            int v0 = _outputValues[0];
+                            int v1 = _outputValues[1];
+
+                            if (await SendOutputValuesAsync(v0, v1, _outputTaskTokenSource.Token))
+                            {
+                                if (v0 != 0 || v1 != 0)
+                                {
+                                    _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                                }
+                                else
+                                {
+                                    _sendAttemptsLeft--;
+                                }
+                            }
+                            else
+                            {
+                                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                            }
+                        }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                    }
+                }
+            });
+
+            return true;
+        }
+
+        private async Task StopOutputTaskAsync()
+        {
+            if (_outputTaskTokenSource != null)
+            {
+                _outputTaskTokenSource.Cancel();
+                await _outputTask;
+                _outputTaskTokenSource.Dispose();
+                _outputTaskTokenSource = null;
+            }
+        }
+
+        private async Task<bool> SendOutputValuesAsync(int v0, int v1, CancellationToken token)
+        {
+            try
+            {
+                _sendBuffer[3] = (byte)0x00;
+                _sendBuffer[7] = (byte)(v0 < 0 ? (255 + v0) : v0);
+
+                await _characteristic.WriteWithoutResponse(_sendBuffer).ToTask(token);
+                await Task.Delay(25, token);
+
+                _sendBuffer[3] = (byte)0x01;
+                _sendBuffer[7] = (byte)(v1 < 0 ? (255 + v1) : v1);
+
+                await _characteristic.WriteWithoutResponse(_sendBuffer).ToTask(token);
+                await Task.Delay(25, token);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

@@ -15,6 +15,8 @@ namespace BrickController2.DeviceManagement
         private readonly Guid SERVICE_UUID = new Guid("4e050000-74fb-4481-88b3-9919b1676e93");
         private readonly Guid CHARACTERISTIC_UUID = new Guid("000092d1-0000-1000-8000-00805f9b34fb");
 
+        private readonly byte[] _sendOutputBuffer = new byte[] { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 };
+        private readonly byte[] _sendOutputLevelBuffer = new byte[] { 0x11, 0x00 };
         private readonly int[] _outputValues = new int[4];
         private int _outputLevelValue;
 
@@ -155,17 +157,12 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                byte[] buffer = new[]
-                {
-                    (byte)0x10,
-                    (byte)(v0 / 2),
-                    (byte)(v1 / 2),
-                    (byte)(v2 / 2),
-                    (byte)(v3 / 2),
-                    (byte)0x00
-                };
+                _sendOutputBuffer[1] = (byte)(v0 / 2);
+                _sendOutputBuffer[2] = (byte)(v1 / 2);
+                _sendOutputBuffer[3] = (byte)(v2 / 2);
+                _sendOutputBuffer[4] = (byte)(v3 / 2);
 
-                await _characteristic.Write(buffer).ToTask(token);
+                await _characteristic.Write(_sendOutputBuffer).ToTask(token);
                 return true;
             }
             catch (Exception)
@@ -178,13 +175,9 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                byte[] buffer = new[]
-                {
-                    (byte)0x11,
-                    (byte)(outputLevelValue + 1)
-                };
+                _sendOutputLevelBuffer[1] = (byte)(outputLevelValue + 1);
 
-                await _characteristic.Write(buffer).ToTask(token);
+                await _characteristic.Write(_sendOutputLevelBuffer).ToTask(token);
                 return true;
             }
             catch (Exception)

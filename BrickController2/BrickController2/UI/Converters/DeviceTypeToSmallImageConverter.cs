@@ -23,6 +23,9 @@ namespace BrickController2.UI.Converters
                 case DeviceType.Infrared:
                     return ImageSource.FromResource($"{ImageHelper.ImageResourceRootNameSpace}.infra_image_small.png");
 
+                case DeviceType.PoweredUp:
+                    return ImageSource.FromResource($"{ImageHelper.ImageResourceRootNameSpace}.poweredup_image_small.png");
+
                 default:
                     return null;
             }
