@@ -178,7 +178,7 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                var otherControllerAction = controllerAction.ControllerEvent.ControllerActions.FirstOrDefault(ca => ca.DeviceId == deviceId && ca.Channel == channel);
+                var otherControllerAction = controllerAction.ControllerEvent.ControllerActions.FirstOrDefault(ca => ca.Id != controllerAction.Id && ca.DeviceId == deviceId && ca.Channel == channel);
                 if (otherControllerAction != null)
                 {
                     var parent = otherControllerAction.ControllerEvent;
