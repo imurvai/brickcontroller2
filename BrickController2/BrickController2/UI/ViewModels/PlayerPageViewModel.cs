@@ -23,6 +23,8 @@ namespace BrickController2.UI.ViewModels
         private readonly IList<Device> _buwizzDevices = new List<Device>();
         private readonly IList<Device> _buwizz2Devices = new List<Device>();
 
+        private readonly IDictionary<string, float[]> _previousButtonOutputs = new Dictionary<string, float[]>();
+
         private readonly IList<Task<DeviceConnectionResult>> _connectionTasks = new List<Task<DeviceConnectionResult>>();
         private CancellationTokenSource _connectionTokenSource;
 
@@ -157,45 +159,29 @@ namespace BrickController2.UI.ViewModels
                         {
                             var device = _deviceManager.GetDeviceById(controllerAction.DeviceId);
                             var channel = controllerAction.Channel;
-                            int outputValue = 0;
+                            float outputValue = 0F;
 
                             if (gameControllerEvent.Key.EventType == GameControllerEventType.Button)
                             {
-                                // TODO: handle buttontype
-                                outputValue = gameControllerEvent.Value > 0.5 ? (controllerAction.IsInvert ? -255 : 255) : 0;
+                                var isPressed = gameControllerEvent.Value > 0.5;
+                                if (!ShouldProcessButtonEvent(isPressed, controllerAction))
+                                {
+                                    continue;
+                                }
+
+                                outputValue = ProcessButtonEvent(gameControllerEvent.Key.EventCode, isPressed, controllerAction);
                             }
                             else if (gameControllerEvent.Key.EventType == GameControllerEventType.Axis)
                             {
-                                var gameControllerValue = gameControllerEvent.Value;
-
-                                var axisDeadZone = controllerAction.AxisDeadZonePercent / 100F;
-                                if (axisDeadZone > 0)
-                                {
-                                    if (gameControllerValue <= axisDeadZone)
-                                    {
-                                        gameControllerValue = 0;
-                                    }
-
-                                    // TODO: adjust the controller value
-                                }
-
-                                if (controllerAction.AxisCharacteristic == ControllerAxisCharacteristic.Exponential)
-                                {
-                                    // Cheat :)
-                                    gameControllerValue = gameControllerValue * Math.Abs(gameControllerValue);
-                                }
-                                else if (controllerAction.AxisCharacteristic == ControllerAxisCharacteristic.Logarithmic)
-                                {
-                                    // Another cheat :)
-                                    gameControllerValue = (float)Math.Sqrt(Math.Abs(gameControllerValue)) * (gameControllerValue < 0 ? -1 : 1); 
-                                }
-
-                                outputValue = (int)(gameControllerValue * (controllerAction.IsInvert ? -255 : 255));
+                                outputValue = ProcessAxisEvent(gameControllerEvent.Key.EventCode, gameControllerEvent.Value, controllerAction);
                             }
 
-                            // TODO: handle max output percent
+                            if (controllerAction.MaxOutputPercent < 100)
+                            {
+                                outputValue = (outputValue * controllerAction.MaxOutputPercent) / 100;
+                            }
 
-                            device.SetOutput(channel, outputValue);
+                            device.SetOutput(channel, controllerAction.IsInvert ? -outputValue : outputValue);
                         }
                     }
                 }
@@ -247,6 +233,123 @@ namespace BrickController2.UI.ViewModels
                     }
                 }
             }
+        }
+
+        private bool ShouldProcessButtonEvent(bool isPressed, ControllerAction controllerAction)
+        {
+            return controllerAction.ButtonType == ControllerButtonType.Normal || isPressed;
+        }
+
+        private float ProcessButtonEvent(string gameControllerEventCode, bool isPressed, ControllerAction controllerAction)
+        {
+            var previousButtonOutputs = GetPreviousButtonOutputs(gameControllerEventCode);
+            float currentOutput = 0;
+
+            switch (controllerAction.ButtonType)
+            {
+                case ControllerButtonType.Normal:
+                    currentOutput = isPressed ? 1 : 0;
+                    break;
+
+                case ControllerButtonType.SimpleToggle:
+                    currentOutput = previousButtonOutputs[0] != 0 ? 0 : 1;
+                    break;
+
+                case ControllerButtonType.Alternating:
+                    currentOutput = previousButtonOutputs[0] < 0 ? 1 : -1;
+                    break;
+
+                case ControllerButtonType.Circular:
+                    if (previousButtonOutputs[0] < 0)
+                    {
+                        currentOutput = 0;
+                    }
+                    else if (previousButtonOutputs[0] == 0)
+                    {
+                        currentOutput = 1;
+                    }
+                    else
+                    {
+                        currentOutput = -1;
+                    }
+                    break;
+
+                case ControllerButtonType.PingPong:
+                    if (previousButtonOutputs[0] != 0)
+                    {
+                        currentOutput = 0;
+                    }
+                    else
+                    {
+                        currentOutput = previousButtonOutputs[1] < 0 ? 1 : -1;
+                    }
+                    break;
+            }
+
+            SetPreviousButtonOutput(gameControllerEventCode, currentOutput);
+            return currentOutput;
+        }
+
+        private float[] GetPreviousButtonOutputs(string gameControllerEventCode)
+        {
+            if (_previousButtonOutputs.ContainsKey(gameControllerEventCode))
+            {
+                return _previousButtonOutputs[gameControllerEventCode];
+            }
+            else
+            {
+                var prevOutputs = new float[2] { 0, 0 };
+                _previousButtonOutputs[gameControllerEventCode] = prevOutputs;
+                return prevOutputs;
+            }
+        }
+
+        private void SetPreviousButtonOutput(string gameControllerEventCode, float value)
+        {
+            var buttonOutputs = _previousButtonOutputs[gameControllerEventCode];
+            buttonOutputs[1] = buttonOutputs[0];
+            buttonOutputs[0] = value;
+        }
+
+        private float ProcessAxisEvent(string gameControllerEventCode, float axisValue, ControllerAction controllerAction)
+        {
+            var axisDeadZone = controllerAction.AxisDeadZonePercent / 100F;
+            if (axisDeadZone > 0)
+            {
+                if (Math.Abs(axisValue) <= axisDeadZone)
+                {
+                    return 0;
+                }
+
+                if (axisValue < 0)
+                {
+                    axisValue = (axisValue + axisDeadZone) / (1 - axisDeadZone);
+                }
+                else
+                {
+                    axisValue = (axisValue - axisDeadZone) / (1 - axisDeadZone);
+                }
+            }
+
+            if (controllerAction.AxisCharacteristic == ControllerAxisCharacteristic.Exponential)
+            {
+                // Cheat :)
+                axisValue = axisValue * Math.Abs(axisValue);
+            }
+            else if (controllerAction.AxisCharacteristic == ControllerAxisCharacteristic.Logarithmic)
+            {
+                // Another cheat :)
+                if (axisValue < 0)
+                {
+                    axisValue = -(float)Math.Sqrt(Math.Abs(axisValue));
+                }
+                else
+                {
+                    axisValue = (float)Math.Sqrt(Math.Abs(axisValue));
+                }
+            }
+
+            return axisValue;
         }
     }
 }

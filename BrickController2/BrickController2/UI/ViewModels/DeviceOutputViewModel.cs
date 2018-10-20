@@ -20,13 +20,16 @@ namespace BrickController2.UI.ViewModels
         public DeviceManagement.Device Device { get; }
         public int Channel { get; }
 
+        public int MinValue => -100;
+        public int MaxValue => 100;
+
         public int Output
         {
             get { return _output; }
             set
             {
                 _output = value;
-                Device.SetOutput(Channel, value);
+                Device.SetOutput(Channel, (float)value / MaxValue);
                 RaisePropertyChanged();
             }
         }

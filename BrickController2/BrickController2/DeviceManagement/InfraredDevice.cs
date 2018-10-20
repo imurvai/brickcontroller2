@@ -35,12 +35,13 @@ namespace BrickController2.DeviceManagement
             SetState(DeviceState.Disconnected, false);
         }
 
-        public override void SetOutput(int channel, int value)
+        public override void SetOutput(int channel, float value)
         {
             CheckChannel(channel);
             value = CutOutputValue(value);
 
-            _infraredDeviceManager.SetOutput(this, channel, value);
+            var intValue = (int)(7 * value);
+            _infraredDeviceManager.SetOutput(this, channel, intValue);
         }
     }
 }

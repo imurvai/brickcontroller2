@@ -12,7 +12,6 @@ namespace BrickController2.DeviceManagement
 
         private string _name;
         private DeviceState _deviceState;
-        protected int _output;
         protected int _outputLevel;
 
         internal Device(string name, string address, IDeviceRepository deviceRepository)
@@ -22,7 +21,6 @@ namespace BrickController2.DeviceManagement
             _name = name;
             Address = address;
             _deviceState = DeviceState.Disconnected;
-            _output = 0;
             _outputLevel = DefaultOutputLevel;
         }
 
@@ -42,7 +40,6 @@ namespace BrickController2.DeviceManagement
             set { _deviceState = value; RaisePropertyChanged(); }
         }
 
-        public int Output => _output;
         public int OutputLevel => _outputLevel;
 
         public event EventHandler<DeviceStateChangedEventArgs> DeviceStateChanged;
@@ -54,7 +51,7 @@ namespace BrickController2.DeviceManagement
         public abstract Task<DeviceConnectionResult> ConnectAsync(CancellationToken token);
         public abstract Task DisconnectAsync();
 
-        public abstract void SetOutput(int channel, int value);
+        public abstract void SetOutput(int channel, float value);
         public virtual void SetOutputLevel(int value)
         {
         }
@@ -88,9 +85,9 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        protected int CutOutputValue(int outputValue)
+        protected float CutOutputValue(float outputValue)
         {
-            return Math.Max(-255, Math.Min(255, outputValue));
+            return Math.Max(-1F, Math.Min(1F, outputValue));
         }
     }
 }

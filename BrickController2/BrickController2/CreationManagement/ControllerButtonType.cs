@@ -3,10 +3,9 @@
     public enum ControllerButtonType
     {
         Normal,
-        Alternating,
         SimpleToggle,
-        CircularToggle,
-        MinOnePlusOneToggle,
-        PingPongToggle
+        Alternating,
+        Circular,
+        PingPong
     }
 }

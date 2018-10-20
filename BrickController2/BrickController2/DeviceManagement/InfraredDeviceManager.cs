@@ -196,11 +196,11 @@ namespace BrickController2.DeviceManagement
         {
             if (value < 0)
             {
-                return (8 - (Math.Abs(value) >> 5)) | 8;
+                return (8 - Math.Abs(value)) | 8;
             }
             else
             {
-                return value >> 5;
+                return value;
             }
         }
 

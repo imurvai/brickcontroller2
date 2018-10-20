@@ -33,17 +33,18 @@ namespace BrickController2.DeviceManagement
         public override DeviceType DeviceType => DeviceType.SBrick;
         public override int NumberOfChannels => 4;
 
-        public override void SetOutput(int channel, int value)
+        public override void SetOutput(int channel, float value)
         {
             CheckChannel(channel);
             value = CutOutputValue(value);
 
-            if (_outputValues[channel] == value)
+            var intValue = (int)(value * 255);
+            if (_outputValues[channel] == intValue)
             {
                 return;
             }
 
-            _outputValues[channel] = value;
+            _outputValues[channel] = intValue;
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 

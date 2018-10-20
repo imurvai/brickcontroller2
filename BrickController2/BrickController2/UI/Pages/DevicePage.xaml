@@ -79,7 +79,7 @@
                             <DataTemplate>
                                 <ViewCell>
                                     <StackLayout>
-                                        <controls:ExtendedSlider Value="{Binding Output, Mode=TwoWay}" TouchUpCommand="{Binding TouchUpCommand}" IsEnabled="{Binding Device.DeviceState, Converter={StaticResource DeviceConnectedToBool}}"  Minimum="-255" Maximum="255" HeightRequest="50"/>
+                                        <controls:ExtendedSlider Value="{Binding Output, Mode=TwoWay}" TouchUpCommand="{Binding TouchUpCommand}" IsEnabled="{Binding Device.DeviceState, Converter={StaticResource DeviceConnectedToBool}}"  Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}" HeightRequest="50"/>
                                     </StackLayout>
                                 </ViewCell>
                             </DataTemplate>

@@ -1,5 +1,4 @@
-﻿using BrickController2.Helpers;
-using Plugin.BluetoothLE;
+﻿using Plugin.BluetoothLE;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
@@ -37,17 +36,18 @@ namespace BrickController2.DeviceManagement
         public override int NumberOfOutputLevels => 3;
         public override int DefaultOutputLevel => 2;
 
-        public override void SetOutput(int channel, int value)
+        public override void SetOutput(int channel, float value)
         {
             CheckChannel(channel);
             value = CutOutputValue(value);
 
-            if (_outputValues[channel] == value)
+            var intValue = (int)(value * 255);
+            if (_outputValues[channel] == intValue)
             {
                 return;
             }
 
-            _outputValues[channel] = value;
+            _outputValues[channel] = intValue;
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
