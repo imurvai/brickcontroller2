@@ -25,11 +25,24 @@
 
             <!-- Buwizz output level controls -->
             <StackLayout Grid.Row="1" Orientation="Vertical">
-                
+
+                <!-- BuWizz 1 output level -->
+                <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizzDevice}" Padding="20">
+                    <Label Text="BuWizz output Level"/>
+                    <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="1" HorizontalOptions="Fill" VerticalOptions="Start"/>
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,4,10,4"/>
+                </StackLayout>
+
+                <!-- BuWizz 2 output level -->
+                <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizz2Device}" Padding="20">
+                    <Label Text="BuWizz 2 output Level"/>
+                    <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="1" HorizontalOptions="Fill" VerticalOptions="Start"/>
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,4,10,4"/>
+                </StackLayout>
             </StackLayout>
             
             <!-- Controller profiles -->
-            <ListView Grid.Row="1" ItemsSource="{Binding Creation.ControllerProfiles}" SelectedItem="{Binding ActiveProfile, Mode=TwoWay}" SelectionMode="Single" HasUnevenRows="True">
+            <ListView Grid.Row="2" ItemsSource="{Binding Creation.ControllerProfiles}" SelectedItem="{Binding ActiveProfile, Mode=TwoWay}" SelectionMode="Single" HasUnevenRows="True">
                 <ListView.Behaviors>
                     <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerProfileTappedCommand}"/>
                 </ListView.Behaviors>
