@@ -1,4 +1,4 @@
-﻿using BrickController2.HardwareServices.GameController;
+﻿using BrickController2.PlatformServices.GameController;
 
 namespace BrickController2.UI.Services.Dialog
 {

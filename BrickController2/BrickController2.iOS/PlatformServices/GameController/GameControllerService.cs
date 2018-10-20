@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BrickController2.HardwareServices.GameController;
+using BrickController2.PlatformServices.GameController;
 using Foundation;
 using GameController;
 
-namespace BrickController2.iOS.HardwareServices.GameController
+namespace BrickController2.iOS.PlatformServices.GameController
 {
     public class GameControllerService : IGameControllerService
     {

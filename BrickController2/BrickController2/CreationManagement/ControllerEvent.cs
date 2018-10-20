@@ -1,4 +1,4 @@
-﻿using BrickController2.HardwareServices.GameController;
+﻿using BrickController2.PlatformServices.GameController;
 using BrickController2.Helpers;
 using SQLite;
 using SQLiteNetExtensions.Attributes;

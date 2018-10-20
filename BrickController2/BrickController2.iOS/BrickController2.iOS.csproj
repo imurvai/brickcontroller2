@@ -103,11 +103,12 @@
     <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HardwareServices\DI\HardwareServicesModule.cs" />
-    <Compile Include="HardwareServices\GameController\GameControllerService.cs" />
-    <Compile Include="HardwareServices\Infrared\InfraredService.cs" />
+    <Compile Include="PlatformServices\DI\PlatformServicesModule.cs" />
+    <Compile Include="PlatformServices\GameController\GameControllerService.cs" />
+    <Compile Include="PlatformServices\Infrared\InfraredService.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="PlatformServices\Versioning\VersionService.cs" />
     <Compile Include="UI\CustomRenderers\ExtendedSliderRenderer.cs" />
     <Compile Include="UI\Services\DialogService.cs" />
     <Compile Include="UI\Services\DI\UIServicesModule.cs" />

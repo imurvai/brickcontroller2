@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Android.Runtime;
 using Android.Views;
-using BrickController2.HardwareServices.GameController;
+using BrickController2.PlatformServices.GameController;
 
-namespace BrickController2.Droid.HardwareServices.GameController
+namespace BrickController2.Droid.PlatformServices.GameController
 {
     public class GameControllerService : IGameControllerService
     {

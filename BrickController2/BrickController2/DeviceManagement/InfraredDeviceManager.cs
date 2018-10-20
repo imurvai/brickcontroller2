@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using BrickController2.HardwareServices.Infrared;
+using BrickController2.PlatformServices.Infrared;
 using BrickController2.Helpers;
 
 namespace BrickController2.DeviceManagement

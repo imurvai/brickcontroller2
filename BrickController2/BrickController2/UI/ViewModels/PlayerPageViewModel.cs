@@ -1,6 +1,6 @@
 ﻿using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
-using BrickController2.HardwareServices.GameController;
+using BrickController2.PlatformServices.GameController;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;

@@ -7,8 +7,8 @@ using Android.Content;
 using Android.Views.InputMethods;
 using Android.Widget;
 using BrickController2.CreationManagement;
-using BrickController2.Droid.HardwareServices.GameController;
-using BrickController2.HardwareServices.GameController;
+using BrickController2.Droid.PlatformServices.GameController;
+using BrickController2.PlatformServices.GameController;
 using BrickController2.UI.Services.Dialog;
 
 namespace BrickController2.Droid.UI.Services

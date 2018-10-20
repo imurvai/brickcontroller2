@@ -3,7 +3,7 @@ using Android.App;
 using Android.Content;
 using Android.Runtime;
 using Android.Views;
-using BrickController2.Droid.HardwareServices.GameController;
+using BrickController2.Droid.PlatformServices.GameController;
 
 namespace BrickController2.Droid.UI.Services
 {

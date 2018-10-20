@@ -1,4 +1,4 @@
-﻿namespace BrickController2.HardwareServices.GameController
+﻿namespace BrickController2.PlatformServices.GameController
 {
     public enum GameControllerEventType
     {

@@ -1,10 +1,10 @@
 ﻿using Android.Content;
 using Android.Hardware;
-using BrickController2.HardwareServices.Infrared;
+using BrickController2.PlatformServices.Infrared;
 using System;
 using System.Threading.Tasks;
 
-namespace BrickController2.Droid.HardwareServices.Infrared
+namespace BrickController2.Droid.PlatformServices.Infrared
 {
     public class InfraredService : IInfraredService
     {

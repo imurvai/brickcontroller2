@@ -8,8 +8,8 @@ using Autofac;
 using BrickController2.CreationManagement.DI;
 using BrickController2.Database.DI;
 using BrickController2.DeviceManagement.DI;
-using BrickController2.Droid.HardwareServices.GameController;
-using BrickController2.Droid.HardwareServices.DI;
+using BrickController2.Droid.PlatformServices.GameController;
+using BrickController2.Droid.PlatformServices.DI;
 using BrickController2.Droid.UI.Services.DI;
 using BrickController2.UI.DI;
 using Plugin.CurrentActivity;
@@ -75,7 +75,7 @@ namespace BrickController2.Droid
             var builder = new ContainerBuilder();
 
             builder.RegisterInstance(this).As<Context>().As<Activity>();
-            builder.RegisterModule(new HardwareServicesModule());
+            builder.RegisterModule(new PlatformServicesModule());
             builder.RegisterModule(new UIServicesModule());
 
             builder.RegisterModule(new DatabaseModule());
