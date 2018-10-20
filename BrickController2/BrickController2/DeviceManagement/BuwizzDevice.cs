@@ -34,7 +34,7 @@ namespace BrickController2.DeviceManagement
         public override DeviceType DeviceType => DeviceType.BuWizz;
         public override int NumberOfChannels => 4;
         public override int NumberOfOutputLevels => 3;
-        public override int DefaultOutputLevel => 2;
+        public override int DefaultOutputLevel => 1;
 
         public override void SetOutput(int channel, float value)
         {
@@ -150,7 +150,7 @@ namespace BrickController2.DeviceManagement
                 _sendBuffer[1] = (byte)((Math.Abs(v1) >> 2) | (v1 < 0 ? 0x40 : 0));
                 _sendBuffer[2] = (byte)((Math.Abs(v2) >> 2) | (v2 < 0 ? 0x40 : 0));
                 _sendBuffer[3] = (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0));
-                _sendBuffer[4] = (byte)_outputLevelValue;
+                _sendBuffer[4] = (byte)(_outputLevelValue * 0x20);
 
                 await _characteristic.WriteWithoutResponse(_sendBuffer).ToTask(token);
                 await Task.Delay(60, token);

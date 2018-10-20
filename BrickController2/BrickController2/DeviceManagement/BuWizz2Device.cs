@@ -35,7 +35,7 @@ namespace BrickController2.DeviceManagement
         public override DeviceType DeviceType => DeviceType.BuWizz2;
         public override int NumberOfChannels => 4;
         public override int NumberOfOutputLevels => 4;
-        public override int DefaultOutputLevel => 2;
+        public override int DefaultOutputLevel => 1;
 
         public override void SetOutput(int channel, float value)
         {
