@@ -82,6 +82,12 @@ namespace BrickController2.UI.ViewModels
 
         private async Task AddControllerEventAsync()
         {
+            if (_deviceManager.Devices?.Count == 0)
+            {
+                await _dialogService.ShowMessageBoxAsync("Warning", "Please scan for devices before adding controller events!", "Ok");
+                return;
+            }
+
             var result = await _dialogService.ShowGameControllerEventDialogAsync("Controller", "Press a button or move a joy on the game controller", "Cancel");
             if (result.IsOk)
             {

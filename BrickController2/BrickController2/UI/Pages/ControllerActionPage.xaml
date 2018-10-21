@@ -5,7 +5,7 @@
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:creationManagement="clr-namespace:BrickController2.CreationManagement"
-    xmlns:gameController="clr-namespace:BrickController2.HardwareServices.GameController"
+    xmlns:gameController="clr-namespace:BrickController2.PlatformServices.GameController"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerActionPage"
     Title="Controller Action">
