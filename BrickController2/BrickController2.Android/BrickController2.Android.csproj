@@ -77,6 +77,9 @@
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2.1" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PlatformServices\BluetoothLE\BluetoothLEDevice.cs" />
+    <Compile Include="PlatformServices\BluetoothLE\BluetoothLEScanner.cs" />
+    <Compile Include="PlatformServices\BluetoothLE\BluetoothLEService.cs" />
     <Compile Include="PlatformServices\DI\PlatformServicesModule.cs" />
     <Compile Include="PlatformServices\GameController\GameControllerService.cs" />
     <Compile Include="PlatformServices\Infrared\InfraredService.cs" />

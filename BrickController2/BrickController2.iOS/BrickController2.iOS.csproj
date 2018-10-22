@@ -103,6 +103,8 @@
     <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="PlatformServices\BluetoothLE\BluetoothLEDevice.cs" />
+    <Compile Include="PlatformServices\BluetoothLE\BluetoothLEService.cs" />
     <Compile Include="PlatformServices\DI\PlatformServicesModule.cs" />
     <Compile Include="PlatformServices\GameController\GameControllerService.cs" />
     <Compile Include="PlatformServices\Infrared\InfraredService.cs" />
@@ -238,4 +240,5 @@
   <ItemGroup>
     <BundleResource Include="Resources\ic_launcher.png" />
   </ItemGroup>
+  <ItemGroup />
 </Project>
