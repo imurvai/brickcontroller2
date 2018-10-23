@@ -4,7 +4,7 @@ using BrickController2.PlatformServices.BluetoothLE;
 
 namespace BrickController2.Droid.PlatformServices.BluetoothLE
 {
-    public class BluetoothLEScanner : BluetoothAdapter.ILeScanCallback
+    public class BluetoothLEScanner : Java.Lang.Object, BluetoothAdapter.ILeScanCallback
     {
         private readonly Action<ScanResult> _scanCallback;
 

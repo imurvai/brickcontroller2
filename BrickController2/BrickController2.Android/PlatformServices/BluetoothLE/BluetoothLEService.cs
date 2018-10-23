@@ -59,7 +59,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
         public IBluetoothLEDevice GetKnownDeviceAsync(string address)
         {
-            var device = _bluetoothAdapter.GetRemoteDevice(address);
+            var device = _bluetoothAdapter?.GetRemoteDevice(address);
             if (device == null)
             {
                 return null;
