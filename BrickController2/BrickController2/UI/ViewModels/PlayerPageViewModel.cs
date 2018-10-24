@@ -24,6 +24,7 @@ namespace BrickController2.UI.ViewModels
         private readonly IList<Device> _buwizz2Devices = new List<Device>();
 
         private readonly IDictionary<string, float[]> _previousButtonOutputs = new Dictionary<string, float[]>();
+        private readonly IDictionary<(string, int), IDictionary<(GameControllerEventType, string), float>> _axisOutputValues = new Dictionary<(string, int), IDictionary<(GameControllerEventType, string), float>>();
 
         private readonly IList<Task<DeviceConnectionResult>> _connectionTasks = new List<Task<DeviceConnectionResult>>();
         private CancellationTokenSource _connectionTokenSource;
@@ -174,14 +175,11 @@ namespace BrickController2.UI.ViewModels
                             else if (gameControllerEvent.Key.EventType == GameControllerEventType.Axis)
                             {
                                 outputValue = ProcessAxisEvent(gameControllerEvent.Key.EventCode, gameControllerEvent.Value, controllerAction);
+                                StoreAxisOutputValue(outputValue, controllerAction.DeviceId, controllerAction.Channel, controllerEvent.EventType, controllerEvent.EventCode);
+                                outputValue = CombineAxisOutputValues(controllerAction.DeviceId, controllerAction.Channel);
                             }
 
-                            if (controllerAction.MaxOutputPercent < 100)
-                            {
-                                outputValue = (outputValue * controllerAction.MaxOutputPercent) / 100;
-                            }
-
-                            device.SetOutput(channel, controllerAction.IsInvert ? -outputValue : outputValue);
+                            device.SetOutput(channel, outputValue);
                         }
                     }
                 }
@@ -287,7 +285,7 @@ namespace BrickController2.UI.ViewModels
             }
 
             SetPreviousButtonOutput(gameControllerEventCode, currentOutput);
-            return currentOutput;
+            return AdjustOutputValue(currentOutput, controllerAction);
         }
 
         private float[] GetPreviousButtonOutputs(string gameControllerEventCode)
@@ -349,7 +347,45 @@ namespace BrickController2.UI.ViewModels
                 }
             }
 
-            return axisValue;
+            return AdjustOutputValue(axisValue, controllerAction);
+        }
+
+        private void StoreAxisOutputValue(float outputValue, string deviceId, int channel, GameControllerEventType controllerEventType, string controllerEventCode)
+        {
+            var axisOutputValuesKey = (deviceId, channel);
+            if (!_axisOutputValues.ContainsKey(axisOutputValuesKey))
+            {
+                _axisOutputValues[axisOutputValuesKey] = new Dictionary<(GameControllerEventType, string), float>();
+            }
+
+            _axisOutputValues[axisOutputValuesKey][(controllerEventType, controllerEventCode)] = outputValue;
+        }
+
+        private float CombineAxisOutputValues(string deviceId, int channel)
+        {
+            var axisOutputValuesKey = (deviceId, channel);
+            if (!_axisOutputValues.ContainsKey(axisOutputValuesKey))
+            {
+                return 0.0F;
+            }
+
+            var result = 0.0F;
+            foreach (var outputValue in _axisOutputValues[axisOutputValuesKey].Values)
+            {
+                result += outputValue;
+            }
+
+            return Math.Max(-1.0F, Math.Min(1.0F, result));
+        }
+
+        private float AdjustOutputValue(float outputValue, ControllerAction controllerAction)
+        {
+            if (controllerAction.MaxOutputPercent < 100)
+            {
+                outputValue = (outputValue * controllerAction.MaxOutputPercent) / 100;
+            }
+
+            return controllerAction.IsInvert ? -outputValue : outputValue;
         }
     }
 }

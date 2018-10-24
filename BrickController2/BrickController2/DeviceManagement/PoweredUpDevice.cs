@@ -137,14 +137,12 @@ namespace BrickController2.DeviceManagement
                 _sendBuffer[3] = (byte)0x00;
                 _sendBuffer[7] = (byte)(v0 < 0 ? (255 + v0) : v0);
 
-                await _characteristic.WriteWithoutResponse(_sendBuffer).ToTask(token);
-                await Task.Delay(25, token);
+                await _characteristic.Write(_sendBuffer);
 
                 _sendBuffer[3] = (byte)0x01;
                 _sendBuffer[7] = (byte)(v1 < 0 ? (255 + v1) : v1);
 
-                await _characteristic.WriteWithoutResponse(_sendBuffer).ToTask(token);
-                await Task.Delay(25, token);
+                await _characteristic.Write(_sendBuffer);
 
                 return true;
             }

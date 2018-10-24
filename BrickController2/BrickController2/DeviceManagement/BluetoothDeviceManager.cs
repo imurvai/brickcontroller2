@@ -14,6 +14,9 @@ namespace BrickController2.DeviceManagement
         public BluetoothDeviceManager(IAdapter adapter)
         {
             _adapter = adapter;
+
+            CrossBleAdapter.AndroidConfiguration.ShouldInvokeOnMainThread = false;
+            CrossBleAdapter.AndroidConfiguration.PauseBetweenInvocations = TimeSpan.Zero;
         }
 
         public async Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)

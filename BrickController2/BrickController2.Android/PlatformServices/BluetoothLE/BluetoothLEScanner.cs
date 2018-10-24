@@ -13,12 +13,6 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             _scanCallback = scanCallback;
         }
 
-        public IntPtr Handle => throw new NotImplementedException();
-
-        public void Dispose()
-        {
-        }
-
         public void OnLeScan(BluetoothDevice device, int rssi, byte[] scanRecord)
         {
             _scanCallback(new ScanResult(device.Name, device.Address, scanRecord));
