@@ -176,7 +176,7 @@ namespace BrickController2.DeviceManagement
             {
                 _sendOutputLevelBuffer[1] = (byte)(outputLevelValue + 1);
 
-                await _characteristic.Write(_sendOutputLevelBuffer).ToTask(token);
+                await _characteristic.Write(_sendOutputLevelBuffer);
                 return true;
             }
             catch (Exception)

@@ -142,7 +142,7 @@ namespace BrickController2.DeviceManagement
                 _sendBuffer[2] = (byte)((Math.Abs(v2) & 0xfe) | 0x02 | (v2 < 0 ? 1 : 0));
                 _sendBuffer[3] = (byte)((Math.Abs(v3) & 0xfe) | 0x02 | (v3 < 0 ? 1 : 0));
 
-                await _characteristic.Write(_sendBuffer).ToTask(token);
+                await _characteristic.Write(_sendBuffer);
                 return true;
             }
             catch (Exception)
