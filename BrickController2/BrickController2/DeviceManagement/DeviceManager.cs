@@ -39,6 +39,8 @@ namespace BrickController2.DeviceManagement
             set { _isScanning = value; RaisePropertyChanged(); }
         }
 
+        public bool IsBluetoothOn => _bluetoothDeviceManager.IsBluetoothOn;
+
         public async Task LoadDevicesAsync()
         {
             using (await _asyncLock.LockAsync())

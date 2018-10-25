@@ -23,7 +23,7 @@ namespace BrickController2.Droid
         Theme = "@style/MainTheme",
         MainLauncher = false,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         private GameControllerService _gameControllerService;
 
@@ -36,9 +36,11 @@ namespace BrickController2.Droid
 
             base.OnCreate(bundle);
 
+            Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+
             CrossCurrentActivity.Current.Init(this, bundle);
 
-            global::Xamarin.Forms.Forms.Init(this, bundle);
+            Xamarin.Forms.Forms.Init(this, bundle);
 
             var container = InitDI();
             _gameControllerService = container.Resolve<GameControllerService>();

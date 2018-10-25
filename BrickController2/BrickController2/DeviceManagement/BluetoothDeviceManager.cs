@@ -19,11 +19,15 @@ namespace BrickController2.DeviceManagement
             CrossBleAdapter.AndroidConfiguration.PauseBetweenInvocations = TimeSpan.Zero;
         }
 
+        public bool IsBluetoothLESupported => _adapter.Status != AdapterStatus.Unsupported;
+
+        public bool IsBluetoothOn => _adapter.Status == AdapterStatus.PoweredOn;
+
         public async Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
-                if (_adapter.IsScanning)
+                if (!IsBluetoothOn || _adapter.IsScanning)
                 {
                     return;
                 }

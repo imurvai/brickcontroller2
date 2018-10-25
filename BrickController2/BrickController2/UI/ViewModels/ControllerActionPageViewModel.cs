@@ -69,6 +69,7 @@ namespace BrickController2.UI.ViewModels
 
             SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null);
             DeleteControllerActionCommand = new SafeCommand(async () => await DeleteControllerActionAsync());
+            OpenDeviceDetailsCommand = new SafeCommand(async () => await OpenDeviceDetailsAsync(), () => SelectedDevice != null);
         }
 
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
@@ -141,6 +142,7 @@ namespace BrickController2.UI.ViewModels
 
         public ICommand SaveControllerActionCommand { get; }
         public ICommand DeleteControllerActionCommand { get; }
+        public ICommand OpenDeviceDetailsCommand { get; }
 
         private async Task SaveControllerActionAsync()
         {
@@ -182,6 +184,16 @@ namespace BrickController2.UI.ViewModels
 
                 await NavigationService.NavigateBackAsync();
             }
+        }
+
+        private async Task OpenDeviceDetailsAsync()
+        {
+            if (SelectedDevice == null)
+            {
+                return;
+            }
+
+            await NavigationService.NavigateToAsync<DevicePageViewModel>(new NavigationParameters(("device", SelectedDevice)));
         }
     }
 }

@@ -2,10 +2,9 @@
 using BrickController2.DeviceManagement;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
-using Device = BrickController2.DeviceManagement.Device;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
 using BrickController2.UI.Commands;
+using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -29,11 +28,6 @@ namespace BrickController2.UI.ViewModels
             RenameCommand = new SafeCommand(async () => await RenameDeviceAsync());
             BuWizzOutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
             BuWizz2OutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
-
-            for (int i = 0; i < Device.NumberOfChannels; i++)
-            {
-                Outputs.Add(new DeviceOutputViewModel(Device, i));
-            }
         }
 
         public Device Device { get; }
@@ -44,12 +38,32 @@ namespace BrickController2.UI.ViewModels
         public ICommand BuWizzOutputLevelChangedCommand { get; }
         public ICommand BuWizz2OutputLevelChangedCommand { get; }
 
-        public ObservableCollection<DeviceOutputViewModel> Outputs { get; } = new ObservableCollection<DeviceOutputViewModel>();
+        public int BuWizzOutputLevel { get; set; } = 1;
+        public int BuWizz2OutputLevel { get; set; } = 1;
 
         public override async void OnAppearing()
         {
+            if (Device.DeviceType != DeviceType.Infrared)
+            {
+                if (!_deviceManager.IsBluetoothOn)
+                {
+                    await _dialogService.ShowMessageBoxAsync("Warning", "Turn bluetooth on to connect to a bluetooth device.", "Ok");
+                    await NavigationService.NavigateBackAsync();
+                    return;
+                }
+            }
+
             Device.DeviceStateChanged += DeviceStateChangedHandler;
             await ConnectAsync();
+
+            if (Device.DeviceType == DeviceType.BuWizz)
+            {
+                SetBuWizzOutputLevel(BuWizzOutputLevel);
+            }
+            else if (Device.DeviceType == DeviceType.BuWizz2)
+            {
+                SetBuWizzOutputLevel(BuWizz2OutputLevel);
+            }
 
             base.OnAppearing();
         }

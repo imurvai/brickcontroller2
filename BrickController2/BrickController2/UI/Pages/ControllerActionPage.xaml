@@ -5,6 +5,7 @@
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:creationManagement="clr-namespace:BrickController2.CreationManagement"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:gameController="clr-namespace:BrickController2.PlatformServices.GameController"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerActionPage"
@@ -30,10 +31,12 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
                     <Label Grid.Column="0" Text="Device" VerticalOptions="Center"/>
                     <Picker Grid.Column="1" Title="Select device" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"></Picker>
+                    <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link_white.png}" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
                 </Grid>
 
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
@@ -86,7 +89,7 @@
 
                             <Label Grid.Column="0" Text="Servo angle"/>
                             <StackLayout Grid.Column="1" Orientation="Horizontal">
-                                <Slider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="360" HorizontalOptions="FillAndExpand"/>
+                                <Slider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="360" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
                                 <Label Text="{Binding MaxServoAngle}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                                 <Label Text="°"/>
                             </StackLayout>
@@ -145,7 +148,7 @@
 
                     <Label Grid.Column="0" Text="Max output"/>
                     <StackLayout Grid.Column="1" Orientation="Horizontal">
-                        <Slider Value="{Binding MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand"/>
+                        <Slider Value="{Binding MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
                         <Label Text="{Binding MaxOutputPercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                         <Label Text="%"/>
                     </StackLayout>
@@ -168,7 +171,7 @@
 
                         <Label Grid.Column="0" Text="Axis dead zone"/>
                         <StackLayout Grid.Column="1" Orientation="Horizontal">
-                            <Slider Value="{Binding AxisDeadZonePercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand"/>
+                            <Slider Value="{Binding AxisDeadZonePercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
                             <Label Text="{Binding AxisDeadZonePercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                             <Label Text="%"/>
                         </StackLayout>

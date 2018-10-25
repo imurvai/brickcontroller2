@@ -2,5 +2,7 @@
 {
     internal interface IBluetoothDeviceManager : IDeviceScanner
     {
+        bool IsBluetoothLESupported { get; }
+        bool IsBluetoothOn { get; }
     }
 }

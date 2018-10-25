@@ -61,30 +61,20 @@
                 <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizzDevice}">
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,4,10,4"/>
                     <Label Text="Output Level"/>
-                    <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="1" HorizontalOptions="Fill" VerticalOptions="Start"/>
+                    <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                 </StackLayout>
 
                 <!-- BuWizz 2 output level -->
                 <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizz2Device}">
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,4,10,4"/>
                     <Label Text="Output Level"/>
-                    <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="1" HorizontalOptions="Fill" VerticalOptions="Start"/>
+                    <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizz2OutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                 </StackLayout>
 
                 <!-- Outputs -->
                 <StackLayout Orientation="Vertical">
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,4,10,8"/>
-                    <ListView ItemsSource="{Binding Outputs}" HasUnevenRows="True" SelectionMode="None">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <StackLayout>
-                                        <controls:ExtendedSlider Value="{Binding Output, Mode=TwoWay}" TouchUpCommand="{Binding TouchUpCommand}" IsEnabled="{Binding Device.DeviceState, Converter={StaticResource DeviceConnectedToBool}}"  Minimum="{Binding MinValue}" Maximum="{Binding MaxValue}" HeightRequest="50"/>
-                                    </StackLayout>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                    <controls:DeviceOutputTesterControl Device="{Binding Device}"/>
                 </StackLayout> 
             
             </StackLayout>

@@ -29,14 +29,14 @@
                 <!-- BuWizz 1 output level -->
                 <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizzDevice}" Padding="20">
                     <Label Text="BuWizz output Level"/>
-                    <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="1" HorizontalOptions="Fill" VerticalOptions="Start"/>
+                    <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,4,10,4"/>
                 </StackLayout>
 
                 <!-- BuWizz 2 output level -->
                 <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizz2Device}" Padding="20">
                     <Label Text="BuWizz 2 output Level"/>
-                    <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="1" HorizontalOptions="Fill" VerticalOptions="Start"/>
+                    <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,4,10,4"/>
                 </StackLayout>
             </StackLayout>

@@ -59,17 +59,33 @@ namespace BrickController2.UI.ViewModels
         public ICommand BuWizzOutputLevelChangedCommand { get; }
         public ICommand BuWizz2OutputLevelChangedCommand { get; }
 
+        public int BuWizzOutputLevel { get; set; } = 1;
+        public int BuWizz2OutputLevel { get; set; } = 1;
+
         public override async void OnAppearing()
         {
             base.OnAppearing();
 
-            foreach(var device in _devices)
+            if (_devices.Any(d => d.DeviceType != DeviceType.Infrared))
+            {
+                if (!_deviceManager.IsBluetoothOn)
+                {
+                    await _dialogService.ShowMessageBoxAsync("Warning", "Turn bluetooth on to connect to a bluetooth device(s).", "Ok");
+                    await NavigationService.NavigateBackAsync();
+                    return;
+                }
+            }
+
+            foreach (var device in _devices)
             {
                 device.DeviceStateChanged += OnDeviceStateChanged;
             }
 
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
             await ConnectDevicesAsync();
+
+            ChangeOutputLevel(BuWizzOutputLevel, _buwizzDevices);
+            ChangeOutputLevel(BuWizz2OutputLevel, _buwizz2Devices);
         }
 
         public override async void OnDisappearing()

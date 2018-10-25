@@ -15,7 +15,10 @@ namespace BrickController2.iOS
     {
         public override bool FinishedLaunching(UIApplication uiApp, NSDictionary options)
         {
-            global::Xamarin.Forms.Forms.Init();
+            Xamarin.Forms.Forms.Init();
+
+            // Preventing screen turning off
+            UIApplication.SharedApplication.IdleTimerDisabled = true;
 
             var container = InitDI();
             var app = container.Resolve<App>();
