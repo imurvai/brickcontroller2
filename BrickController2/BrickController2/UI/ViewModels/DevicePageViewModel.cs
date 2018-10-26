@@ -83,7 +83,7 @@ namespace BrickController2.UI.ViewModels
             {
                 if (string.IsNullOrWhiteSpace(result.Result))
                 {
-                    await DisplayAlertAsync("Warning", "Device name can not be empty.", "Ok");
+                    await _dialogService.ShowMessageBoxAsync("Warning", "Device name can not be empty.", "Ok");
                     return;
                 }
 
@@ -111,7 +111,7 @@ namespace BrickController2.UI.ViewModels
             {
                 if (connectionResult == DeviceConnectionResult.Error)
                 {
-                    await DisplayAlertAsync("Warning", "Failed to connect to device.", "Ok");
+                    await _dialogService.ShowMessageBoxAsync("Warning", "Failed to connect to device.", "Ok");
                 }
 
                 await NavigationService.NavigateBackAsync();

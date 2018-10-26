@@ -51,7 +51,7 @@ namespace BrickController2.UI.ViewModels
             {
                 if (string.IsNullOrWhiteSpace(result.Result))
                 {
-                    await DisplayAlertAsync("Warning", "Creation name can not be empty.", "Ok");
+                    await _dialogService.ShowMessageBoxAsync("Warning", "Creation name can not be empty.", "Ok");
                     return;
                 }
 
@@ -92,7 +92,7 @@ namespace BrickController2.UI.ViewModels
             {
                 if (string.IsNullOrWhiteSpace(result.Result))
                 {
-                    await DisplayAlertAsync("Warning", "Controller profile name can not be empty.", "Ok");
+                    await _dialogService.ShowMessageBoxAsync("Warning", "Controller profile name can not be empty.", "Ok");
                     return;
                 }
 

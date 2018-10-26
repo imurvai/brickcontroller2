@@ -61,7 +61,7 @@ namespace BrickController2.UI.ViewModels
             {
                 if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
                 {
-                    await DisplayAlertAsync("Permission request", "Location permission is needed for accessing bluetooth", "Ok");
+                    await _dialogService.ShowMessageBoxAsync("Permission request", "Location permission is needed for accessing bluetooth", "Ok");
                 }
 
                 var result = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
@@ -73,7 +73,7 @@ namespace BrickController2.UI.ViewModels
 
             if (status != PermissionStatus.Granted)
             {
-                await DisplayAlertAsync("Warning", "Bluetooth devices will NOT be available.", "Ok");
+                await _dialogService.ShowMessageBoxAsync("Warning", "Bluetooth devices will NOT be available.", "Ok");
             }
         }
 
@@ -100,7 +100,7 @@ namespace BrickController2.UI.ViewModels
             {
                 if (string.IsNullOrWhiteSpace(result.Result))
                 {
-                    await DisplayAlertAsync("Warning", "Creation name can not be empty.", "Ok");
+                    await _dialogService.ShowMessageBoxAsync("Warning", "Creation name can not be empty.", "Ok");
                     return;
                 }
 
