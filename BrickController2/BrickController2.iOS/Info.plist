@@ -37,11 +37,11 @@
 	<string>New Entry</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
-	<key>XSLaunchImageAssets</key>
-	<string>Assets.xcassets/LaunchImages.launchimage</string>
 	<key>CFBundleShortVersionString</key>
 	<string>0.3</string>
 	<key>CFBundleVersion</key>
 	<string>4</string>
+	<key>XSLaunchImageAssets</key>
+	<string>Assets.xcassets/LaunchImages.launchimage</string>
 </dict>
 </plist>
