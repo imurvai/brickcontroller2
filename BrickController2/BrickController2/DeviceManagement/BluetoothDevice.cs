@@ -1,4 +1,5 @@
-﻿using Plugin.BluetoothLE;
+﻿using BrickController2.Helpers;
+using Plugin.BluetoothLE;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
@@ -10,6 +11,8 @@ namespace BrickController2.DeviceManagement
 {
     internal abstract class BluetoothDevice : Device
     {
+        private readonly AsyncLock _asyncLock = new AsyncLock();
+
         protected readonly IAdapter _adapter;
 
         protected IDevice _bleDevice;
@@ -37,25 +40,6 @@ namespace BrickController2.DeviceManagement
                 var guid = Guid.Parse(Address);
                 _bleDevice = await _adapter.GetKnownDevice(guid).FirstAsync();
 
-                _bleDeviceDisconnectedSubscription = _bleDevice
-                    .WhenDisconnected()
-                    .ObserveOn(SynchronizationContext.Current)
-                    .Subscribe(device =>
-                    {
-                        if (device != _bleDevice)
-                        {
-                            return;
-                        }
-
-                        if (DeviceState != DeviceState.Discovering && DeviceState != DeviceState.Connected)
-                        {
-                            return;
-                        }
-
-                        CleanUp();
-                        SetState(DeviceState.Disconnected, true);
-                    });
-
                 var connectionFailedTask = _bleDevice.WhenConnectionFailed().ToTask(token);
                 var connectionOkTask = _bleDevice.WhenConnected().Take(1).ToTask(token);
 
@@ -71,32 +55,38 @@ namespace BrickController2.DeviceManagement
                         var services = new List<IGattService>();
                         await _bleDevice.DiscoverServices().ForEachAsync(service => services.Add(service), token);
 
-                        if (await ServicesDiscovered(services, token) && await ConnectPostActionAsync(token))
+                        if (await ServicesDiscovered(services, token) && 
+                            await ConnectPostActionAsync(token))
                         {
+                            _bleDeviceDisconnectedSubscription = _bleDevice
+                                .WhenDisconnected()
+                                .ObserveOn(SynchronizationContext.Current)
+                                .Subscribe(async device =>
+                                {
+                                    await DisconnectInternalAsync(true);
+                                });
+
                             SetState(DeviceState.Connected, false);
                             return DeviceConnectionResult.Ok;
                         }
                     }
                     else
                     {
-                        CleanUp();
-                        SetState(DeviceState.Disconnected, false);
+                        await DisconnectInternalAsync(false);
                         return DeviceConnectionResult.Canceled;
                     }
                 }
             }
             catch (OperationCanceledException)
             {
-                CleanUp();
-                SetState(DeviceState.Disconnected, false);
+                await DisconnectInternalAsync(false);
                 return DeviceConnectionResult.Canceled;
             }
             catch (Exception)
             {
             }
 
-            CleanUp();
-            SetState(DeviceState.Disconnected, true);
+            await DisconnectInternalAsync(true);
             return DeviceConnectionResult.Error;
         }
 
@@ -107,19 +97,22 @@ namespace BrickController2.DeviceManagement
                 return;
             }
 
-            await DisconnectInternalAsync();
+            await DisconnectInternalAsync(false);
         }
 
-        private async Task DisconnectInternalAsync()
+        private async Task DisconnectInternalAsync(bool isError)
         {
-            if (_bleDevice != null)
+            using (await _asyncLock.LockAsync())
             {
-                SetState(DeviceState.Disconnecting, false);
-                await DisconnectPreActionAsync(CancellationToken.None);
-            }
+                if (_bleDevice != null)
+                {
+                    SetState(DeviceState.Disconnecting, false);
+                    await DisconnectPreActionAsync(CancellationToken.None);
+                }
 
-            CleanUp();
-            SetState(DeviceState.Disconnected, false);
+                CleanUp();
+                SetState(DeviceState.Disconnected, isError);
+            }
         }
 
         private void CleanUp()
