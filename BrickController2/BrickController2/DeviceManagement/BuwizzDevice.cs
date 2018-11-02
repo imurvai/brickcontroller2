@@ -1,8 +1,7 @@
-﻿using Plugin.BluetoothLE;
+﻿using BrickController2.PlatformServices.BluetoothLE;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,13 +20,10 @@ namespace BrickController2.DeviceManagement
 
         private IGattCharacteristic _characteristic;
 
-        private Task _outputTask;
-        private CancellationTokenSource _outputTaskTokenSource;
-        private object _outputTaskLock = new object();
         private int _sendAttemptsLeft;
 
-        public BuWizzDevice(string name, string address, IDeviceRepository deviceRepository, IAdapter adapter)
-            : base(name, address, deviceRepository, adapter)
+        public BuWizzDevice(string name, string address, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
+            : base(name, address, deviceRepository, bleService)
         {
         }
 
@@ -56,34 +52,16 @@ namespace BrickController2.DeviceManagement
             _outputLevelValue = Math.Max(0, Math.Min(NumberOfOutputLevels - 1, value));
         }
 
-        protected override async Task<bool> ServicesDiscovered(IList<IGattService> services, CancellationToken token)
+        protected override bool ProcessServices(IEnumerable<IGattService> services)
         {
-            _characteristic = null;
-            foreach (var service in services)
-            {
-                if (service.Uuid == SERVICE_UUID)
-                {
-                    _characteristic = await service.GetKnownCharacteristics(CHARACTERISTIC_UUID).FirstAsync().ToTask(token);
-                }
-            }
+            var service = services.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
+            _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
 
             return _characteristic != null;
         }
 
-        protected override async Task<bool> ConnectPostActionAsync(CancellationToken token)
+        protected override async Task ProcessOutputsAsync(CancellationToken token)
         {
-            return await StartOutputTaskAsync();
-        }
-
-        protected override async Task DisconnectPreActionAsync(CancellationToken token)
-        {
-            await StopOutputTaskAsync();
-        }
-
-        private async Task<bool> StartOutputTaskAsync()
-        {
-            await StopOutputTaskAsync();
-
             _outputValues[0] = 0;
             _outputValues[1] = 0;
             _outputValues[2] = 0;
@@ -91,54 +69,37 @@ namespace BrickController2.DeviceManagement
             _outputLevelValue = DefaultOutputLevel;
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
 
-            _outputTaskTokenSource = new CancellationTokenSource();
-            _outputTask = Task.Run(async () =>
+            while (!token.IsCancellationRequested)
             {
-                while (!_outputTaskTokenSource.Token.IsCancellationRequested)
+                try
                 {
-                    try
+                    if (_sendAttemptsLeft > 0)
                     {
-                        if (_sendAttemptsLeft > 0)
-                        {
-                            int v0 = _outputValues[0];
-                            int v1 = _outputValues[1];
-                            int v2 = _outputValues[2];
-                            int v3 = _outputValues[3];
+                        int v0 = _outputValues[0];
+                        int v1 = _outputValues[1];
+                        int v2 = _outputValues[2];
+                        int v3 = _outputValues[3];
 
-                            if (await SendOutputValuesAsync(v0, v1, v2, v3, _outputTaskTokenSource.Token))
-                            {
-                                if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0)
-                                {
-                                    _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                                }
-                                else
-                                {
-                                    _sendAttemptsLeft--;
-                                }
-                            }
-                            else
+                        if (await SendOutputValuesAsync(v0, v1, v2, v3, token))
+                        {
+                            if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0)
                             {
                                 _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                             }
+                            else
+                            {
+                                _sendAttemptsLeft--;
+                            }
+                        }
+                        else
+                        {
+                            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                         }
                     }
-                    catch (OperationCanceledException)
-                    {
-                    }
                 }
-            });
-
-            return true;
-        }
-
-        private async Task StopOutputTaskAsync()
-        {
-            if (_outputTaskTokenSource != null)
-            {
-                _outputTaskTokenSource.Cancel();
-                await _outputTask;
-                _outputTaskTokenSource.Dispose();
-                _outputTaskTokenSource = null;
+                catch (OperationCanceledException)
+                {
+                }
             }
         }
 
@@ -152,7 +113,7 @@ namespace BrickController2.DeviceManagement
                 _sendBuffer[3] = (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0));
                 _sendBuffer[4] = (byte)(_outputLevelValue * 0x20);
 
-                await _characteristic.WriteWithoutResponse(_sendBuffer);
+                await _bleDevice?.WriteNoResponseAsync(_characteristic, _sendBuffer);
                 await Task.Delay(60, token);
                 return true;
             }

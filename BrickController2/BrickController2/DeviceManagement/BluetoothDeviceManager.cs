@@ -2,75 +2,60 @@
 using System.Threading;
 using System.Threading.Tasks;
 using BrickController2.Helpers;
-using Plugin.BluetoothLE;
+using BrickController2.PlatformServices.BluetoothLE;
 
 namespace BrickController2.DeviceManagement
 {
     internal class BluetoothDeviceManager : IBluetoothDeviceManager
     {
-        private readonly IAdapter _adapter;
+        private readonly IBluetoothLEService _bleService;
         private readonly AsyncLock _asyncLock = new AsyncLock();
 
-        public BluetoothDeviceManager(IAdapter adapter)
+        public BluetoothDeviceManager(IBluetoothLEService bleService)
         {
-            _adapter = adapter;
-
-            CrossBleAdapter.AndroidConfiguration.ShouldInvokeOnMainThread = false;
-            CrossBleAdapter.AndroidConfiguration.PauseBetweenInvocations = TimeSpan.Zero;
+            _bleService = bleService;
         }
 
-        public bool IsBluetoothLESupported => _adapter.Status != AdapterStatus.Unsupported;
-
-        public bool IsBluetoothOn => _adapter.Status == AdapterStatus.PoweredOn;
+        public bool IsBluetoothLESupported => _bleService.IsBluetoothLESupported;
+        public bool IsBluetoothOn => _bleService.IsBluetoothOn;
 
         public async Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
-                if (!IsBluetoothOn || _adapter.IsScanning)
+                if (!IsBluetoothOn)
                 {
                     return;
                 }
 
                 try
                 {
-                    await Task.Run(async () =>
-                    {
-                        using (_adapter.Scan(new ScanConfig { ScanType = BleScanType.LowLatency })
-                            .Subscribe(async scanResult =>
-                            {
-                                var deviceType = GetDeviceType(scanResult.AdvertisementData);
-                                if (deviceType != DeviceType.Unknown)
-                                {
-                                    await deviceFoundCallback(deviceType, scanResult.Device.Name, scanResult.Device.Uuid.ToString());
-                                }
-                            }))
+                    await _bleService.ScanDevicesAsync(
+                        async scanResult =>
                         {
-                            await token.WaitAsync();
-                        }
-                    });
+                            var deviceType = GetDeviceType(scanResult.ScanRecord);
+                            if (deviceType != DeviceType.Unknown)
+                            {
+                                await deviceFoundCallback(deviceType, scanResult.DeviceName, scanResult.DeviceAddress);
+                            }
+                        },
+                        token);
                 }
-                catch (Exception)
+                catch (OperationCanceledException)
                 {
-                }
-                finally
-                {
-                    _adapter.StopScan();
                 }
             }
         }
 
-        private DeviceType GetDeviceType(IAdvertisementData advertisementData)
+        private DeviceType GetDeviceType(byte[] scanRecord)
         {
-            var manufacturerData = advertisementData.ManufacturerData;
-
-            if (manufacturerData == null || manufacturerData.Length < 2)
+            if (scanRecord == null || scanRecord.Length < 2)
             {
                 return DeviceType.Unknown;
             }
 
-            var data1 = manufacturerData[0];
-            var data2 = manufacturerData[1];
+            var data1 = scanRecord[0];
+            var data2 = scanRecord[1];
 
             if (data1 == 0x98 && data2 == 0x01)
             {
@@ -89,13 +74,13 @@ namespace BrickController2.DeviceManagement
 
             if (data1 == 0x97 && data2 == 0x03)
             {
-                if (manufacturerData.Length >= 4)
+                if (scanRecord.Length >= 4)
                 {
-                    if (manufacturerData[3] == 0x40)
+                    if (scanRecord[3] == 0x40)
                     {
                         //return DeviceType.Boost;
                     }
-                    else if (manufacturerData[3] == 0x41)
+                    else if (scanRecord[3] == 0x41)
                     {
                         return DeviceType.PoweredUp;
                     }
