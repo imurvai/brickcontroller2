@@ -2,7 +2,7 @@
 {
     public enum BluetoothAdapterState
     {
-        Disconnected,
-        Connected
+        Off,
+        On  
     }
 }

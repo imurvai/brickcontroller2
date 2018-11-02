@@ -57,7 +57,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             }
         }
 
-        public IBluetoothLEDevice GetKnownDeviceAsync(string address)
+        public IBluetoothLEDevice GetKnownDevice(string address)
         {
             var device = _bluetoothAdapter?.GetRemoteDevice(address);
             if (device == null)
@@ -65,7 +65,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                 return null;
             }
 
-            return new BluetoothLEDevice(_context, _bluetoothAdapter, address);
+            return new BluetoothLEDevice(_context, device);
         }
     }
 }

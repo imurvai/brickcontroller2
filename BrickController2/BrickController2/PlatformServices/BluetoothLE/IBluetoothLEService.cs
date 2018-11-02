@@ -10,6 +10,7 @@ namespace BrickController2.PlatformServices.BluetoothLE
         bool IsBluetoothOn { get; }
 
         Task<bool> ScanDevicesAsync(Action<ScanResult> scanCallback, CancellationToken token);
-        IBluetoothLEDevice GetKnownDeviceAsync(string address);
+
+        IBluetoothLEDevice GetKnownDevice(string address);
     }
 }

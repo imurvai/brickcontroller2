@@ -9,13 +9,13 @@ namespace BrickController2.PlatformServices.BluetoothLE
     {
         string Address { get; }
         BluetoothLEDeviceState State { get; }
-        IDictionary<string, IEnumerable<string>> ServicesAndCharacteristics { get; }
 
-        event EventHandler<BluetoothLEDeviceStateChangedEventArgs> StateChanged;
+        event EventHandler<EventArgs> Disconnected;
 
-        Task<bool> ConnectAndDiscoverServicesAsync(CancellationToken token);
+        Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(CancellationToken token);
         Task DisconnectAsync();
 
-        bool Write(string characteristic, byte[] data, bool noResponse = false);
+        Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data);
+        Task<bool> WriteNoResponseAsync(IGattCharacteristic characteristic, byte[] data);
     }
 }
