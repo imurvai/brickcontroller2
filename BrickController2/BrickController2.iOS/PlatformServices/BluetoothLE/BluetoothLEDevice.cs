@@ -25,7 +25,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             _centralManager = centralManager;
         }
 
-        public string Address => _peripheral.UUID.ToString();
+        public string Address => _peripheral.Identifier.ToString();
         public BluetoothLEDeviceState State { get; private set; } = BluetoothLEDeviceState.Disconnected;
 
         public event EventHandler<EventArgs> Disconnected;
@@ -74,20 +74,37 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
 
         public async Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data)
         {
-            lock (_lock)
+            lock(_lock)
             {
+                if (State != BluetoothLEDeviceState.Connected)
+                {
+                    return false;
+                }
+
+                var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
+                var nativeData = NSData.FromArray(data);
+
+                _writeCompletionSource = new TaskCompletionSource<bool>();
+                _peripheral.WriteValue(nativeData, nativeCharacteristic, CBCharacteristicWriteType.WithResponse);
             }
 
-            throw new NotImplementedException();
+            var result = await _writeCompletionSource.Task;
+            _writeCompletionSource = null;
+            return result;
         }
 
         public bool WriteNoResponse(IGattCharacteristic characteristic, byte[] data)
         {
-            lock (_lock)
+            if (State != BluetoothLEDeviceState.Connected)
             {
+                return false;
             }
 
-            throw new NotImplementedException();
+            var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
+            var nativeData = NSData.FromArray(data);
+
+            _peripheral.WriteValue(nativeData, nativeCharacteristic, CBCharacteristicWriteType.WithoutResponse);
+            return true;
         }
 
         public override async void DiscoveredService(CBPeripheral peripheral, NSError error)
@@ -126,6 +143,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
 
                     lock (_lock)
                     {
+                        State = BluetoothLEDeviceState.Connected;
                         _connectCompletionSource?.SetResult(services);
                         return;
                     }
@@ -180,27 +198,33 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             }
         }
 
-        internal async void OnDeviceConnected()
+        public override void WroteCharacteristicValue(CBPeripheral peripheral, CBCharacteristic characteristic, NSError error)
+        {
+            lock(_lock)
+            {
+                _writeCompletionSource?.SetResult(error == null);
+            }
+        }
+
+        internal void OnDeviceConnected()
         {
             lock (_lock)
             {
                 if (State == BluetoothLEDeviceState.Connecting)
                 {
                     State = BluetoothLEDeviceState.Discovering;
-                }
-                else
-                {
-                    return;
-                }
-            }
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(750);
 
-            await Task.Delay(750);
-
-            lock (_lock)
-            {
-                if (State == BluetoothLEDeviceState.Discovering)
-                {
-                    _peripheral.DiscoverServices();
+                        lock (_lock)
+                        {
+                            if (State == BluetoothLEDeviceState.Discovering)
+                            {
+                                _peripheral.DiscoverServices();
+                            }
+                        }
+                    });
                 }
             }
         }
