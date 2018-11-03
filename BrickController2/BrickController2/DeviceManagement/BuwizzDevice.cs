@@ -113,7 +113,7 @@ namespace BrickController2.DeviceManagement
                 _sendBuffer[3] = (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0));
                 _sendBuffer[4] = (byte)(_outputLevelValue * 0x20);
 
-                await _bleDevice?.WriteNoResponseAsync(_characteristic, _sendBuffer);
+                _bleDevice?.WriteNoResponse(_characteristic, _sendBuffer);
                 await Task.Delay(60, token);
                 return true;
             }

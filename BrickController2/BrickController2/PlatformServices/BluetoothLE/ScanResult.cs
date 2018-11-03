@@ -1,16 +1,18 @@
-﻿namespace BrickController2.PlatformServices.BluetoothLE
+﻿using System.Collections.Generic;
+
+namespace BrickController2.PlatformServices.BluetoothLE
 {
     public class ScanResult
     {
-        public ScanResult(string deviceName, string deviceAddress, byte[] scanRecord)
+        public ScanResult(string deviceName, string deviceAddress, IDictionary<byte, byte[]> advertismentData)
         {
             DeviceName = deviceName;
             DeviceAddress = deviceAddress;
-            ScanRecord = scanRecord;
+            AdvertismentData = advertismentData;
         }
 
         public string DeviceName { get; }
         public string DeviceAddress { get; }
-        public byte[] ScanRecord { get; }
+        public IDictionary<byte, byte[]> AdvertismentData { get; }
     }
 }

@@ -45,6 +45,11 @@ namespace BrickController2.DeviceManagement
                     SetState(DeviceState.Connected, false);
                     return DeviceConnectionResult.Ok;
                 }
+                else if (token.IsCancellationRequested)
+                {
+                    await DisconnectInternalAsync(false);
+                    return DeviceConnectionResult.Canceled;
+                }
             }
             catch (OperationCanceledException)
             {
@@ -78,7 +83,7 @@ namespace BrickController2.DeviceManagement
                     await StopOutputTaskAsync();
                     SetState(DeviceState.Disconnecting, isError);
                     _bleDevice.Disconnected -= OnDeviceDisconnected;
-                    _bleDevice?.DisconnectAsync();
+                    _bleDevice?.Disconnect();
                     _bleDevice = null;
                 }
 

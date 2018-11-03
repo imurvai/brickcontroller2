@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using BrickController2.Helpers;
@@ -33,7 +34,7 @@ namespace BrickController2.DeviceManagement
                     await _bleService.ScanDevicesAsync(
                         async scanResult =>
                         {
-                            var deviceType = GetDeviceType(scanResult.ScanRecord);
+                            var deviceType = GetDeviceType(scanResult.AdvertismentData);
                             if (deviceType != DeviceType.Unknown)
                             {
                                 await deviceFoundCallback(deviceType, scanResult.DeviceName, scanResult.DeviceAddress);
@@ -47,15 +48,21 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private DeviceType GetDeviceType(byte[] scanRecord)
+        private DeviceType GetDeviceType(IDictionary<byte, byte[]> advertismentData)
         {
-            if (scanRecord == null || scanRecord.Length < 2)
+            if (advertismentData == null || !advertismentData.ContainsKey(0xFF))
             {
                 return DeviceType.Unknown;
             }
 
-            var data1 = scanRecord[0];
-            var data2 = scanRecord[1];
+            var manufacturerData = advertismentData[0xFF];
+            if (manufacturerData == null || manufacturerData.Length < 2)
+            {
+                return DeviceType.Unknown;
+            }
+
+            var data1 = manufacturerData[0];
+            var data2 = manufacturerData[1];
 
             if (data1 == 0x98 && data2 == 0x01)
             {
@@ -74,13 +81,13 @@ namespace BrickController2.DeviceManagement
 
             if (data1 == 0x97 && data2 == 0x03)
             {
-                if (scanRecord.Length >= 4)
+                if (manufacturerData.Length >= 4)
                 {
-                    if (scanRecord[3] == 0x40)
+                    if (manufacturerData[3] == 0x40)
                     {
                         //return DeviceType.Boost;
                     }
-                    else if (scanRecord[3] == 0x41)
+                    else if (manufacturerData[3] == 0x41)
                     {
                         return DeviceType.PoweredUp;
                     }
