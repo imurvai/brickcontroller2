@@ -25,7 +25,6 @@
 
                 <Label Text="3rd party libraries" FontAttributes="Bold"/>
                 <Label Text="Autofac"/>
-                <Label Text="Plugin.BluetoothLE"/>
                 <Label Text="Plugin.Permissions"/>
                 <Label Text="SQLiteNetExtensionsAsync"/>
                 <Label Text="Xamarin.Forms"/>
