@@ -120,7 +120,7 @@ namespace BrickController2.UI.ViewModels
 
         private async void DeviceStateChangedHandler(object sender, DeviceStateChangedEventArgs args)
         {
-            if (args.OldState == DeviceState.Connected && args.NewState == DeviceState.Disconnected && args.IsError)
+            if (args.NewState == DeviceState.Disconnected && args.IsError)
             {
                 var result = await _dialogService.ShowQuestionDialogAsync("Device connection lost", "Do you want to reconnect?", "Yes", "No");
                 if (result)

@@ -21,7 +21,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
 
         public BluetoothLEService()
         {
-            _centralManager = new CBCentralManager(this, DispatchQueue.CurrentQueue, new CBCentralInitOptions());
+            _centralManager = new CBCentralManager(this, DispatchQueue.CurrentQueue);
             _peripheralManager = new CBPeripheralManager();
         }
 
@@ -36,7 +36,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             }
 
             _scanCallback = scanCallback;
-            _centralManager.ScanForPeripherals((CBUUID)null);
+            _centralManager.ScanForPeripherals(null, new PeripheralScanningOptions { AllowDuplicatesKey = true });
 
             var tcs = new TaskCompletionSource<bool>();
 
@@ -75,13 +75,8 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         {
             lock(_lock)
             {
-                byte[] scanRecord = null;
-                if (advertisementData != null && advertisementData.ContainsKey(CBAdvertisement.DataManufacturerDataKey))
-                {
-                    scanRecord = (advertisementData.ObjectForKey(CBAdvertisement.DataManufacturerDataKey) as NSData)?.ToArray();
-                }
-
-                _scanCallback?.Invoke(new ScanResult(peripheral.Name, peripheral.UUID.ToString(), scanRecord));
+                var processedAdvertisementData = ProcessAdvertisementData(advertisementData);
+                _scanCallback?.Invoke(new ScanResult(peripheral.Name, peripheral.Identifier.ToString(), processedAdvertisementData));
             }
         }
 
@@ -95,6 +90,37 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         {
             var device = _peripheralMap[peripheral];
             device.OnDeviceDisconnected();
+        }
+
+        public override void FailedToConnectPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error)
+        {
+            var device = _peripheralMap[peripheral];
+            device.OnDeviceDisconnected();
+        }
+
+        private IDictionary<byte, byte[]> ProcessAdvertisementData(NSDictionary advertisementData)
+        {
+            var result = new Dictionary<byte, byte[]>();
+
+            var manufacturerData = GetDataForKey(advertisementData, CBAdvertisement.DataManufacturerDataKey);
+            if (manufacturerData != null)
+            {
+                result[0xFF] = manufacturerData;
+            }
+
+            // TODO: add the rest of the advertisementdata...
+
+            return result;
+        }
+
+        private byte[] GetDataForKey(NSDictionary advertisementData, NSString key)
+        {
+            if (advertisementData == null || !advertisementData.ContainsKey(key))
+            {
+                return null;
+            }
+
+            return ((NSData)advertisementData.ObjectForKey(key))?.ToArray();
         }
     }
 }

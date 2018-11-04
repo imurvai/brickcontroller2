@@ -38,23 +38,21 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                 return Task.FromResult(false);
             }
 
-            using (var leScanner = new BluetoothLEScanner(scanCallback))
+            var leScanner = new BluetoothLEScanner(scanCallback);
+            if (!_bluetoothAdapter.StartLeScan(leScanner))
             {
-                if (!_bluetoothAdapter.StartLeScan(leScanner))
-                {
-                    return Task.FromResult(false);
-                }
-
-                var tcs = new TaskCompletionSource<bool>();
-
-                token.Register(() =>
-                {
-                    _bluetoothAdapter.StopLeScan(leScanner);
-                    tcs.SetResult(true);
-                });
-
-                return tcs.Task;
+                return Task.FromResult(false);
             }
+
+            var tcs = new TaskCompletionSource<bool>();
+
+            token.Register(() =>
+            {
+                _bluetoothAdapter.StopLeScan(leScanner);
+                tcs.SetResult(true);
+            });
+
+            return tcs.Task;
         }
 
         public IBluetoothLEDevice GetKnownDevice(string address)

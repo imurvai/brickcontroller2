@@ -72,9 +72,12 @@ namespace BrickController2.DeviceManagement
 
         protected void SetState(DeviceState newState, bool isError)
         {
-            var oldState = DeviceState;
-            DeviceState = newState;
-            DeviceStateChanged?.Invoke(this, new DeviceStateChangedEventArgs(oldState, newState, isError));
+            Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+            {
+                var oldState = DeviceState;
+                DeviceState = newState;
+                DeviceStateChanged?.Invoke(this, new DeviceStateChangedEventArgs(oldState, newState, isError));
+            });
         }
 
         protected void CheckChannel(int channel)

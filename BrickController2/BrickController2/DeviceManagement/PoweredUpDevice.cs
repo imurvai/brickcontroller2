@@ -1,10 +1,9 @@
-﻿using System;
+﻿using BrickController2.PlatformServices.BluetoothLE;
+using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Plugin.BluetoothLE;
 
 namespace BrickController2.DeviceManagement
 {
@@ -20,13 +19,10 @@ namespace BrickController2.DeviceManagement
 
         private IGattCharacteristic _characteristic;
 
-        private Task _outputTask;
-        private CancellationTokenSource _outputTaskTokenSource;
-        private object _outputTaskLock = new object();
         private int _sendAttemptsLeft;
 
-        public PoweredUpDevice(string name, string address, IDeviceRepository deviceRepository, IAdapter adapter)
-            : base(name, address, deviceRepository, adapter)
+        public PoweredUpDevice(string name, string address, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
+            : base(name, address, deviceRepository, bleService)
         {
         }
 
@@ -49,101 +45,63 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
-        protected override async Task<bool> ServicesDiscovered(IList<IGattService> services, CancellationToken token)
+        protected override bool ProcessServices(IEnumerable<IGattService> services)
         {
-            _characteristic = null;
-            foreach (var service in services)
-            {
-                if (service.Uuid == SERVICE_UUID)
-                {
-                    _characteristic = await service.GetKnownCharacteristics(CHARACTERISTIC_UUID).FirstAsync().ToTask(token);
-                }
-            }
+            var service = services.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
+            _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
 
             return _characteristic != null;
         }
 
-        protected override async Task<bool> ConnectPostActionAsync(CancellationToken token)
+        protected override async Task ProcessOutputsAsync(CancellationToken token)
         {
-            return await StartOutputTaskAsync();
-        }
-
-        protected override async Task DisconnectPreActionAsync(CancellationToken token)
-        {
-            await StopOutputTaskAsync();
-        }
-
-        private async Task<bool> StartOutputTaskAsync()
-        {
-            await StopOutputTaskAsync();
-
             _outputValues[0] = 0;
             _outputValues[1] = 0;
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
 
-            _outputTaskTokenSource = new CancellationTokenSource();
-            _outputTask = Task.Run(async () =>
+            while (!token.IsCancellationRequested)
             {
-                while (!_outputTaskTokenSource.Token.IsCancellationRequested)
+                try
                 {
-                    try
+                    if (_sendAttemptsLeft > 0)
                     {
-                        if (_sendAttemptsLeft > 0)
-                        {
-                            int v0 = _outputValues[0];
-                            int v1 = _outputValues[1];
+                        int v0 = _outputValues[0];
+                        var result0 = await SendOutputValueAsync(0, v0);
 
-                            if (await SendOutputValuesAsync(v0, v1, _outputTaskTokenSource.Token))
-                            {
-                                if (v0 != 0 || v1 != 0)
-                                {
-                                    _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                                }
-                                else
-                                {
-                                    _sendAttemptsLeft--;
-                                }
-                            }
-                            else
+                        int v1 = _outputValues[1];
+                        var result1 = await SendOutputValueAsync(1, v1);
+
+                        if (result0 && result1)
+                        {
+                            if (v0 != 0 || v1 != 0)
                             {
                                 _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                             }
+                            else
+                            {
+                                _sendAttemptsLeft--;
+                            }
+                        }
+                        else
+                        {
+                            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                         }
                     }
-                    catch (OperationCanceledException)
-                    {
-                    }
                 }
-            });
-
-            return true;
-        }
-
-        private async Task StopOutputTaskAsync()
-        {
-            if (_outputTaskTokenSource != null)
-            {
-                _outputTaskTokenSource.Cancel();
-                await _outputTask;
-                _outputTaskTokenSource.Dispose();
-                _outputTaskTokenSource = null;
+                catch (OperationCanceledException)
+                {
+                }
             }
         }
 
-        private async Task<bool> SendOutputValuesAsync(int v0, int v1, CancellationToken token)
+        private async Task<bool> SendOutputValueAsync(int channel, int value)
         {
             try
             {
-                _sendBuffer[3] = (byte)0x00;
-                _sendBuffer[7] = (byte)(v0 < 0 ? (255 + v0) : v0);
+                _sendBuffer[3] = (byte)channel;
+                _sendBuffer[7] = (byte)(value < 0 ? (255 + value) : value);
 
-                await _characteristic.Write(_sendBuffer);
-
-                _sendBuffer[3] = (byte)0x01;
-                _sendBuffer[7] = (byte)(v1 < 0 ? (255 + v1) : v1);
-
-                await _characteristic.Write(_sendBuffer);
-
+                await _bleDevice?.WriteAsync(_characteristic, _sendBuffer);
                 return true;
             }
             catch (Exception)

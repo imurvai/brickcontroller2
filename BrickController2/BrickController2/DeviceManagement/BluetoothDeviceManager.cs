@@ -1,69 +1,61 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using BrickController2.Helpers;
-using Plugin.BluetoothLE;
+using BrickController2.PlatformServices.BluetoothLE;
 
 namespace BrickController2.DeviceManagement
 {
     internal class BluetoothDeviceManager : IBluetoothDeviceManager
     {
-        private readonly IAdapter _adapter;
+        private readonly IBluetoothLEService _bleService;
         private readonly AsyncLock _asyncLock = new AsyncLock();
 
-        public BluetoothDeviceManager(IAdapter adapter)
+        public BluetoothDeviceManager(IBluetoothLEService bleService)
         {
-            _adapter = adapter;
-
-            CrossBleAdapter.AndroidConfiguration.ShouldInvokeOnMainThread = false;
-            CrossBleAdapter.AndroidConfiguration.PauseBetweenInvocations = TimeSpan.Zero;
+            _bleService = bleService;
         }
 
-        public bool IsBluetoothLESupported => _adapter.Status != AdapterStatus.Unsupported;
-
-        public bool IsBluetoothOn => _adapter.Status == AdapterStatus.PoweredOn;
+        public bool IsBluetoothLESupported => _bleService.IsBluetoothLESupported;
+        public bool IsBluetoothOn => _bleService.IsBluetoothOn;
 
         public async Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
-                if (!IsBluetoothOn || _adapter.IsScanning)
+                if (!IsBluetoothOn)
                 {
                     return;
                 }
 
                 try
                 {
-                    await Task.Run(async () =>
-                    {
-                        using (_adapter.Scan(new ScanConfig { ScanType = BleScanType.LowLatency })
-                            .Subscribe(async scanResult =>
-                            {
-                                var deviceType = GetDeviceType(scanResult.AdvertisementData);
-                                if (deviceType != DeviceType.Unknown)
-                                {
-                                    await deviceFoundCallback(deviceType, scanResult.Device.Name, scanResult.Device.Uuid.ToString());
-                                }
-                            }))
+                    await _bleService.ScanDevicesAsync(
+                        async scanResult =>
                         {
-                            await token.WaitAsync();
-                        }
-                    });
+                            var deviceType = GetDeviceType(scanResult.AdvertismentData);
+                            if (deviceType != DeviceType.Unknown)
+                            {
+                                await deviceFoundCallback(deviceType, scanResult.DeviceName, scanResult.DeviceAddress);
+                            }
+                        },
+                        token);
                 }
-                catch (Exception)
+                catch (OperationCanceledException)
                 {
-                }
-                finally
-                {
-                    _adapter.StopScan();
                 }
             }
         }
 
-        private DeviceType GetDeviceType(IAdvertisementData advertisementData)
+        private DeviceType GetDeviceType(IDictionary<byte, byte[]> advertismentData)
         {
-            var manufacturerData = advertisementData.ManufacturerData;
+            if (advertismentData == null || !advertismentData.ContainsKey(0xFF))
+            {
+                return DeviceType.Unknown;
+            }
 
+            var manufacturerData = advertismentData[0xFF];
             if (manufacturerData == null || manufacturerData.Length < 2)
             {
                 return DeviceType.Unknown;

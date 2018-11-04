@@ -128,7 +128,6 @@
     <ImageAsset Include="Assets.xcassets\LaunchImages.launchimage\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
@@ -182,18 +181,15 @@
     <PackageReference Include="Autofac">
       <Version>4.8.1</Version>
     </PackageReference>
-    <PackageReference Include="Plugin.BluetoothLE">
-      <Version>6.2.2</Version>
-    </PackageReference>
     <PackageReference Include="Plugin.Permissions">
       <Version>3.0.0.12</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="3.3.0.912540" />
+    <PackageReference Include="Xamarin.Forms" Version="3.3.0.967583" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\BrickController2\BrickController2.csproj">
-      <Project>{472A44DC-D7EA-4F64-BBA0-EDE6ACC6C39D}</Project>
+      <Project>{852D9034-471A-42D0-8701-63D12E2EDACA}</Project>
       <Name>BrickController2</Name>
     </ProjectReference>
   </ItemGroup>
@@ -253,5 +249,8 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Icon180.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="LaunchScreen.storyboard" />
   </ItemGroup>
 </Project>

@@ -1,9 +1,6 @@
-﻿using BrickController2.Helpers;
-using Plugin.BluetoothLE;
+﻿using BrickController2.PlatformServices.BluetoothLE;
 using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
-using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,22 +8,20 @@ namespace BrickController2.DeviceManagement
 {
     internal abstract class BluetoothDevice : Device
     {
-        private readonly AsyncLock _asyncLock = new AsyncLock();
+        protected readonly IBluetoothLEService _bleService;
 
-        protected readonly IAdapter _adapter;
+        protected IBluetoothLEDevice _bleDevice;
+        private Task _outputTask;
+        private CancellationTokenSource _outputTaskTokenSource;
 
-        protected IDevice _bleDevice;
-        private IDisposable _bleDeviceDisconnectedSubscription;
-
-        public BluetoothDevice(string name, string address, IDeviceRepository deviceRepository, IAdapter adapter)
+        public BluetoothDevice(string name, string address, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
             : base(name, address, deviceRepository)
         {
-            _adapter = adapter;
+            _bleService = bleService;
         }
 
-        protected abstract Task<bool> ServicesDiscovered(IList<IGattService> services, CancellationToken token);
-        protected abstract Task<bool> ConnectPostActionAsync(CancellationToken token);
-        protected abstract Task DisconnectPreActionAsync(CancellationToken token);
+        protected abstract bool ProcessServices(IEnumerable<IGattService> services);
+        protected abstract Task ProcessOutputsAsync(CancellationToken token);
 
         public async override Task<DeviceConnectionResult> ConnectAsync(CancellationToken token)
         {
@@ -37,44 +32,23 @@ namespace BrickController2.DeviceManagement
 
             try
             {
-                var guid = Guid.Parse(Address);
-                _bleDevice = await _adapter.GetKnownDevice(guid).FirstAsync();
+                _bleDevice = _bleService.GetKnownDevice(Address);
 
-                var connectionFailedTask = _bleDevice.WhenConnectionFailed().ToTask(token);
-                var connectionOkTask = _bleDevice.WhenConnected().Take(1).ToTask(token);
-
-                _bleDevice.Connect(new ConnectionConfig { AutoConnect = false });
                 SetState(DeviceState.Connecting, false);
+                var services = await _bleDevice.ConnectAndDiscoverServicesAsync(token);
 
-                var result = await Task.WhenAny(connectionFailedTask, connectionOkTask);
-                if (result == connectionOkTask)
+                if (services != null && ProcessServices(services))
                 {
-                    if (!connectionOkTask.IsCanceled)
-                    {
-                        SetState(DeviceState.Discovering, false);
-                        var services = new List<IGattService>();
-                        await _bleDevice.DiscoverServices().ForEachAsync(service => services.Add(service), token);
+                    await StartOutputTaskAsync();
+                    _bleDevice.Disconnected += OnDeviceDisconnected;
 
-                        if (await ServicesDiscovered(services, token) && 
-                            await ConnectPostActionAsync(token))
-                        {
-                            _bleDeviceDisconnectedSubscription = _bleDevice
-                                .WhenDisconnected()
-                                .ObserveOn(SynchronizationContext.Current)
-                                .Subscribe(async device =>
-                                {
-                                    await DisconnectInternalAsync(true);
-                                });
-
-                            SetState(DeviceState.Connected, false);
-                            return DeviceConnectionResult.Ok;
-                        }
-                    }
-                    else
-                    {
-                        await DisconnectInternalAsync(false);
-                        return DeviceConnectionResult.Canceled;
-                    }
+                    SetState(DeviceState.Connected, false);
+                    return DeviceConnectionResult.Ok;
+                }
+                else if (token.IsCancellationRequested)
+                {
+                    await DisconnectInternalAsync(false);
+                    return DeviceConnectionResult.Canceled;
                 }
             }
             catch (OperationCanceledException)
@@ -106,21 +80,49 @@ namespace BrickController2.DeviceManagement
             {
                 if (_bleDevice != null)
                 {
-                    SetState(DeviceState.Disconnecting, false);
-                    await DisconnectPreActionAsync(CancellationToken.None);
+                    await StopOutputTaskAsync();
+                    SetState(DeviceState.Disconnecting, isError);
+                    _bleDevice.Disconnected -= OnDeviceDisconnected;
+                    _bleDevice?.Disconnect();
+                    _bleDevice = null;
                 }
 
-                CleanUp();
                 SetState(DeviceState.Disconnected, isError);
             }
         }
 
-        private void CleanUp()
+        private async void OnDeviceDisconnected(object sender, EventArgs args)
         {
-            _bleDeviceDisconnectedSubscription?.Dispose();
-            _bleDeviceDisconnectedSubscription = null;
-            _bleDevice?.CancelConnection();
-            _bleDevice = null;
+            await DisconnectInternalAsync(true);
+        }
+
+        private async Task StartOutputTaskAsync()
+        {
+            await StopOutputTaskAsync();
+
+            _outputTaskTokenSource = new CancellationTokenSource();
+            _outputTask = Task.Run(async () =>
+            {
+                try
+                {
+                    await ProcessOutputsAsync(_outputTaskTokenSource.Token);
+                }
+                catch (Exception)
+                {
+                }
+            });
+        }
+
+        private async Task StopOutputTaskAsync()
+        {
+            if (_outputTaskTokenSource != null && _outputTask != null)
+            {
+                _outputTaskTokenSource.Cancel();
+                await _outputTask;
+                _outputTaskTokenSource.Dispose();
+                _outputTaskTokenSource = null;
+                _outputTask = null;
+            }
         }
     }
 }

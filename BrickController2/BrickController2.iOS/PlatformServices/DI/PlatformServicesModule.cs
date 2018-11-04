@@ -17,7 +17,7 @@ namespace BrickController2.iOS.PlatformServices.DI
             builder.RegisterType<InfraredService>().As<IInfraredService>().SingleInstance();
             builder.RegisterType<GameControllerService>().AsSelf().As<IGameControllerService>().SingleInstance();
             builder.RegisterType<VersionService>().As<IVersionService>().SingleInstance();
-            //builder.RegisterType<BluetoothLEService>().As<IBluetoothLEService>().SingleInstance();
+            builder.RegisterType<BluetoothLEService>().As<IBluetoothLEService>().SingleInstance();
         }
     }
 }
