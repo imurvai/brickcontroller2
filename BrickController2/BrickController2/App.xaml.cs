@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using BrickController2.UI.ViewModels;
 using BrickController2.UI.Pages;
+using BrickController2.Helpers;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Skip)]
 namespace BrickController2
@@ -16,6 +17,7 @@ namespace BrickController2
             Func<Page, NavigationPage> navigationPageFactory)
 		{
 			InitializeComponent();
+            ThreadHelper.Init();
 
             var vm = viewModelFactory(typeof(CreationListPageViewModel), null);
 		    var page = pageFactory(typeof(CreationListPage), vm);

@@ -70,7 +70,7 @@ namespace BrickController2.UI.ViewModels
             {
                 if (!_deviceManager.IsBluetoothOn)
                 {
-                    await _dialogService.ShowMessageBoxAsync("Warning", "Turn bluetooth on to connect to a bluetooth device(s).", "Ok");
+                    await _dialogService.ShowMessageBoxAsync("Warning", "Turn bluetooth on to connect to bluetooth device(s).", "Ok");
                     await NavigationService.NavigateBackAsync();
                     return;
                 }

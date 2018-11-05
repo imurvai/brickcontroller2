@@ -72,7 +72,7 @@ namespace BrickController2.DeviceManagement
 
         protected void SetState(DeviceState newState, bool isError)
         {
-            Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+            ThreadHelper.RunOnMainThread(() =>
             {
                 var oldState = DeviceState;
                 DeviceState = newState;
