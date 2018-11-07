@@ -34,7 +34,7 @@ namespace BrickController2.DeviceManagement
             {
                 _bleDevice = _bleService.GetKnownDevice(Address);
 
-                SetState(DeviceState.Connecting, false);
+                await SetStateAsync(DeviceState.Connecting, false);
                 var services = await _bleDevice.ConnectAndDiscoverServicesAsync(token);
 
                 if (services != null && ProcessServices(services))
@@ -42,7 +42,7 @@ namespace BrickController2.DeviceManagement
                     await StartOutputTaskAsync();
                     _bleDevice.Disconnected += OnDeviceDisconnected;
 
-                    SetState(DeviceState.Connected, false);
+                    await SetStateAsync(DeviceState.Connected, false);
                     return DeviceConnectionResult.Ok;
                 }
                 else if (token.IsCancellationRequested)
@@ -81,13 +81,13 @@ namespace BrickController2.DeviceManagement
                 if (_bleDevice != null)
                 {
                     await StopOutputTaskAsync();
-                    SetState(DeviceState.Disconnecting, isError);
+                    await SetStateAsync(DeviceState.Disconnecting, isError);
                     _bleDevice.Disconnected -= OnDeviceDisconnected;
                     _bleDevice?.Disconnect();
                     _bleDevice = null;
                 }
 
-                SetState(DeviceState.Disconnected, isError);
+                await SetStateAsync(DeviceState.Disconnected, isError);
             }
         }
 

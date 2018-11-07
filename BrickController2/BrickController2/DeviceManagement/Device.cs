@@ -70,9 +70,9 @@ namespace BrickController2.DeviceManagement
             return Name;
         }
 
-        protected void SetState(DeviceState newState, bool isError)
+        protected async Task SetStateAsync(DeviceState newState, bool isError)
         {
-            ThreadHelper.RunOnMainThread(() =>
+            await ThreadHelper.RunOnMainThread(() =>
             {
                 var oldState = DeviceState;
                 DeviceState = newState;

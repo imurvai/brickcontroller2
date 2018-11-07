@@ -18,21 +18,21 @@ namespace BrickController2.DeviceManagement
 
         public override async Task<DeviceConnectionResult> ConnectAsync(CancellationToken token)
         {
-            SetState(DeviceState.Connecting, false);
+            await SetStateAsync(DeviceState.Connecting, false);
 
             var result = await _infraredDeviceManager.ConnectDevice(this);
 
-            SetState(result == DeviceConnectionResult.Ok ? DeviceState.Connected : DeviceState.Disconnected, result == DeviceConnectionResult.Error);
+            await SetStateAsync(result == DeviceConnectionResult.Ok ? DeviceState.Connected : DeviceState.Disconnected, result == DeviceConnectionResult.Error);
             return result;
         }
 
         public override async Task DisconnectAsync()
         {
-            SetState(DeviceState.Disconnecting, false);
+            await SetStateAsync(DeviceState.Disconnecting, false);
 
             await _infraredDeviceManager.DisconnectDevice(this);
 
-            SetState(DeviceState.Disconnected, false);
+            await SetStateAsync(DeviceState.Disconnected, false);
         }
 
         public override void SetOutput(int channel, float value)
