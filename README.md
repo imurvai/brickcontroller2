@@ -13,6 +13,7 @@ Cross platform mobile application for controlling Lego creations using a bluetoo
 - BuWizz 1
 - BuWizz 2
 - Lego PowerFunctions infrared receiver on Android devices having IR emitter
+- Lego Powered-Up hub
 
 ## Project details
 
@@ -21,7 +22,6 @@ BrickController 2 is a Xamarin.Forms application and can be compiled using Visua
 ## 3rd party libraries used
 
 - Autofac IOC container
-- [Plugin.BluetoothLE](https://github.com/aritchie/bluetoothle)
 - [Plugin.Permissions](https://github.com/jamesmontemagno/PermissionsPlugin)
 - [SQLite-Net-Extensions Async](https://bitbucket.org/twincoders/sqlite-net-extensions)
 
