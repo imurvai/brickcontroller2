@@ -11,6 +11,11 @@ namespace BrickController2.UI.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var deviceType = (DeviceType)value;
+            return Convert(deviceType);
+        }
+
+        public ImageSource Convert(DeviceType deviceType)
+        {
             switch (deviceType)
             {
                 case DeviceType.BuWizz:

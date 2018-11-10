@@ -75,11 +75,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PlatformServices\BluetoothLE\BluetoothLEDevice.cs" />
-    <Compile Include="PlatformServices\BluetoothLE\BluetoothLEScanner.cs" />
+    <Compile Include="PlatformServices\BluetoothLE\BluetoothLENewScanner.cs" />
+    <Compile Include="PlatformServices\BluetoothLE\BluetoothLEOldScanner.cs" />
     <Compile Include="PlatformServices\BluetoothLE\BluetoothLEService.cs" />
     <Compile Include="PlatformServices\BluetoothLE\GattCharacteristic.cs" />
     <Compile Include="PlatformServices\BluetoothLE\GattService.cs" />
     <Compile Include="PlatformServices\BluetoothLE\Helper.cs" />
+    <Compile Include="PlatformServices\BluetoothLE\ScanRecordProcessor.cs" />
     <Compile Include="PlatformServices\DI\PlatformServicesModule.cs" />
     <Compile Include="PlatformServices\GameController\GameControllerService.cs" />
     <Compile Include="PlatformServices\Infrared\InfraredService.cs" />

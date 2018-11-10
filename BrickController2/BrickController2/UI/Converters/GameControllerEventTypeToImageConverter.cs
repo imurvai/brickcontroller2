@@ -11,6 +11,11 @@ namespace BrickController2.UI.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var eventType = (GameControllerEventType)value;
+            return Convert(eventType);
+        }
+
+        public ImageSource Convert(GameControllerEventType eventType)
+        {
             switch (eventType)
             {
                 case GameControllerEventType.Button:

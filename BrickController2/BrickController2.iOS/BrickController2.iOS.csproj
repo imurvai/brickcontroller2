@@ -54,7 +54,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>iPhone Developer: imurvai@gmail.com (V4B6W68637)</CodesignKey>
+    <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>
     </CodesignEntitlements>
@@ -115,6 +115,7 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="PlatformServices\Versioning\VersionService.cs" />
     <Compile Include="UI\CustomRenderers\ExtendedSliderRenderer.cs" />
+    <Compile Include="UI\CustomRenderers\NoAnimListViewRenderer.cs" />
     <Compile Include="UI\Services\DialogService.cs" />
     <Compile Include="UI\Services\DI\UIServicesModule.cs" />
     <Compile Include="UI\Services\ProgressDialog.cs" />

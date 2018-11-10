@@ -53,8 +53,8 @@ namespace BrickController2.UI.ViewModels
                 }
             }
 
-            Device.DeviceStateChanged += DeviceStateChangedHandler;
             await ConnectAsync();
+            Device.DeviceStateChanged += DeviceStateChangedHandler;
 
             if (Device.DeviceType == DeviceType.BuWizz)
             {

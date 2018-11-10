@@ -75,6 +75,11 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         {
             lock(_lock)
             {
+                if (peripheral == null || peripheral.Identifier == null || string.IsNullOrEmpty(peripheral.Name))
+                {
+                    return;
+                }
+
                 var processedAdvertisementData = ProcessAdvertisementData(advertisementData);
                 _scanCallback?.Invoke(new ScanResult(peripheral.Name, peripheral.Identifier.ToString(), processedAdvertisementData));
             }

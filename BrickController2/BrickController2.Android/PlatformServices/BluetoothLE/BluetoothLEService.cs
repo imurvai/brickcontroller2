@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Android.Bluetooth;
 using Android.Content;
 using Android.Content.PM;
+using Android.OS;
 using BrickController2.PlatformServices.BluetoothLE;
 
 namespace BrickController2.Droid.PlatformServices.BluetoothLE
@@ -12,6 +13,8 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
     {
         private readonly Context _context;
         private readonly BluetoothAdapter _bluetoothAdapter;
+
+        private bool _isScanning = false;
 
         public BluetoothLEService(Context context)
         {
@@ -31,28 +34,29 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
         public bool IsBluetoothLESupported => _bluetoothAdapter != null;
         public bool IsBluetoothOn => _bluetoothAdapter?.IsEnabled ?? false;
 
-        public Task<bool> ScanDevicesAsync(Action<ScanResult> scanCallback, CancellationToken token)
+        public async Task<bool> ScanDevicesAsync(Action<ScanResult> scanCallback, CancellationToken token)
         {
-            if (!IsBluetoothLESupported || !IsBluetoothOn)
+            if (!IsBluetoothLESupported || !IsBluetoothOn || _isScanning)
             {
-                return Task.FromResult(false);
+                return false;
             }
 
-            var leScanner = new BluetoothLEScanner(scanCallback);
-            if (!_bluetoothAdapter.StartLeScan(leScanner))
+            try
             {
-                return Task.FromResult(false);
+                _isScanning = true;
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+                {
+                    return await NewScanAsync(scanCallback, token);
+                }
+                else
+                {
+                    return await OldScanAsync(scanCallback, token);
+                }
             }
-
-            var tcs = new TaskCompletionSource<bool>();
-
-            token.Register(() =>
+            finally
             {
-                _bluetoothAdapter.StopLeScan(leScanner);
-                tcs.SetResult(true);
-            });
-
-            return tcs.Task;
+                _isScanning = false;
+            }
         }
 
         public IBluetoothLEDevice GetKnownDevice(string address)
@@ -64,6 +68,39 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             }
 
             return new BluetoothLEDevice(_context, device);
+        }
+
+        private Task<bool> OldScanAsync(Action<ScanResult> scanCallback, CancellationToken token)
+        {
+            var leScanner = new BluetoothLEOldScanner(scanCallback);
+            if (!_bluetoothAdapter.StartLeScan(leScanner))
+            {
+                return Task.FromResult(false);
+            }
+
+            var tcs = new TaskCompletionSource<bool>();
+            token.Register(() =>
+            {
+                _bluetoothAdapter.StopLeScan(leScanner);
+                tcs.SetResult(true);
+            });
+
+            return tcs.Task;
+        }
+
+        private Task<bool> NewScanAsync(Action<ScanResult> scanCallback, CancellationToken token)
+        {
+            var leScanner = new BluetoothLENewScanner(scanCallback);
+            _bluetoothAdapter.BluetoothLeScanner.StartScan(leScanner);
+
+            var tcs = new TaskCompletionSource<bool>();
+            token.Register(() =>
+            {
+                _bluetoothAdapter.BluetoothLeScanner.StopScan(leScanner);
+                tcs.SetResult(true);
+            });
+
+            return tcs.Task;
         }
     }
 }
