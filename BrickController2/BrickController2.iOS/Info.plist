@@ -24,7 +24,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>BrickController2</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.scn.BrickController</string>
+	<string>com.scn.brickcontroller2</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
