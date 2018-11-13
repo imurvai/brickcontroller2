@@ -28,8 +28,8 @@
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
     <IOSDebugOverWiFi>true</IOSDebugOverWiFi>
-    <CodesignKey>iPhone Distribution: Istvan Murvai (D672JMLT87)</CodesignKey>
-    <CodesignProvision>BrickController2 distribution profile</CodesignProvision>
+    <CodesignKey>iPhone Developer: Istvan Murvai (V4B6W68637)</CodesignKey>
+    <CodesignProvision>BrickController2 iOS dev profile</CodesignProvision>
     <CodesignExtraArgs />
     <CodesignResourceRules />
     <CodesignEntitlements />
@@ -72,7 +72,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Istvan Murvai (V4B6W68637)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <CodesignProvision>iOS Team Provisioning Profile: com.scn.brickcontroller2</CodesignProvision>
+    <CodesignProvision>BrickController2 iOS dev profile</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>none</DebugType>
@@ -95,9 +95,8 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignProvision>
-    </CodesignProvision>
-    <CodesignKey>iPhone Distribution: Istvan Murvai (D672JMLT87)</CodesignKey>
+    <CodesignProvision>BrickController2 iOS dist profile</CodesignProvision>
+    <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CopyAppBundle>true</CopyAppBundle>
     <OptimizePNGs>true</OptimizePNGs>
