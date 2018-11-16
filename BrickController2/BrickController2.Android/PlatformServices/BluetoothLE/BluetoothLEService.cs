@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Android.Bluetooth;
+using Android.Bluetooth.LE;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
@@ -34,7 +35,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
         public bool IsBluetoothLESupported => _bluetoothAdapter != null;
         public bool IsBluetoothOn => _bluetoothAdapter?.IsEnabled ?? false;
 
-        public async Task<bool> ScanDevicesAsync(Action<ScanResult> scanCallback, CancellationToken token)
+        public async Task<bool> ScanDevicesAsync(Action<BrickController2.PlatformServices.BluetoothLE.ScanResult> scanCallback, CancellationToken token)
         {
             if (!IsBluetoothLESupported || !IsBluetoothOn || _isScanning)
             {
@@ -70,7 +71,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             return new BluetoothLEDevice(_context, device);
         }
 
-        private Task<bool> OldScanAsync(Action<ScanResult> scanCallback, CancellationToken token)
+        private Task<bool> OldScanAsync(Action<BrickController2.PlatformServices.BluetoothLE.ScanResult> scanCallback, CancellationToken token)
         {
             var leScanner = new BluetoothLEOldScanner(scanCallback);
             if (!_bluetoothAdapter.StartLeScan(leScanner))
@@ -88,10 +89,14 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             return tcs.Task;
         }
 
-        private Task<bool> NewScanAsync(Action<ScanResult> scanCallback, CancellationToken token)
+        private Task<bool> NewScanAsync(Action<BrickController2.PlatformServices.BluetoothLE.ScanResult> scanCallback, CancellationToken token)
         {
             var leScanner = new BluetoothLENewScanner(scanCallback);
-            _bluetoothAdapter.BluetoothLeScanner.StartScan(leScanner);
+            var settingsBuilder = new ScanSettings.Builder()
+                .SetCallbackType(ScanCallbackType.AllMatches)
+                .SetScanMode(Android.Bluetooth.LE.ScanMode.LowLatency);
+
+            _bluetoothAdapter.BluetoothLeScanner.StartScan(null, settingsBuilder.Build(), leScanner);
 
             var tcs = new TaskCompletionSource<bool>();
             token.Register(() =>
