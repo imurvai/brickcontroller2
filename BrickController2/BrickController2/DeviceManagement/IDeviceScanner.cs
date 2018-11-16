@@ -6,6 +6,6 @@ namespace BrickController2.DeviceManagement
 {
     internal interface IDeviceScanner
     {
-        Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token);
+        Task<bool> ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token);
     }
 }

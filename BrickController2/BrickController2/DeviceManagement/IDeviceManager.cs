@@ -12,7 +12,7 @@ namespace BrickController2.DeviceManagement
         bool IsBluetoothOn { get; }
 
         Task LoadDevicesAsync();
-        Task ScanAsync(CancellationToken token);
+        Task<bool> ScanAsync(CancellationToken token);
 
         Task DeleteDeviceAsync(Device device);
         Task DeleteDevicesAsync();

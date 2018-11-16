@@ -34,7 +34,7 @@ namespace BrickController2.DeviceManagement
             _infraredService = infraredService;
         }
 
-        public async Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
+        public async Task<bool> ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -51,6 +51,8 @@ namespace BrickController2.DeviceManagement
                     }
                 }
             }
+
+            return true;
         }
 
         public async Task<DeviceConnectionResult> ConnectDevice(InfraredDevice device)

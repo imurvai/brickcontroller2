@@ -54,6 +54,10 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                     return await OldScanAsync(scanCallback, token);
                 }
             }
+            catch (Exception)
+            {
+                return false;
+            }
             finally
             {
                 _isScanning = false;
@@ -71,41 +75,55 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             return new BluetoothLEDevice(_context, device);
         }
 
-        private Task<bool> OldScanAsync(Action<BrickController2.PlatformServices.BluetoothLE.ScanResult> scanCallback, CancellationToken token)
+        private async Task<bool> OldScanAsync(Action<BrickController2.PlatformServices.BluetoothLE.ScanResult> scanCallback, CancellationToken token)
         {
-            var leScanner = new BluetoothLEOldScanner(scanCallback);
-            if (!_bluetoothAdapter.StartLeScan(leScanner))
+            try
             {
-                return Task.FromResult(false);
+                var leScanner = new BluetoothLEOldScanner(scanCallback);
+                if (!_bluetoothAdapter.StartLeScan(leScanner))
+                {
+                    return false;
+                }
+
+                var tcs = new TaskCompletionSource<bool>();
+                token.Register(() =>
+                {
+                    _bluetoothAdapter.StopLeScan(leScanner);
+                    tcs.SetResult(true);
+                });
+
+                return await tcs.Task;
             }
-
-            var tcs = new TaskCompletionSource<bool>();
-            token.Register(() =>
+            catch (Exception)
             {
-                _bluetoothAdapter.StopLeScan(leScanner);
-                tcs.SetResult(true);
-            });
-
-            return tcs.Task;
+                return false;
+            }
         }
 
-        private Task<bool> NewScanAsync(Action<BrickController2.PlatformServices.BluetoothLE.ScanResult> scanCallback, CancellationToken token)
+        private async Task<bool> NewScanAsync(Action<BrickController2.PlatformServices.BluetoothLE.ScanResult> scanCallback, CancellationToken token)
         {
-            var leScanner = new BluetoothLENewScanner(scanCallback);
-            var settingsBuilder = new ScanSettings.Builder()
-                .SetCallbackType(ScanCallbackType.AllMatches)
-                .SetScanMode(Android.Bluetooth.LE.ScanMode.LowLatency);
-
-            _bluetoothAdapter.BluetoothLeScanner.StartScan(null, settingsBuilder.Build(), leScanner);
-
-            var tcs = new TaskCompletionSource<bool>();
-            token.Register(() =>
+            try
             {
-                _bluetoothAdapter.BluetoothLeScanner.StopScan(leScanner);
-                tcs.SetResult(true);
-            });
+                var leScanner = new BluetoothLENewScanner(scanCallback);
+                var settingsBuilder = new ScanSettings.Builder()
+                    .SetCallbackType(ScanCallbackType.AllMatches)
+                    .SetScanMode(Android.Bluetooth.LE.ScanMode.LowLatency);
 
-            return tcs.Task;
+                _bluetoothAdapter.BluetoothLeScanner.StartScan(null, settingsBuilder.Build(), leScanner);
+
+                var tcs = new TaskCompletionSource<bool>();
+                token.Register(() =>
+                {
+                    _bluetoothAdapter.BluetoothLeScanner.StopScan(leScanner);
+                    tcs.SetResult(true);
+                });
+
+                return await tcs.Task;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

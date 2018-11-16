@@ -47,19 +47,26 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ScanAsync()
         {
+            if (!DeviceManager.IsBluetoothOn &&
+                !await _dialogService.ShowQuestionDialogAsync("Warning", "Bluetooth is turned off. Do you want to proceed with the scanning?", "Yes", "No"))
+            {
+                return;
+            }
+
             var percent = 0;
+            var scanResult = true;
             await _dialogService.ShowProgressDialogAsync(
                 true,
                 async (progressDialog, token) =>
                 {
                     using (var cts = new CancellationTokenSource())
                     {
-                        Task scanTask = null;
+                        Task<bool> scanTask = null;
                         try
                         {
                             scanTask = DeviceManager.ScanAsync(cts.Token);
 
-                            while (!token.IsCancellationRequested && percent <= 100)
+                            while (!token.IsCancellationRequested && percent <= 100 && !scanTask.IsCompleted)
                             {
                                 progressDialog.Percent = percent;
                                 await Task.Delay(100, token);
@@ -73,13 +80,18 @@ namespace BrickController2.UI.ViewModels
 
                         if (scanTask != null)
                         {
-                            await scanTask;
+                            scanResult = await scanTask;
                         }
                     }
                 },
                 "Scanning...",
                 "Searching for devices.",
                 "Cancel");
+
+            if (!scanResult)
+            {
+                await _dialogService.ShowMessageBoxAsync("Warning", "Error during scanning", "Ok");
+            }
         }
     }
 }

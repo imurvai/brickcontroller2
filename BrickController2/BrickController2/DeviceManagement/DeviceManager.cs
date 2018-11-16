@@ -1,7 +1,6 @@
 ﻿using BrickController2.Helpers;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,7 +58,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task ScanAsync(CancellationToken token)
+        public async Task<bool> ScanAsync(CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -71,12 +70,17 @@ namespace BrickController2.DeviceManagement
                     var bluetoothScan = _bluetoothDeviceManager.ScanAsync(FoundDevice, token);
 
                     await Task.WhenAll(infraScan, bluetoothScan);
+
+                    return infraScan.Result && bluetoothScan.Result;
                 }
                 catch (Exception)
                 {
+                    return false;
                 }
-
-                IsScanning = false;
+                finally
+                {
+                    IsScanning = false;
+                }
             }
 
             async Task FoundDevice(DeviceType deviceType, string deviceName, string deviceAddress)

@@ -20,18 +20,18 @@ namespace BrickController2.DeviceManagement
         public bool IsBluetoothLESupported => _bleService.IsBluetoothLESupported;
         public bool IsBluetoothOn => _bleService.IsBluetoothOn;
 
-        public async Task ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
+        public async Task<bool> ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
                 if (!IsBluetoothOn)
                 {
-                    return;
+                    return true;
                 }
 
                 try
                 {
-                    await _bleService.ScanDevicesAsync(
+                    return await _bleService.ScanDevicesAsync(
                         async scanResult =>
                         {
                             var deviceType = GetDeviceType(scanResult.AdvertismentData);
@@ -44,6 +44,11 @@ namespace BrickController2.DeviceManagement
                 }
                 catch (OperationCanceledException)
                 {
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
                 }
             }
         }
