@@ -47,10 +47,9 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ScanAsync()
         {
-            if (!DeviceManager.IsBluetoothOn &&
-                !await _dialogService.ShowQuestionDialogAsync("Warning", "Bluetooth is turned off. Do you want to proceed with the scanning?", "Yes", "No"))
+            if (!DeviceManager.IsBluetoothOn)
             {
-                return;
+                await _dialogService.ShowMessageBoxAsync("Warning", "Bluetooth is turned off.", "Ok");
             }
 
             var percent = 0;

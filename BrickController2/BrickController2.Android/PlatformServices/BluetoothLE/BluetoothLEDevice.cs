@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Android.Bluetooth;
 using Android.Content;
+using Android.OS;
 using Android.Runtime;
 using BrickController2.PlatformServices.BluetoothLE;
 
@@ -42,7 +43,15 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
                 State = BluetoothLEDeviceState.Connecting;
 
-                _bluetoothGatt = _bluetoothDevice.ConnectGatt(_context, true, this);
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+                {
+                    _bluetoothGatt = _bluetoothDevice.ConnectGatt(_context, true, this, BluetoothTransports.Le);
+                }
+                else
+                {
+                    _bluetoothDevice.ConnectGatt(_context, true, this);
+                }
+
                 if (_bluetoothGatt == null)
                 {
                     State = BluetoothLEDeviceState.Disconnected;
