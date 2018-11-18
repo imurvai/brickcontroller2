@@ -5,6 +5,7 @@ using BrickController2.UI.Services.Dialog;
 using System.Threading.Tasks;
 using BrickController2.UI.Commands;
 using Device = BrickController2.DeviceManagement.Device;
+using System.Threading;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -12,6 +13,10 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
+
+        private CancellationTokenSource _connectionTokenSource;
+        private Task _connectionTask;
+        private bool _isDisappearing = false;
 
         public DevicePageViewModel(
             INavigationService navigationService,
@@ -43,6 +48,9 @@ namespace BrickController2.UI.ViewModels
 
         public override async void OnAppearing()
         {
+            base.OnAppearing();
+            _isDisappearing = false;
+
             if (Device.DeviceType != DeviceType.Infrared)
             {
                 if (!_deviceManager.IsBluetoothOn)
@@ -53,24 +61,21 @@ namespace BrickController2.UI.ViewModels
                 }
             }
 
-            await ConnectAsync();
             Device.DeviceStateChanged += DeviceStateChangedHandler;
-
-            if (Device.DeviceType == DeviceType.BuWizz)
-            {
-                SetBuWizzOutputLevel(BuWizzOutputLevel);
-            }
-            else if (Device.DeviceType == DeviceType.BuWizz2)
-            {
-                SetBuWizzOutputLevel(BuWizz2OutputLevel);
-            }
-
-            base.OnAppearing();
+            _connectionTask = ConnectAsync();
         }
 
         public override async void OnDisappearing()
         {
+            _isDisappearing = true;
             Device.DeviceStateChanged -= DeviceStateChangedHandler;
+
+            if (_connectionTokenSource != null)
+            {
+                _connectionTokenSource.Cancel();
+                await _connectionTask;
+            }
+
             await Device.DisconnectAsync();
 
             base.OnDisappearing();
@@ -96,25 +101,46 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectAsync()
         {
+            _connectionTokenSource = new CancellationTokenSource();
             DeviceConnectionResult connectionResult = DeviceConnectionResult.Ok;
+
             await _dialogService.ShowProgressDialogAsync(
                 false,
                 async (progressDialog, token) =>
                 {
-                    connectionResult = await Device.ConnectAsync(token);
+                    token.Register(() => _connectionTokenSource.Cancel());
+
+                    connectionResult = await Device.ConnectAsync(_connectionTokenSource.Token);
                 },
                 "Connecting...",
                 null,
                 "Cancel");
 
-            if (connectionResult != DeviceConnectionResult.Ok)
-            {
-                if (connectionResult == DeviceConnectionResult.Error)
-                {
-                    await _dialogService.ShowMessageBoxAsync("Warning", "Failed to connect to device.", "Ok");
-                }
+            _connectionTokenSource.Dispose();
+            _connectionTokenSource = null;
 
-                await NavigationService.NavigateBackAsync();
+            if (Device.DeviceState == DeviceState.Connected)
+            {
+                if (Device.DeviceType == DeviceType.BuWizz)
+                {
+                    SetBuWizzOutputLevel(BuWizzOutputLevel);
+                }
+                else if (Device.DeviceType == DeviceType.BuWizz2)
+                {
+                    SetBuWizzOutputLevel(BuWizz2OutputLevel);
+                }
+            }
+            else
+            {
+                if (!_isDisappearing)
+                {
+                    if (connectionResult == DeviceConnectionResult.Error)
+                    {
+                        await _dialogService.ShowMessageBoxAsync("Warning", "Failed to connect to device.", "Ok");
+                    }
+
+                    await NavigationService.NavigateBackAsync();
+                }
             }
         }
 
@@ -125,7 +151,7 @@ namespace BrickController2.UI.ViewModels
                 var result = await _dialogService.ShowQuestionDialogAsync("Device connection lost", "Do you want to reconnect?", "Yes", "No");
                 if (result)
                 {
-                    await ConnectAsync();
+                    _connectionTask = ConnectAsync();
                 }
                 else
                 {

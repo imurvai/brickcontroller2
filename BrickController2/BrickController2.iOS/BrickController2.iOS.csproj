@@ -57,7 +57,7 @@
     <CodesignKey>iPhone Developer: Istvan Murvai (V4B6W68637)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <CodesignProvision>iOS Team Provisioning Profile: com.scn.brickcontroller2</CodesignProvision>
+    <CodesignProvision>BrickController2 iOS dev profile</CodesignProvision>
     <CodesignExtraArgs />
     <CodesignResourceRules />
     <MtouchLink>None</MtouchLink>

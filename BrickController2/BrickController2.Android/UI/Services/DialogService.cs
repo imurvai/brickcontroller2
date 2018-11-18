@@ -26,7 +26,7 @@ namespace BrickController2.Droid.UI.Services
 
         public Task ShowMessageBoxAsync(string title, string message, string buttonText)
         {
-            var completionSource = new TaskCompletionSource<bool>();
+            var completionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             AlertDialog dialog = null;
             dialog = new AlertDialog.Builder(_context)
@@ -48,7 +48,7 @@ namespace BrickController2.Droid.UI.Services
 
         public Task<bool> ShowQuestionDialogAsync(string title, string message, string positiveButtonText, string negativeButtonText)
         {
-            var completionSource = new TaskCompletionSource<bool>();
+            var completionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             AlertDialog dialog = null;
             dialog = new AlertDialog.Builder(_context)
@@ -75,7 +75,7 @@ namespace BrickController2.Droid.UI.Services
 
         public Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText)
         {
-            var completionSource = new TaskCompletionSource<InputDialogResult>();
+            var completionSource = new TaskCompletionSource<InputDialogResult>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             var inputMethodManager = (InputMethodManager)_context.GetSystemService(Context.InputMethodService);
 
@@ -168,7 +168,7 @@ namespace BrickController2.Droid.UI.Services
 
         public Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
         {
-            var completionSource = new TaskCompletionSource<GameControllerEventDialogResult>();
+            var completionSource = new TaskCompletionSource<GameControllerEventDialogResult>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             var dialog = new GameControllerEventDialog(_context, _gameControllerService);
             dialog.SetTitle(title);

@@ -152,29 +152,35 @@ namespace BrickController2.DeviceManagement
 
         private async Task SendIrData(CancellationToken token)
         {
-            for (int address = 0; address < 4; address++)
+            try
             {
-                token.ThrowIfCancellationRequested();
-
-                if (_sendAttemptsLeft[address] > 0)
+                for (int address = 0; address < 4; address++)
                 {
-                    int value0 = _outputValues[address, 0];
-                    int value1 = _outputValues[address, 1];
+                    token.ThrowIfCancellationRequested();
 
-                    FillIrBuffer(value0, value1, address);
-
-                    await _infraredService.SendPacketAsync(IR_FREQUENCY, _irData);
-                    await Task.Delay(2, token);
-
-                    if (value0 != 0 || value1 != 0)
+                    if (_sendAttemptsLeft[address] > 0)
                     {
-                        _sendAttemptsLeft[address] = MAX_SEND_ATTEMPTS;
-                    }
-                    else
-                    {
-                        _sendAttemptsLeft[address] -= 1;
+                        int value0 = _outputValues[address, 0];
+                        int value1 = _outputValues[address, 1];
+
+                        FillIrBuffer(value0, value1, address);
+
+                        await _infraredService.SendPacketAsync(IR_FREQUENCY, _irData);
+                        await Task.Delay(2, token);
+
+                        if (value0 != 0 || value1 != 0)
+                        {
+                            _sendAttemptsLeft[address] = MAX_SEND_ATTEMPTS;
+                        }
+                        else
+                        {
+                            _sendAttemptsLeft[address] -= 1;
+                        }
                     }
                 }
+            }
+            catch (Exception)
+            {
             }
         }
 

@@ -8,8 +8,6 @@ namespace BrickController2.Droid.PlatformServices.GameController
 {
     public class GameControllerService : IGameControllerService
     {
-        private const string DualShock4HackKey = "DualShock4Hack";
-
         private readonly IDictionary<Axis, float> _lastAxisValues = new Dictionary<Axis, float>();
         private readonly object _lockObject = new object();
 
@@ -75,17 +73,19 @@ namespace BrickController2.Droid.PlatformServices.GameController
                         (e.Device.ProductId == 2508 || e.Device.ProductId == 1476))
                     {
                         // DualShock 4 hack for the triggers
+                        if (!_lastAxisValues.ContainsKey(axisCode) && axisValue == 0.0F)
+                        {
+                            continue;
+                        }
+
                         axisValue = (axisValue + 1) / 2;
                     }
 
-                    if (Math.Abs(axisValue) < 0.05F)
-                    {
-                        axisValue = 0.0F;
-                    }
+                    axisValue = AdjustControllerValue(axisValue);
 
                     if (_lastAxisValues.TryGetValue(axisCode, out float lastValue))
                     {
-                        if (Math.Abs(axisValue - lastValue) < 0.001)
+                        if (AreAlmostEqual(axisValue, lastValue))
                         {
                             // axisValue == lastValue
                             continue;
@@ -101,6 +101,19 @@ namespace BrickController2.Droid.PlatformServices.GameController
             }
 
             return false;
+        }
+
+        private float AdjustControllerValue(float value)
+        {
+            value = Math.Abs(value) < 0.05 ? 0.0F : value;
+            value = value > 0.95 ? 1.0F : value;
+            value = value < -0.95 ? -1.0F : value;
+            return value;
+        }
+
+        private bool AreAlmostEqual(float a, float b)
+        {
+            return Math.Abs(a - b) < 0.001;
         }
     }
 }

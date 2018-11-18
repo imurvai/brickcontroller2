@@ -247,7 +247,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
         {
             axis.ValueChangedHandler = (ax, value) =>
             {
-                value = Math.Abs(value) < 0.1 ? 0.0F : value;
+                value = AdjustControllerValue(value);
 
                 if (!_lastControllerEventValueMap.ContainsKey(name) || !AreAlmostEqual(_lastControllerEventValueMap[name], value))
                 {
@@ -255,6 +255,14 @@ namespace BrickController2.iOS.PlatformServices.GameController
                     _lastControllerEventValueMap[name] = value;
                 }
             };
+        }
+
+        private float AdjustControllerValue(float value)
+        {
+            value = Math.Abs(value) < 0.05 ? 0.0F : value;
+            value = value > 0.95 ? 1.0F : value;
+            value = value < -0.95 ? -1.0F : value;
+            return value;
         }
 
         private bool AreAlmostEqual(float a, float b)

@@ -47,7 +47,7 @@ namespace BrickController2.DeviceManagement
 
         protected override bool ProcessServices(IEnumerable<IGattService> services)
         {
-            var service = services.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
+            var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
 
             return _characteristic != null;

@@ -49,7 +49,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                 }
                 else
                 {
-                    _bluetoothDevice.ConnectGatt(_context, true, this);
+                    _bluetoothGatt = _bluetoothDevice.ConnectGatt(_context, true, this);
                 }
 
                 if (_bluetoothGatt == null)
@@ -58,7 +58,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                     return null;
                 }
 
-                _connectCompletionSource = new TaskCompletionSource<IEnumerable<IGattService>>();
+                _connectCompletionSource = new TaskCompletionSource<IEnumerable<IGattService>>(TaskCreationOptions.RunContinuationsAsynchronously);
                 token.Register(() =>
                 {
                     lock(_lock)
@@ -111,7 +111,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                     return false;
                 }
 
-                _writeCompletionSource = new TaskCompletionSource<bool>();
+                _writeCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
                 if (!_bluetoothGatt.WriteCharacteristic(gattCharacteristic))
                 {

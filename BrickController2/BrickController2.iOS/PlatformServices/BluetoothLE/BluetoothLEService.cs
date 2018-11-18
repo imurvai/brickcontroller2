@@ -38,7 +38,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             _scanCallback = scanCallback;
             _centralManager.ScanForPeripherals(null, new PeripheralScanningOptions { AllowDuplicatesKey = true });
 
-            var tcs = new TaskCompletionSource<bool>();
+            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             token.Register(() =>
             {

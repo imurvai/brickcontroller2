@@ -26,8 +26,11 @@ namespace BrickController2.UI.ViewModels
         private readonly IDictionary<string, float[]> _previousButtonOutputs = new Dictionary<string, float[]>();
         private readonly IDictionary<(string, int), IDictionary<(GameControllerEventType, string), float>> _axisOutputValues = new Dictionary<(string, int), IDictionary<(GameControllerEventType, string), float>>();
 
-        private readonly IDictionary<Device, Task<DeviceConnectionResult>> _connectionTasks = new Dictionary<Device, Task<DeviceConnectionResult>>();
+        private readonly IDictionary<Device, Task<DeviceConnectionResult>> _deviceConnectionTasks = new Dictionary<Device, Task<DeviceConnectionResult>>();
+        private Task _connectionTask;
         private CancellationTokenSource _connectionTokenSource;
+        private TaskCompletionSource<bool> _connectionCompletionSource;
+        private bool _isDisappearing = false;
 
         public PlayerPageViewModel(
             INavigationService navigationService,
@@ -65,6 +68,7 @@ namespace BrickController2.UI.ViewModels
         public override async void OnAppearing()
         {
             base.OnAppearing();
+            _isDisappearing = false;
 
             if (_devices.Any(d => d.DeviceType != DeviceType.Infrared))
             {
@@ -76,27 +80,34 @@ namespace BrickController2.UI.ViewModels
                 }
             }
 
+            _gameControllerService.GameControllerEvent += GameControllerEventHandler;
             foreach (var device in _devices)
             {
                 device.DeviceStateChanged += OnDeviceStateChanged;
             }
 
-            _gameControllerService.GameControllerEvent += GameControllerEventHandler;
-            await ConnectDevicesAsync();
-
-            ChangeOutputLevel(BuWizzOutputLevel, _buwizzDevices);
-            ChangeOutputLevel(BuWizz2OutputLevel, _buwizz2Devices);
+            _connectionTask = ConnectDevicesAsync();
         }
 
         public override async void OnDisappearing()
         {
+            _isDisappearing = true;
+
+            _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
             foreach (var device in _devices)
             {
                 device.DeviceStateChanged -= OnDeviceStateChanged;
             }
 
-            _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
-            await DisconnectDevicesAsync();
+            if (_connectionTokenSource != null)
+            {
+                _connectionTokenSource.Cancel();
+                await _connectionCompletionSource.Task;
+            }
+            else
+            {
+                await DisconnectDevicesAsync();
+            }
 
             base.OnDisappearing();
         }
@@ -131,14 +142,15 @@ namespace BrickController2.UI.ViewModels
             if (_connectionTokenSource == null)
             {
                 _connectionTokenSource = new CancellationTokenSource();
+                _connectionCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
                 showProgress = true;
             }
 
             foreach (var device in _devices)
             {
-                if (device.DeviceState == DeviceState.Disconnected && !_connectionTasks.ContainsKey(device))
+                if (device.DeviceState == DeviceState.Disconnected && !_deviceConnectionTasks.ContainsKey(device))
                 {
-                    _connectionTasks[device] = device.ConnectAsync(_connectionTokenSource.Token);
+                    _deviceConnectionTasks[device] = device.ConnectAsync(_connectionTokenSource.Token);
                 }
             }
 
@@ -153,9 +165,9 @@ namespace BrickController2.UI.ViewModels
                 {
                     token.Register(() => _connectionTokenSource?.Cancel());
 
-                    while (_connectionTasks.Values.Any(t => !t.IsCompleted))
+                    while (_deviceConnectionTasks.Values.Any(t => !t.IsCompleted))
                     {
-                        await Task.WhenAll(_connectionTasks.Values);
+                        await Task.WhenAll(_deviceConnectionTasks.Values);
                     }
                 },
                 "Connecting...",
@@ -164,12 +176,22 @@ namespace BrickController2.UI.ViewModels
 
             _connectionTokenSource.Dispose();
             _connectionTokenSource = null;
-            _connectionTasks.Clear();
+            _connectionCompletionSource.SetResult(true);
+            _deviceConnectionTasks.Clear();
 
-            if (_devices.Any(d => d.DeviceState != DeviceState.Connected))
+            if (_devices.All(d => d.DeviceState == DeviceState.Connected))
+            {
+                ChangeOutputLevel(BuWizzOutputLevel, _buwizzDevices);
+                ChangeOutputLevel(BuWizz2OutputLevel, _buwizz2Devices);
+            }
+            else
             {
                 await DisconnectDevicesAsync();
-                await NavigationService.NavigateBackAsync();
+
+                if (!_isDisappearing)
+                {
+                    await NavigationService.NavigateBackAsync();
+                }
             }
         }
 
@@ -193,13 +215,13 @@ namespace BrickController2.UI.ViewModels
                 "Cancel");
         }
 
-        private async void OnDeviceStateChanged(object sender, DeviceStateChangedEventArgs args)
+        private void OnDeviceStateChanged(object sender, DeviceStateChangedEventArgs args)
         {
             if (sender is Device device)
             {
                 if (args.IsError && args.NewState == DeviceState.Disconnected)
                 {
-                    await ConnectDevicesAsync();
+                    _connectionTask = ConnectDevicesAsync();
                 }
             }
         }

@@ -37,7 +37,7 @@ namespace BrickController2.DeviceManagement
                 await SetStateAsync(DeviceState.Connecting, false);
                 var services = await _bleDevice.ConnectAndDiscoverServicesAsync(token);
 
-                if (services != null && ProcessServices(services))
+                if (ProcessServices(services))
                 {
                     await StartOutputTaskAsync();
                     _bleDevice.Disconnected += OnDeviceDisconnected;

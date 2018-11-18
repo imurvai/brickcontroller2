@@ -42,7 +42,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 State = BluetoothLEDeviceState.Connecting;
                 _centralManager.ConnectPeripheral(_peripheral, new PeripheralConnectionOptions { NotifyOnConnection = true, NotifyOnDisconnection = true });
 
-                _connectCompletionSource = new TaskCompletionSource<IEnumerable<IGattService>>();
+                _connectCompletionSource = new TaskCompletionSource<IEnumerable<IGattService>>(TaskCreationOptions.RunContinuationsAsynchronously);
                 token.Register(() =>
                 {
                     lock (_lock)
@@ -84,7 +84,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
                 var nativeData = NSData.FromArray(data);
 
-                _writeCompletionSource = new TaskCompletionSource<bool>();
+                _writeCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
                 _peripheral.WriteValue(nativeData, nativeCharacteristic, CBCharacteristicWriteType.WithResponse);
             }
 
@@ -118,7 +118,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                     {
                         foreach (var service in _peripheral.Services)
                         {
-                            _discoverCompletionSource = new TaskCompletionSource<IEnumerable<IGattCharacteristic>>();
+                            _discoverCompletionSource = new TaskCompletionSource<IEnumerable<IGattCharacteristic>>(TaskCreationOptions.RunContinuationsAsynchronously);
 
                             _peripheral.DiscoverCharacteristics(service);
 

@@ -23,7 +23,7 @@ namespace BrickController2.Helpers
             }
             else
             {
-                var tcs = new TaskCompletionSource<bool>();
+                var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
                 Device.BeginInvokeOnMainThread(() =>
                 {

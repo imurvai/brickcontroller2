@@ -85,7 +85,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                     return false;
                 }
 
-                var tcs = new TaskCompletionSource<bool>();
+                var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
                 token.Register(() =>
                 {
                     _bluetoothAdapter.StopLeScan(leScanner);
@@ -111,7 +111,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
                 _bluetoothAdapter.BluetoothLeScanner.StartScan(null, settingsBuilder.Build(), leScanner);
 
-                var tcs = new TaskCompletionSource<bool>();
+                var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
                 token.Register(() =>
                 {
                     _bluetoothAdapter.BluetoothLeScanner.StopScan(leScanner);

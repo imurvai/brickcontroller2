@@ -7,7 +7,7 @@ namespace BrickController2.Helpers
     {
         public static Task WaitAsync(this CancellationToken token)
         {
-            var tcs = new TaskCompletionSource<bool>();
+            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             token.Register(() => tcs.SetResult(true));
             return tcs.Task;
         }
