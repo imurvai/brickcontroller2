@@ -37,18 +37,18 @@ namespace BrickController2.DeviceManagement
                 await SetStateAsync(DeviceState.Connecting, false);
                 var services = await _bleDevice.ConnectAndDiscoverServicesAsync(token);
 
+                token.ThrowIfCancellationRequested();
+
                 if (ProcessServices(services))
                 {
                     await StartOutputTaskAsync();
+
+                    token.ThrowIfCancellationRequested();
+
                     _bleDevice.Disconnected += OnDeviceDisconnected;
 
                     await SetStateAsync(DeviceState.Connected, false);
                     return DeviceConnectionResult.Ok;
-                }
-                else if (token.IsCancellationRequested)
-                {
-                    await DisconnectInternalAsync(false);
-                    return DeviceConnectionResult.Canceled;
                 }
             }
             catch (OperationCanceledException)

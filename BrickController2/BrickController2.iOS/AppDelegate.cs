@@ -27,6 +27,16 @@ namespace BrickController2.iOS
             return base.FinishedLaunching(uiApp, options);
         }
 
+        public override void DidEnterBackground(UIApplication uiApplication)
+        {
+            base.DidEnterBackground(uiApplication);
+        }
+
+        public override void WillEnterForeground(UIApplication uiApplication)
+        {
+            base.WillEnterForeground(uiApplication);
+        }
+
         private IContainer InitDI()
         {
             var builder = new ContainerBuilder();

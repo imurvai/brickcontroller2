@@ -66,13 +66,12 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
         public IBluetoothLEDevice GetKnownDevice(string address)
         {
-            var device = _bluetoothAdapter?.GetRemoteDevice(address);
-            if (device == null)
+            if (!IsBluetoothLESupported)
             {
                 return null;
             }
 
-            return new BluetoothLEDevice(_context, device);
+            return new BluetoothLEDevice(_context, _bluetoothAdapter, address);
         }
 
         private async Task<bool> OldScanAsync(Action<BrickController2.PlatformServices.BluetoothLE.ScanResult> scanCallback, CancellationToken token)
