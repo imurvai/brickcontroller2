@@ -1,4 +1,5 @@
 ﻿using BrickController2.Helpers;
+using BrickController2.UI.Services.UIThread;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,15 +9,17 @@ namespace BrickController2.DeviceManagement
     public abstract class Device : NotifyPropertyChangedSource
     {
         private readonly IDeviceRepository _deviceRepository;
+        private readonly IUIThreadService _uiThreadService;
         protected readonly AsyncLock _asyncLock = new AsyncLock();
 
         private string _name;
         private DeviceState _deviceState;
         protected int _outputLevel;
 
-        internal Device(string name, string address, IDeviceRepository deviceRepository)
+        internal Device(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uIThreadService)
         {
             _deviceRepository = deviceRepository;
+            _uiThreadService = uIThreadService;
 
             _name = name;
             Address = address;
@@ -72,7 +75,7 @@ namespace BrickController2.DeviceManagement
 
         protected async Task SetStateAsync(DeviceState newState, bool isError)
         {
-            await ThreadHelper.RunOnMainThread(() =>
+            await _uiThreadService.RunOnMainThread(() =>
             {
                 var oldState = DeviceState;
                 DeviceState = newState;

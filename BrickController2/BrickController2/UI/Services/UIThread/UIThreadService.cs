@@ -2,20 +2,20 @@
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace BrickController2.Helpers
+namespace BrickController2.UI.Services.UIThread
 {
-    public static class ThreadHelper
+    public class UIThreadService : IUIThreadService
     {
-        private static int _mainThreadId;
+        private int _mainThreadId;
 
-        public static void Init()
+        public UIThreadService()
         {
             _mainThreadId = Environment.CurrentManagedThreadId;
         }
 
-        public static bool IsOnMainThread => Environment.CurrentManagedThreadId == _mainThreadId;
+        public bool IsOnMainThread => Environment.CurrentManagedThreadId == _mainThreadId;
 
-        public static async Task RunOnMainThread(Action action)
+        public async Task RunOnMainThread(Action action)
         {
             if (IsOnMainThread)
             {

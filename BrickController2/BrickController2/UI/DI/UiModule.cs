@@ -6,6 +6,7 @@ using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Pages;
 using BrickController2.UI.ViewModels;
 using Xamarin.Forms;
+using BrickController2.UI.Services.UIThread;
 
 namespace BrickController2.UI.DI
 {
@@ -16,6 +17,7 @@ namespace BrickController2.UI.DI
             // Register services
 
             builder.RegisterType<NavigationService>().As<INavigationService>().SingleInstance();
+            builder.RegisterType<UIThreadService>().As<IUIThreadService>().SingleInstance();
 
             // Register viewmodels
             foreach (var vmType in GetSubClassesOf<PageViewModelBase>())
