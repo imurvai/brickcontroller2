@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Views.InputMethods;
 using Android.Widget;
-using BrickController2.CreationManagement;
 using BrickController2.Droid.PlatformServices.GameController;
 using BrickController2.PlatformServices.GameController;
 using BrickController2.UI.Services.Dialog;
@@ -24,7 +22,7 @@ namespace BrickController2.Droid.UI.Services
             _gameControllerService = gameControllerService;
         }
 
-        public Task ShowMessageBoxAsync(string title, string message, string buttonText)
+        public async Task ShowMessageBoxAsync(string title, string message, string buttonText, CancellationToken token)
         {
             var completionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -43,10 +41,17 @@ namespace BrickController2.Droid.UI.Services
             dialog.SetCanceledOnTouchOutside(false);
             dialog.Show();
 
-            return completionSource.Task;
+            using (token.Register(() =>
+            {
+                dialog.Dismiss();
+                completionSource.SetResult(true);
+            }))
+            {
+                await completionSource.Task;
+            }
         }
 
-        public Task<bool> ShowQuestionDialogAsync(string title, string message, string positiveButtonText, string negativeButtonText)
+        public async Task<bool> ShowQuestionDialogAsync(string title, string message, string positiveButtonText, string negativeButtonText, CancellationToken token)
         {
             var completionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -70,10 +75,17 @@ namespace BrickController2.Droid.UI.Services
             dialog.SetCanceledOnTouchOutside(false);
             dialog.Show();
 
-            return completionSource.Task;
+            using (token.Register(() =>
+            {
+                dialog.Dismiss();
+                completionSource.SetCanceled();
+            }))
+            {
+                return await completionSource.Task;
+            }
         }
 
-        public Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText)
+        public async Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, CancellationToken token)
         {
             var completionSource = new TaskCompletionSource<InputDialogResult>(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -111,7 +123,14 @@ namespace BrickController2.Droid.UI.Services
             valueEditText.RequestFocus();
             inputMethodManager.ToggleSoftInput(ShowFlags.Forced, HideSoftInputFlags.ImplicitOnly);
 
-            return completionSource.Task;
+            using (token.Register(() =>
+            {
+                dialog.Dismiss();
+                completionSource.SetCanceled();
+            }))
+            {
+                return await completionSource.Task;
+            }
         }
 
         public async Task ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText)
@@ -166,7 +185,7 @@ namespace BrickController2.Droid.UI.Services
             }
         }
 
-        public Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
+        public async Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText, CancellationToken token)
         {
             var completionSource = new TaskCompletionSource<GameControllerEventDialogResult>(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -186,7 +205,14 @@ namespace BrickController2.Droid.UI.Services
             dialog.SetCanceledOnTouchOutside(false);
             dialog.Show();
 
-            return completionSource.Task;
+            using (token.Register(() =>
+            {
+                dialog.Dismiss();
+                completionSource.SetCanceled();
+            }))
+            {
+                return await completionSource.Task;
+            }
 
             void GameControllerEventHandler(object sender, GameControllerEventArgs args)
             {

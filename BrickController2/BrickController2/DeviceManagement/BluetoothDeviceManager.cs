@@ -69,7 +69,7 @@ namespace BrickController2.DeviceManagement
             var data1 = manufacturerData[0];
             var data2 = manufacturerData[1];
 
-            if (data1 == 0x98 && data2 == 0x01)
+            if ((data1 & 0xFF) == 0x98 && data2 == 0x01)
             {
                 return DeviceType.SBrick;
             }
@@ -84,7 +84,7 @@ namespace BrickController2.DeviceManagement
                 return DeviceType.BuWizz2;
             }
 
-            if (data1 == 0x97 && data2 == 0x03)
+            if ((data1 & 0xFF) == 0x97 && data2 == 0x03)
             {
                 if (manufacturerData.Length >= 4)
                 {

@@ -21,13 +21,11 @@ namespace BrickController2.UI.ViewModels
         public override void OnAppearing()
         {
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
-            base.OnAppearing();
         }
 
         public override void OnDisappearing()
         {
             _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
-            base.OnDisappearing();
         }
 
         public ObservableCollection<GameControllerEventViewModel> ControllerEventList { get; } = new ObservableCollection<GameControllerEventViewModel>(); 

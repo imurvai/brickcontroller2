@@ -16,10 +16,10 @@ namespace BrickController2.DeviceManagement
         private DeviceState _deviceState;
         protected int _outputLevel;
 
-        internal Device(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uIThreadService)
+        internal Device(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uiThreadService)
         {
             _deviceRepository = deviceRepository;
-            _uiThreadService = uIThreadService;
+            _uiThreadService = uiThreadService;
 
             _name = name;
             Address = address;

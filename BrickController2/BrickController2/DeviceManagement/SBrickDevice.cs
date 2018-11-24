@@ -1,4 +1,5 @@
 ﻿using BrickController2.PlatformServices.BluetoothLE;
+using BrickController2.UI.Services.UIThread;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +22,8 @@ namespace BrickController2.DeviceManagement
 
         private int _sendAttemptsLeft;
 
-        public SBrickDevice(string name, string address, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
-            : base(name, address, deviceRepository, bleService)
+        public SBrickDevice(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
+            : base(name, address, deviceRepository, uiThreadService, bleService)
         {
         }
 

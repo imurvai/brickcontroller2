@@ -3,8 +3,10 @@ using BrickController2.DeviceManagement;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -15,6 +17,8 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
+
+        private CancellationTokenSource _disappearingTokenSource;
 
         private Device _selectedDevice;
         private int _channel;
@@ -144,11 +148,22 @@ namespace BrickController2.UI.ViewModels
         public ICommand DeleteControllerActionCommand { get; }
         public ICommand OpenDeviceDetailsCommand { get; }
 
+        public override void OnAppearing()
+        {
+            _disappearingTokenSource?.Cancel();
+            _disappearingTokenSource = new CancellationTokenSource();
+        }
+
+        public override void OnDisappearing()
+        {
+            _disappearingTokenSource?.Cancel();
+        }
+
         private async Task SaveControllerActionAsync()
         {
             if (SelectedDevice == null)
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", "Select a device before saving.", "Ok");
+                await _dialogService.ShowMessageBoxAsync("Warning", "Select a device before saving.", "Ok", _disappearingTokenSource.Token);
                 return;
             }
 
@@ -172,17 +187,23 @@ namespace BrickController2.UI.ViewModels
 
         private async Task DeleteControllerActionAsync()
         {
-            if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this controller action?", "Yes", "No"))
+            try
             {
-                if (ControllerAction != null)
+                if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this controller action?", "Yes", "No", _disappearingTokenSource.Token))
                 {
-                    await _dialogService.ShowProgressDialogAsync(
-                        false,
-                        async (progressDialog, token) => await _creationManager.DeleteControllerActionAsync(ControllerAction),
-                        "Deleting...");
-                }
+                    if (ControllerAction != null)
+                    {
+                        await _dialogService.ShowProgressDialogAsync(
+                            false,
+                            async (progressDialog, token) => await _creationManager.DeleteControllerActionAsync(ControllerAction),
+                            "Deleting...");
+                    }
 
-                await NavigationService.NavigateBackAsync();
+                    await NavigationService.NavigateBackAsync();
+                }
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 

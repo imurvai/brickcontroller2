@@ -1,4 +1,5 @@
 ﻿using BrickController2.PlatformServices.BluetoothLE;
+using BrickController2.UI.Services.UIThread;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -14,8 +15,8 @@ namespace BrickController2.DeviceManagement
         private Task _outputTask;
         private CancellationTokenSource _outputTaskTokenSource;
 
-        public BluetoothDevice(string name, string address, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
-            : base(name, address, deviceRepository)
+        public BluetoothDevice(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
+            : base(name, address, deviceRepository, uiThreadService)
         {
             _bleService = bleService;
         }
@@ -25,75 +26,86 @@ namespace BrickController2.DeviceManagement
 
         public async override Task<DeviceConnectionResult> ConnectAsync(CancellationToken token)
         {
-            if (_bleDevice != null || DeviceState != DeviceState.Disconnected)
+            using (await _asyncLock.LockAsync())
             {
-                return DeviceConnectionResult.Error;
-            }
-
-            try
-            {
-                _bleDevice = _bleService.GetKnownDevice(Address);
-
-                await SetStateAsync(DeviceState.Connecting, false);
-                var services = await _bleDevice.ConnectAndDiscoverServicesAsync(token);
-
-                token.ThrowIfCancellationRequested();
-
-                if (ProcessServices(services))
+                if (_bleDevice != null || DeviceState != DeviceState.Disconnected)
                 {
-                    await StartOutputTaskAsync();
+                    return DeviceConnectionResult.Error;
+                }
 
-                    token.ThrowIfCancellationRequested();
+                try
+                {
+                    _bleDevice = _bleService.GetKnownDevice(Address);
+                    if (_bleDevice == null)
+                    {
+                        return DeviceConnectionResult.Error;
+                    }
 
                     _bleDevice.Disconnected += OnDeviceDisconnected;
 
-                    await SetStateAsync(DeviceState.Connected, false);
-                    return DeviceConnectionResult.Ok;
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                await DisconnectInternalAsync(false);
-                return DeviceConnectionResult.Canceled;
-            }
-            catch (Exception)
-            {
-            }
+                    await SetStateAsync(DeviceState.Connecting, false);
+                    var services = await _bleDevice.ConnectAndDiscoverServicesAsync(token);
 
-            await DisconnectInternalAsync(true);
-            return DeviceConnectionResult.Error;
+                    token.ThrowIfCancellationRequested();
+
+                    if (ProcessServices(services))
+                    {
+                        await StartOutputTaskAsync();
+
+                        token.ThrowIfCancellationRequested();
+
+
+                        await SetStateAsync(DeviceState.Connected, false);
+                        return DeviceConnectionResult.Ok;
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    await DisconnectInternalAsync(false);
+                    return DeviceConnectionResult.Canceled;
+                }
+                catch (Exception)
+                {
+                }
+
+                await DisconnectInternalAsync(true);
+                return DeviceConnectionResult.Error;
+            }
         }
 
-        public async override Task DisconnectAsync()
+        public override async Task DisconnectAsync()
         {
-            if (DeviceState == DeviceState.Disconnected)
+            using (await _asyncLock.LockAsync())
             {
-                return;
-            }
+                if (DeviceState == DeviceState.Disconnected)
+                {
+                    return;
+                }
 
-            await DisconnectInternalAsync(false);
+                await DisconnectInternalAsync(false);
+            }
         }
 
         private async Task DisconnectInternalAsync(bool isError)
         {
-            using (await _asyncLock.LockAsync())
+            if (_bleDevice != null)
             {
-                if (_bleDevice != null)
-                {
-                    await StopOutputTaskAsync();
-                    await SetStateAsync(DeviceState.Disconnecting, isError);
-                    _bleDevice.Disconnected -= OnDeviceDisconnected;
-                    _bleDevice?.Disconnect();
-                    _bleDevice = null;
-                }
-
-                await SetStateAsync(DeviceState.Disconnected, isError);
+                await StopOutputTaskAsync();
+                await SetStateAsync(DeviceState.Disconnecting, isError);
+                _bleDevice.Disconnected -= OnDeviceDisconnected;
+                _bleDevice?.Disconnect();
+                _bleDevice = null;
             }
+
+            await SetStateAsync(DeviceState.Disconnected, isError);
         }
 
         private async void OnDeviceDisconnected(object sender, EventArgs args)
         {
-            await DisconnectInternalAsync(true);
+            using (await _asyncLock.LockAsync())
+            {
+                await DisconnectInternalAsync(true);
+            }
         }
 
         private async Task StartOutputTaskAsync()

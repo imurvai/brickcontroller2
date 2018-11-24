@@ -6,6 +6,8 @@ using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Commands;
 using System.Linq;
 using BrickController2.DeviceManagement;
+using System.Threading;
+using System;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -14,6 +16,8 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
+
+        private CancellationTokenSource _disappearingTokenSource;
 
         public CreationPageViewModel(
             INavigationService navigationService,
@@ -44,21 +48,38 @@ namespace BrickController2.UI.ViewModels
         public ICommand ControllerProfileTappedCommand { get; }
         public ICommand DeleteControllerProfileCommand { get; }
 
+        public override void OnAppearing()
+        {
+            _disappearingTokenSource?.Cancel();
+            _disappearingTokenSource = new CancellationTokenSource();
+        }
+
+        public override void OnDisappearing()
+        {
+            _disappearingTokenSource.Cancel();
+        }
+
         private async Task RenameCreationAsync()
         {
-            var result = await _dialogService.ShowInputDialogAsync("Rename", "Enter a new creation name", Creation.Name, "Creation name", "Rename", "Cancel");
-            if (result.IsOk)
+            try
             {
-                if (string.IsNullOrWhiteSpace(result.Result))
+                var result = await _dialogService.ShowInputDialogAsync("Rename", "Enter a new creation name", Creation.Name, "Creation name", "Rename", "Cancel", _disappearingTokenSource.Token);
+                if (result.IsOk)
                 {
-                    await _dialogService.ShowMessageBoxAsync("Warning", "Creation name can not be empty.", "Ok");
-                    return;
-                }
+                    if (string.IsNullOrWhiteSpace(result.Result))
+                    {
+                        await _dialogService.ShowMessageBoxAsync("Warning", "Creation name can not be empty.", "Ok", _disappearingTokenSource.Token);
+                        return;
+                    }
 
-                await _dialogService.ShowProgressDialogAsync(
-                    false,
-                    async (progressDialog, token) => await _creationManager.RenameCreationAsync(Creation, result.Result),
-                    "Renaming...");
+                    await _dialogService.ShowProgressDialogAsync(
+                        false,
+                        async (progressDialog, token) => await _creationManager.RenameCreationAsync(Creation, result.Result),
+                        "Renaming...");
+                }
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 
@@ -81,39 +102,51 @@ namespace BrickController2.UI.ViewModels
             }
             else
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", warning, "Ok");
+                await _dialogService.ShowMessageBoxAsync("Warning", warning, "Ok", _disappearingTokenSource.Token);
             }
         }
 
         private async Task AddControllerProfileAsync()
         {
-            var result = await _dialogService.ShowInputDialogAsync("Controller profile", "Enter a profile name", null, "Profile name", "Create", "Cancel");
-            if (result.IsOk)
+            try
             {
-                if (string.IsNullOrWhiteSpace(result.Result))
+                var result = await _dialogService.ShowInputDialogAsync("Controller profile", "Enter a profile name", null, "Profile name", "Create", "Cancel", _disappearingTokenSource.Token);
+                if (result.IsOk)
                 {
-                    await _dialogService.ShowMessageBoxAsync("Warning", "Controller profile name can not be empty.", "Ok");
-                    return;
+                    if (string.IsNullOrWhiteSpace(result.Result))
+                    {
+                        await _dialogService.ShowMessageBoxAsync("Warning", "Controller profile name can not be empty.", "Ok", _disappearingTokenSource.Token);
+                        return;
+                    }
+
+                    ControllerProfile controllerProfile = null;
+                    await _dialogService.ShowProgressDialogAsync(
+                        false,
+                        async (progressDialog, token) => controllerProfile = await _creationManager.AddControllerProfileAsync(Creation, result.Result),
+                        "Creating...");
+
+                    await NavigationService.NavigateToAsync<ControllerProfilePageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile)));
                 }
-
-                ControllerProfile controllerProfile = null;
-                await _dialogService.ShowProgressDialogAsync(
-                    false,
-                    async (progressDialog, token) => controllerProfile = await _creationManager.AddControllerProfileAsync(Creation, result.Result),
-                    "Creating...");
-
-                await NavigationService.NavigateToAsync<ControllerProfilePageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile)));
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 
         private async Task DeleteControllerProfileAsync(ControllerProfile controllerProfile)
         {
-            if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete profile {controllerProfile.Name}?", "Yes", "No"))
+            try
             {
-                await _dialogService.ShowProgressDialogAsync(
-                    false,
-                    async (progressDialog, token) => await _creationManager.DeleteControllerProfileAsync(controllerProfile),
-                    "Deleting...");
+                if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete profile {controllerProfile.Name}?", "Yes", "No", _disappearingTokenSource.Token))
+                {
+                    await _dialogService.ShowProgressDialogAsync(
+                        false,
+                        async (progressDialog, token) => await _creationManager.DeleteControllerProfileAsync(controllerProfile),
+                        "Deleting...");
+                }
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 

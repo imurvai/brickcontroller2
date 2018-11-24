@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using BrickController2.UI.Services.UIThread;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
@@ -7,8 +8,8 @@ namespace BrickController2.DeviceManagement
     {
         private readonly IInfraredDeviceManager _infraredDeviceManager;
 
-        public InfraredDevice(string name, string address, IInfraredDeviceManager infraredDeviceManager, IDeviceRepository deviceRepository)
-            : base(name, address, deviceRepository)
+        public InfraredDevice(string name, string address, IInfraredDeviceManager infraredDeviceManager, IUIThreadService uiThreadService, IDeviceRepository deviceRepository)
+            : base(name, address, deviceRepository, uiThreadService)
         {
             _infraredDeviceManager = infraredDeviceManager;
         }

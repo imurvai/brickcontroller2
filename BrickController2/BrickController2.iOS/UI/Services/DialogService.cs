@@ -18,7 +18,7 @@ namespace BrickController2.iOS.UI.Services
             _gameControllerService = gameControllerService;
         }
 
-        public Task ShowMessageBoxAsync(string title, string message, string buttonText)
+        public async Task ShowMessageBoxAsync(string title, string message, string buttonText, CancellationToken token)
         {
             var completionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
@@ -30,10 +30,17 @@ namespace BrickController2.iOS.UI.Services
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
 
-            return completionSource.Task;
+            using (token.Register(() =>
+            {
+                 alert?.Dispose();
+                 completionSource.SetResult(true);
+            }))
+            {
+                await completionSource.Task;
+            }
         }
 
-        public Task<bool> ShowQuestionDialogAsync(string title, string message, string positiveButtonText, string negativeButtonText)
+        public async Task<bool> ShowQuestionDialogAsync(string title, string message, string positiveButtonText, string negativeButtonText, CancellationToken token)
         {
             var completionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
             var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
@@ -50,10 +57,17 @@ namespace BrickController2.iOS.UI.Services
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
 
-            return completionSource.Task;
+            using (token.Register(() =>
+            {
+                alert?.Dispose();
+                completionSource.SetCanceled();
+            }))
+            {
+                return await completionSource.Task;
+            }
         }
 
-        public Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText)
+        public async Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, CancellationToken token)
         {
             var completionSource = new TaskCompletionSource<InputDialogResult>(TaskCreationOptions.RunContinuationsAsynchronously);
             var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
@@ -76,7 +90,14 @@ namespace BrickController2.iOS.UI.Services
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
 
-            return completionSource.Task;
+            using (token.Register(() =>
+            {
+                alert?.Dispose();
+                completionSource.SetCanceled();
+            }))
+            {
+                return await completionSource.Task;
+            }
         }
 
         public async Task ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText)
@@ -130,7 +151,7 @@ namespace BrickController2.iOS.UI.Services
             }
         }
 
-        public Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText)
+        public async Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText, CancellationToken token)
         {
             var completionSource = new TaskCompletionSource<GameControllerEventDialogResult>(TaskCreationOptions.RunContinuationsAsynchronously);
             var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
@@ -145,7 +166,14 @@ namespace BrickController2.iOS.UI.Services
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
 
-            return completionSource.Task;
+            using (token.Register(() =>
+            {
+                alert?.Dispose();
+                completionSource.SetCanceled();
+            }))
+            {
+                return await completionSource.Task;
+            }
 
             async void GameControllerEventHandler(object sender, GameControllerEventArgs args)
             {

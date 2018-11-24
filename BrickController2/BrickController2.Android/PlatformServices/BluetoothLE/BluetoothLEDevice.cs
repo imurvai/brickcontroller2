@@ -36,6 +36,8 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
         public async Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(CancellationToken token)
         {
+            CancellationTokenRegistration tokenRegistration;
+
             lock(_lock)
             {
                 if (State != BluetoothLEDeviceState.Disconnected)
@@ -70,7 +72,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                 }
 
                 _connectCompletionSource = new TaskCompletionSource<IEnumerable<IGattService>>(TaskCreationOptions.RunContinuationsAsynchronously);
-                token.Register(() =>
+                tokenRegistration = token.Register(() =>
                 {
                     lock(_lock)
                     {
@@ -82,6 +84,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
             var result = await _connectCompletionSource.Task;
             _connectCompletionSource = null;
+            tokenRegistration.Dispose();
             return result;
         }
 
@@ -92,9 +95,11 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                 if (_bluetoothGatt != null)
                 {
                     _bluetoothGatt.Disconnect();
+                    _bluetoothGatt.Close();
                     _bluetoothGatt.Dispose();
-                    _bluetoothDevice.Dispose();
                     _bluetoothGatt = null;
+
+                    _bluetoothDevice.Dispose();
                     _bluetoothDevice = null;
                 }
 
@@ -169,7 +174,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                 case ProfileState.Connected:
                     lock (_lock)
                     {
-                        if (State == BluetoothLEDeviceState.Connecting)
+                        if (State == BluetoothLEDeviceState.Connecting && status == GattStatus.Success)
                         {
                             State = BluetoothLEDeviceState.Discovering;
                             Task.Run(async () =>
@@ -187,10 +192,6 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                                     }
                                 }
                             });
-                        }
-                        else
-                        {
-                            return;
                         }
                     }
 
@@ -251,11 +252,6 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
                     State = BluetoothLEDeviceState.Connected;
                     _connectCompletionSource?.SetResult(services);
-                }
-                else
-                {
-                    Disconnect();
-                    _connectCompletionSource?.SetResult(null);
                 }
             }
         }

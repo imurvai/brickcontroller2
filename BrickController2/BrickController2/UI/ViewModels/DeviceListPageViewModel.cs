@@ -14,6 +14,9 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly IDialogService _dialogService;
 
+        private CancellationTokenSource _disappearingTokenSource;
+        private bool _isDisappearing = false;
+
         public DeviceListPageViewModel(
             INavigationService navigationService,
             IDeviceManager deviceManager,
@@ -34,14 +37,33 @@ namespace BrickController2.UI.ViewModels
         public ICommand DeviceTappedCommand { get; }
         public ICommand DeleteDeviceCommand { get; }
 
+        public override void OnAppearing()
+        {
+            _isDisappearing = false;
+            _disappearingTokenSource?.Cancel();
+            _disappearingTokenSource = new CancellationTokenSource();
+        }
+
+        public override void OnDisappearing()
+        {
+            _isDisappearing = true;
+            _disappearingTokenSource.Cancel();
+        }
+
         private async Task DeleteDeviceAsync(Device device)
         {
-            if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete device {device.Name}?", "Yes", "No"))
+            try
             {
-                await _dialogService.ShowProgressDialogAsync(
-                    false,
-                    async (progressDialog, token) => await DeviceManager.DeleteDeviceAsync(device),
-                    "Deleting...");
+                if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete device {device.Name}?", "Yes", "No", _disappearingTokenSource.Token))
+                {
+                    await _dialogService.ShowProgressDialogAsync(
+                        false,
+                        async (progressDialog, token) => await DeviceManager.DeleteDeviceAsync(device),
+                        "Deleting...");
+                }
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 
@@ -49,7 +71,7 @@ namespace BrickController2.UI.ViewModels
         {
             if (!DeviceManager.IsBluetoothOn)
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", "Bluetooth is turned off.", "Ok");
+                await _dialogService.ShowMessageBoxAsync("Warning", "Bluetooth is turned off.", "Ok", _disappearingTokenSource.Token);
             }
 
             var percent = 0;
@@ -58,28 +80,32 @@ namespace BrickController2.UI.ViewModels
                 true,
                 async (progressDialog, token) =>
                 {
-                    using (var cts = new CancellationTokenSource())
+                    if (!_isDisappearing)
                     {
-                        Task<bool> scanTask = null;
-                        try
+                        using (var cts = new CancellationTokenSource())
+                        using (_disappearingTokenSource.Token.Register(() => cts.Cancel()))
                         {
-                            scanTask = DeviceManager.ScanAsync(cts.Token);
-
-                            while (!token.IsCancellationRequested && percent <= 100 && !scanTask.IsCompleted)
+                            Task<bool> scanTask = null;
+                            try
                             {
-                                progressDialog.Percent = percent;
-                                await Task.Delay(100, token);
-                                percent += 1;
+                                scanTask = DeviceManager.ScanAsync(cts.Token);
+
+                                while (!token.IsCancellationRequested && percent <= 100 && !scanTask.IsCompleted)
+                                {
+                                    progressDialog.Percent = percent;
+                                    await Task.Delay(100, token);
+                                    percent += 1;
+                                }
                             }
-                        }
-                        catch (Exception)
-                        { }
+                            catch (Exception)
+                            { }
 
-                        cts.Cancel();
+                            cts.Cancel();
 
-                        if (scanTask != null)
-                        {
-                            scanResult = await scanTask;
+                            if (scanTask != null)
+                            {
+                                scanResult = await scanTask;
+                            }
                         }
                     }
                 },
@@ -87,9 +113,9 @@ namespace BrickController2.UI.ViewModels
                 "Searching for devices.",
                 "Cancel");
 
-            if (!scanResult)
+            if (!scanResult && !_isDisappearing)
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", "Error during scanning", "Ok");
+                await _dialogService.ShowMessageBoxAsync("Warning", "Error during scanning", "Ok", CancellationToken.None);
             }
         }
     }

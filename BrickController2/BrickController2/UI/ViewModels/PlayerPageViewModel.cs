@@ -31,6 +31,7 @@ namespace BrickController2.UI.ViewModels
         private CancellationTokenSource _connectionTokenSource;
         private TaskCompletionSource<bool> _connectionCompletionSource;
         private bool _isDisappearing = false;
+        private CancellationTokenSource _disappearingTokenSource;
 
         public PlayerPageViewModel(
             INavigationService navigationService,
@@ -67,17 +68,15 @@ namespace BrickController2.UI.ViewModels
 
         public override async void OnAppearing()
         {
-            base.OnAppearing();
             _isDisappearing = false;
+            _disappearingTokenSource?.Cancel();
+            _disappearingTokenSource = new CancellationTokenSource();
 
-            if (_devices.Any(d => d.DeviceType != DeviceType.Infrared))
+            if (_devices.Any(d => d.DeviceType != DeviceType.Infrared) && !_deviceManager.IsBluetoothOn)
             {
-                if (!_deviceManager.IsBluetoothOn)
-                {
-                    await _dialogService.ShowMessageBoxAsync("Warning", "Turn bluetooth on to connect to bluetooth device(s).", "Ok");
-                    await NavigationService.NavigateBackAsync();
-                    return;
-                }
+                await _dialogService.ShowMessageBoxAsync("Warning", "Turn bluetooth on to connect to bluetooth device(s).", "Ok", _disappearingTokenSource.Token);
+                await NavigationService.NavigateBackAsync();
+                return;
             }
 
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
@@ -99,17 +98,7 @@ namespace BrickController2.UI.ViewModels
                 device.DeviceStateChanged -= OnDeviceStateChanged;
             }
 
-            if (_connectionTokenSource != null)
-            {
-                _connectionTokenSource.Cancel();
-                await _connectionCompletionSource.Task;
-            }
-            else
-            {
-                await DisconnectDevicesAsync();
-            }
-
-            base.OnDisappearing();
+            await DisconnectDevicesAsync();
         }
 
         private void CollectDevices()
@@ -197,6 +186,12 @@ namespace BrickController2.UI.ViewModels
 
         private async Task DisconnectDevicesAsync()
         {
+            if (_connectionTokenSource != null)
+            {
+                _connectionTokenSource.Cancel();
+                await _connectionCompletionSource.Task;
+            }
+
             await _dialogService.ShowProgressDialogAsync(
                 false,
                 async (progressDialog, token) =>
