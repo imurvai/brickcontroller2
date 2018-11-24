@@ -30,10 +30,10 @@ namespace BrickController2.iOS.UI.Services
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
 
-            using (token.Register(() =>
+            using (token.Register(async () =>
             {
-                 alert?.Dispose();
-                 completionSource.SetResult(true);
+                await alert.DismissViewControllerAsync(true);
+                completionSource.SetResult(true);
             }))
             {
                 await completionSource.Task;
@@ -57,9 +57,9 @@ namespace BrickController2.iOS.UI.Services
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
 
-            using (token.Register(() =>
+            using (token.Register(async () =>
             {
-                alert?.Dispose();
+                await alert.DismissViewControllerAsync(true);
                 completionSource.SetCanceled();
             }))
             {
@@ -90,9 +90,9 @@ namespace BrickController2.iOS.UI.Services
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
 
-            using (token.Register(() =>
+            using (token.Register(async () =>
             {
-                alert?.Dispose();
+                await alert.DismissViewControllerAsync(true);
                 completionSource.SetCanceled();
             }))
             {
@@ -166,9 +166,10 @@ namespace BrickController2.iOS.UI.Services
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
 
-            using (token.Register(() =>
+            using (token.Register(async () =>
             {
-                alert?.Dispose();
+                _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
+                await alert.DismissViewControllerAsync(true);
                 completionSource.SetCanceled();
             }))
             {

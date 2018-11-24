@@ -207,6 +207,7 @@ namespace BrickController2.Droid.UI.Services
 
             using (token.Register(() =>
             {
+                _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
                 dialog.Dismiss();
                 completionSource.SetCanceled();
             }))
