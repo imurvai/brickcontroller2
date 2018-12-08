@@ -3,6 +3,7 @@ using BrickController2.DeviceManagement;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Services.Translation;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -32,11 +33,12 @@ namespace BrickController2.UI.ViewModels
 
         public ControllerActionPageViewModel(
             INavigationService navigationService,
+            ITranslationService translationService,
             ICreationManager creationManager,
             IDeviceManager deviceManager,
             IDialogService dialogService,
             NavigationParameters parameters)
-            : base(navigationService)
+            : base(navigationService, translationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;

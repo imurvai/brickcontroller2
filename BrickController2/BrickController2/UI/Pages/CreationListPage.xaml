@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationListPage"
     x:Name="Page"
-    Title="Creations">
+    Title="{extensions:Translate Creations}">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -60,7 +60,7 @@
             </ListView>
 
             <!-- Creation list placeholder -->
-            <Label Grid.Row="0" Text="Add creations" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <Label Grid.Row="0" Text="{extensions:Translate AddCreations}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label.Triggers>
                     <DataTrigger TargetType="Label" Binding="{Binding Creations.Count}" Value="0">
                         <Setter Property="IsVisible" Value="True"/>
@@ -82,7 +82,7 @@
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
                         <Image Source="{extensions:ImageResource Source=ic_link.png}" WidthRequest="20" HeightRequest="20"/>
-                        <Label Text="Devices" FontSize="Small"/>
+                        <Label Text="{extensions:Translate Devices}" FontSize="Small"/>
                     </StackLayout>
                 </Frame>
                 <Frame Grid.Column="1" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
@@ -91,7 +91,7 @@
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
                         <Image Source="{extensions:ImageResource Source=ic_console.png}" WidthRequest="20" HeightRequest="20"/>
-                        <Label Text="Controller" FontSize="Small"/>
+                        <Label Text="{extensions:Translate Controller}" FontSize="Small"/>
                     </StackLayout>
                 </Frame>
                 <Frame Grid.Column="2" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
@@ -100,7 +100,7 @@
                     </Frame.GestureRecognizers>
                     <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
                         <Image Source="{extensions:ImageResource Source=ic_info.png}" WidthRequest="20" HeightRequest="20"/>
-                        <Label Text="About" FontSize="Small"/>
+                        <Label Text="{extensions:Translate About}" FontSize="Small"/>
                     </StackLayout>
                 </Frame>
             </Grid>

@@ -12,22 +12,22 @@ namespace BrickController2.UI.MarkupExtensions
 
         public ImageSource ProvideValue(IServiceProvider serviceProvider)
         {
-            return ProvideValueInternal(serviceProvider);
+            return ProvideValueInternal();
         }
 
         object IMarkupExtension.ProvideValue(IServiceProvider serviceProvider)
         {
-            return ProvideValueInternal(serviceProvider);
+            return ProvideValueInternal();
         }
 
-        private ImageSource ProvideValueInternal(IServiceProvider serviceProvider)
+        private ImageSource ProvideValueInternal()
         {
             if (string.IsNullOrEmpty(Source))
             {
                 return null;
             }
 
-            return ImageSource.FromResource($"{ImageHelper.ImageResourceRootNameSpace}.{Source}");
+            return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.{Source}");
         }
     }
 }

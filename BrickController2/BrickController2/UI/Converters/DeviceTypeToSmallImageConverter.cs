@@ -15,16 +15,16 @@ namespace BrickController2.UI.Converters
             {
                 case DeviceType.BuWizz:
                 case DeviceType.BuWizz2:
-                   return ImageSource.FromResource($"{ImageHelper.ImageResourceRootNameSpace}.buwizz_image_small.png");
+                   return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.buwizz_image_small.png");
 
                 case DeviceType.SBrick:
-                    return ImageSource.FromResource($"{ImageHelper.ImageResourceRootNameSpace}.sbrick_image_small.png");
+                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.sbrick_image_small.png");
 
                 case DeviceType.Infrared:
-                    return ImageSource.FromResource($"{ImageHelper.ImageResourceRootNameSpace}.infra_image_small.png");
+                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.infra_image_small.png");
 
                 case DeviceType.PoweredUp:
-                    return ImageSource.FromResource($"{ImageHelper.ImageResourceRootNameSpace}.poweredup_image_small.png");
+                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.poweredup_image_small.png");
 
                 default:
                     return null;

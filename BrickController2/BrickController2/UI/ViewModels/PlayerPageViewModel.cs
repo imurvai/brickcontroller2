@@ -4,6 +4,7 @@ using BrickController2.PlatformServices.GameController;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Services.Translation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,12 +36,12 @@ namespace BrickController2.UI.ViewModels
 
         public PlayerPageViewModel(
             INavigationService navigationService,
+            ITranslationService translationService,
             IDeviceManager deviceManager,
             IDialogService dialogService,
             IGameControllerService gameControllerService,
-            NavigationParameters parameters
-            )
-            : base(navigationService)
+            NavigationParameters parameters)
+            : base(navigationService, translationService)
         {
             _deviceManager = deviceManager;
             _dialogService = dialogService;

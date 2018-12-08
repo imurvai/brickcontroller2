@@ -8,6 +8,7 @@ using BrickController2.DeviceManagement;
 using System.Collections.ObjectModel;
 using System;
 using System.Threading;
+using BrickController2.UI.Services.Translation;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -21,11 +22,12 @@ namespace BrickController2.UI.ViewModels
 
         public ControllerProfilePageViewModel(
             INavigationService navigationService,
+            ITranslationService translationService,
             ICreationManager creationManager,
             IDeviceManager deviceManager,
             IDialogService dialogService,
             NavigationParameters parameters)
-            : base(navigationService)
+            : base(navigationService, translationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;

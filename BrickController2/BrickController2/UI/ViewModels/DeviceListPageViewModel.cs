@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Device = BrickController2.DeviceManagement.Device;
 using BrickController2.UI.Commands;
 using System.Threading;
+using BrickController2.UI.Services.Translation;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -19,9 +20,10 @@ namespace BrickController2.UI.ViewModels
 
         public DeviceListPageViewModel(
             INavigationService navigationService,
+            ITranslationService translationService,
             IDeviceManager deviceManager,
             IDialogService dialogService) 
-            : base(navigationService)
+            : base(navigationService, translationService)
         {
             DeviceManager = deviceManager;
             _dialogService = dialogService;
