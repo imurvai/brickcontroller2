@@ -120,8 +120,14 @@
   <data name="About" xml:space="preserve">
     <value>Névjegy</value>
   </data>
+  <data name="AddControllerProfiles" xml:space="preserve">
+    <value>Hozz létre vezérlő profilokat</value>
+  </data>
   <data name="AddCreations" xml:space="preserve">
     <value>Hozz létre alkotásokat</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Cím</value>
   </data>
   <data name="AdvancedSettings" xml:space="preserve">
     <value>Haladó beállítások</value>
@@ -134,6 +140,12 @@
   </data>
   <data name="AreYouSureToDeleteCreation" xml:space="preserve">
     <value>Biztos törölni szeretnéd ezt az alkotást:</value>
+  </data>
+  <data name="AreYouSureToDeleteDevice" xml:space="preserve">
+    <value>Biztos törölni akarod ezt az eszközt:</value>
+  </data>
+  <data name="AreYouSureToDeleteProfile" xml:space="preserve">
+    <value>Biztos törölni szeretnéd ezt a profilet:</value>
   </data>
   <data name="AreYouSureToDeleteThisControllerAcrion" xml:space="preserve">
     <value>Biztos törölni szeretnéd ezt a vezérlő akciót?</value>
@@ -150,8 +162,17 @@
   <data name="BluetoothDevicesWillNOTBeAvailable" xml:space="preserve">
     <value>A bluetooth eszközök nem lesznek elérhetőek</value>
   </data>
+  <data name="BluetoothIsTurnedOff" xml:space="preserve">
+    <value>A bluetooth ki van kapcsolva</value>
+  </data>
   <data name="ButtonType" xml:space="preserve">
     <value>Gomb típus</value>
+  </data>
+  <data name="BuWizz2OutputLevel" xml:space="preserve">
+    <value>BuWizz 2 kimeneti szint</value>
+  </data>
+  <data name="BuWizzOutputLevel" xml:space="preserve">
+    <value>BuWizz kimeneti szint</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Mégse</value>
@@ -161,6 +182,9 @@
   </data>
   <data name="Confirm" xml:space="preserve">
     <value>Jóváhagyás</value>
+  </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>Kapcsolódás...</value>
   </data>
   <data name="Controller" xml:space="preserve">
     <value>Vezérlő</value>
@@ -201,14 +225,29 @@
   <data name="Device" xml:space="preserve">
     <value>Eszköz</value>
   </data>
+  <data name="DeviceName" xml:space="preserve">
+    <value>Eszköz neve</value>
+  </data>
+  <data name="DeviceNameCanNotBeEmpty" xml:space="preserve">
+    <value>Az eszköz neve nem lehet üres</value>
+  </data>
   <data name="Devices" xml:space="preserve">
     <value>Eszközök</value>
+  </data>
+  <data name="DeviceType" xml:space="preserve">
+    <value>Eszköz típusa</value>
   </data>
   <data name="Disclaimer" xml:space="preserve">
     <value>Jogi nyilatkozat</value>
   </data>
+  <data name="Disconnecting" xml:space="preserve">
+    <value>Szétkapcsolás...</value>
+  </data>
   <data name="EnterCreationName" xml:space="preserve">
     <value>Adj meg egy alkotás nevet</value>
+  </data>
+  <data name="EnterDeviceName" xml:space="preserve">
+    <value>Adj meg egy eszköz nevet</value>
   </data>
   <data name="EnterProfileName" xml:space="preserve">
     <value>Adj meg profil nevet</value>
@@ -216,8 +255,14 @@
   <data name="Error" xml:space="preserve">
     <value>Hiba</value>
   </data>
+  <data name="ErrorDuringScanning" xml:space="preserve">
+    <value>Hiba történt szkennelés közben.</value>
+  </data>
   <data name="ExternalLibraries" xml:space="preserve">
     <value>Külső komponensek</value>
+  </data>
+  <data name="FailedToConnect" xml:space="preserve">
+    <value>Kapcsolódási hiba</value>
   </data>
   <data name="IconSet" xml:space="preserve">
     <value>Ikonok</value>
@@ -240,20 +285,35 @@
   <data name="Missing" xml:space="preserve">
     <value>Hiányzik</value>
   </data>
+  <data name="MissingDevices" xml:space="preserve">
+    <value>Az alkotás beállításokban hiányzó eszközök vannak.</value>
+  </data>
   <data name="No" xml:space="preserve">
     <value>Nem</value>
+  </data>
+  <data name="NoControllerActions" xml:space="preserve">
+    <value>Ehhez az alkotáshoz nincsenek vezérlő akciók adva.</value>
   </data>
   <data name="Ok" xml:space="preserve">
     <value>Rendben</value>
   </data>
+  <data name="OutputLevel" xml:space="preserve">
+    <value>Kimeneti szint</value>
+  </data>
   <data name="PermissionRequest" xml:space="preserve">
     <value>Hozzáférés kérés</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>Játék</value>
   </data>
   <data name="PressButtonOrMoveJoy" xml:space="preserve">
     <value>Nyomj meg egy gombot vagy mozgasd az egyik joy-t a vezérlőn!</value>
   </data>
   <data name="PressButtonsOrMoveJoys" xml:space="preserve">
     <value>Nyomj gombokat vagy mozgass joy-okat.</value>
+  </data>
+  <data name="PressScanToDiscoverDevices" xml:space="preserve">
+    <value>Nyomd meg a scan gombot az eszközök felfedezéséhez</value>
   </data>
   <data name="ProfileName" xml:space="preserve">
     <value>Profile neve</value>
@@ -276,6 +336,12 @@
   <data name="ScanForDevicesFirst" xml:space="preserve">
     <value>Keress rá az eszközökre vezérlő esemény hozzáadása előtt!</value>
   </data>
+  <data name="Scanning" xml:space="preserve">
+    <value>Szkennelés...</value>
+  </data>
+  <data name="SearchingForDevices" xml:space="preserve">
+    <value>Eszközök keresése.</value>
+  </data>
   <data name="SelectDevice" xml:space="preserve">
     <value>Válassz egy eszközt</value>
   </data>
@@ -287,6 +353,12 @@
   </data>
   <data name="ShortChannel" xml:space="preserve">
     <value>Cs</value>
+  </data>
+  <data name="TurnOnBluetoothToConnect" xml:space="preserve">
+    <value>Bluetooth eszköz kapcsolódáshoz kapcsold be a bluetooth-t</value>
+  </data>
+  <data name="TurnOnBluetoothToConnectBluetoothDevices" xml:space="preserve">
+    <value>Bluetooth eszköz(ök) kapcsolódásához kapcsold be a bluetooth-t</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Verzió</value>

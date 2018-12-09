@@ -4,9 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.DevicePage"
-    Title="Device">
+    Title="{extensions:Translate Device}">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -46,13 +47,13 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Column="0" Grid.Row="0" Text="Device name" FontSize="Small"/>
+                        <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate DeviceName}" FontSize="Small"/>
                         <Label Grid.Column="1" Grid.Row="0" Text="{Binding Device.Name}" FontSize="Medium" FontAttributes="Bold"/>
 
-                        <Label Grid.Column="0" Grid.Row="1" Text="Device type" FontSize="Small"/>
+                        <Label Grid.Column="0" Grid.Row="1" Text="{extensions:Translate  DeviceType}" FontSize="Small"/>
                         <Label Grid.Column="1" Grid.Row="1" Text="{Binding Device.DeviceType}" FontSize="Medium" FontAttributes="Bold"/>
 
-                        <Label Grid.Column="0" Grid.Row="2" Text="Address" FontSize="Small"/>
+                        <Label Grid.Column="0" Grid.Row="2" Text="{extensions:Translate Address}" FontSize="Small"/>
                         <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Text="{Binding Device.Address}" FontSize="Micro"/>
                     </Grid>
                 </Grid>
@@ -60,14 +61,14 @@
                 <!-- BuWizz 1 output level -->
                 <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizzDevice}" Padding="10">
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
-                    <Label Text="Output Level"/>
+                    <Label Text="{extensions:Translate OutputLevel}"/>
                     <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                 </StackLayout>
 
                 <!-- BuWizz 2 output level -->
                 <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizz2Device}" Padding="10">
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
-                    <Label Text="Output Level"/>
+                    <Label Text="{extensions:Translate OutputLevel}"/>
                     <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizz2OutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                 </StackLayout>
 

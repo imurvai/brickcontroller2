@@ -65,19 +65,30 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                var result = await _dialogService.ShowInputDialogAsync("Rename", "Enter a new creation name", Creation.Name, "Creation name", "Rename", "Cancel", _disappearingTokenSource.Token);
+                var result = await _dialogService.ShowInputDialogAsync(
+                    Translate("Rename"),
+                    Translate("EnterCreationName"),
+                    Creation.Name,
+                    Translate("CreationName"),
+                    Translate("Rename"),
+                    Translate("Cancel"),
+                    _disappearingTokenSource.Token);
                 if (result.IsOk)
                 {
                     if (string.IsNullOrWhiteSpace(result.Result))
                     {
-                        await _dialogService.ShowMessageBoxAsync("Warning", "Creation name can not be empty.", "Ok", _disappearingTokenSource.Token);
+                        await _dialogService.ShowMessageBoxAsync(
+                            Translate("Warning"),
+                            Translate("CreationNameCanNotBeEmpty"),
+                            Translate("Ok"),
+                            _disappearingTokenSource.Token);
                         return;
                     }
 
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.RenameCreationAsync(Creation, result.Result),
-                        "Renaming...");
+                        Translate("Renaming"));
                 }
             }
             catch (OperationCanceledException)
@@ -91,11 +102,11 @@ namespace BrickController2.UI.ViewModels
             var deviceIds = Creation.GetDeviceIds();
             if (deviceIds == null || deviceIds.Count() == 0)
             {
-                warning = "There are no controller actions added to the creation.";
+                warning = Translate("NoControllerActions");
             }
             else if (deviceIds.Any(di => _deviceManager.GetDeviceById(di) == null))
             {
-                warning = "There are missing devices in the creation setup.";
+                warning = Translate("MissingDevices");
             }
 
             if (warning == null)
@@ -104,7 +115,11 @@ namespace BrickController2.UI.ViewModels
             }
             else
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", warning, "Ok", _disappearingTokenSource.Token);
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    warning,
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
             }
         }
 
@@ -112,12 +127,25 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                var result = await _dialogService.ShowInputDialogAsync("Controller profile", "Enter a profile name", null, "Profile name", "Create", "Cancel", _disappearingTokenSource.Token);
+                var result = await _dialogService.ShowInputDialogAsync(
+                    Translate("ControllerProfile"),
+                    Translate("EnterProfileName"),
+                    null,
+                    Translate("ProfileName"),
+                    Translate("Create"),
+                    Translate("Cancel"),
+                    _disappearingTokenSource.Token);
+
                 if (result.IsOk)
                 {
                     if (string.IsNullOrWhiteSpace(result.Result))
                     {
-                        await _dialogService.ShowMessageBoxAsync("Warning", "Controller profile name can not be empty.", "Ok", _disappearingTokenSource.Token);
+                        await _dialogService.ShowMessageBoxAsync(
+                            Translate("Warning"),
+                            Translate("ProfileNameCanNotBeEmpty"),
+                            Translate("Ok"),
+                            _disappearingTokenSource.Token);
+
                         return;
                     }
 
@@ -125,7 +153,7 @@ namespace BrickController2.UI.ViewModels
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => controllerProfile = await _creationManager.AddControllerProfileAsync(Creation, result.Result),
-                        "Creating...");
+                        Translate("Creating"));
 
                     await NavigationService.NavigateToAsync<ControllerProfilePageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile)));
                 }
@@ -139,12 +167,17 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete profile {controllerProfile.Name}?", "Yes", "No", _disappearingTokenSource.Token))
+                if (await _dialogService.ShowQuestionDialogAsync(
+                    Translate("Confirm"),
+                    $"{Translate("AreYouSureToDeleteProfile")} '{controllerProfile.Name}'?",
+                    Translate("Yes"),
+                    Translate("No"),
+                    _disappearingTokenSource.Token))
                 {
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.DeleteControllerProfileAsync(controllerProfile),
-                        "Deleting...");
+                        Translate("Deleting"));
                 }
             }
             catch (OperationCanceledException)

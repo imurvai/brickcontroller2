@@ -8,7 +8,7 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationPage"
     x:Name="Page"
-    Title="Creation">
+    Title="{extensions:Translate Creation}">
 
     <local:PageBase.ToolbarItems>
         <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameCreationCommand}"/>
@@ -55,7 +55,7 @@
             </ListView>
 
             <!-- Controller profile list placeholder -->
-            <Label Grid.Row="1" Text="Add controller profiles" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <Label Grid.Row="1" Text="{extensions:Translate AddControllerProfiles}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label.Triggers>
                     <DataTrigger TargetType="Label" Binding="{Binding Creation.ControllerProfiles.Count}" Value="0">
                         <Setter Property="IsVisible" Value="True"/>

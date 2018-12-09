@@ -4,9 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.PlayerPage"
-    Title="Play">
+    Title="{extensions:Translate Play}">
 
     <local:PageBase.Content>
         <ScrollView>
@@ -27,14 +28,14 @@
 
                     <!-- BuWizz 1 output level -->
                     <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizzDevice}" Padding="20">
-                        <Label Text="BuWizz output Level"/>
+                        <Label Text="{extensions:Translate BuWizzOutputLevel}"/>
                         <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                         <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
                     </StackLayout>
 
                     <!-- BuWizz 2 output level -->
                     <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizz2Device}" Padding="20">
-                        <Label Text="BuWizz 2 output Level"/>
+                        <Label Text="{extensions:Translate BuWizz2OutputLevel}"/>
                         <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                         <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
                     </StackLayout>

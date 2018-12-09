@@ -120,8 +120,14 @@
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="AddControllerProfiles" xml:space="preserve">
+    <value>Add controller profiles</value>
+  </data>
   <data name="AddCreations" xml:space="preserve">
     <value>Add creations</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
   </data>
   <data name="AdvancedSettings" xml:space="preserve">
     <value>Advanced settings</value>
@@ -134,6 +140,12 @@
   </data>
   <data name="AreYouSureToDeleteCreation" xml:space="preserve">
     <value>Are you sure to delete creation</value>
+  </data>
+  <data name="AreYouSureToDeleteDevice" xml:space="preserve">
+    <value>Are you sure to delete device</value>
+  </data>
+  <data name="AreYouSureToDeleteProfile" xml:space="preserve">
+    <value>Are you sure to delete profile</value>
   </data>
   <data name="AreYouSureToDeleteThisControllerAcrion" xml:space="preserve">
     <value>Are you sure to delete this controller action?</value>
@@ -150,8 +162,17 @@
   <data name="BluetoothDevicesWillNOTBeAvailable" xml:space="preserve">
     <value>Bluetooth devices will NOT be available</value>
   </data>
+  <data name="BluetoothIsTurnedOff" xml:space="preserve">
+    <value>Bluetooth is turned off.</value>
+  </data>
   <data name="ButtonType" xml:space="preserve">
     <value>Button type</value>
+  </data>
+  <data name="BuWizz2OutputLevel" xml:space="preserve">
+    <value>BuWizz 2 output level</value>
+  </data>
+  <data name="BuWizzOutputLevel" xml:space="preserve">
+    <value>BuWizz output level</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -161,6 +182,9 @@
   </data>
   <data name="Confirm" xml:space="preserve">
     <value>Confirm</value>
+  </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>Connecting</value>
   </data>
   <data name="Controller" xml:space="preserve">
     <value>Controller</value>
@@ -201,14 +225,29 @@
   <data name="Device" xml:space="preserve">
     <value>Device</value>
   </data>
+  <data name="DeviceName" xml:space="preserve">
+    <value>Device name</value>
+  </data>
+  <data name="DeviceNameCanNotBeEmpty" xml:space="preserve">
+    <value>Device name can not be empty.</value>
+  </data>
   <data name="Devices" xml:space="preserve">
     <value>Devices</value>
+  </data>
+  <data name="DeviceType" xml:space="preserve">
+    <value>Device type</value>
   </data>
   <data name="Disclaimer" xml:space="preserve">
     <value>Disclaimer</value>
   </data>
+  <data name="Disconnecting" xml:space="preserve">
+    <value>Disconnecting</value>
+  </data>
   <data name="EnterCreationName" xml:space="preserve">
     <value>Enter a creation name</value>
+  </data>
+  <data name="EnterDeviceName" xml:space="preserve">
+    <value>Enter a device name</value>
   </data>
   <data name="EnterProfileName" xml:space="preserve">
     <value>Enter a new profile name</value>
@@ -216,8 +255,14 @@
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="ErrorDuringScanning" xml:space="preserve">
+    <value>Error during scanning</value>
+  </data>
   <data name="ExternalLibraries" xml:space="preserve">
     <value>3rd party components</value>
+  </data>
+  <data name="FailedToConnect" xml:space="preserve">
+    <value>Failed to connect.</value>
   </data>
   <data name="IconSet" xml:space="preserve">
     <value>Icon set</value>
@@ -240,20 +285,35 @@
   <data name="Missing" xml:space="preserve">
     <value>Missing</value>
   </data>
+  <data name="MissingDevices" xml:space="preserve">
+    <value>There are missing devices in the creation setup.</value>
+  </data>
   <data name="No" xml:space="preserve">
     <value>No</value>
+  </data>
+  <data name="NoControllerActions" xml:space="preserve">
+    <value>There are no controller actions added to the creation.</value>
   </data>
   <data name="Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="OutputLevel" xml:space="preserve">
+    <value>Output level</value>
+  </data>
   <data name="PermissionRequest" xml:space="preserve">
     <value>Permission request</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>Play</value>
   </data>
   <data name="PressButtonOrMoveJoy" xml:space="preserve">
     <value>Press a button or move a joy on the game controller</value>
   </data>
   <data name="PressButtonsOrMoveJoys" xml:space="preserve">
     <value>Press buttons or move joys</value>
+  </data>
+  <data name="PressScanToDiscoverDevices" xml:space="preserve">
+    <value>Press scan to discover devices</value>
   </data>
   <data name="ProfileName" xml:space="preserve">
     <value>Profile name</value>
@@ -276,6 +336,12 @@
   <data name="ScanForDevicesFirst" xml:space="preserve">
     <value>Scan for devices before adding controller events!</value>
   </data>
+  <data name="Scanning" xml:space="preserve">
+    <value>Scanning...</value>
+  </data>
+  <data name="SearchingForDevices" xml:space="preserve">
+    <value>Searching for devices.</value>
+  </data>
   <data name="SelectDevice" xml:space="preserve">
     <value>Select device</value>
   </data>
@@ -287,6 +353,12 @@
   </data>
   <data name="ShortChannel" xml:space="preserve">
     <value>Ch</value>
+  </data>
+  <data name="TurnOnBluetoothToConnect" xml:space="preserve">
+    <value>Turn bluetooth on to connect to a bluetooth device.</value>
+  </data>
+  <data name="TurnOnBluetoothToConnectBluetoothDevices" xml:space="preserve">
+    <value>Turn bluetooth on to connect to bluetooth device(s).</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>

@@ -75,7 +75,12 @@ namespace BrickController2.UI.ViewModels
 
             if (_devices.Any(d => d.DeviceType != DeviceType.Infrared) && !_deviceManager.IsBluetoothOn)
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", "Turn bluetooth on to connect to bluetooth device(s).", "Ok", _disappearingTokenSource.Token);
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    Translate("TurnOnBluetoothToConnectBluetoothDevices"),
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
+
                 await NavigationService.NavigateBackAsync();
                 return;
             }
@@ -160,9 +165,9 @@ namespace BrickController2.UI.ViewModels
                         await Task.WhenAll(_deviceConnectionTasks.Values);
                     }
                 },
-                "Connecting...",
+                Translate("Connecting"),
                 null,
-                "Cancel");
+                Translate("Cancel"));
 
             _connectionTokenSource.Dispose();
             _connectionTokenSource = null;
@@ -206,9 +211,9 @@ namespace BrickController2.UI.ViewModels
 
                     await Task.WhenAll(tasks);
                 },
-                "Disconnecting...",
+                Translate("Disconnecting"),
                 null,
-                "Cancel");
+                null);
         }
 
         private void OnDeviceStateChanged(object sender, DeviceStateChangedEventArgs args)
