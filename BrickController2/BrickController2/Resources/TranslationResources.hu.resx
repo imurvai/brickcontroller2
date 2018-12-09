@@ -123,20 +123,56 @@
   <data name="AddCreations" xml:space="preserve">
     <value>Hozz létre alkotásokat</value>
   </data>
+  <data name="AdvancedSettings" xml:space="preserve">
+    <value>Haladó beállítások</value>
+  </data>
+  <data name="AreYouSureToDeleteControllerAction" xml:space="preserve">
+    <value>Biztos törölni szeretnéd ezt az akciót?</value>
+  </data>
+  <data name="AreYouSureToDeleteControllerEvent" xml:space="preserve">
+    <value>Biztos törölni szeretnéd ezt a vezérlő eseményt:</value>
+  </data>
   <data name="AreYouSureToDeleteCreation" xml:space="preserve">
     <value>Biztos törölni szeretnéd ezt az alkotást:</value>
+  </data>
+  <data name="AreYouSureToDeleteThisControllerAcrion" xml:space="preserve">
+    <value>Biztos törölni szeretnéd ezt a vezérlő akciót?</value>
+  </data>
+  <data name="AxisCharacteristic" xml:space="preserve">
+    <value>Tengely karakterisztika</value>
+  </data>
+  <data name="AxisDeadZone" xml:space="preserve">
+    <value>Tengely inaktív zóna</value>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>Kék</value>
   </data>
   <data name="BluetoothDevicesWillNOTBeAvailable" xml:space="preserve">
     <value>A bluetooth eszközök nem lesznek elérhetőek</value>
   </data>
+  <data name="ButtonType" xml:space="preserve">
+    <value>Gomb típus</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Elvet</value>
+    <value>Mégse</value>
+  </data>
+  <data name="ChannelType" xml:space="preserve">
+    <value>Csatorna típus</value>
   </data>
   <data name="Confirm" xml:space="preserve">
     <value>Jóváhagyás</value>
   </data>
   <data name="Controller" xml:space="preserve">
     <value>Vezérlő</value>
+  </data>
+  <data name="ControllerAction" xml:space="preserve">
+    <value>Vezérlő akció</value>
+  </data>
+  <data name="ControllerProfile" xml:space="preserve">
+    <value>Vezérlő profil</value>
+  </data>
+  <data name="ControllerTester" xml:space="preserve">
+    <value>Vezérlő teszt</value>
   </data>
   <data name="Create" xml:space="preserve">
     <value>Létrehozás</value>
@@ -162,14 +198,35 @@
   <data name="Deleting" xml:space="preserve">
     <value>Törlés...</value>
   </data>
+  <data name="Device" xml:space="preserve">
+    <value>Eszköz</value>
+  </data>
   <data name="Devices" xml:space="preserve">
     <value>Eszközök</value>
+  </data>
+  <data name="Disclaimer" xml:space="preserve">
+    <value>Jogi nyilatkozat</value>
   </data>
   <data name="EnterCreationName" xml:space="preserve">
     <value>Adj meg egy alkotás nevet</value>
   </data>
+  <data name="EnterProfileName" xml:space="preserve">
+    <value>Adj meg profil nevet</value>
+  </data>
   <data name="Error" xml:space="preserve">
     <value>Hiba</value>
+  </data>
+  <data name="ExternalLibraries" xml:space="preserve">
+    <value>Külső komponensek</value>
+  </data>
+  <data name="IconSet" xml:space="preserve">
+    <value>Ikonok</value>
+  </data>
+  <data name="Inv" xml:space="preserve">
+    <value>Ford.</value>
+  </data>
+  <data name="Invert" xml:space="preserve">
+    <value>Megfordít</value>
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Betöltés...</value>
@@ -177,17 +234,62 @@
   <data name="LocationPermissionIsNeeded" xml:space="preserve">
     <value>Helyzet hozzáférés szükséges a Bluetooth eléréséhez</value>
   </data>
+  <data name="MaxOutput" xml:space="preserve">
+    <value>Max kimenet</value>
+  </data>
+  <data name="Missing" xml:space="preserve">
+    <value>Hiányzik</value>
+  </data>
   <data name="No" xml:space="preserve">
     <value>Nem</value>
   </data>
   <data name="Ok" xml:space="preserve">
-    <value>Ok</value>
+    <value>Rendben</value>
   </data>
   <data name="PermissionRequest" xml:space="preserve">
     <value>Hozzáférés kérés</value>
   </data>
+  <data name="PressButtonOrMoveJoy" xml:space="preserve">
+    <value>Nyomj meg egy gombot vagy mozgasd az egyik joy-t a vezérlőn!</value>
+  </data>
+  <data name="PressButtonsOrMoveJoys" xml:space="preserve">
+    <value>Nyomj gombokat vagy mozgass joy-okat.</value>
+  </data>
+  <data name="ProfileName" xml:space="preserve">
+    <value>Profile neve</value>
+  </data>
+  <data name="ProfileNameCanNotBeEmpty" xml:space="preserve">
+    <value>A profil neve nem lehet üres</value>
+  </data>
+  <data name="Red" xml:space="preserve">
+    <value>Piros</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Átnevezés</value>
+  </data>
   <data name="Renaming" xml:space="preserve">
     <value>Átnevezés...</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Mentés...</value>
+  </data>
+  <data name="ScanForDevicesFirst" xml:space="preserve">
+    <value>Keress rá az eszközökre vezérlő esemény hozzáadása előtt!</value>
+  </data>
+  <data name="SelectDevice" xml:space="preserve">
+    <value>Válassz egy eszközt</value>
+  </data>
+  <data name="SelectDeviceBeforeSaving" xml:space="preserve">
+    <value>Válassz egy eszközt mentés előtt!</value>
+  </data>
+  <data name="ServoAngle" xml:space="preserve">
+    <value>Szervó elfordulás</value>
+  </data>
+  <data name="ShortChannel" xml:space="preserve">
+    <value>Cs</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Verzió</value>
   </data>
   <data name="Warning" xml:space="preserve">
     <value>Figyelmeztetés</value>

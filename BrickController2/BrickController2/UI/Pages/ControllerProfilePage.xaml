@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerProfilePage"
     x:Name="Page"
-    Title="Controller profile">
+    Title="{extensions:Translate ControllerProfile}">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -80,9 +80,11 @@
                                 </Grid.ColumnDefinitions>
                                 <Image Grid.Column="0" Source="{extensions:ImageResource Source=ic_exclamation_mark_red.png}" IsVisible="{Binding DeviceMissing}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center"/>
                                 <StackLayout Grid.Column="1" Orientation="Horizontal" VerticalOptions="Center">
-                                    <Label Text="Device: "/>
+                                    <Label Text="{extensions:Translate Device}"/>
+                                    <Label Text=": "/>
                                     <Label Text="{Binding DeviceName}" FontAttributes="Bold"/>
-                                    <Label Text="Ch: "/>
+                                    <Label Text="{extensions:Translate ShortChannel}"/>
+                                    <Label Text=": "/>
                                     <Label Text="{Binding ChannelName}" FontAttributes="Bold"/>
                                     <Label Text=" - "/>
                                     <Label Text="{Binding InvertName}" FontAttributes="Bold"/>

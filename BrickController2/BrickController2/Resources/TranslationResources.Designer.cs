@@ -79,11 +79,74 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advanced settings.
+        /// </summary>
+        internal static string AdvancedSettings {
+            get {
+                return ResourceManager.GetString("AdvancedSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure to delete this controller action?.
+        /// </summary>
+        internal static string AreYouSureToDeleteControllerAction {
+            get {
+                return ResourceManager.GetString("AreYouSureToDeleteControllerAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure to delete controller event.
+        /// </summary>
+        internal static string AreYouSureToDeleteControllerEvent {
+            get {
+                return ResourceManager.GetString("AreYouSureToDeleteControllerEvent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure to delete creation.
         /// </summary>
         internal static string AreYouSureToDeleteCreation {
             get {
                 return ResourceManager.GetString("AreYouSureToDeleteCreation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure to delete this controller action?.
+        /// </summary>
+        internal static string AreYouSureToDeleteThisControllerAcrion {
+            get {
+                return ResourceManager.GetString("AreYouSureToDeleteThisControllerAcrion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Axis characteristic.
+        /// </summary>
+        internal static string AxisCharacteristic {
+            get {
+                return ResourceManager.GetString("AxisCharacteristic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Axis dead zone.
+        /// </summary>
+        internal static string AxisDeadZone {
+            get {
+                return ResourceManager.GetString("AxisDeadZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blue.
+        /// </summary>
+        internal static string Blue {
+            get {
+                return ResourceManager.GetString("Blue", resourceCulture);
             }
         }
         
@@ -97,11 +160,29 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Button type.
+        /// </summary>
+        internal static string ButtonType {
+            get {
+                return ResourceManager.GetString("ButtonType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel type.
+        /// </summary>
+        internal static string ChannelType {
+            get {
+                return ResourceManager.GetString("ChannelType", resourceCulture);
             }
         }
         
@@ -120,6 +201,33 @@ namespace BrickController2.Resources {
         internal static string Controller {
             get {
                 return ResourceManager.GetString("Controller", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controller Action.
+        /// </summary>
+        internal static string ControllerAction {
+            get {
+                return ResourceManager.GetString("ControllerAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controller profile.
+        /// </summary>
+        internal static string ControllerProfile {
+            get {
+                return ResourceManager.GetString("ControllerProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controller tester.
+        /// </summary>
+        internal static string ControllerTester {
+            get {
+                return ResourceManager.GetString("ControllerTester", resourceCulture);
             }
         }
         
@@ -196,11 +304,29 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Device.
+        /// </summary>
+        internal static string Device {
+            get {
+                return ResourceManager.GetString("Device", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Devices.
         /// </summary>
         internal static string Devices {
             get {
                 return ResourceManager.GetString("Devices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disclaimer.
+        /// </summary>
+        internal static string Disclaimer {
+            get {
+                return ResourceManager.GetString("Disclaimer", resourceCulture);
             }
         }
         
@@ -214,11 +340,56 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter a new profile name.
+        /// </summary>
+        internal static string EnterProfileName {
+            get {
+                return ResourceManager.GetString("EnterProfileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         internal static string Error {
             get {
                 return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3rd party components.
+        /// </summary>
+        internal static string ExternalLibraries {
+            get {
+                return ResourceManager.GetString("ExternalLibraries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Icon set.
+        /// </summary>
+        internal static string IconSet {
+            get {
+                return ResourceManager.GetString("IconSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inv.
+        /// </summary>
+        internal static string Inv {
+            get {
+                return ResourceManager.GetString("Inv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invert.
+        /// </summary>
+        internal static string Invert {
+            get {
+                return ResourceManager.GetString("Invert", resourceCulture);
             }
         }
         
@@ -237,6 +408,24 @@ namespace BrickController2.Resources {
         internal static string LocationPermissionIsNeeded {
             get {
                 return ResourceManager.GetString("LocationPermissionIsNeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max output.
+        /// </summary>
+        internal static string MaxOutput {
+            get {
+                return ResourceManager.GetString("MaxOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Missing.
+        /// </summary>
+        internal static string Missing {
+            get {
+                return ResourceManager.GetString("Missing", resourceCulture);
             }
         }
         
@@ -268,11 +457,128 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Press a button or move a joy on the game controller.
+        /// </summary>
+        internal static string PressButtonOrMoveJoy {
+            get {
+                return ResourceManager.GetString("PressButtonOrMoveJoy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press buttons or move joys.
+        /// </summary>
+        internal static string PressButtonsOrMoveJoys {
+            get {
+                return ResourceManager.GetString("PressButtonsOrMoveJoys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile name.
+        /// </summary>
+        internal static string ProfileName {
+            get {
+                return ResourceManager.GetString("ProfileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile name can not be empty..
+        /// </summary>
+        internal static string ProfileNameCanNotBeEmpty {
+            get {
+                return ResourceManager.GetString("ProfileNameCanNotBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Red.
+        /// </summary>
+        internal static string Red {
+            get {
+                return ResourceManager.GetString("Red", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        internal static string Rename {
+            get {
+                return ResourceManager.GetString("Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Renaming....
         /// </summary>
         internal static string Renaming {
             get {
                 return ResourceManager.GetString("Renaming", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving....
+        /// </summary>
+        internal static string Saving {
+            get {
+                return ResourceManager.GetString("Saving", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scan for devices before adding controller events!.
+        /// </summary>
+        internal static string ScanForDevicesFirst {
+            get {
+                return ResourceManager.GetString("ScanForDevicesFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select device.
+        /// </summary>
+        internal static string SelectDevice {
+            get {
+                return ResourceManager.GetString("SelectDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a device before saving..
+        /// </summary>
+        internal static string SelectDeviceBeforeSaving {
+            get {
+                return ResourceManager.GetString("SelectDeviceBeforeSaving", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Servo angle.
+        /// </summary>
+        internal static string ServoAngle {
+            get {
+                return ResourceManager.GetString("ServoAngle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ch.
+        /// </summary>
+        internal static string ShortChannel {
+            get {
+                return ResourceManager.GetString("ShortChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        internal static string Version {
+            get {
+                return ResourceManager.GetString("Version", resourceCulture);
             }
         }
         

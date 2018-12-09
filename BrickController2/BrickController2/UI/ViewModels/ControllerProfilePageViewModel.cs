@@ -72,19 +72,30 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                var result = await _dialogService.ShowInputDialogAsync("Rename", "Enter a new profile name", ControllerProfile.Name, "Profile name", "Rename", "Cancel", _disappearingTokenSource.Token);
+                var result = await _dialogService.ShowInputDialogAsync(
+                    Translate("Rename"),
+                    Translate("EnterProfileName"),
+                    ControllerProfile.Name,
+                    Translate("ProfileName"),
+                    Translate("Rename"),
+                    Translate("Cancel"),
+                    _disappearingTokenSource.Token);
                 if (result.IsOk)
                 {
                     if (string.IsNullOrWhiteSpace(result.Result))
                     {
-                        await _dialogService.ShowMessageBoxAsync("Warning", "Profile name can not be empty.", "Ok", _disappearingTokenSource.Token);
+                        await _dialogService.ShowMessageBoxAsync(
+                            Translate("Warning"),
+                            Translate("ProfileNameCanNotBeEmpty"),
+                            Translate("Ok"),
+                            _disappearingTokenSource.Token);
                         return;
                     }
 
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.RenameControllerProfileAsync(ControllerProfile, result.Result),
-                        "Renaming...");
+                        Translate("Renaming"));
                 }
             }
             catch (OperationCanceledException)
@@ -98,18 +109,26 @@ namespace BrickController2.UI.ViewModels
             {
                 if (_deviceManager.Devices?.Count == 0)
                 {
-                    await _dialogService.ShowMessageBoxAsync("Warning", "Please scan for devices before adding controller events!", "Ok", _disappearingTokenSource.Token);
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Warning"),
+                        Translate("ScanForDevicesFirst"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
                     return;
                 }
 
-                var result = await _dialogService.ShowGameControllerEventDialogAsync("Controller", "Press a button or move a joy on the game controller", "Cancel", _disappearingTokenSource.Token);
+                var result = await _dialogService.ShowGameControllerEventDialogAsync(
+                    Translate("Controller"),
+                    Translate("PressButtonOrMoveJoy"),
+                    Translate("Cancel"),
+                    _disappearingTokenSource.Token);
                 if (result.IsOk)
                 {
                     ControllerEvent controllerEvent = null;
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => controllerEvent = await _creationManager.AddOrGetControllerEventAsync(ControllerProfile, result.EventType, result.EventCode),
-                        "Creating...");
+                        Translate("Creating"));
 
                     await NavigationService.NavigateToAsync<ControllerActionPageViewModel>(new NavigationParameters(("controllerevent", controllerEvent)));
                 }
@@ -123,12 +142,17 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete controller event {controllerEvent.EventCode}?", "Yes", "No", _disappearingTokenSource.Token))
+                if (await _dialogService.ShowQuestionDialogAsync(
+                    Translate("Confirm"),
+                    $"{Translate("AreYouSureToDeleteControllerEvent")} {controllerEvent.EventCode}?",
+                    Translate("Yes"),
+                    Translate("No"),
+                    _disappearingTokenSource.Token))
                 {
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.DeleteControllerEventAsync(controllerEvent),
-                        "Deleting...");
+                        Translate("Deleting"));
                 }
             }
             catch (OperationCanceledException)
@@ -140,7 +164,12 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete controller action?", "Yes", "No", _disappearingTokenSource.Token))
+                if (await _dialogService.ShowQuestionDialogAsync(
+                    Translate("Confirm"),
+                    Translate("AreYouSureToDeleteThisControllerAcrion"),
+                    Translate("Yes"),
+                    Translate("No"),
+                    _disappearingTokenSource.Token))
                 {
                     await _dialogService.ShowProgressDialogAsync(
                         false,
@@ -153,7 +182,7 @@ namespace BrickController2.UI.ViewModels
                                 await _creationManager.DeleteControllerEventAsync(controllerEvent);
                             }
                         },
-                        "Deleting...");
+                        Translate("Deleting"));
                 }
             }
             catch (OperationCanceledException)
@@ -166,7 +195,7 @@ namespace BrickController2.UI.ViewModels
             CleanupControllerEvents();
             foreach (var controllerEvent in ControllerProfile.ControllerEvents)
             {
-                ControllerEvents.Add(new ControllerEventViewModel(controllerEvent, _deviceManager));
+                ControllerEvents.Add(new ControllerEventViewModel(controllerEvent, _deviceManager, TranslationService));
             }
         }
 
@@ -182,14 +211,19 @@ namespace BrickController2.UI.ViewModels
 
         public class ControllerActionViewModel
         {
-            public ControllerActionViewModel(ControllerAction controllerAction, IDeviceManager deviceManager)
+            private readonly ITranslationService _translationService;
+
+            public ControllerActionViewModel(ControllerAction controllerAction, IDeviceManager deviceManager, ITranslationService translationService)
             {
+                _translationService = translationService;
+
                 ControllerAction = controllerAction;
                 var device = deviceManager.GetDeviceById(controllerAction.DeviceId);
+
                 DeviceMissing = device == null;
-                DeviceName = device != null ? device.Name : "Missing";
-                ChannelName = (device == null || device.DeviceType != DeviceType.Infrared) ? $"{controllerAction.Channel + 1}" : (controllerAction.Channel == 0 ? "Blue" : "Red");
-                InvertName = controllerAction.IsInvert ? "Inv" : string.Empty;
+                DeviceName = device != null ? device.Name : Translate("Missing");
+                ChannelName = (device == null || device.DeviceType != DeviceType.Infrared) ? $"{controllerAction.Channel + 1}" : (controllerAction.Channel == 0 ? Translate("Blue") : Translate("Red"));
+                InvertName = controllerAction.IsInvert ? Translate("Inv") : string.Empty;
             }
 
             public ControllerAction ControllerAction { get; }
@@ -197,18 +231,22 @@ namespace BrickController2.UI.ViewModels
             public string DeviceName { get; }
             public string ChannelName { get; }
             public string InvertName { get; }
+
+            private string Translate(string key) => _translationService.Translate(key);
         }
 
         public class ControllerEventViewModel : ObservableCollection<ControllerActionViewModel>, IDisposable
         {
             private readonly IDeviceManager _deviceManager;
+            private readonly ITranslationService _translationService;
 
-            public ControllerEventViewModel(ControllerEvent controllerEvent, IDeviceManager deviceManager)
+            public ControllerEventViewModel(ControllerEvent controllerEvent, IDeviceManager deviceManager, ITranslationService translationService)
             {
                 ControllerEvent = controllerEvent;
                 _deviceManager = deviceManager;
+                _translationService = translationService;
 
-                PopulateGroup(controllerEvent, deviceManager);
+                PopulateGroup(controllerEvent, deviceManager, translationService);
                 controllerEvent.ControllerActions.CollectionChanged += OnCollectionChanged;
             }
 
@@ -222,15 +260,15 @@ namespace BrickController2.UI.ViewModels
 
             private void OnCollectionChanged(object sender, EventArgs args)
             {
-                PopulateGroup(ControllerEvent, _deviceManager);
+                PopulateGroup(ControllerEvent, _deviceManager, _translationService);
             }
 
-            private void PopulateGroup(ControllerEvent controllerEvent, IDeviceManager deviceManager)
+            private void PopulateGroup(ControllerEvent controllerEvent, IDeviceManager deviceManager, ITranslationService translationService)
             {
                 Clear();
                 foreach (var controllerAction in controllerEvent.ControllerActions)
                 {
-                    Add(new ControllerActionViewModel(controllerAction, deviceManager));
+                    Add(new ControllerActionViewModel(controllerAction, deviceManager, translationService));
                 }
             }
         }
