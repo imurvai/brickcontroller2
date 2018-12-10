@@ -88,6 +88,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Resources\TranslationResources.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\TranslationResources.hu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\TranslationResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>TranslationResources.Designer.cs</LastGenOutput>

@@ -118,255 +118,255 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About" xml:space="preserve">
-    <value>Névjegy</value>
+    <value>Über</value>
   </data>
   <data name="AddControllerProfiles" xml:space="preserve">
-    <value>Hozz létre vezérlő profilokat</value>
+    <value>Erstellen Sie Kontrollprofile</value>
   </data>
   <data name="AddCreations" xml:space="preserve">
-    <value>Hozz létre alkotásokat</value>
+    <value>Kreationen erstellen</value>
   </data>
   <data name="Address" xml:space="preserve">
-    <value>Cím</value>
+    <value>Adresse</value>
   </data>
   <data name="AdvancedSettings" xml:space="preserve">
-    <value>Haladó beállítások</value>
+    <value>Erweiterte Einstellungen</value>
   </data>
   <data name="AreYouSureToDeleteControllerAction" xml:space="preserve">
-    <value>Biztos törölni szeretnéd ezt az akciót?</value>
+    <value>Möchten Sie diese Aktion wirklich löschen?</value>
   </data>
   <data name="AreYouSureToDeleteControllerEvent" xml:space="preserve">
-    <value>Biztos törölni szeretnéd ezt a vezérlő eseményt:</value>
+    <value>Sie müssen dieses Steuerungsereignis löschen:</value>
   </data>
   <data name="AreYouSureToDeleteCreation" xml:space="preserve">
-    <value>Biztos törölni szeretnéd ezt az alkotást:</value>
+    <value>Sind Sie sicher, dass Sie diese Erstellung löschen möchten:</value>
   </data>
   <data name="AreYouSureToDeleteDevice" xml:space="preserve">
-    <value>Biztos törölni akarod ezt az eszközt:</value>
+    <value>Sie müssen dieses Tool löschen:</value>
   </data>
   <data name="AreYouSureToDeleteProfile" xml:space="preserve">
-    <value>Biztos törölni szeretnéd ezt a profilet:</value>
+    <value>Sie möchten dieses Profil wirklich löschen:</value>
   </data>
   <data name="AreYouSureToDeleteThisControllerAcrion" xml:space="preserve">
-    <value>Biztos törölni szeretnéd ezt a vezérlő akciót?</value>
+    <value>Möchten Sie diese Steuerungsaktion wirklich löschen?</value>
   </data>
   <data name="AxisCharacteristic" xml:space="preserve">
-    <value>Tengely karakterisztika</value>
+    <value>Achseneigenschaften</value>
   </data>
   <data name="AxisDeadZone" xml:space="preserve">
-    <value>Tengely inaktív zóna</value>
+    <value>Achse inaktive Zone</value>
   </data>
   <data name="Blue" xml:space="preserve">
-    <value>Kék</value>
+    <value>Blau</value>
   </data>
   <data name="BluetoothDevicesWillNOTBeAvailable" xml:space="preserve">
-    <value>A bluetooth eszközök nem lesznek elérhetőek</value>
+    <value>Bluetooth-Geräte sind nicht verfügbar</value>
   </data>
   <data name="BluetoothIsTurnedOff" xml:space="preserve">
-    <value>A bluetooth ki van kapcsolva</value>
+    <value>Bluetooth ist ausgeschaltet</value>
   </data>
   <data name="ButtonType" xml:space="preserve">
-    <value>Gomb típus</value>
+    <value>Knopfart</value>
   </data>
   <data name="BuWizz2OutputLevel" xml:space="preserve">
-    <value>BuWizz 2 kimeneti szint</value>
+    <value>BuWizz 2 Ausgabelautstärke</value>
   </data>
   <data name="BuWizzOutputLevel" xml:space="preserve">
-    <value>BuWizz kimeneti szint</value>
+    <value>BuWizz Ausgabelautstärke</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Mégse</value>
+    <value>Stornieren</value>
   </data>
   <data name="ChannelType" xml:space="preserve">
-    <value>Csatorna típus</value>
+    <value>Kanaltyp</value>
   </data>
   <data name="Confirm" xml:space="preserve">
-    <value>Jóváhagyás</value>
+    <value>Bestätigen</value>
   </data>
   <data name="Connecting" xml:space="preserve">
-    <value>Kapcsolódás...</value>
+    <value>Verbinden ...</value>
   </data>
   <data name="Controller" xml:space="preserve">
-    <value>Vezérlő</value>
+    <value>Kontrolleur</value>
   </data>
   <data name="ControllerAction" xml:space="preserve">
-    <value>Vezérlő akció</value>
+    <value>Kontroller-Aktion</value>
   </data>
   <data name="ControllerProfile" xml:space="preserve">
-    <value>Vezérlő profil</value>
+    <value>Kontrolleur-Profil</value>
   </data>
   <data name="ControllerTester" xml:space="preserve">
-    <value>Vezérlő teszt</value>
+    <value>Kontrolleur-Test</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Létrehozás</value>
+    <value>Erstellen</value>
   </data>
   <data name="Creating" xml:space="preserve">
-    <value>Létrehozás...</value>
+    <value>Erstellen...</value>
   </data>
   <data name="Creation" xml:space="preserve">
-    <value>Alkotás</value>
+    <value>Kreation</value>
   </data>
   <data name="CreationName" xml:space="preserve">
-    <value>Alkotás neve</value>
+    <value>Name der Kreation</value>
   </data>
   <data name="CreationNameCanNotBeEmpty" xml:space="preserve">
-    <value>Az alkotás neve nem lehet üres</value>
+    <value>Kreationname darf nicht leer sein</value>
   </data>
   <data name="Creations" xml:space="preserve">
-    <value>Alkotások</value>
+    <value>Kreationen</value>
   </data>
   <data name="DefaultProfile" xml:space="preserve">
-    <value>Alap profil</value>
+    <value>Standard Profil</value>
   </data>
   <data name="Deleting" xml:space="preserve">
-    <value>Törlés...</value>
+    <value>Löschen...</value>
   </data>
   <data name="Device" xml:space="preserve">
-    <value>Eszköz</value>
+    <value>Gerät</value>
   </data>
   <data name="DeviceName" xml:space="preserve">
-    <value>Eszköz neve</value>
+    <value>Gerätename</value>
   </data>
   <data name="DeviceNameCanNotBeEmpty" xml:space="preserve">
-    <value>Az eszköz neve nem lehet üres</value>
+    <value>Gerätename darf nicht leer sein</value>
   </data>
   <data name="Devices" xml:space="preserve">
-    <value>Eszközök</value>
+    <value>Geräte</value>
   </data>
   <data name="DeviceType" xml:space="preserve">
-    <value>Eszköz típusa</value>
+    <value>Gerätetyp</value>
   </data>
   <data name="Disclaimer" xml:space="preserve">
-    <value>Jogi nyilatkozat</value>
+    <value>Haftungsausschluss</value>
   </data>
   <data name="Disconnecting" xml:space="preserve">
-    <value>Szétkapcsolás...</value>
+    <value>Verbindung trennen...</value>
   </data>
   <data name="EnterCreationName" xml:space="preserve">
-    <value>Adj meg egy alkotás nevet</value>
+    <value>Geben Sie einen Namen für die Kreation ein</value>
   </data>
   <data name="EnterDeviceName" xml:space="preserve">
-    <value>Adj meg egy eszköz nevet</value>
+    <value>Geben Sie einen Gerätenamen ein</value>
   </data>
   <data name="EnterProfileName" xml:space="preserve">
-    <value>Adj meg profil nevet</value>
+    <value>Geben Sie einen Profilnamen ein</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Hiba</value>
+    <value>Error</value>
   </data>
   <data name="ErrorDuringScanning" xml:space="preserve">
-    <value>Hiba történt szkennelés közben.</value>
+    <value>Fehler beim Scannen</value>
   </data>
   <data name="ExternalLibraries" xml:space="preserve">
-    <value>Külső komponensek</value>
+    <value>Externe Komponenten</value>
   </data>
   <data name="FailedToConnect" xml:space="preserve">
-    <value>Kapcsolódási hiba</value>
+    <value>Verbindung nicht möglich</value>
   </data>
   <data name="IconSet" xml:space="preserve">
-    <value>Ikonok</value>
+    <value>Icon-Set</value>
   </data>
   <data name="Inv" xml:space="preserve">
-    <value>Ford.</value>
+    <value>Um</value>
   </data>
   <data name="Invert" xml:space="preserve">
-    <value>Megfordít</value>
+    <value>Umkehren</value>
   </data>
   <data name="Loading" xml:space="preserve">
-    <value>Betöltés...</value>
+    <value>Wird geladen...</value>
   </data>
   <data name="LocationPermissionIsNeeded" xml:space="preserve">
-    <value>Helyzet hozzáférés szükséges a Bluetooth eléréséhez</value>
+    <value>Für die Bluetooth-Verbindung ist eine Standortgenehmigung erforderlich</value>
   </data>
   <data name="MaxOutput" xml:space="preserve">
-    <value>Max kimenet</value>
+    <value>Max Leistung</value>
   </data>
   <data name="Missing" xml:space="preserve">
-    <value>Hiányzik</value>
+    <value>Fehlt</value>
   </data>
   <data name="MissingDevices" xml:space="preserve">
-    <value>Az alkotás beállításokban hiányzó eszközök vannak.</value>
+    <value>Im Erstellungssetup fehlen Geräte</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>Nem</value>
+    <value>Nein</value>
   </data>
   <data name="NoControllerActions" xml:space="preserve">
-    <value>Ehhez az alkotáshoz nincsenek vezérlő akciók adva.</value>
+    <value>Keine Controller-Aktionen für diese Kreation</value>
   </data>
   <data name="Ok" xml:space="preserve">
-    <value>Rendben</value>
+    <value>OK</value>
   </data>
   <data name="OutputLevel" xml:space="preserve">
-    <value>Kimeneti szint</value>
+    <value>Ausgabelautstärke</value>
   </data>
   <data name="PermissionRequest" xml:space="preserve">
-    <value>Hozzáférés kérés</value>
+    <value>Erlaubnisanfrage</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Játék</value>
+    <value>Abspielen</value>
   </data>
   <data name="PressButtonOrMoveJoy" xml:space="preserve">
-    <value>Nyomj meg egy gombot vagy mozgasd az egyik joy-t a vezérlőn!</value>
+    <value>Drücken Sie eine Taste oder bewegen Sie einen Joystick auf dem Controller</value>
   </data>
   <data name="PressButtonsOrMoveJoys" xml:space="preserve">
-    <value>Nyomj gombokat vagy mozgass joy-okat.</value>
+    <value>Tasten drücken oder Joysticks bewegen</value>
   </data>
   <data name="PressScanToDiscoverDevices" xml:space="preserve">
-    <value>Nyomd meg a scan gombot az eszközök felfedezéséhez</value>
+    <value>Klicken Sie auf Scannen, um Geräte zu finden</value>
   </data>
   <data name="ProfileName" xml:space="preserve">
-    <value>Profil neve</value>
+    <value>Profilname</value>
   </data>
   <data name="ProfileNameCanNotBeEmpty" xml:space="preserve">
-    <value>A profil neve nem lehet üres</value>
+    <value>Der Profilname darf nicht leer sein</value>
   </data>
   <data name="Red" xml:space="preserve">
-    <value>Piros</value>
+    <value>Rot</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Átnevezés</value>
+    <value>Umbenennen</value>
   </data>
   <data name="Renaming" xml:space="preserve">
-    <value>Átnevezés...</value>
+    <value>Umbenennung...</value>
   </data>
   <data name="Saving" xml:space="preserve">
-    <value>Mentés...</value>
+    <value>Speichern...</value>
   </data>
   <data name="ScanForDevicesFirst" xml:space="preserve">
-    <value>Keress rá az eszközökre vezérlő esemény hozzáadása előtt!</value>
+    <value>Suchen Sie nach Geräten, bevor Sie Controller-Aktionen hinzufügen!</value>
   </data>
   <data name="Scanning" xml:space="preserve">
-    <value>Szkennelés...</value>
+    <value>Scannen...</value>
   </data>
   <data name="SearchingForDevices" xml:space="preserve">
-    <value>Eszközök keresése.</value>
+    <value>Geräte suchen</value>
   </data>
   <data name="SelectDevice" xml:space="preserve">
-    <value>Válassz egy eszközt</value>
+    <value>Wählen Sie ein Gerät aus</value>
   </data>
   <data name="SelectDeviceBeforeSaving" xml:space="preserve">
-    <value>Válassz egy eszközt mentés előtt!</value>
+    <value>Wählen Sie vor dem Speichern ein Gerät aus!</value>
   </data>
   <data name="ServoAngle" xml:space="preserve">
-    <value>Szervó elfordulás</value>
+    <value>Servo-Winkel</value>
   </data>
   <data name="ShortChannel" xml:space="preserve">
-    <value>Cs</value>
+    <value>Ka</value>
   </data>
   <data name="TurnOnBluetoothToConnect" xml:space="preserve">
-    <value>Bluetooth eszköz kapcsolódáshoz kapcsold be a bluetooth-t</value>
+    <value>Schalten Sie Bluetooth ein, um eine Verbindung zu einem Bluetooth-Gerät herzustellen</value>
   </data>
   <data name="TurnOnBluetoothToConnectBluetoothDevices" xml:space="preserve">
-    <value>Bluetooth eszköz(ök) kapcsolódásához kapcsold be a bluetooth-t</value>
+    <value>Schalten Sie Bluetooth ein, um eine Verbindung zu Bluetooth-Geräten herzustellen</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>Verzió</value>
+    <value>Version</value>
   </data>
   <data name="Warning" xml:space="preserve">
-    <value>Figyelmeztetés</value>
+    <value>Warnung</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Igen</value>
+    <value>Ja</value>
   </data>
 </root>
