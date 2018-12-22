@@ -72,13 +72,21 @@ namespace BrickController2.Droid.PlatformServices.GameController
                         e.Device.VendorId == 1356 && 
                         (e.Device.ProductId == 2508 || e.Device.ProductId == 1476))
                     {
-                        // DualShock 4 hack for the triggers
+                        // DualShock 4 hack for the triggers ([-1:1] -> [0:1])
                         if (!_lastAxisValues.ContainsKey(axisCode) && axisValue == 0.0F)
                         {
                             continue;
                         }
 
                         axisValue = (axisValue + 1) / 2;
+                    }
+
+                    if (e.Device.VendorId == 0x057e && 
+                        (/*e.Device.ProductId == 0x2006 || e.Device.ProductId == 0x2007 ||*/ e.Device.ProductId == 0x2009))
+                    {
+                        // Nintendo Switch Pro controller hack ([-0.69:0.7] -> [-1:1])
+                        // 2006 and 2007 are for the Nintendo Joy-Con controller (haven't reported issues with it)
+                        axisValue = Math.Min(1, Math.Max(-1, axisValue / 0.69F));
                     }
 
                     axisValue = AdjustControllerValue(axisValue);
