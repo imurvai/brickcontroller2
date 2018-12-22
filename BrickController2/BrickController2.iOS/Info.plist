@@ -41,7 +41,7 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.921</string>
+	<string>0.95</string>
 	<key>CFBundleVersion</key>
 	<string>15</string>
 </dict>

@@ -87,6 +87,7 @@
     <Compile Include="PlatformServices\Infrared\InfraredService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MainApplication.cs" />
+    <Compile Include="PlatformServices\Localization\LocalizationService.cs" />
     <Compile Include="PlatformServices\Versioning\VersionService.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

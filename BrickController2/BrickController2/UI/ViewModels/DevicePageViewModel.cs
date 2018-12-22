@@ -7,6 +7,7 @@ using BrickController2.UI.Commands;
 using Device = BrickController2.DeviceManagement.Device;
 using System.Threading;
 using System;
+using BrickController2.UI.Services.Translation;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -22,10 +23,11 @@ namespace BrickController2.UI.ViewModels
 
         public DevicePageViewModel(
             INavigationService navigationService,
+            ITranslationService translationService,
             IDeviceManager deviceManager,
             IDialogService dialogService,
             NavigationParameters parameters)
-            : base(navigationService)
+            : base(navigationService, translationService)
         {
             _deviceManager = deviceManager;
             _dialogService = dialogService;
@@ -58,7 +60,12 @@ namespace BrickController2.UI.ViewModels
             {
                 if (!_deviceManager.IsBluetoothOn)
                 {
-                    await _dialogService.ShowMessageBoxAsync("Warning", "Turn bluetooth on to connect to a bluetooth device.", "Ok", _disappearingTokenSource.Token);
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Warning"),
+                        Translate("TurnOnBluetoothToConnect"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
+
                     await NavigationService.NavigateBackAsync();
                     return;
                 }
@@ -88,19 +95,32 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                var result = await _dialogService.ShowInputDialogAsync("Rename", "Enter a new name for the device", Device.Name, "Device name", "Rename", "Cancel", _disappearingTokenSource.Token);
+                var result = await _dialogService.ShowInputDialogAsync(
+                    Translate("Rename"),
+                    Translate("EnterDeviceName"),
+                    Device.Name,
+                    Translate("DeviceName"),
+                    Translate("Rename"),
+                    Translate("Cancel"),
+                    _disappearingTokenSource.Token);
+
                 if (result.IsOk)
                 {
                     if (string.IsNullOrWhiteSpace(result.Result))
                     {
-                        await _dialogService.ShowMessageBoxAsync("Warning", "Device name can not be empty.", "Ok", _disappearingTokenSource.Token);
+                        await _dialogService.ShowMessageBoxAsync(
+                            Translate("Warning"),
+                            Translate("DeviceNameCanNotBeEmpty"),
+                            Translate("Ok"),
+                            _disappearingTokenSource.Token);
+
                         return;
                     }
 
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await Device.RenameDeviceAsync(Device, result.Result),
-                        "Renaming...");
+                        Translate("Renaming"));
                 }
             }
             catch (OperationCanceledException)
@@ -121,9 +141,9 @@ namespace BrickController2.UI.ViewModels
 
                     connectionResult = await Device.ConnectAsync(_connectionTokenSource.Token);
                 },
-                "Connecting...",
+                Translate("Connecting"),
                 null,
-                "Cancel");
+                Translate("Cancel"));
 
             _connectionTokenSource.Dispose();
             _connectionTokenSource = null;
@@ -145,7 +165,11 @@ namespace BrickController2.UI.ViewModels
                 {
                     if (connectionResult == DeviceConnectionResult.Error)
                     {
-                        await _dialogService.ShowMessageBoxAsync("Warning", "Failed to connect to device.", "Ok", _disappearingTokenSource.Token);
+                        await _dialogService.ShowMessageBoxAsync(
+                            Translate("Warning"),
+                            Translate("FailedToConnect"),
+                            Translate("Ok"),
+                            _disappearingTokenSource.Token);
                     }
 
                     await NavigationService.NavigateBackAsync();

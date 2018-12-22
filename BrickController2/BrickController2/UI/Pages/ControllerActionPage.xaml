@@ -9,7 +9,7 @@
     xmlns:gameController="clr-namespace:BrickController2.PlatformServices.GameController"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerActionPage"
-    Title="Controller Action">
+    Title="{extensions:Translate ControllerAction}">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -34,8 +34,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Column="0" Text="Device" VerticalOptions="Center"/>
-                    <Picker Grid.Column="1" Title="Select device" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"></Picker>
+                    <Label Grid.Column="0" Text="{extensions:Translate Device}" VerticalOptions="Center"/>
+                    <Picker Grid.Column="1" Title="{extensions:Translate SelectDevice}" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"></Picker>
                     <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link_white.png}" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
                 </Grid>
 
@@ -53,12 +53,12 @@
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Column="0" Text="Invert" VerticalOptions="Center"/>
+                    <Label Grid.Column="0" Text="{extensions:Translate Invert}" VerticalOptions="Center"/>
                     <Switch Grid.Column="1" IsToggled="{Binding IsInvert}" HorizontalOptions="Start"/>
                 </Grid>
 
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
-                <Label Text="Advanced settings" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
+                <Label Text="{extensions:Translate AdvancedSettings}" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
 
                 <StackLayout Orientation="Vertical" IsVisible="{Binding SelectedDevice.DeviceType, Converter={StaticResource DeviceTypeToChannelOutputVisible}}">
                     <!-- Channel output type selector -->
@@ -68,7 +68,7 @@
                             <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Text="Channel type" VerticalOptions="Center"/>
+                        <Label Grid.Column="0" Text="{extensions:Translate ChannelType}" VerticalOptions="Center"/>
                         <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ChannelOutputType" SelectedItem="{Binding ChannelOutputType}"/>
                     </Grid>
 
@@ -87,7 +87,7 @@
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0" Text="Servo angle"/>
+                            <Label Grid.Column="0" Text="{extensions:Translate ServoAngle}"/>
                             <StackLayout Grid.Column="1" Orientation="Horizontal">
                                 <Slider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="360" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
                                 <Label Text="{Binding MaxServoAngle}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
@@ -112,7 +112,7 @@
                             <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Text="Button type" VerticalOptions="Center"/>
+                        <Label Grid.Column="0" Text="{extensions:Translate ButtonType}" VerticalOptions="Center"/>
                         <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding ButtonType}"/>
                     </Grid>
 
@@ -132,7 +132,7 @@
                             <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Text="Axis characteristic" VerticalOptions="Center"/>
+                        <Label Grid.Column="0" Text="{extensions:Translate AxisCharacteristic}" VerticalOptions="Center"/>
                         <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding AxisCharacteristic}"/>
                     </Grid>
 
@@ -146,7 +146,7 @@
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Column="0" Text="Max output"/>
+                    <Label Grid.Column="0" Text="{extensions:Translate MaxOutput}"/>
                     <StackLayout Grid.Column="1" Orientation="Horizontal">
                         <Slider Value="{Binding MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
                         <Label Text="{Binding MaxOutputPercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
@@ -169,7 +169,7 @@
                             <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Text="Axis dead zone"/>
+                        <Label Grid.Column="0" Text="{extensions:Translate AxisDeadZone}"/>
                         <StackLayout Grid.Column="1" Orientation="Horizontal">
                             <Slider Value="{Binding AxisDeadZonePercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
                             <Label Text="{Binding AxisDeadZonePercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>

@@ -4,6 +4,7 @@ using BrickController2.PlatformServices.GameController;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Services.Translation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,12 +36,12 @@ namespace BrickController2.UI.ViewModels
 
         public PlayerPageViewModel(
             INavigationService navigationService,
+            ITranslationService translationService,
             IDeviceManager deviceManager,
             IDialogService dialogService,
             IGameControllerService gameControllerService,
-            NavigationParameters parameters
-            )
-            : base(navigationService)
+            NavigationParameters parameters)
+            : base(navigationService, translationService)
         {
             _deviceManager = deviceManager;
             _dialogService = dialogService;
@@ -74,7 +75,12 @@ namespace BrickController2.UI.ViewModels
 
             if (_devices.Any(d => d.DeviceType != DeviceType.Infrared) && !_deviceManager.IsBluetoothOn)
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", "Turn bluetooth on to connect to bluetooth device(s).", "Ok", _disappearingTokenSource.Token);
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    Translate("TurnOnBluetoothToConnectBluetoothDevices"),
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
+
                 await NavigationService.NavigateBackAsync();
                 return;
             }
@@ -159,9 +165,9 @@ namespace BrickController2.UI.ViewModels
                         await Task.WhenAll(_deviceConnectionTasks.Values);
                     }
                 },
-                "Connecting...",
+                Translate("Connecting"),
                 null,
-                "Cancel");
+                Translate("Cancel"));
 
             _connectionTokenSource.Dispose();
             _connectionTokenSource = null;
@@ -205,9 +211,9 @@ namespace BrickController2.UI.ViewModels
 
                     await Task.WhenAll(tasks);
                 },
-                "Disconnecting...",
+                Translate("Disconnecting"),
                 null,
-                "Cancel");
+                null);
         }
 
         private void OnDeviceStateChanged(object sender, DeviceStateChangedEventArgs args)

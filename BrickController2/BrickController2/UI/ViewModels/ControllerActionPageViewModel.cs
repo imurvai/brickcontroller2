@@ -3,6 +3,7 @@ using BrickController2.DeviceManagement;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Services.Translation;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -32,11 +33,12 @@ namespace BrickController2.UI.ViewModels
 
         public ControllerActionPageViewModel(
             INavigationService navigationService,
+            ITranslationService translationService,
             ICreationManager creationManager,
             IDeviceManager deviceManager,
             IDialogService dialogService,
             NavigationParameters parameters)
-            : base(navigationService)
+            : base(navigationService, translationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;
@@ -163,7 +165,11 @@ namespace BrickController2.UI.ViewModels
         {
             if (SelectedDevice == null)
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", "Select a device before saving.", "Ok", _disappearingTokenSource.Token);
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    Translate("SelectDeviceBeforeSaving"),
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
                 return;
             }
 
@@ -180,7 +186,7 @@ namespace BrickController2.UI.ViewModels
                         await _creationManager.AddOrUpdateControllerActionAsync(ControllerEvent, SelectedDevice.Id, Channel, IsInvert, ButtonType, AxisCharacteristic, MaxOutputPercent, AxisDeadZonePercent);
                     }
                 },
-                "Saving...");
+                Translate("Saving"));
 
             await NavigationService.NavigateBackAsync();
         }
@@ -189,14 +195,19 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                if (await _dialogService.ShowQuestionDialogAsync("Confirm", "Are you sure to delete this controller action?", "Yes", "No", _disappearingTokenSource.Token))
+                if (await _dialogService.ShowQuestionDialogAsync(
+                    Translate("Confirm"),
+                    Translate("AreYouSureToDeleteControllerAction"),
+                    Translate("Yes"),
+                    Translate("No"),
+                    _disappearingTokenSource.Token))
                 {
                     if (ControllerAction != null)
                     {
                         await _dialogService.ShowProgressDialogAsync(
                             false,
                             async (progressDialog, token) => await _creationManager.DeleteControllerActionAsync(ControllerAction),
-                            "Deleting...");
+                            Translate("Deleting"));
                     }
 
                     await NavigationService.NavigateBackAsync();

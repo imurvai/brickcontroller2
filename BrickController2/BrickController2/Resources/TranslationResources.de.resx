@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About" xml:space="preserve">
+    <value>Über</value>
+  </data>
+  <data name="AddControllerProfiles" xml:space="preserve">
+    <value>Erstellen Sie Kontrollprofile</value>
+  </data>
+  <data name="AddCreations" xml:space="preserve">
+    <value>Kreationen erstellen</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="AdvancedSettings" xml:space="preserve">
+    <value>Erweiterte Einstellungen</value>
+  </data>
+  <data name="AreYouSureToDeleteControllerAction" xml:space="preserve">
+    <value>Möchten Sie diese Aktion wirklich löschen?</value>
+  </data>
+  <data name="AreYouSureToDeleteControllerEvent" xml:space="preserve">
+    <value>Sie müssen dieses Steuerungsereignis löschen:</value>
+  </data>
+  <data name="AreYouSureToDeleteCreation" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie diese Erstellung löschen möchten:</value>
+  </data>
+  <data name="AreYouSureToDeleteDevice" xml:space="preserve">
+    <value>Sie müssen dieses Tool löschen:</value>
+  </data>
+  <data name="AreYouSureToDeleteProfile" xml:space="preserve">
+    <value>Sie möchten dieses Profil wirklich löschen:</value>
+  </data>
+  <data name="AreYouSureToDeleteThisControllerAcrion" xml:space="preserve">
+    <value>Möchten Sie diese Steuerungsaktion wirklich löschen?</value>
+  </data>
+  <data name="AxisCharacteristic" xml:space="preserve">
+    <value>Achseneigenschaften</value>
+  </data>
+  <data name="AxisDeadZone" xml:space="preserve">
+    <value>Achse inaktive Zone</value>
+  </data>
+  <data name="Blue" xml:space="preserve">
+    <value>Blau</value>
+  </data>
+  <data name="BluetoothDevicesWillNOTBeAvailable" xml:space="preserve">
+    <value>Bluetooth-Geräte sind nicht verfügbar</value>
+  </data>
+  <data name="BluetoothIsTurnedOff" xml:space="preserve">
+    <value>Bluetooth ist ausgeschaltet</value>
+  </data>
+  <data name="ButtonType" xml:space="preserve">
+    <value>Knopfart</value>
+  </data>
+  <data name="BuWizz2OutputLevel" xml:space="preserve">
+    <value>BuWizz 2 Ausgabelautstärke</value>
+  </data>
+  <data name="BuWizzOutputLevel" xml:space="preserve">
+    <value>BuWizz Ausgabelautstärke</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Stornieren</value>
+  </data>
+  <data name="ChannelType" xml:space="preserve">
+    <value>Kanaltyp</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>Verbinden ...</value>
+  </data>
+  <data name="Controller" xml:space="preserve">
+    <value>Kontrolleur</value>
+  </data>
+  <data name="ControllerAction" xml:space="preserve">
+    <value>Kontroller-Aktion</value>
+  </data>
+  <data name="ControllerProfile" xml:space="preserve">
+    <value>Kontrolleur-Profil</value>
+  </data>
+  <data name="ControllerTester" xml:space="preserve">
+    <value>Kontrolleur-Test</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Erstellen</value>
+  </data>
+  <data name="Creating" xml:space="preserve">
+    <value>Erstellen...</value>
+  </data>
+  <data name="Creation" xml:space="preserve">
+    <value>Kreation</value>
+  </data>
+  <data name="CreationName" xml:space="preserve">
+    <value>Name der Kreation</value>
+  </data>
+  <data name="CreationNameCanNotBeEmpty" xml:space="preserve">
+    <value>Kreationname darf nicht leer sein</value>
+  </data>
+  <data name="Creations" xml:space="preserve">
+    <value>Kreationen</value>
+  </data>
+  <data name="DefaultProfile" xml:space="preserve">
+    <value>Standard Profil</value>
+  </data>
+  <data name="Deleting" xml:space="preserve">
+    <value>Löschen...</value>
+  </data>
+  <data name="Device" xml:space="preserve">
+    <value>Gerät</value>
+  </data>
+  <data name="DeviceName" xml:space="preserve">
+    <value>Gerätename</value>
+  </data>
+  <data name="DeviceNameCanNotBeEmpty" xml:space="preserve">
+    <value>Gerätename darf nicht leer sein</value>
+  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>Geräte</value>
+  </data>
+  <data name="DeviceType" xml:space="preserve">
+    <value>Gerätetyp</value>
+  </data>
+  <data name="Disclaimer" xml:space="preserve">
+    <value>Haftungsausschluss</value>
+  </data>
+  <data name="Disconnecting" xml:space="preserve">
+    <value>Verbindung trennen...</value>
+  </data>
+  <data name="EnterCreationName" xml:space="preserve">
+    <value>Geben Sie einen Namen für die Kreation ein</value>
+  </data>
+  <data name="EnterDeviceName" xml:space="preserve">
+    <value>Geben Sie einen Gerätenamen ein</value>
+  </data>
+  <data name="EnterProfileName" xml:space="preserve">
+    <value>Geben Sie einen Profilnamen ein</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorDuringScanning" xml:space="preserve">
+    <value>Fehler beim Scannen</value>
+  </data>
+  <data name="ExternalLibraries" xml:space="preserve">
+    <value>Externe Komponenten</value>
+  </data>
+  <data name="FailedToConnect" xml:space="preserve">
+    <value>Verbindung nicht möglich</value>
+  </data>
+  <data name="IconSet" xml:space="preserve">
+    <value>Icon-Set</value>
+  </data>
+  <data name="Inv" xml:space="preserve">
+    <value>Um</value>
+  </data>
+  <data name="Invert" xml:space="preserve">
+    <value>Umkehren</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Wird geladen...</value>
+  </data>
+  <data name="LocationPermissionIsNeeded" xml:space="preserve">
+    <value>Für die Bluetooth-Verbindung ist eine Standortgenehmigung erforderlich</value>
+  </data>
+  <data name="MaxOutput" xml:space="preserve">
+    <value>Max Leistung</value>
+  </data>
+  <data name="Missing" xml:space="preserve">
+    <value>Fehlt</value>
+  </data>
+  <data name="MissingDevices" xml:space="preserve">
+    <value>Im Erstellungssetup fehlen Geräte</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
+  <data name="NoControllerActions" xml:space="preserve">
+    <value>Keine Controller-Aktionen für diese Kreation</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="OutputLevel" xml:space="preserve">
+    <value>Ausgabelautstärke</value>
+  </data>
+  <data name="PermissionRequest" xml:space="preserve">
+    <value>Erlaubnisanfrage</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>Abspielen</value>
+  </data>
+  <data name="PressButtonOrMoveJoy" xml:space="preserve">
+    <value>Drücken Sie eine Taste oder bewegen Sie einen Joystick auf dem Controller</value>
+  </data>
+  <data name="PressButtonsOrMoveJoys" xml:space="preserve">
+    <value>Tasten drücken oder Joysticks bewegen</value>
+  </data>
+  <data name="PressScanToDiscoverDevices" xml:space="preserve">
+    <value>Klicken Sie auf Scannen, um Geräte zu finden</value>
+  </data>
+  <data name="ProfileName" xml:space="preserve">
+    <value>Profilname</value>
+  </data>
+  <data name="ProfileNameCanNotBeEmpty" xml:space="preserve">
+    <value>Der Profilname darf nicht leer sein</value>
+  </data>
+  <data name="Red" xml:space="preserve">
+    <value>Rot</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="Renaming" xml:space="preserve">
+    <value>Umbenennung...</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>Speichern...</value>
+  </data>
+  <data name="ScanForDevicesFirst" xml:space="preserve">
+    <value>Suchen Sie nach Geräten, bevor Sie Controller-Aktionen hinzufügen!</value>
+  </data>
+  <data name="Scanning" xml:space="preserve">
+    <value>Scannen...</value>
+  </data>
+  <data name="SearchingForDevices" xml:space="preserve">
+    <value>Geräte suchen</value>
+  </data>
+  <data name="SelectDevice" xml:space="preserve">
+    <value>Wählen Sie ein Gerät aus</value>
+  </data>
+  <data name="SelectDeviceBeforeSaving" xml:space="preserve">
+    <value>Wählen Sie vor dem Speichern ein Gerät aus!</value>
+  </data>
+  <data name="ServoAngle" xml:space="preserve">
+    <value>Servo-Winkel</value>
+  </data>
+  <data name="ShortChannel" xml:space="preserve">
+    <value>Ka</value>
+  </data>
+  <data name="TurnOnBluetoothToConnect" xml:space="preserve">
+    <value>Schalten Sie Bluetooth ein, um eine Verbindung zu einem Bluetooth-Gerät herzustellen</value>
+  </data>
+  <data name="TurnOnBluetoothToConnectBluetoothDevices" xml:space="preserve">
+    <value>Schalten Sie Bluetooth ein, um eine Verbindung zu Bluetooth-Geräten herzustellen</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warnung</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+</root>

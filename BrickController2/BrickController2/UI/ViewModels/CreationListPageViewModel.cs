@@ -10,6 +10,7 @@ using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System.Threading;
 using System;
+using BrickController2.UI.Services.Translation;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -24,10 +25,11 @@ namespace BrickController2.UI.ViewModels
 
         public CreationListPageViewModel(
             INavigationService navigationService,
+            ITranslationService translationService,
             ICreationManager creationManager,
             IDeviceManager deviceManager,
             IDialogService dialogService)
-            : base(navigationService)
+            : base(navigationService, translationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;
@@ -71,7 +73,11 @@ namespace BrickController2.UI.ViewModels
             {
                 if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
                 {
-                    await _dialogService.ShowMessageBoxAsync("Permission request", "Location permission is needed for accessing bluetooth", "Ok", _disappearingTokenSource.Token);
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("PermissionRequest"),
+                        Translate("LocationPermissionIsNeeded"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
                 }
 
                 var result = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
@@ -83,7 +89,11 @@ namespace BrickController2.UI.ViewModels
 
             if (status != PermissionStatus.Granted)
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", "Bluetooth devices will NOT be available.", "Ok", _disappearingTokenSource.Token);
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    Translate("BluetoothDevicesWillNOTBeAvailable"),
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
             }
         }
 
@@ -99,7 +109,7 @@ namespace BrickController2.UI.ViewModels
                         await _deviceManager.LoadDevicesAsync();
                         _isLoaded = true;
                     },
-                    "Loading...");
+                    Translate("Loading"));
             }
         }
 
@@ -107,12 +117,25 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                var result = await _dialogService.ShowInputDialogAsync("Creation", "Enter a creation name", null, "Creation name", "Create", "Cancel", _disappearingTokenSource.Token);
+                var result = await _dialogService.ShowInputDialogAsync(
+                    Translate("Creation"),
+                    Translate("EnterCreationName"),
+                    null,
+                    Translate("CreationName"),
+                    Translate("Create"),
+                    Translate("Cancel"),
+                    _disappearingTokenSource.Token);
+
                 if (result.IsOk)
                 {
                     if (string.IsNullOrWhiteSpace(result.Result))
                     {
-                        await _dialogService.ShowMessageBoxAsync("Warning", "Creation name can not be empty.", "Ok", _disappearingTokenSource.Token);
+                        await _dialogService.ShowMessageBoxAsync(
+                            Translate("Warning"),
+                            Translate("CreationNameCanNotBeEmpty"),
+                            Translate("Ok"),
+                            _disappearingTokenSource.Token);
+
                         return;
                     }
 
@@ -122,9 +145,9 @@ namespace BrickController2.UI.ViewModels
                         async (progressDialog, token) =>
                         {
                             creation = await _creationManager.AddCreationAsync(result.Result);
-                            await _creationManager.AddControllerProfileAsync(creation, "Default profile");
+                            await _creationManager.AddControllerProfileAsync(creation, Translate("DefaultProfile"));
                         },
-                        "Creating...");
+                        Translate("Creating"));
 
                     await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation)));
                 }
@@ -138,12 +161,17 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete creation {creation.Name}?", "Yes", "No", _disappearingTokenSource.Token))
+                if (await _dialogService.ShowQuestionDialogAsync(
+                    Translate("Confirm"),
+                    $"{Translate("AreYouSureToDeleteCreation")} '{creation.Name}'?",
+                    Translate("Yes"),
+                    Translate("No"),
+                    _disappearingTokenSource.Token))
                 {
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.DeleteCreationAsync(creation),
-                        "Deleting...");
+                        Translate("Deleting"));
                 }
             }
             catch (OperationCanceledException)

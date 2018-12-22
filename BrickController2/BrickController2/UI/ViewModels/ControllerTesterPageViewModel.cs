@@ -1,5 +1,6 @@
 ﻿using BrickController2.PlatformServices.GameController;
 using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Services.Translation;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,8 +13,9 @@ namespace BrickController2.UI.ViewModels
 
         public ControllerTesterPageViewModel(
             INavigationService navigationService,
+            ITranslationService translationService,
             IGameControllerService gameControllerService)
-            : base(navigationService)
+            : base(navigationService, translationService)
         {
             _gameControllerService = gameControllerService;
         }

@@ -7,6 +7,8 @@ using BrickController2.iOS.PlatformServices.Versioning;
 using BrickController2.PlatformServices.Versioning;
 using BrickController2.iOS.PlatformServices.BluetoothLE;
 using BrickController2.PlatformServices.BluetoothLE;
+using BrickController2.iOS.PlatformServices.Localization;
+using BrickController2.PlatformServices.Localization;
 
 namespace BrickController2.iOS.PlatformServices.DI
 {
@@ -18,6 +20,7 @@ namespace BrickController2.iOS.PlatformServices.DI
             builder.RegisterType<GameControllerService>().AsSelf().As<IGameControllerService>().SingleInstance();
             builder.RegisterType<VersionService>().As<IVersionService>().SingleInstance();
             builder.RegisterType<BluetoothLEService>().As<IBluetoothLEService>().SingleInstance();
+            builder.RegisterType<LocalizationService>().As<ILocalizationService>().SingleInstance();
         }
     }
 }

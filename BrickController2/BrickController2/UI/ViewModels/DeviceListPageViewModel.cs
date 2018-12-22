@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Device = BrickController2.DeviceManagement.Device;
 using BrickController2.UI.Commands;
 using System.Threading;
+using BrickController2.UI.Services.Translation;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -19,9 +20,10 @@ namespace BrickController2.UI.ViewModels
 
         public DeviceListPageViewModel(
             INavigationService navigationService,
+            ITranslationService translationService,
             IDeviceManager deviceManager,
             IDialogService dialogService) 
-            : base(navigationService)
+            : base(navigationService, translationService)
         {
             DeviceManager = deviceManager;
             _dialogService = dialogService;
@@ -54,12 +56,17 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                if (await _dialogService.ShowQuestionDialogAsync("Confirm", $"Are you sure to delete device {device.Name}?", "Yes", "No", _disappearingTokenSource.Token))
+                if (await _dialogService.ShowQuestionDialogAsync(
+                    Translate("Confirm"),
+                    $"{Translate("AreYouSureToDeleteDevice")} '{device.Name}'?",
+                    Translate("Yes"),
+                    Translate("No"),
+                    _disappearingTokenSource.Token))
                 {
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await DeviceManager.DeleteDeviceAsync(device),
-                        "Deleting...");
+                        Translate("Deleting"));
                 }
             }
             catch (OperationCanceledException)
@@ -71,7 +78,11 @@ namespace BrickController2.UI.ViewModels
         {
             if (!DeviceManager.IsBluetoothOn)
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", "Bluetooth is turned off.", "Ok", _disappearingTokenSource.Token);
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    Translate("BluetoothIsTurnedOff"),
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
             }
 
             var percent = 0;
@@ -109,13 +120,17 @@ namespace BrickController2.UI.ViewModels
                         }
                     }
                 },
-                "Scanning...",
-                "Searching for devices.",
-                "Cancel");
+                Translate("Scanning"),
+                Translate("SearchingForDevices"),
+                Translate("Cancel"));
 
             if (!scanResult && !_isDisappearing)
             {
-                await _dialogService.ShowMessageBoxAsync("Warning", "Error during scanning", "Ok", CancellationToken.None);
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    Translate("ErrorDuringScanning"),
+                    Translate("Ok"),
+                    CancellationToken.None);
             }
         }
     }

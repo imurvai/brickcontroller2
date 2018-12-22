@@ -2,9 +2,10 @@
 <local:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerTesterPage"
-    Title="Controller tester">
+    Title="{extensions:Translate ControllerTester}">
     
     <local:PageBase.Content>
         <StackLayout Padding="10">
@@ -31,7 +32,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Label Text="Press buttons or move the joys" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <Label Text="{extensions:Translate PressButtonsOrMoveJoys}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label.Triggers>
                     <DataTrigger TargetType="Label" Binding="{Binding ControllerEventList.Count}" Value="0">
                         <Setter Property="IsVisible" Value="True"/>
