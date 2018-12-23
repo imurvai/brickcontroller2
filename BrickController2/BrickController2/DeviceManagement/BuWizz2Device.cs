@@ -18,11 +18,11 @@ namespace BrickController2.DeviceManagement
         private readonly byte[] _sendOutputBuffer = new byte[] { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 };
         private readonly byte[] _sendOutputLevelBuffer = new byte[] { 0x11, 0x00 };
         private readonly int[] _outputValues = new int[4];
-        private int _outputLevelValue;
+
+        private volatile int _outputLevelValue;
+        private volatile int _sendAttemptsLeft;
 
         private IGattCharacteristic _characteristic;
-
-        private int _sendAttemptsLeft;
 
         public BuWizz2Device(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, uiThreadService, bleService)
@@ -106,6 +106,10 @@ namespace BrickController2.DeviceManagement
                         {
                             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                         }
+                    }
+                    else
+                    {
+                        await Task.Delay(10);
                     }
                 }
                 catch (OperationCanceledException)

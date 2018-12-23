@@ -18,9 +18,9 @@ namespace BrickController2.DeviceManagement
         private readonly byte[] _sendBuffer = new byte[] { 0x0a, 0x00, 0x81, 0x00, 0x11, 0x60, 0x00, 0x00, 0x00, 0x00 };
         private readonly int[] _outputValues = new int[2];
 
-        private IGattCharacteristic _characteristic;
+        private volatile int _sendAttemptsLeft;
 
-        private int _sendAttemptsLeft;
+        private IGattCharacteristic _characteristic;
 
         public PoweredUpDevice(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, uiThreadService, bleService)
@@ -87,6 +87,10 @@ namespace BrickController2.DeviceManagement
                         {
                             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                         }
+                    }
+                    else
+                    {
+                        await Task.Delay(10);
                     }
                 }
                 catch (OperationCanceledException)
