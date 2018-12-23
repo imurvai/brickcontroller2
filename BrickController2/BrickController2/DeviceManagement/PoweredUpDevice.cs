@@ -15,7 +15,7 @@ namespace BrickController2.DeviceManagement
         private readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
         private readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
 
-        private readonly byte[] _sendBuffer = new byte[] { 0x0a, 0x00, 0x81, 0x00, 0x11, 0x60, 0x00, 0x00, 0x00, 0x00 };
+        private readonly byte[] _sendBuffer = new byte[] { 0x08, 0x00, 0x81, 0x39, 0x11, 0x02, 0x00, 0x00 };
         private readonly int[] _outputValues = new int[2];
 
         private volatile int _sendAttemptsLeft;
@@ -67,12 +67,9 @@ namespace BrickController2.DeviceManagement
                     if (_sendAttemptsLeft > 0)
                     {
                         int v0 = _outputValues[0];
-                        var result0 = await SendOutputValueAsync(0, v0);
-
                         int v1 = _outputValues[1];
-                        var result1 = await SendOutputValueAsync(1, v1);
 
-                        if (result0 && result1)
+                        if (await SendOutputValuesAsync(v0, v1))
                         {
                             if (v0 != 0 || v1 != 0)
                             {
@@ -99,12 +96,12 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private async Task<bool> SendOutputValueAsync(int channel, int value)
+        private async Task<bool> SendOutputValuesAsync(int v0, int v1)
         {
             try
             {
-                _sendBuffer[3] = (byte)channel;
-                _sendBuffer[7] = (byte)(value < 0 ? (255 + value) : value);
+                _sendBuffer[6] = (byte)(v0 < 0 ? (255 + v0) : v0);
+                _sendBuffer[7] = (byte)(v1 < 0 ? (255 + v1) : v1);
 
                 await _bleDevice?.WriteAsync(_characteristic, _sendBuffer);
                 return true;
