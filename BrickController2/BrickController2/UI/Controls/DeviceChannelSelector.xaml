@@ -29,7 +29,7 @@
                     <controls:ChannelSelectorRadioButton x:Name="SBrickChannel1" Channel="1" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
                 </Grid>
 
-                <Image Grid.Column="1" Source="{extensions:ImageResource Source=sbrick_image.png}" WidthRequest="150" HeightRequest="150"/>
+                <Image Grid.Column="1" Source="{extensions:ImageResource Source=sbrick_image.png}" WidthRequest="150" HeightRequest="130"/>
 
                 <Grid Grid.Column="2">
                     <controls:ChannelSelectorRadioButton x:Name="SBrickChannel2" Channel="2" Text="3" HorizontalOptions="Start" VerticalOptions="Start"/>
@@ -50,7 +50,7 @@
                     <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel1" Channel="1" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
                 </Grid>
 
-                <Image Grid.Column="1" Source="{extensions:ImageResource Source=buwizz_image.png}" WidthRequest="150" HeightRequest="150"/>
+                <Image Grid.Column="1" Source="{extensions:ImageResource Source=buwizz_image.png}" WidthRequest="150" HeightRequest="100"/>
 
                 <Grid Grid.Column="2">
                     <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel3" Channel="3" Text="4" HorizontalOptions="Start" VerticalOptions="Start"/>
@@ -90,10 +90,31 @@
                     <controls:ChannelSelectorRadioButton x:Name="PoweredUpChannel1" Channel="1" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
                 </Grid>
 
-                <Image Grid.Column="1" Source="{extensions:ImageResource Source=poweredup_image.png}" WidthRequest="150" HeightRequest="150"/>
+                <Image Grid.Column="1" Source="{extensions:ImageResource Source=poweredup_image.png}" WidthRequest="150" HeightRequest="120"/>
 
                 <Grid Grid.Column="2">
                 </Grid>
+            </Grid>
+            
+            <!-- Boost section -->
+            <Grid x:Name="BoostSection">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <controls:ChannelSelectorRadioButton Grid.Column="1" Grid.Row="0" x:Name="BoostChannelD" Channel="3" Text="D" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="1" x:Name="BoostChannelB" Channel="1" Text="B" HorizontalOptions="End" VerticalOptions="Start"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="1" x:Name="BoostChannelA" Channel="0" Text="A" HorizontalOptions="End" VerticalOptions="End"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="1" Grid.Row="2" x:Name="BoostChannelC" Channel="2" Text="C" HorizontalOptions="Center" VerticalOptions="Center"/>
+
+                <Image Grid.Column="1" Grid.Row="1" Source="{extensions:ImageResource Source=boost_image.png}" WidthRequest="150" HeightRequest="80"/>
             </Grid>
 
         </Grid>

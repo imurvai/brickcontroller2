@@ -90,7 +90,7 @@ namespace BrickController2.DeviceManagement
                 {
                     if (manufacturerData[3] == 0x40)
                     {
-                        //return DeviceType.Boost;
+                        return DeviceType.Boost;
                     }
                     else if (manufacturerData[3] == 0x41)
                     {
