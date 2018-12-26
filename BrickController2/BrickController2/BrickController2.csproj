@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="UI\Images\boost_image.png" />
+    <None Remove="UI\Images\boost_image_small.png" />
     <None Remove="UI\Images\buwizz_image.png" />
     <None Remove="UI\Images\buwizz_image_small.png" />
     <None Remove="UI\Images\ic_add.png" />
@@ -36,6 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="UI\Images\boost_image.png" />
+    <EmbeddedResource Include="UI\Images\boost_image_small.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image_small.png" />
     <EmbeddedResource Include="UI\Images\ic_add.png" />

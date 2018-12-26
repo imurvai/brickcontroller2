@@ -26,6 +26,9 @@ namespace BrickController2.UI.Converters
                 case DeviceType.PoweredUp:
                     return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.poweredup_image_small.png");
 
+                case DeviceType.Boost:
+                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.boost_image_small.png");
+
                 default:
                     return null;
             }
