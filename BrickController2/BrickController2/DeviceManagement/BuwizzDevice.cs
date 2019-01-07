@@ -32,6 +32,7 @@ namespace BrickController2.DeviceManagement
         public override int NumberOfChannels => 4;
         public override int NumberOfOutputLevels => 3;
         public override int DefaultOutputLevel => 1;
+        protected override bool AutoConnectOnFirstConnect => false;
 
         public override void SetOutput(int channel, float value)
         {

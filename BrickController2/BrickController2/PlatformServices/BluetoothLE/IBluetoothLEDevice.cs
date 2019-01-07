@@ -12,7 +12,7 @@ namespace BrickController2.PlatformServices.BluetoothLE
 
         event EventHandler<EventArgs> Disconnected;
 
-        Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(CancellationToken token);
+        Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(bool autoConnect, CancellationToken token);
         void Disconnect();
 
         Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data);

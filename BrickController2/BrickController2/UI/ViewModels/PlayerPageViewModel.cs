@@ -31,6 +31,7 @@ namespace BrickController2.UI.ViewModels
         private Task _connectionTask;
         private CancellationTokenSource _connectionTokenSource;
         private TaskCompletionSource<bool> _connectionCompletionSource;
+        private bool _reconnect = false;
         private bool _isDisappearing = false;
         private CancellationTokenSource _disappearingTokenSource;
 
@@ -145,7 +146,7 @@ namespace BrickController2.UI.ViewModels
             {
                 if (device.DeviceState == DeviceState.Disconnected && !_deviceConnectionTasks.ContainsKey(device))
                 {
-                    _deviceConnectionTasks[device] = device.ConnectAsync(_connectionTokenSource.Token);
+                    _deviceConnectionTasks[device] = device.ConnectAsync(_reconnect, _connectionTokenSource.Token);
                 }
             }
 
@@ -176,6 +177,7 @@ namespace BrickController2.UI.ViewModels
 
             if (_devices.All(d => d.DeviceState == DeviceState.Connected))
             {
+                _reconnect = true;
                 ChangeOutputLevel(BuWizzOutputLevel, _buwizzDevices);
                 ChangeOutputLevel(BuWizz2OutputLevel, _buwizz2Devices);
             }

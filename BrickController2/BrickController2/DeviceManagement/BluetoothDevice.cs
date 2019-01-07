@@ -21,10 +21,11 @@ namespace BrickController2.DeviceManagement
             _bleService = bleService;
         }
 
+        protected abstract bool AutoConnectOnFirstConnect { get; }
         protected abstract bool ProcessServices(IEnumerable<IGattService> services);
         protected abstract Task ProcessOutputsAsync(CancellationToken token);
 
-        public async override Task<DeviceConnectionResult> ConnectAsync(CancellationToken token)
+        public async override Task<DeviceConnectionResult> ConnectAsync(bool reconnect, CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -44,7 +45,7 @@ namespace BrickController2.DeviceManagement
                     _bleDevice.Disconnected += OnDeviceDisconnected;
 
                     await SetStateAsync(DeviceState.Connecting, false);
-                    var services = await _bleDevice.ConnectAndDiscoverServicesAsync(token);
+                    var services = await _bleDevice.ConnectAndDiscoverServicesAsync(reconnect || AutoConnectOnFirstConnect, token);
 
                     token.ThrowIfCancellationRequested();
 

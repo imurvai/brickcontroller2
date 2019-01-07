@@ -30,8 +30,8 @@ namespace BrickController2.DeviceManagement
         }
 
         public override DeviceType DeviceType => DeviceType.Boost;
-
         public override int NumberOfChannels => 4;
+        protected override bool AutoConnectOnFirstConnect => true;
 
         public override void SetOutput(int channel, float value)
         {

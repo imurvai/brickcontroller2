@@ -51,7 +51,7 @@ namespace BrickController2.DeviceManagement
         public virtual int NumberOfOutputLevels => 1;
         public virtual int DefaultOutputLevel => 1;
 
-        public abstract Task<DeviceConnectionResult> ConnectAsync(CancellationToken token);
+        public abstract Task<DeviceConnectionResult> ConnectAsync(bool reconnect, CancellationToken token);
         public abstract Task DisconnectAsync();
 
         public abstract void SetOutput(int channel, float value);

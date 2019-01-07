@@ -30,7 +30,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
 
         public event EventHandler<EventArgs> Disconnected;
 
-        public async Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(CancellationToken token)
+        public async Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(bool reconnect, CancellationToken token)
         {
             lock(_lock)
             {

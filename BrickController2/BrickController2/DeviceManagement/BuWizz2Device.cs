@@ -33,6 +33,7 @@ namespace BrickController2.DeviceManagement
         public override int NumberOfChannels => 4;
         public override int NumberOfOutputLevels => 4;
         public override int DefaultOutputLevel => 1;
+        protected override bool AutoConnectOnFirstConnect => false;
 
         public override void SetOutput(int channel, float value)
         {
@@ -122,10 +123,10 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                _sendOutputBuffer[1] = (byte)(v1 / 2);
-                _sendOutputBuffer[2] = (byte)(v0 / 2);
-                _sendOutputBuffer[3] = (byte)(v3 / 2);
-                _sendOutputBuffer[4] = (byte)(v2 / 2);
+                _sendOutputBuffer[1] = (byte)(v0 / 2);
+                _sendOutputBuffer[2] = (byte)(v1 / 2);
+                _sendOutputBuffer[3] = (byte)(v2 / 2);
+                _sendOutputBuffer[4] = (byte)(v3 / 2);
 
                 await _bleDevice?.WriteAsync(_characteristic, _sendOutputBuffer);
                 return true;

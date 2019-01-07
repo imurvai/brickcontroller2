@@ -17,7 +17,7 @@ namespace BrickController2.DeviceManagement
         public override DeviceType DeviceType => DeviceType.Infrared;
         public override int NumberOfChannels => 2;
 
-        public override async Task<DeviceConnectionResult> ConnectAsync(CancellationToken token)
+        public override async Task<DeviceConnectionResult> ConnectAsync(bool reconnect, CancellationToken token)
         {
             await SetStateAsync(DeviceState.Connecting, false);
 

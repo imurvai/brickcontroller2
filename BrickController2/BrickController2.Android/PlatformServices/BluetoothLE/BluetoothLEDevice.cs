@@ -34,7 +34,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
         public event EventHandler<EventArgs> Disconnected;
 
-        public async Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(CancellationToken token)
+        public async Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(bool autoConnect, CancellationToken token)
         {
             CancellationTokenRegistration tokenRegistration;
 
@@ -56,11 +56,11 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
                 if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
                 {
-                    _bluetoothGatt = _bluetoothDevice.ConnectGatt(_context, true, this, BluetoothTransports.Le);
+                    _bluetoothGatt = _bluetoothDevice.ConnectGatt(_context, autoConnect, this, BluetoothTransports.Le);
                 }
                 else
                 {
-                    _bluetoothGatt = _bluetoothDevice.ConnectGatt(_context, true, this);
+                    _bluetoothGatt = _bluetoothDevice.ConnectGatt(_context, autoConnect, this);
                 }
 
                 if (_bluetoothGatt == null)
@@ -166,6 +166,8 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
         public override void OnConnectionStateChange(BluetoothGatt gatt, [GeneratedEnum] GattStatus status, [GeneratedEnum] ProfileState newState)
         {
+            System.Diagnostics.Debug.WriteLine($"OnConnectionStateChanged - status: {status}, newState: {newState}");
+
             switch (newState)
             {
                 case ProfileState.Connecting:
@@ -192,6 +194,11 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                                     }
                                 }
                             });
+                        }
+                        else
+                        {
+                            Disconnect();
+                            _connectCompletionSource?.SetResult(null);
                         }
                     }
 
@@ -228,6 +235,8 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
         public override void OnServicesDiscovered(BluetoothGatt gatt, [GeneratedEnum] GattStatus status)
         {
+            System.Diagnostics.Debug.WriteLine($"OnServiceDiscovered - status: {status}");
+
             lock (_lock)
             {
                 if (status == GattStatus.Success && State == BluetoothLEDeviceState.Discovering)
@@ -252,6 +261,11 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
                     State = BluetoothLEDeviceState.Connected;
                     _connectCompletionSource?.SetResult(services);
+                }
+                else
+                {
+                    Disconnect();
+                    _connectCompletionSource?.SetResult(null);
                 }
             }
         }

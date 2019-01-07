@@ -28,8 +28,8 @@ namespace BrickController2.DeviceManagement
         }
 
         public override DeviceType DeviceType => DeviceType.PoweredUp;
-
         public override int NumberOfChannels => 2;
+        protected override bool AutoConnectOnFirstConnect => true;
 
         public override void SetOutput(int channel, float value)
         {
