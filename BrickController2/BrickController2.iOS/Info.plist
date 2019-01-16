@@ -32,6 +32,10 @@
 	<string>BrickController2</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Bluetooth access is required to use SBrick, BuWizz or Powered-Up devices.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Location access is required to use bluetooth.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location access is required to use bluetooth.</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Allow the application to access the calendar.</string>
 	<key>XSAppIconAssets</key>
