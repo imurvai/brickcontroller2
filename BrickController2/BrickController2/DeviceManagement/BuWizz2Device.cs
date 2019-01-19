@@ -18,15 +18,19 @@ namespace BrickController2.DeviceManagement
         private readonly byte[] _sendOutputBuffer = new byte[] { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 };
         private readonly byte[] _sendOutputLevelBuffer = new byte[] { 0x11, 0x00 };
         private readonly int[] _outputValues = new int[4];
+        private readonly bool _swapChannels;
 
         private volatile int _outputLevelValue;
         private volatile int _sendAttemptsLeft;
 
         private IGattCharacteristic _characteristic;
 
-        public BuWizz2Device(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
+        public BuWizz2Device(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, uiThreadService, bleService)
         {
+            // On BuWizz2 with manufacturer data 0x4e054257001e the ports are swapped
+            // (no normal BuWizz2es manufacturer data is 0x4e054257001b)
+            _swapChannels = deviceData != null && deviceData.Length >= 6 && deviceData[5] == 0x1E;
         }
 
         public override DeviceType DeviceType => DeviceType.BuWizz2;
@@ -123,10 +127,20 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                _sendOutputBuffer[1] = (byte)(v0 / 2);
-                _sendOutputBuffer[2] = (byte)(v1 / 2);
-                _sendOutputBuffer[3] = (byte)(v2 / 2);
-                _sendOutputBuffer[4] = (byte)(v3 / 2);
+                if (_swapChannels)
+                {
+                    _sendOutputBuffer[1] = (byte)(v1 / 2);
+                    _sendOutputBuffer[2] = (byte)(v0 / 2);
+                    _sendOutputBuffer[3] = (byte)(v3 / 2);
+                    _sendOutputBuffer[4] = (byte)(v2 / 2);
+                }
+                else
+                {
+                    _sendOutputBuffer[1] = (byte)(v0 / 2);
+                    _sendOutputBuffer[2] = (byte)(v1 / 2);
+                    _sendOutputBuffer[3] = (byte)(v2 / 2);
+                    _sendOutputBuffer[4] = (byte)(v3 / 2);
+                }
 
                 await _bleDevice?.WriteAsync(_characteristic, _sendOutputBuffer);
                 return true;

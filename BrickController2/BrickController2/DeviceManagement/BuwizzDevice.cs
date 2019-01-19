@@ -23,7 +23,7 @@ namespace BrickController2.DeviceManagement
 
         private IGattCharacteristic _characteristic;
 
-        public BuWizzDevice(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
+        public BuWizzDevice(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, uiThreadService, bleService)
         {
         }

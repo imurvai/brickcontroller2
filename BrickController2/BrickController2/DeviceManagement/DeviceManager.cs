@@ -49,7 +49,7 @@ namespace BrickController2.DeviceManagement
                 var deviceDTOs = await _deviceRepository.GetDevicesAsync();
                 foreach (var deviceDTO in deviceDTOs)
                 {
-                    var device = _deviceFactory(deviceDTO.DeviceType, deviceDTO.Name, deviceDTO.Address);
+                    var device = _deviceFactory(deviceDTO.DeviceType, deviceDTO.Name, deviceDTO.Address, deviceDTO.DeviceData);
                     if (device != null)
                     {
                         Devices.Add(device);
@@ -83,7 +83,7 @@ namespace BrickController2.DeviceManagement
                 }
             }
 
-            async Task FoundDevice(DeviceType deviceType, string deviceName, string deviceAddress)
+            async Task FoundDevice(DeviceType deviceType, string deviceName, string deviceAddress, byte[] deviceData)
             {
                 using (await _foundDeviceLock.LockAsync())
                 {
@@ -92,10 +92,10 @@ namespace BrickController2.DeviceManagement
                         return;
                     }
 
-                    var device = _deviceFactory(deviceType, deviceName, deviceAddress);
+                    var device = _deviceFactory(deviceType, deviceName, deviceAddress, deviceData);
                     if (device != null)
                     {
-                        await _deviceRepository.InsertDeviceAsync(device.DeviceType, device.Name, device.Address);
+                        await _deviceRepository.InsertDeviceAsync(device.DeviceType, device.Name, device.Address, deviceData);
                         Devices.Add(device);
                     }
                 }

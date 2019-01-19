@@ -38,11 +38,9 @@
 	<string>Location access is required to use bluetooth.</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Allow the application to access the calendar.</string>
-	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.02</string>
+	<string>1.1</string>
 	<key>CFBundleVersion</key>
-	<string>18</string>
+	<string>19</string>
 </dict>
 </plist>

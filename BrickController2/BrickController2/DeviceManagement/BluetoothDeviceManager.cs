@@ -20,7 +20,7 @@ namespace BrickController2.DeviceManagement
         public bool IsBluetoothLESupported => _bleService.IsBluetoothLESupported;
         public bool IsBluetoothOn => _bleService.IsBluetoothOn;
 
-        public async Task<bool> ScanAsync(Func<DeviceType, string, string, Task> deviceFoundCallback, CancellationToken token)
+        public async Task<bool> ScanAsync(Func<DeviceType, string, string, byte[], Task> deviceFoundCallback, CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -34,10 +34,10 @@ namespace BrickController2.DeviceManagement
                     return await _bleService.ScanDevicesAsync(
                         async scanResult =>
                         {
-                            var deviceType = GetDeviceType(scanResult.AdvertismentData);
-                            if (deviceType != DeviceType.Unknown)
+                            var deviceInfo = GetDeviceIfo(scanResult.AdvertismentData);
+                            if (deviceInfo.DeviceType != DeviceType.Unknown)
                             {
-                                await deviceFoundCallback(deviceType, scanResult.DeviceName, scanResult.DeviceAddress);
+                                await deviceFoundCallback(deviceInfo.DeviceType, scanResult.DeviceName, scanResult.DeviceAddress, deviceInfo.ManufacturerData);
                             }
                         },
                         token);
@@ -53,17 +53,17 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private DeviceType GetDeviceType(IDictionary<byte, byte[]> advertismentData)
+        private (DeviceType DeviceType, byte[] ManufacturerData) GetDeviceIfo(IDictionary<byte, byte[]> advertismentData)
         {
             if (advertismentData == null || !advertismentData.ContainsKey(0xFF))
             {
-                return DeviceType.Unknown;
+                return (DeviceType.Unknown, null);
             }
 
             var manufacturerData = advertismentData[0xFF];
             if (manufacturerData == null || manufacturerData.Length < 2)
             {
-                return DeviceType.Unknown;
+                return (DeviceType.Unknown, null);
             }
 
             var data1 = manufacturerData[0];
@@ -71,17 +71,17 @@ namespace BrickController2.DeviceManagement
 
             if ((data1 & 0xFF) == 0x98 && data2 == 0x01)
             {
-                return DeviceType.SBrick;
+                return (DeviceType.SBrick, manufacturerData);
             }
 
             if (data1 == 0x48 && data2 == 0x4D)
             {
-                return DeviceType.BuWizz;
+                return (DeviceType.BuWizz, manufacturerData);
             }
 
             if (data1 == 0x4e && data2 == 0x05)
             {
-                return DeviceType.BuWizz2;
+                return (DeviceType.BuWizz2, manufacturerData);
             }
 
             if ((data1 & 0xFF) == 0x97 && data2 == 0x03)
@@ -90,16 +90,16 @@ namespace BrickController2.DeviceManagement
                 {
                     if (manufacturerData[3] == 0x40)
                     {
-                        return DeviceType.Boost;
+                        return (DeviceType.Boost, manufacturerData);
                     }
                     else if (manufacturerData[3] == 0x41)
                     {
-                        return DeviceType.PoweredUp;
+                        return (DeviceType.PoweredUp, manufacturerData);
                     }
                 }
             }
 
-            return DeviceType.Unknown;
+            return (DeviceType.Unknown, null);
         }
     }
 }

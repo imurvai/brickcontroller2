@@ -11,5 +11,6 @@ namespace BrickController2.DeviceManagement
         public DeviceType DeviceType { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
+        public byte[] DeviceData { get; set; }
     }
 }

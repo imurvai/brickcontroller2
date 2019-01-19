@@ -8,7 +8,7 @@ namespace BrickController2.DeviceManagement
     {
         private readonly IInfraredDeviceManager _infraredDeviceManager;
 
-        public InfraredDevice(string name, string address, IInfraredDeviceManager infraredDeviceManager, IUIThreadService uiThreadService, IDeviceRepository deviceRepository)
+        public InfraredDevice(string name, string address, byte[] deviceData, IInfraredDeviceManager infraredDeviceManager, IUIThreadService uiThreadService, IDeviceRepository deviceRepository)
             : base(name, address, deviceRepository, uiThreadService)
         {
             _infraredDeviceManager = infraredDeviceManager;

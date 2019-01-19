@@ -22,7 +22,7 @@ namespace BrickController2.DeviceManagement.DI
             builder.Register<DeviceFactory>(c =>
             {
                 IComponentContext ctx = c.Resolve<IComponentContext>();
-                return (deviceType, name, address) => ctx.ResolveKeyed<Device>(deviceType, new NamedParameter("name", name), new NamedParameter("address", address));
+                return (deviceType, name, address, deviceData) => ctx.ResolveKeyed<Device>(deviceType, new NamedParameter("name", name), new NamedParameter("address", address), new NamedParameter("deviceData", deviceData));
             });
         }
     }

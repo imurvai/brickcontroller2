@@ -38,11 +38,11 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public async Task InsertDeviceAsync(DeviceType type, string name, string address)
+        public async Task InsertDeviceAsync(DeviceType type, string name, string address, byte[] devicedata)
         {
             using (await _lock.LockAsync())
             {
-                var device = new DeviceDTO { DeviceType = type, Address = address, Name = name };
+                var device = new DeviceDTO { DeviceType = type, Address = address, Name = name, DeviceData = devicedata };
                 await InitAsync();
                 await _databaseConnection.InsertAsync(device);
             }
