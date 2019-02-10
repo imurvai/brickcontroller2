@@ -5,6 +5,7 @@
 Manufacturer data in scanrecord starts with: 0x48, 0x4D
 
 __Service UUID__: 0000ffe0-0000-1000-8000-00805f9b34fb
+
 __Characteristic UUID__: 0000ffe1-0000-1000-8000-00805f9b34fb
 
 ### Payload:
@@ -30,6 +31,7 @@ There are two revisions of BuWizz2 (I'm aware of at least):
 - Rev 2 manufacturer data contunues with __0x1E__
 
 __Service UUID__: 4e050000-74fb-4481-88b3-9919b1676e93
+
 __Characteristic UUID__: 000092d1-0000-1000-8000-00805f9b34fb
 
 ### Payload:
@@ -38,7 +40,9 @@ For V2 setting the output level and the output values can be done in separate __
 
 1. Setting the output level:
 In this case the payload consist of 2 bytes: __0x11__ and __output level__
+
 The output level values: low: __1__, medium: __2__, high: __3__, ludicrous: __4__
+
 2. Setting the channel outputs:
 It consists of 6 bytes:
 
