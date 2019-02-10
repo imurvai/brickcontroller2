@@ -1,5 +1,9 @@
 # BuWizz protocol description
 
+## Remark
+
+This protocol description is not official. It was reverse-engineered based on the bluetooth communication logs.
+
 ## BuWizz V1
 
 Manufacturer data in scanrecord starts with: 0x48, 0x4D
