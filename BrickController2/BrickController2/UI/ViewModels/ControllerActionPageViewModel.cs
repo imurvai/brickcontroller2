@@ -1,5 +1,6 @@
 ﻿using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
+using BrickController2.PlatformServices.Preferences;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
@@ -18,6 +19,7 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
+        private readonly IPreferences _preferences;
 
         private CancellationTokenSource _disappearingTokenSource;
 
@@ -37,12 +39,14 @@ namespace BrickController2.UI.ViewModels
             ICreationManager creationManager,
             IDeviceManager deviceManager,
             IDialogService dialogService,
+            IPreferences preferences,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;
             _dialogService = dialogService;
+            _preferences = preferences;
 
             ControllerAction = parameters.Get<ControllerAction>("controlleraction", null);
             ControllerEvent = parameters.Get<ControllerEvent>("controllerevent", null) ?? ControllerAction.ControllerEvent;
@@ -62,7 +66,10 @@ namespace BrickController2.UI.ViewModels
             }
             else
             {
-                SelectedDevice = _deviceManager.Devices.FirstOrDefault();
+                var lastSelectedDeviceId = _preferences.Get<string>("LastSelectedDeviceId", null, "com.scn.BrickController2.ControllerActionPage");
+                SelectedDevice = string.IsNullOrEmpty(lastSelectedDeviceId) ?
+                    _deviceManager.Devices.FirstOrDefault() :
+                    _deviceManager.GetDeviceById(lastSelectedDeviceId);
                 Channel = 0;
                 IsInvert = false;
                 ChannelOutputType = ChannelOutputType.NormalMotor;
@@ -89,6 +96,8 @@ namespace BrickController2.UI.ViewModels
             set
             {
                 _selectedDevice = value;
+                _preferences.Set<string>("LastSelectedDeviceId", _selectedDevice.Id, "com.scn.BrickController2.ControllerActionPage");
+
                 if (_selectedDevice.NumberOfChannels <= Channel)
                 {
                     Channel = 0;
