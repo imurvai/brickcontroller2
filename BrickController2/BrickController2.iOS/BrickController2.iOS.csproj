@@ -33,6 +33,7 @@
     <CodesignExtraArgs />
     <CodesignResourceRules />
     <CodesignEntitlements />
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -118,6 +119,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="PlatformServices\Localization\LocalizationService.cs" />
+    <Compile Include="PlatformServices\Preferences\Preferences.cs" />
     <Compile Include="PlatformServices\Versioning\VersionService.cs" />
     <Compile Include="UI\CustomRenderers\ExtendedSliderRenderer.cs" />
     <Compile Include="UI\CustomRenderers\NoAnimListViewRenderer.cs" />

@@ -7,13 +7,12 @@
     <ContentView.Content>
         <StackLayout Orientation="Horizontal">
             <Grid WidthRequest="25" HeightRequest="25" VerticalOptions="Center">
-                <Frame BackgroundColor="Black" HasShadow="False" WidthRequest="20" HeightRequest="20" CornerRadius="10" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Frame x:Name="SwitchFrame" BackgroundColor="White" HasShadow="False" WidthRequest="18" HeightRequest="18" CornerRadius="9" Padding="0" HorizontalOptions="Center" VerticalOptions="Center">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer x:Name="TapRecognizer"/>
-                    </Frame.GestureRecognizers>
-                </Frame>
-                <Frame x:Name="CheckedIndicatorFrame" BackgroundColor="Red" HasShadow="False" WidthRequest="14" HeightRequest="14" CornerRadius="7" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="TapRecognizer"/>
+                </Grid.GestureRecognizers>
+                <Frame BackgroundColor="Black" HasShadow="False" WidthRequest="22" HeightRequest="22" CornerRadius="11" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame x:Name="SwitchFrame" BackgroundColor="White" HasShadow="False" WidthRequest="20" HeightRequest="20" CornerRadius="10" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame x:Name="CheckedIndicatorFrame" BackgroundColor="Red" HasShadow="False" WidthRequest="16" HeightRequest="16" CornerRadius="8" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
             </Grid>
             <Label x:Name="TextLabel"/>
         </StackLayout>
