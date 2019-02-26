@@ -67,9 +67,7 @@ namespace BrickController2.UI.ViewModels
             else
             {
                 var lastSelectedDeviceId = _preferences.Get<string>("LastSelectedDeviceId", null, "com.scn.BrickController2.ControllerActionPage");
-                SelectedDevice = string.IsNullOrEmpty(lastSelectedDeviceId) ?
-                    _deviceManager.Devices.FirstOrDefault() :
-                    _deviceManager.GetDeviceById(lastSelectedDeviceId);
+                SelectedDevice = _deviceManager.GetDeviceById(lastSelectedDeviceId) ?? _deviceManager.Devices.FirstOrDefault();
                 Channel = 0;
                 IsInvert = false;
                 ChannelOutputType = ChannelOutputType.NormalMotor;
@@ -96,7 +94,6 @@ namespace BrickController2.UI.ViewModels
             set
             {
                 _selectedDevice = value;
-                _preferences.Set<string>("LastSelectedDeviceId", _selectedDevice.Id, "com.scn.BrickController2.ControllerActionPage");
 
                 if (_selectedDevice.NumberOfChannels <= Channel)
                 {
@@ -167,6 +164,8 @@ namespace BrickController2.UI.ViewModels
 
         public override void OnDisappearing()
         {
+            _preferences.Set<string>("LastSelectedDeviceId", _selectedDevice.Id, "com.scn.BrickController2.ControllerActionPage");
+
             _disappearingTokenSource?.Cancel();
         }
 

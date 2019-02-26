@@ -37,7 +37,7 @@ namespace BrickController2.Droid.PlatformServices.Preferences
                         throw new ArgumentException(nameof(key));
                     }
 
-                    return Get<T>(key);
+                    return Get<T>(key, prefs);
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace BrickController2.Droid.PlatformServices.Preferences
                         return defaultValue;
                     }
 
-                    return Get<T>(key);
+                    return Get<T>(key, prefs);
                 }
             }
         }
@@ -86,6 +86,8 @@ namespace BrickController2.Droid.PlatformServices.Preferences
                         default:
                             throw new NotSupportedException($"{typeof(T)} is not supported.");
                     }
+
+                    editor.Commit();
                 }
             }
         }
