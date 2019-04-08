@@ -53,26 +53,25 @@ namespace BrickController2.iOS.PlatformServices.Preferences
             {
                 var defaults = GetDefaults(section);
 
-                switch (value)
+                if (value is bool b)
                 {
-                    case bool b:
-                        defaults.SetBool(b, key);
-                        break;
-
-                    case int i:
-                        defaults.SetInt(i, key);
-                        break;
-
-                    case float f:
-                        defaults.SetFloat(f, key);
-                        break;
-
-                    case string s:
-                        defaults.SetString(s, key);
-                        break;
-
-                    default:
-                        throw new NotSupportedException($"{typeof(T)} is not supported.");
+                    defaults.SetBool(b, key);
+                }
+                else if (value is int i)
+                {
+                    defaults.SetInt(i, key);
+                }
+                else if (value is float f)
+                {
+                    defaults.SetFloat(f, key);
+                }
+                else if (value is string s)
+                {
+                    defaults.SetString(s, key);
+                }
+                else
+                {
+                    throw new NotSupportedException($"{typeof(T)} is not supported.");
                 }
             }
         }
