@@ -34,8 +34,6 @@
 	<string>Bluetooth access is required to use SBrick, BuWizz or Powered-Up devices.</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Allow the application to access the calendar.</string>
-	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.5</string>
 	<key>CFBundleVersion</key>
