@@ -34,7 +34,11 @@
 	<string>Allow the application to access the calendar.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Location access is required to use SBrick, BuWizz or Powered-Up devices.</string>
-	<key>XSAppIconAssets</key>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Location access is required to use SBrick, BuWizz or Powered-Up devices.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Location access is required to use SBrick, BuWizz or Powered-Up devices.</string>
+    <key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.5</string>
@@ -42,7 +46,5 @@
 	<string>21</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location access is required to use SBrick, BuWizz or Powered-Up devices.</string>
 </dict>
 </plist>

@@ -28,7 +28,7 @@ namespace BrickController2.iOS.PlatformServices.Preferences
                     throw new ArgumentException(nameof(key));
                 }
 
-                return Get<T>(key);
+                return Get<T>(key, defaults);
             }
         }
 
@@ -43,7 +43,7 @@ namespace BrickController2.iOS.PlatformServices.Preferences
                     return defaultValue;
                 }
 
-                return Get<T>(key);
+                return Get<T>(key, defaults);
             }
         }
 
@@ -91,8 +91,7 @@ namespace BrickController2.iOS.PlatformServices.Preferences
 
         private T Get<T>(string key, NSUserDefaults defaults)
         {
-            object result = null;
-
+            object result;
             switch (Type.GetTypeCode(typeof(T)))
             {
                 case TypeCode.Boolean:
