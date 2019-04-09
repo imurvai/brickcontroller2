@@ -33,7 +33,7 @@
     <CodesignExtraArgs />
     <CodesignResourceRules />
     <CodesignEntitlements />
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -44,6 +44,8 @@
     <MtouchLink>None</MtouchLink>
     <MtouchArch>x86_64</MtouchArch>
     <ConsolePause>false</ConsolePause>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -74,6 +76,7 @@
     <CodesignKey>iPhone Developer: Istvan Murvai (V4B6W68637)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CodesignProvision>BrickController2 iOS dev profile</CodesignProvision>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>none</DebugType>
@@ -87,6 +90,14 @@
     <CodesignProvision>Automatic:AdHoc</CodesignProvision>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <DeviceSpecificBuild></DeviceSpecificBuild>
+    <IOSDebugOverWiFi></IOSDebugOverWiFi>
+    <CrashReportingEnabled>false</CrashReportingEnabled>
+    <CodesignResourceRules></CodesignResourceRules>
+    <IOSDebuggerPort></IOSDebuggerPort>
+    <MtouchHttpClientHandler></MtouchHttpClientHandler>
+    <OnDemandResourcesPrefetchOrder></OnDemandResourcesPrefetchOrder>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <DebugType>none</DebugType>
@@ -104,6 +115,7 @@
     <BuildIpa>true</BuildIpa>
     <IpaPackageName>com.scn.brickcontroller2</IpaPackageName>
     <IpaIncludeArtwork>true</IpaIncludeArtwork>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <AppExtensionDebugBundleId />
