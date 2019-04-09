@@ -75,7 +75,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Istvan Murvai (V4B6W68637)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <CodesignProvision>BrickController2 iOS dev profile</CodesignProvision>
+    <CodesignProvision>iOS Team Provisioning Profile: *</CodesignProvision>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
