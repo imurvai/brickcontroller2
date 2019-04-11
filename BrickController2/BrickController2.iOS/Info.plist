@@ -26,19 +26,25 @@
 	<string>BrickController2</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.scn.brickcontroller2</string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
 	<string>BrickController2</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Bluetooth access is required to use SBrick, BuWizz or Powered-Up devices.</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Allow the application to access the calendar.</string>
-	<key>XSAppIconAssets</key>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location access is required to use SBrick, BuWizz or Powered-Up devices.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Location access is required to use SBrick, BuWizz or Powered-Up devices.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Location access is required to use SBrick, BuWizz or Powered-Up devices.</string>
+    <key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1</string>
+	<string>1.5</string>
 	<key>CFBundleVersion</key>
-	<string>19</string>
+	<string>21</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 </dict>
 </plist>

@@ -8,6 +8,7 @@ using BrickController2.PlatformServices.BluetoothLE;
 using BrickController2.PlatformServices.GameController;
 using BrickController2.PlatformServices.Infrared;
 using BrickController2.PlatformServices.Localization;
+using BrickController2.PlatformServices.Preferences;
 using BrickController2.PlatformServices.Versioning;
 
 namespace BrickController2.Droid.PlatformServices.DI
@@ -21,6 +22,7 @@ namespace BrickController2.Droid.PlatformServices.DI
             builder.RegisterType<VersionService>().As<IVersionService>().SingleInstance();
             builder.RegisterType<BluetoothLEService>().As<IBluetoothLEService>().SingleInstance();
             builder.RegisterType<LocalizationService>().As<ILocalizationService>().SingleInstance();
+            builder.RegisterType<Preferences.Preferences>().As<IPreferences>().SingleInstance();
         }
     }
 }
