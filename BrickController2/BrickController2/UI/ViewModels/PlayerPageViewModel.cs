@@ -24,7 +24,7 @@ namespace BrickController2.UI.ViewModels
         private readonly IList<Device> _buwizzDevices = new List<Device>();
         private readonly IList<Device> _buwizz2Devices = new List<Device>();
 
-        private readonly IDictionary<string, float[]> _previousButtonOutputs = new Dictionary<string, float[]>();
+        private readonly IDictionary<(string EventCode, ControllerAction ControllerAction), float[]> _previousButtonOutputs = new Dictionary<(string, ControllerAction), float[]>();
         private readonly IDictionary<(string, int), IDictionary<(GameControllerEventType, string), float>> _axisOutputValues = new Dictionary<(string, int), IDictionary<(GameControllerEventType, string), float>>();
 
         private readonly IDictionary<Device, Task<DeviceConnectionResult>> _deviceConnectionTasks = new Dictionary<Device, Task<DeviceConnectionResult>>();
@@ -283,7 +283,7 @@ namespace BrickController2.UI.ViewModels
 
         private float ProcessButtonEvent(string gameControllerEventCode, bool isPressed, ControllerAction controllerAction)
         {
-            var previousButtonOutputs = GetPreviousButtonOutputs(gameControllerEventCode);
+            var previousButtonOutputs = GetPreviousButtonOutputs(gameControllerEventCode, controllerAction);
             float currentOutput = 0;
 
             switch (controllerAction.ButtonType)
@@ -327,27 +327,27 @@ namespace BrickController2.UI.ViewModels
                     break;
             }
 
-            SetPreviousButtonOutput(gameControllerEventCode, currentOutput);
+            SetPreviousButtonOutput(gameControllerEventCode, controllerAction, currentOutput);
             return AdjustOutputValue(currentOutput, controllerAction);
         }
 
-        private float[] GetPreviousButtonOutputs(string gameControllerEventCode)
+        private float[] GetPreviousButtonOutputs(string gameControllerEventCode, ControllerAction controllerAction)
         {
-            if (_previousButtonOutputs.ContainsKey(gameControllerEventCode))
+            if (_previousButtonOutputs.ContainsKey((gameControllerEventCode, controllerAction)))
             {
-                return _previousButtonOutputs[gameControllerEventCode];
+                return _previousButtonOutputs[(gameControllerEventCode, controllerAction)];
             }
             else
             {
                 var prevOutputs = new float[2] { 0, 0 };
-                _previousButtonOutputs[gameControllerEventCode] = prevOutputs;
+                _previousButtonOutputs[(gameControllerEventCode, controllerAction)] = prevOutputs;
                 return prevOutputs;
             }
         }
 
-        private void SetPreviousButtonOutput(string gameControllerEventCode, float value)
+        private void SetPreviousButtonOutput(string gameControllerEventCode, ControllerAction controllerAction, float value)
         {
-            var buttonOutputs = _previousButtonOutputs[gameControllerEventCode];
+            var buttonOutputs = _previousButtonOutputs[(gameControllerEventCode, controllerAction)];
             buttonOutputs[1] = buttonOutputs[0];
             buttonOutputs[0] = value;
         }
