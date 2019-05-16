@@ -6,6 +6,7 @@
         SimpleToggle,
         Alternating,
         Circular,
-        PingPong
+        PingPong,
+        Stop
     }
 }

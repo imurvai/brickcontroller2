@@ -120,6 +120,26 @@
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
                 </StackLayout>
 
+                <!-- Axis type selector -->
+                <StackLayout Orientation="Vertical" IsVisible="False">
+                    <StackLayout.Triggers>
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger>
+                    </StackLayout.Triggers>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="0" Text="{extensions:Translate AxisType}" VerticalOptions="Center"/>
+                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisType" SelectedItem="{Binding AxisType}"/>
+                    </Grid>
+
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                </StackLayout>
+
                 <!-- Axis characteristic selector -->
                 <StackLayout Orientation="Vertical" IsVisible="False">
                     <StackLayout.Triggers>

@@ -25,6 +25,8 @@ namespace BrickController2.UI.ViewModels
         private readonly IList<Device> _buwizz2Devices = new List<Device>();
 
         private readonly IDictionary<(string EventCode, ControllerAction ControllerAction), float[]> _previousButtonOutputs = new Dictionary<(string, ControllerAction), float[]>();
+        private readonly IDictionary<(string EventCode, ControllerAction ControllerAction), float> _previousAxisOutputs = new Dictionary<(string, ControllerAction), float>();
+        private readonly IDictionary<ControllerAction, bool> _disabledOutputForAxises = new Dictionary<ControllerAction, bool>();
         private readonly IDictionary<(string, int), IDictionary<(GameControllerEventType, string), float>> _axisOutputValues = new Dictionary<(string, int), IDictionary<(GameControllerEventType, string), float>>();
 
         private readonly IDictionary<Device, Task<DeviceConnectionResult>> _deviceConnectionTasks = new Dictionary<Device, Task<DeviceConnectionResult>>();
@@ -269,6 +271,7 @@ namespace BrickController2.UI.ViewModels
                                 outputValue = CombineAxisOutputValues(controllerAction.DeviceId, controllerAction.Channel);
                             }
 
+                            outputValue = AdjustOutputValue(outputValue, controllerAction);
                             device.SetOutput(channel, outputValue);
                         }
                     }
@@ -325,10 +328,18 @@ namespace BrickController2.UI.ViewModels
                         currentOutput = previousButtonOutputs[1] < 0 ? 1 : -1;
                     }
                     break;
+
+                case ControllerButtonType.Stop:
+                    currentOutput = 0;
+
+                    SetIsOutputDisabledForAxises(controllerAction, false);
+                    ResetPreviousAxisOutputsForOutput(controllerAction);
+
+                    break;
             }
 
             SetPreviousButtonOutput(gameControllerEventCode, controllerAction, currentOutput);
-            return AdjustOutputValue(currentOutput, controllerAction);
+            return currentOutput;
         }
 
         private float[] GetPreviousButtonOutputs(string gameControllerEventCode, ControllerAction controllerAction)
@@ -354,6 +365,8 @@ namespace BrickController2.UI.ViewModels
 
         private float ProcessAxisEvent(string gameControllerEventCode, float axisValue, ControllerAction controllerAction)
         {
+            var previousAxisValue = GetPreviousAxisOutput(gameControllerEventCode, controllerAction);
+
             var axisDeadZone = controllerAction.AxisDeadZonePercent / 100F;
             if (axisDeadZone > 0)
             {
@@ -390,7 +403,78 @@ namespace BrickController2.UI.ViewModels
                 }
             }
 
-            return AdjustOutputValue(axisValue, controllerAction);
+            if (controllerAction.AxisType == ControllerAxisType.Train)
+            {
+                if (GetIsOutputDisableForAxises(controllerAction))
+                {
+                    if (axisValue == 0)
+                    {
+                        SetIsOutputDisabledForAxises(controllerAction, false);
+                    }
+
+                    axisValue = previousAxisValue;
+                }
+                else
+                {
+                    if (axisValue * previousAxisValue >= 0)
+                    {
+                        // The sign of axisValue and previouAxisValue are same
+                        if (Math.Abs(axisValue) < Math.Abs(previousAxisValue))
+                        {
+                            // Don't accelarate
+                            axisValue = previousAxisValue;
+                        }
+                    }
+                    else
+                    {
+                        // The sign of axisValue and previousAxisValue are different
+                        if (Math.Abs(previousAxisValue - axisValue) < 1)
+                        {
+                            // Don't slow down
+                            axisValue = previousAxisValue;
+                        }
+                        else
+                        {
+                            // Slow down
+                            if (previousAxisValue > 0)
+                            {
+                                axisValue = previousAxisValue - (previousAxisValue - axisValue - 1);
+                            }
+                            else
+                            {
+                                axisValue = previousAxisValue - (previousAxisValue - axisValue + 1);
+                            }
+
+                            if (axisValue == 0)
+                            {
+                                SetIsOutputDisabledForAxises(controllerAction, true);
+                            }
+                        }
+                    }
+                }
+            }
+
+            SetPreviousAxisOutput(gameControllerEventCode, controllerAction, axisValue);
+            return axisValue;
+        }
+
+        private float GetPreviousAxisOutput(string gameControllerEventCode, ControllerAction controllerAction)
+        {
+            if (_previousAxisOutputs.ContainsKey((gameControllerEventCode, controllerAction)))
+            {
+                return _previousAxisOutputs[(gameControllerEventCode, controllerAction)];
+            }
+            else
+            {
+                var prevOutput = 0.0f;
+                _previousAxisOutputs[(gameControllerEventCode, controllerAction)] = prevOutput;
+                return prevOutput;
+            }
+        }
+
+        private void SetPreviousAxisOutput(string gameControllerEventCode, ControllerAction controllerAction, float value)
+        {
+            _previousAxisOutputs[(gameControllerEventCode, controllerAction)] = value;
         }
 
         private void StoreAxisOutputValue(float outputValue, string deviceId, int channel, GameControllerEventType controllerEventType, string controllerEventCode)
@@ -402,6 +486,29 @@ namespace BrickController2.UI.ViewModels
             }
 
             _axisOutputValues[axisOutputValuesKey][(controllerEventType, controllerEventCode)] = outputValue;
+        }
+
+        private bool GetIsOutputDisableForAxises(ControllerAction controllerAction)
+        {
+            if (!_disabledOutputForAxises.ContainsKey(controllerAction))
+            {
+                _disabledOutputForAxises[controllerAction] = false;
+            }
+
+            return _disabledOutputForAxises[controllerAction];
+        }
+
+        private void SetIsOutputDisabledForAxises(ControllerAction controllerAction, bool value)
+        {
+            _disabledOutputForAxises[controllerAction] = value;
+        }
+
+        private void ResetPreviousAxisOutputsForOutput(ControllerAction controllerAction)
+        {
+            foreach (var key in _previousAxisOutputs.Keys.Where(k => k.ControllerAction.DeviceId == controllerAction.DeviceId && k.ControllerAction.Channel == controllerAction.Channel).ToArray())
+            {
+                _previousAxisOutputs[key] = 0;
+            }
         }
 
         private float CombineAxisOutputValues(string deviceId, int channel)

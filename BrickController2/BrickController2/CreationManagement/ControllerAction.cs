@@ -11,6 +11,7 @@ namespace BrickController2.CreationManagement
         private ChannelOutputType _channelOutputType;
         private bool _isInvert;
         private ControllerButtonType _buttonType;
+        private ControllerAxisType _axisType;
         private ControllerAxisCharacteristic _axisCharacteristic;
         private int _maxOutputPercent;
         private int _axisDeadZonePercent;
@@ -53,6 +54,12 @@ namespace BrickController2.CreationManagement
         {
             get { return _buttonType; }
             set { _buttonType = value; RaisePropertyChanged(); }
+        }
+
+        public ControllerAxisType AxisType
+        {
+            get { return _axisType; }
+            set { _axisType = value; RaisePropertyChanged(); }
         }
 
         public ControllerAxisCharacteristic AxisCharacteristic

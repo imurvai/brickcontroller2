@@ -90,13 +90,19 @@
     <CodesignProvision>Automatic:AdHoc</CodesignProvision>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <DeviceSpecificBuild></DeviceSpecificBuild>
-    <IOSDebugOverWiFi></IOSDebugOverWiFi>
+    <DeviceSpecificBuild>
+    </DeviceSpecificBuild>
+    <IOSDebugOverWiFi>
+    </IOSDebugOverWiFi>
     <CrashReportingEnabled>false</CrashReportingEnabled>
-    <CodesignResourceRules></CodesignResourceRules>
-    <IOSDebuggerPort></IOSDebuggerPort>
-    <MtouchHttpClientHandler></MtouchHttpClientHandler>
-    <OnDemandResourcesPrefetchOrder></OnDemandResourcesPrefetchOrder>
+    <CodesignResourceRules>
+    </CodesignResourceRules>
+    <IOSDebuggerPort>
+    </IOSDebuggerPort>
+    <MtouchHttpClientHandler>
+    </MtouchHttpClientHandler>
+    <OnDemandResourcesPrefetchOrder>
+    </OnDemandResourcesPrefetchOrder>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
@@ -205,7 +211,7 @@
     <PackageReference Include="Plugin.Permissions">
       <Version>3.0.0.12</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="3.6.0.293080" />
+    <PackageReference Include="Xamarin.Forms" Version="3.6.0.344457" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
