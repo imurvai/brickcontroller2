@@ -77,7 +77,7 @@
                 </Grid>
             </Grid>
             
-            <!-- PoweredUp section -->
+            <!-- PoweredUp -->
             <Grid x:Name="PoweredUpSection">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -96,7 +96,7 @@
                 </Grid>
             </Grid>
             
-            <!-- Boost section -->
+            <!-- Boost -->
             <Grid x:Name="BoostSection">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -115,6 +115,28 @@
                 <controls:ChannelSelectorRadioButton Grid.Column="1" Grid.Row="2" x:Name="BoostChannelC" Channel="2" Text="C" HorizontalOptions="Center" VerticalOptions="Center"/>
 
                 <Image Grid.Column="1" Grid.Row="1" Source="{extensions:ImageResource Source=boost_image.png}" WidthRequest="150" HeightRequest="80"/>
+            </Grid>
+
+            <!-- Control+ -->
+            <Grid x:Name="ControlPlusSection">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="0" x:Name="ControlPlusChannel0" Channel="0" Text="1" HorizontalOptions="Start" VerticalOptions="Start"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="1" x:Name="ControlPlusChannel1" Channel="1" Text="2" HorizontalOptions="Start" VerticalOptions="Start"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="2" x:Name="ControlPlusChannel2" Channel="2" Text="3" HorizontalOptions="Start" VerticalOptions="Start"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="3" x:Name="ControlPlusChannel3" Channel="3" Text="4" HorizontalOptions="Start" VerticalOptions="Start"/>
+
+                <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Source="{extensions:ImageResource Source=controlplus_image.png}" WidthRequest="150" HeightRequest="80"/>
             </Grid>
 
         </Grid>

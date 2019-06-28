@@ -8,6 +8,7 @@
         BuWizz2,
         Infrared,
         Boost,
-        PoweredUp
+        PoweredUp,
+        ControlPlus
     }
 }
