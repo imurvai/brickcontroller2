@@ -9,6 +9,6 @@
         Infrared,
         Boost,
         PoweredUp,
-        ControlPlus
+        TechnicHub
     }
 }

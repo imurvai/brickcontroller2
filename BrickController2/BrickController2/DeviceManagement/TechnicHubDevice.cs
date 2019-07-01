@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
-    internal class ControlPlusDevice : BluetoothDevice
+    internal class TechnicHubDevice : BluetoothDevice
     {
         private const int MAX_SEND_ATTEMPTS = 4;
 
@@ -23,7 +23,7 @@ namespace BrickController2.DeviceManagement
 
         private IGattCharacteristic _characteristic;
 
-        public ControlPlusDevice(
+        public TechnicHubDevice(
             string name, 
             string address, 
             byte[] deviceData, 
@@ -34,7 +34,7 @@ namespace BrickController2.DeviceManagement
         {
         }
 
-        public override DeviceType DeviceType => DeviceType.ControlPlus;
+        public override DeviceType DeviceType => DeviceType.TechnicHub;
         public override int NumberOfChannels => 4;
         protected override bool AutoConnectOnFirstConnect => true;
 
@@ -119,7 +119,13 @@ namespace BrickController2.DeviceManagement
                 _sendBuffer[7] = (byte)(v1 < 0 ? (255 + v1) : v1);
                 await _bleDevice?.WriteAsync(_characteristic, _sendBuffer);
 
-                // TODO: send v2 and v3
+                _sendBuffer[3] = 2;
+                _sendBuffer[7] = (byte)(v2 < 0 ? (255 + v2) : v2);
+                await _bleDevice?.WriteAsync(_characteristic, _sendBuffer);
+
+                _sendBuffer[3] = 3;
+                _sendBuffer[7] = (byte)(v3 < 0 ? (255 + v3) : v3);
+                await _bleDevice?.WriteAsync(_characteristic, _sendBuffer);
 
                 return true;
             }

@@ -98,7 +98,7 @@ namespace BrickController2.DeviceManagement
                     }
                     else if (manufacturerData[3] == 0x80)
                     {
-                        return (DeviceType.ControlPlus, manufacturerData);
+                        return (DeviceType.TechnicHub, manufacturerData);
                     }
                 }
             }

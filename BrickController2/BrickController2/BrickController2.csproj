@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -16,8 +16,6 @@
     <None Remove="UI\Images\boost_image_small.png" />
     <None Remove="UI\Images\buwizz_image.png" />
     <None Remove="UI\Images\buwizz_image_small.png" />
-    <None Remove="UI\Images\controlplus_image.png" />
-    <None Remove="UI\Images\controlplus_image_small.png" />
     <None Remove="UI\Images\ic_add.png" />
     <None Remove="UI\Images\ic_buttons.png" />
     <None Remove="UI\Images\ic_console.png" />
@@ -38,6 +36,8 @@
     <None Remove="UI\Images\poweredup_image_small.png" />
     <None Remove="UI\Images\sbrick_image.png" />
     <None Remove="UI\Images\sbrick_image_small.png" />
+    <None Remove="UI\Images\technichub_image.png" />
+    <None Remove="UI\Images\technichub_image_small.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,8 +45,8 @@
     <EmbeddedResource Include="UI\Images\boost_image_small.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image_small.png" />
-    <EmbeddedResource Include="UI\Images\controlplus_image.png" />
-    <EmbeddedResource Include="UI\Images\controlplus_image_small.png" />
+    <EmbeddedResource Include="UI\Images\technichub_image.png" />
+    <EmbeddedResource Include="UI\Images\technichub_image_small.png" />
     <EmbeddedResource Include="UI\Images\ic_add.png" />
     <EmbeddedResource Include="UI\Images\ic_buttons.png" />
     <EmbeddedResource Include="UI\Images\ic_console.png" />
