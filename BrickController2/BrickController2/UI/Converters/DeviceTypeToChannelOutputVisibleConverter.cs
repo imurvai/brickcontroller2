@@ -14,6 +14,7 @@ namespace BrickController2.UI.Converters
             {
                 case DeviceType.Boost:
                 case DeviceType.PoweredUp:
+                case DeviceType.TechnicHub:
                     return true;
 
                 default:
