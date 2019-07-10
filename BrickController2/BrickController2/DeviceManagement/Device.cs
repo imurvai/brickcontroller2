@@ -55,7 +55,7 @@ namespace BrickController2.DeviceManagement
         public abstract Task DisconnectAsync();
 
         public abstract void SetOutput(int channel, float value);
-        public virtual void SetOutputType(bool isServo, int maxServoAngle = 0) { }
+        public virtual void SetOutputMaxServoAngle(int channel, int maxServoAngle) { }
         public virtual void SetOutputLevel(int value)
         {
         }

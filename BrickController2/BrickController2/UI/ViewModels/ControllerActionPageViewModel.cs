@@ -196,11 +196,33 @@ namespace BrickController2.UI.ViewModels
                 {
                     if (ControllerAction != null)
                     {
-                        await _creationManager.UpdateControllerActionAsync(ControllerAction, SelectedDevice.Id, Channel, IsInvert, ButtonType, AxisType, AxisCharacteristic, MaxOutputPercent, AxisDeadZonePercent);
+                        await _creationManager.UpdateControllerActionAsync(
+                            ControllerAction,
+                            SelectedDevice.Id,
+                            Channel,
+                            IsInvert,
+                            ButtonType,
+                            AxisType,
+                            AxisCharacteristic,
+                            MaxOutputPercent,
+                            AxisDeadZonePercent,
+                            ChannelOutputType,
+                            MaxServoAngle);
                     }
                     else
                     {
-                        await _creationManager.AddOrUpdateControllerActionAsync(ControllerEvent, SelectedDevice.Id, Channel, IsInvert, ButtonType, AxisType, AxisCharacteristic, MaxOutputPercent, AxisDeadZonePercent);
+                        await _creationManager.AddOrUpdateControllerActionAsync(
+                            ControllerEvent,
+                            SelectedDevice.Id,
+                            Channel,
+                            IsInvert,
+                            ButtonType,
+                            AxisType,
+                            AxisCharacteristic,
+                            MaxOutputPercent,
+                            AxisDeadZonePercent,
+                            ChannelOutputType,
+                            MaxServoAngle);
                     }
                 },
                 Translate("Saving"));

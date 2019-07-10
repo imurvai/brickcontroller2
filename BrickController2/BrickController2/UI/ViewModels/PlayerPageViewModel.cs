@@ -27,7 +27,7 @@ namespace BrickController2.UI.ViewModels
         private readonly IDictionary<(string EventCode, ControllerAction ControllerAction), float[]> _previousButtonOutputs = new Dictionary<(string, ControllerAction), float[]>();
         private readonly IDictionary<(string EventCode, ControllerAction ControllerAction), float> _previousAxisOutputs = new Dictionary<(string, ControllerAction), float>();
         private readonly IDictionary<ControllerAction, bool> _disabledOutputForAxises = new Dictionary<ControllerAction, bool>();
-        private readonly IDictionary<(string, int), IDictionary<(GameControllerEventType, string), float>> _axisOutputValues = new Dictionary<(string, int), IDictionary<(GameControllerEventType, string), float>>();
+        private readonly IDictionary<(string DeviceId, int Channel), IDictionary<(GameControllerEventType EventType, string EventCode), float>> _axisOutputValues = new Dictionary<(string, int), IDictionary<(GameControllerEventType, string), float>>();
 
         private readonly IDictionary<Device, Task<DeviceConnectionResult>> _deviceConnectionTasks = new Dictionary<Device, Task<DeviceConnectionResult>>();
         private Task _connectionTask;
@@ -268,10 +268,11 @@ namespace BrickController2.UI.ViewModels
                             {
                                 outputValue = ProcessAxisEvent(gameControllerEvent.Key.EventCode, gameControllerEvent.Value, controllerAction);
                                 StoreAxisOutputValue(outputValue, controllerAction.DeviceId, controllerAction.Channel, controllerEvent.EventType, controllerEvent.EventCode);
-                                outputValue = CombineAxisOutputValues(controllerAction.DeviceId, controllerAction.Channel);
                             }
 
-                            outputValue = AdjustOutputValue(outputValue, controllerAction);
+                            outputValue = CombineAxisOutputValues(controllerAction.DeviceId, controllerAction.Channel);
+
+                            device.SetOutputMaxServoAngle(channel, controllerAction.ChannelOutputType == ChannelOutputType.NormalMotor ? -1 : controllerAction.MaxServoAngle);
                             device.SetOutput(channel, outputValue);
                         }
                     }
@@ -339,7 +340,7 @@ namespace BrickController2.UI.ViewModels
             }
 
             SetPreviousButtonOutput(gameControllerEventCode, controllerAction, currentOutput);
-            return currentOutput;
+            return AdjustOutputValue(currentOutput, controllerAction);
         }
 
         private float[] GetPreviousButtonOutputs(string gameControllerEventCode, ControllerAction controllerAction)
@@ -455,7 +456,7 @@ namespace BrickController2.UI.ViewModels
             }
 
             SetPreviousAxisOutput(gameControllerEventCode, controllerAction, axisValue);
-            return axisValue;
+            return AdjustOutputValue(axisValue, controllerAction);
         }
 
         private float GetPreviousAxisOutput(string gameControllerEventCode, ControllerAction controllerAction)

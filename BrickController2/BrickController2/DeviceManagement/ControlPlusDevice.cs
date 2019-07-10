@@ -3,24 +3,26 @@ using BrickController2.UI.Services.UIThread;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
     internal abstract class ControlPlusDevice : BluetoothDevice
     {
-        private const int MAX_SEND_ATTEMPTS = 4;
+        protected const int MAX_SEND_ATTEMPTS = 4;
 
-        private readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
-        private readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
+        protected readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
+        protected readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
 
-        private readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
-        private readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 100, 100, 127, 0x00 };
-        private readonly int[] _outputValues = new int[4];
-        private readonly int[] _lastOutputValues = new int[4];
+        protected readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
+        protected readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 127, 0x00 };
+        protected readonly byte[] _virtualPortSendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x00, 0x02, 0x00, 0x00 };
+        protected readonly byte[] _virtualPortSetupBuffer = new byte[] { 6, 0x00, 0x61, 0x01, 0x00, 0x00 };
+        protected readonly int[] _outputValues = new int[4];
+        protected readonly int[] _maxServoAngles = new int[4];
+        protected readonly int[] _lastOutputValues = new int[4];
 
-        private volatile int _sendAttemptsLeft;
+        protected volatile int _sendAttemptsLeft;
 
         private IGattCharacteristic _characteristic;
         public ControlPlusDevice(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
@@ -45,6 +47,12 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
+        public override void SetOutputMaxServoAngle(int channel, int maxServoAngle)
+        {
+            CheckChannel(channel);
+            _maxServoAngles[channel] = Math.Min(maxServoAngle, 360);
+        }
+
         protected override bool ProcessServices(IEnumerable<IGattService> services)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
@@ -53,79 +61,26 @@ namespace BrickController2.DeviceManagement
             return _characteristic != null;
         }
 
-        protected override async Task ProcessOutputsAsync(CancellationToken token)
-        {
-            _outputValues[0] = 0;
-            _outputValues[1] = 0;
-            _outputValues[2] = 0;
-            _outputValues[3] = 0;
-            _lastOutputValues[0] = 0;
-            _lastOutputValues[1] = 0;
-            _lastOutputValues[2] = 0;
-            _lastOutputValues[3] = 0;
-            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-
-            while (!token.IsCancellationRequested)
-            {
-                try
-                {
-                    if (_sendAttemptsLeft > 0)
-                    {
-                        int v0 = _outputValues[0];
-                        int v1 = _outputValues[1];
-                        int v2 = _outputValues[2];
-                        int v3 = _outputValues[3];
-
-                        if (await SendOutputValuesAsync(v0, v1, v2, v3))
-                        {
-                            if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0)
-                            {
-                                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                            }
-                            else
-                            {
-                                _sendAttemptsLeft--;
-                            }
-                        }
-                        else
-                        {
-                            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                        }
-                    }
-                    else
-                    {
-                        await Task.Delay(10);
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                }
-            }
-        }
-
-        private async Task<bool> SendOutputValuesAsync(int v0, int v1, int v2, int v3)
+        protected async Task<bool> SetupVirtualPortAsync(int channel1, int channel2)
         {
             try
             {
-                await SendOutputValueAsync(v0, 0, -1);
-                await SendOutputValueAsync(v1, 1, -1);
-                await SendOutputValueAsync(v2, 2, -1);
-                await SendOutputValueAsync(v3, 3, -1);
+                _virtualPortSetupBuffer[4] = (byte)channel1;
+                _virtualPortSetupBuffer[5] = (byte)channel2;
 
-                return true;
+                return await _bleDevice?.WriteAsync(_characteristic, _virtualPortSetupBuffer);
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
         }
 
-        private async Task<bool> SendOutputValueAsync(int value, int channel, int maxServoAngle)
+        protected async Task<bool> SendOutputValueAsync(int channel, int value)
         {
-            if (_lastOutputValues[channel] != value)
+            try
             {
-                //if (maxServoAngle < 0)
-                if (channel != 3)
+                if (_lastOutputValues[channel] != value)
                 {
                     _sendBuffer[3] = (byte)channel;
                     _sendBuffer[7] = (byte)(value < 0 ? (255 + value) : value);
@@ -135,25 +90,80 @@ namespace BrickController2.DeviceManagement
                         _lastOutputValues[channel] = value;
                         return true;
                     }
+                    else
+                    {
+                        return false;
+                    }
                 }
-                else
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        protected async Task<bool> SendOutputValueVirtualAsync(int virtualChannel, int channel1, int channel2, int value1, int value2)
+        {
+            try
+            {
+                if (_lastOutputValues[channel1] != value1 || _lastOutputValues[channel2] != value2)
                 {
-                    var servoValue = 30 * value / 100;
+                    _virtualPortSendBuffer[3] = (byte)virtualChannel;
+                    _virtualPortSendBuffer[6] = (byte)(value1 < 0 ? (255 + value1) : value1);
+                    _virtualPortSendBuffer[7] = (byte)(value2 < 0 ? (255 + value2) : value2);
+
+                    if (await _bleDevice?.WriteAsync(_characteristic, _virtualPortSendBuffer))
+                    {
+                        _lastOutputValues[channel1] = value1;
+                        _lastOutputValues[channel2] = value2;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        protected async Task<bool> SendServoOutputValueAsync(int channel, int value, int maxValue)
+        {
+            try
+            {
+                if (_lastOutputValues[channel] != value)
+                {
+                    var servoValue = maxValue * value / 100;
                     _servoSendBuffer[3] = (byte)channel;
                     _servoSendBuffer[6] = (byte)(servoValue & 0xff);
                     _servoSendBuffer[7] = (byte)((servoValue >> 8) & 0xff);
                     _servoSendBuffer[8] = (byte)((servoValue >> 16) & 0xff);
-                    _servoSendBuffer[9] = (byte)((servoValue >> 32) & 0xff);
+                    _servoSendBuffer[9] = (byte)((servoValue >> 24) & 0xff);
 
                     if (await _bleDevice?.WriteAsync(_characteristic, _servoSendBuffer))
                     {
                         _lastOutputValues[channel] = value;
                         return true;
                     }
+                    else
+                    {
+                        return false;
+                    }
                 }
-            }
 
-            return false;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
