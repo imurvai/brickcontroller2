@@ -531,7 +531,7 @@ namespace BrickController2.UI.ViewModels
 
         private float AdjustOutputValue(float outputValue, ControllerAction controllerAction)
         {
-            if (controllerAction.MaxOutputPercent < 100)
+            if (controllerAction.ChannelOutputType == ChannelOutputType.NormalMotor && controllerAction.MaxOutputPercent < 100)
             {
                 outputValue = (outputValue * controllerAction.MaxOutputPercent) / 100;
             }
