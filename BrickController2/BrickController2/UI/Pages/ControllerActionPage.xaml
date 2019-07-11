@@ -161,21 +161,28 @@
                 </StackLayout>
 
                 <!-- Max output percent -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="3*"/>
-                    </Grid.ColumnDefinitions>
+                <StackLayout Orientation="Vertical" IsVisible="False">
+                    <StackLayout.Triggers>
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.NormalMotor}">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger>
+                    </StackLayout.Triggers>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <Label Grid.Column="0" Text="{extensions:Translate MaxOutput}"/>
-                    <StackLayout Grid.Column="1" Orientation="Horizontal">
-                        <Slider Value="{Binding MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                        <Label Text="{Binding MaxOutputPercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
-                        <Label Text="%"/>
-                    </StackLayout>
-                </Grid>
+                        <Label Grid.Column="0" Text="{extensions:Translate MaxOutput}"/>
+                        <StackLayout Grid.Column="1" Orientation="Horizontal">
+                            <Slider Value="{Binding MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                            <Label Text="{Binding MaxOutputPercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                            <Label Text="%"/>
+                        </StackLayout>
+                    </Grid>
 
-                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                </StackLayout>
 
                 <!-- Axis dead zone percent -->
                 <StackLayout Orientation="Vertical" IsVisible="False">
