@@ -268,9 +268,8 @@ namespace BrickController2.UI.ViewModels
                             {
                                 outputValue = ProcessAxisEvent(gameControllerEvent.Key.EventCode, gameControllerEvent.Value, controllerAction);
                                 StoreAxisOutputValue(outputValue, controllerAction.DeviceId, controllerAction.Channel, controllerEvent.EventType, controllerEvent.EventCode);
+                                outputValue = CombineAxisOutputValues(controllerAction.DeviceId, controllerAction.Channel);
                             }
-
-                            outputValue = CombineAxisOutputValues(controllerAction.DeviceId, controllerAction.Channel);
 
                             device.SetOutputMaxServoAngle(channel, controllerAction.ChannelOutputType == ChannelOutputType.NormalMotor ? -1 : controllerAction.MaxServoAngle);
                             device.SetOutput(channel, outputValue);
