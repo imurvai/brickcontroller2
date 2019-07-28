@@ -82,6 +82,7 @@ namespace BrickController2.UI.Controls
                 set
                 {
                     _output = value;
+                    Device.SetOutputMaxServoAngle(Channel, -1);
                     Device.SetOutput(Channel, (float)value / MaxValue);
                     RaisePropertyChanged();
                 }

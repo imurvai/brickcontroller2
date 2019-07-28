@@ -163,7 +163,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
             SetupDigitalButtonInput(gamePad.ButtonY, "Button_Y");
 
             SetupDigitalButtonInput(gamePad.LeftShoulder, "LeftShoulder");
-            SetupDigitalButtonInput(gamePad.RightShoulder, "LeftShoulder");
+            SetupDigitalButtonInput(gamePad.RightShoulder, "RightShoulder");
 
             SetupDPadInput(gamePad.DPad, "DPad");
         }
@@ -176,7 +176,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
             SetupDigitalButtonInput(gamePad.ButtonY, "Button_Y");
 
             SetupDigitalButtonInput(gamePad.LeftShoulder, "LeftShoulder");
-            SetupDigitalButtonInput(gamePad.RightShoulder, "LeftShoulder");
+            SetupDigitalButtonInput(gamePad.RightShoulder, "RightShoulder");
 
             SetupAnalogButtonInput(gamePad.LeftTrigger, "LeftTrigger");
             SetupAnalogButtonInput(gamePad.RightTrigger, "RightTrigger");
