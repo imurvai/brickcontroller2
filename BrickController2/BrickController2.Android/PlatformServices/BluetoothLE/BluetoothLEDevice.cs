@@ -20,6 +20,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
         private BluetoothGatt _bluetoothGatt = null;
 
         private TaskCompletionSource<IEnumerable<IGattService>> _connectCompletionSource = null;
+        private TaskCompletionSource<byte[]> _readCompletionSource = null;
         private TaskCompletionSource<bool> _writeCompletionSource = null;
 
         public BluetoothLEDevice(Context context, BluetoothAdapter bluetoothAdapter, string address)
@@ -105,6 +106,31 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
                 State = BluetoothLEDeviceState.Disconnected;
             }
+        }
+
+        public async Task<byte[]> ReadAsync(IGattCharacteristic characteristic)
+        {
+            lock(_lock)
+            {
+                if (_bluetoothGatt == null || State != BluetoothLEDeviceState.Connected)
+                {
+                    return null;
+                }
+
+                var gattCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
+
+                _readCompletionSource = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+                if (!_bluetoothGatt.ReadCharacteristic(gattCharacteristic))
+                {
+                    _readCompletionSource = null;
+                    return null;
+                }
+            }
+
+            var result = await _readCompletionSource.Task;
+            _readCompletionSource = null;
+            return result;
         }
 
         public async Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data)
@@ -267,6 +293,21 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                     Disconnect();
                     _connectCompletionSource?.SetResult(null);
                 }
+            }
+        }
+
+        public override void OnCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, [GeneratedEnum] GattStatus status)
+        {
+            lock (_lock)
+            {
+                byte[] result = null;
+
+                if (status == GattStatus.Success)
+                {
+                    result = characteristic.GetValue();
+                }
+
+                _readCompletionSource?.SetResult(result);
             }
         }
 

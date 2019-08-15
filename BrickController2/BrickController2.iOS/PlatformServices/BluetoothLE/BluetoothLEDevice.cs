@@ -16,6 +16,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
 
         private TaskCompletionSource<IEnumerable<IGattService>> _connectCompletionSource = null;
         private TaskCompletionSource<IEnumerable<IGattCharacteristic>> _discoverCompletionSource = null;
+        private TaskCompletionSource<byte[]> _readCompletionSource = null;
         private TaskCompletionSource<bool> _writeCompletionSource = null;
 
         public BluetoothLEDevice(CBCentralManager centralManager, CBPeripheral peripheral)
@@ -70,6 +71,26 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         {
             _centralManager.CancelPeripheralConnection(_peripheral);
             State = BluetoothLEDeviceState.Disconnected;
+        }
+
+        public async Task<byte[]> ReadAsync(IGattCharacteristic characteristic)
+        {
+            lock(_lock)
+            {
+                if (State != BluetoothLEDeviceState.Connected)
+                {
+                    return null;
+                }
+
+                var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
+
+                _readCompletionSource = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+                _peripheral.ReadValue(nativeCharacteristic);
+            }
+
+            var result = await _readCompletionSource.Task;
+            _readCompletionSource = null;
+            return result;
         }
 
         public async Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data)
@@ -195,6 +216,21 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 {
                     _discoverCompletionSource?.SetResult(null);
                 }
+            }
+        }
+
+        public override void UpdatedCharacterteristicValue(CBPeripheral peripheral, CBCharacteristic characteristic, NSError error)
+        {
+            lock(_lock)
+            {
+                byte[] result = null;
+
+                if (error == null)
+                {
+                    result = characteristic.Value?.ToArray();
+                }
+
+                _readCompletionSource?.SetResult(result);
             }
         }
 
