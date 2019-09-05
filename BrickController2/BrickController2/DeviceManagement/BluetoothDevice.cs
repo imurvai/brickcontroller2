@@ -1,5 +1,4 @@
 ﻿using BrickController2.PlatformServices.BluetoothLE;
-using BrickController2.UI.Services.UIThread;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -15,17 +14,22 @@ namespace BrickController2.DeviceManagement
         private Task _outputTask;
         private CancellationTokenSource _outputTaskTokenSource;
 
-        public BluetoothDevice(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
-            : base(name, address, deviceRepository, uiThreadService)
+        private Action<Device> _onDeviceDisconnected = null;
+
+        public BluetoothDevice(string name, string address, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
+            : base(name, address, deviceRepository)
         {
             _bleService = bleService;
         }
 
         protected abstract bool AutoConnectOnFirstConnect { get; }
-        protected abstract bool ProcessServices(IEnumerable<IGattService> services);
+        protected abstract bool ValidateServices(IEnumerable<IGattService> services);
         protected abstract Task ProcessOutputsAsync(CancellationToken token);
 
-        public async override Task<DeviceConnectionResult> ConnectAsync(bool reconnect, CancellationToken token)
+        public async override Task<DeviceConnectionResult> ConnectAsync(
+            bool reconnect,
+            Action<Device> onDeviceDisconnected,
+            CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -33,6 +37,8 @@ namespace BrickController2.DeviceManagement
                 {
                     return DeviceConnectionResult.Error;
                 }
+
+                _onDeviceDisconnected = onDeviceDisconnected;
 
                 try
                 {
@@ -42,34 +48,35 @@ namespace BrickController2.DeviceManagement
                         return DeviceConnectionResult.Error;
                     }
 
-                    _bleDevice.Disconnected += OnDeviceDisconnected;
-
-                    await SetStateAsync(DeviceState.Connecting, false);
-                    var services = await _bleDevice.ConnectAndDiscoverServicesAsync(reconnect || AutoConnectOnFirstConnect, token);
+                    DeviceState = DeviceState.Connecting;
+                    var services = await _bleDevice.ConnectAndDiscoverServicesAsync(
+                        reconnect || AutoConnectOnFirstConnect,
+                        OnCharacteristicChanged,
+                        OnDeviceDisconnected,
+                        token);
 
                     token.ThrowIfCancellationRequested();
 
-                    if (ProcessServices(services))
+                    if (ValidateServices(services))
                     {
                         await StartOutputTaskAsync();
 
                         token.ThrowIfCancellationRequested();
 
-
-                        await SetStateAsync(DeviceState.Connected, false);
+                        DeviceState = DeviceState.Connected;
                         return DeviceConnectionResult.Ok;
                     }
                 }
                 catch (OperationCanceledException)
                 {
-                    await DisconnectInternalAsync(false);
+                    await DisconnectInternalAsync();
                     return DeviceConnectionResult.Canceled;
                 }
                 catch (Exception)
                 {
                 }
 
-                await DisconnectInternalAsync(true);
+                await DisconnectInternalAsync();
                 return DeviceConnectionResult.Error;
             }
         }
@@ -83,30 +90,37 @@ namespace BrickController2.DeviceManagement
                     return;
                 }
 
-                await DisconnectInternalAsync(false);
+                await DisconnectInternalAsync();
             }
         }
 
-        private async Task DisconnectInternalAsync(bool isError)
+        protected virtual void OnCharacteristicChanged(Guid characteristicGuid, byte[] data)
+        {
+        }
+
+        private async Task DisconnectInternalAsync()
         {
             if (_bleDevice != null)
             {
                 await StopOutputTaskAsync();
-                await SetStateAsync(DeviceState.Disconnecting, isError);
-                _bleDevice.Disconnected -= OnDeviceDisconnected;
-                _bleDevice?.Disconnect();
+                DeviceState = DeviceState.Disconnecting;
+                _bleDevice.Disconnect();
                 _bleDevice = null;
             }
 
-            await SetStateAsync(DeviceState.Disconnected, isError);
+            DeviceState = DeviceState.Disconnected;
         }
 
-        private async void OnDeviceDisconnected(object sender, EventArgs args)
+        private void OnDeviceDisconnected(IBluetoothLEDevice bluetoothLEDevice)
         {
-            using (await _asyncLock.LockAsync())
+            Task.Run(async () =>
             {
-                await DisconnectInternalAsync(true);
-            }
+                using (await _asyncLock.LockAsync())
+                {
+                    await DisconnectInternalAsync();
+                    _onDeviceDisconnected?.Invoke(this);
+                }
+            });
         }
 
         private async Task StartOutputTaskAsync()

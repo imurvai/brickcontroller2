@@ -5,6 +5,7 @@ using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Translation;
+using BrickController2.UI.Services.UIThread;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace BrickController2.UI.ViewModels
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
         private readonly IGameControllerService _gameControllerService;
+        private readonly IUIThreadService _uIThreadService;
 
         private readonly IList<Device> _devices = new List<Device>();
         private readonly IList<Device> _buwizzDevices = new List<Device>();
@@ -43,12 +45,14 @@ namespace BrickController2.UI.ViewModels
             IDeviceManager deviceManager,
             IDialogService dialogService,
             IGameControllerService gameControllerService,
+            IUIThreadService uIThreadService,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
             _deviceManager = deviceManager;
             _dialogService = dialogService;
             _gameControllerService = gameControllerService;
+            _uIThreadService = uIThreadService;
 
             Creation = parameters.Get<Creation>("creation");
             CollectDevices();
@@ -89,10 +93,6 @@ namespace BrickController2.UI.ViewModels
             }
 
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
-            foreach (var device in _devices)
-            {
-                device.DeviceStateChanged += OnDeviceStateChanged;
-            }
 
             _connectionTask = ConnectDevicesAsync();
         }
@@ -102,10 +102,6 @@ namespace BrickController2.UI.ViewModels
             _isDisappearing = true;
 
             _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
-            foreach (var device in _devices)
-            {
-                device.DeviceStateChanged -= OnDeviceStateChanged;
-            }
 
             await DisconnectDevicesAsync();
         }
@@ -148,7 +144,7 @@ namespace BrickController2.UI.ViewModels
             {
                 if (device.DeviceState == DeviceState.Disconnected && !_deviceConnectionTasks.ContainsKey(device))
                 {
-                    _deviceConnectionTasks[device] = device.ConnectAsync(_reconnect, _connectionTokenSource.Token);
+                    _deviceConnectionTasks[device] = device.ConnectAsync(_reconnect, OnDeviceDisconnected, _connectionTokenSource.Token);
                 }
             }
 
@@ -220,15 +216,12 @@ namespace BrickController2.UI.ViewModels
                 null);
         }
 
-        private void OnDeviceStateChanged(object sender, DeviceStateChangedEventArgs args)
+        private void OnDeviceDisconnected(Device device)
         {
-            if (sender is Device device)
+            _uIThreadService.RunOnMainThread(() =>
             {
-                if (args.IsError && args.NewState == DeviceState.Disconnected)
-                {
-                    _connectionTask = ConnectDevicesAsync();
-                }
-            }
+                _connectionTask = ConnectDevicesAsync();
+            });
         }
 
         private void ChangeOutputLevel(int level, IList<Device> devices)
@@ -271,7 +264,6 @@ namespace BrickController2.UI.ViewModels
                                 outputValue = CombineAxisOutputValues(controllerAction.DeviceId, controllerAction.Channel);
                             }
 
-                            device.SetOutputMaxServoAngle(channel, controllerAction.ChannelOutputType == ChannelOutputType.NormalMotor ? -1 : controllerAction.MaxServoAngle);
                             device.SetOutput(channel, outputValue);
                         }
                     }
@@ -279,7 +271,7 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private bool ShouldProcessButtonEvent(bool isPressed, ControllerAction controllerAction)
+        private static bool ShouldProcessButtonEvent(bool isPressed, ControllerAction controllerAction)
         {
             return controllerAction.ButtonType == ControllerButtonType.Normal || isPressed;
         }

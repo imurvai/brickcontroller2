@@ -8,6 +8,7 @@ using Device = BrickController2.DeviceManagement.Device;
 using System.Threading;
 using System;
 using BrickController2.UI.Services.Translation;
+using BrickController2.UI.Services.UIThread;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -15,6 +16,7 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
+        private readonly IUIThreadService _uIThreadService;
 
         private CancellationTokenSource _connectionTokenSource;
         private Task _connectionTask;
@@ -27,11 +29,13 @@ namespace BrickController2.UI.ViewModels
             ITranslationService translationService,
             IDeviceManager deviceManager,
             IDialogService dialogService,
+            IUIThreadService uIThreadService,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
             _deviceManager = deviceManager;
             _dialogService = dialogService;
+            _uIThreadService = uIThreadService;
 
             Device = parameters.Get<Device>("device");
 
@@ -72,7 +76,6 @@ namespace BrickController2.UI.ViewModels
                 }
             }
 
-            Device.DeviceStateChanged += DeviceStateChangedHandler;
             _connectionTask = ConnectAsync();
         }
 
@@ -80,8 +83,6 @@ namespace BrickController2.UI.ViewModels
         {
             _isDisappearing = true;
             _disappearingTokenSource.Cancel();
-
-            Device.DeviceStateChanged -= DeviceStateChangedHandler;
 
             if (_connectionTokenSource != null)
             {
@@ -140,7 +141,10 @@ namespace BrickController2.UI.ViewModels
                 {
                     token.Register(() => _connectionTokenSource.Cancel());
 
-                    connectionResult = await Device.ConnectAsync(_reconnect, _connectionTokenSource.Token);
+                    connectionResult = await Device.ConnectAsync(
+                        _reconnect,
+                        OnDeviceDisconnected,
+                        _connectionTokenSource.Token);
                 },
                 Translate("Connecting"),
                 null,
@@ -180,12 +184,15 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private void DeviceStateChangedHandler(object sender, DeviceStateChangedEventArgs args)
+        private void OnDeviceDisconnected(Device device)
         {
-            if (!_isDisappearing && args.NewState == DeviceState.Disconnected && args.IsError)
+            _uIThreadService.RunOnMainThread(() =>
             {
-                _connectionTask = ConnectAsync();
-            }
+                if (!_isDisappearing)
+                {
+                    _connectionTask = ConnectAsync();
+                }
+            });
         }
 
         private void SetBuWizzOutputLevel(int level)

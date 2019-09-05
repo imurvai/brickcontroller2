@@ -13,7 +13,6 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
     public class BluetoothLEService : CBCentralManagerDelegate, IBluetoothLEService
     {
         private readonly CBCentralManager _centralManager;
-        private readonly CBPeripheralManager _peripheralManager;
         private readonly IDictionary<CBPeripheral, BluetoothLEDevice> _peripheralMap = new Dictionary<CBPeripheral, BluetoothLEDevice>();
         private readonly object _lock = new object();
 
@@ -22,7 +21,6 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         public BluetoothLEService()
         {
             _centralManager = new CBCentralManager(this, DispatchQueue.CurrentQueue);
-            _peripheralManager = new CBPeripheralManager();
         }
 
         public bool IsBluetoothLESupported => true;

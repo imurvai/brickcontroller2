@@ -1,5 +1,4 @@
 ﻿using BrickController2.PlatformServices.BluetoothLE;
-using BrickController2.UI.Services.UIThread;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,20 +7,13 @@ namespace BrickController2.DeviceManagement
 {
     internal class PoweredUpDevice : ControlPlusDevice
     {
-        public PoweredUpDevice(
-            string name,
-            string address,
-            byte[] deviceData,
-            IDeviceRepository deviceRepository,
-            IUIThreadService uiThreadService,
-            IBluetoothLEService bleService)
-            : base(name, address, deviceRepository, uiThreadService, bleService)
+        public PoweredUpDevice(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
+            : base(name, address, deviceRepository, bleService)
         {
         }
 
         public override DeviceType DeviceType => DeviceType.PoweredUp;
         public override int NumberOfChannels => 2;
-
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
         {

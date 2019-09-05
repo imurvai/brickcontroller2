@@ -1,5 +1,4 @@
 ﻿using BrickController2.PlatformServices.BluetoothLE;
-using BrickController2.UI.Services.UIThread;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace BrickController2.DeviceManagement
         protected readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
 
         protected readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
-        protected readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 127, 0x00 };
+        protected readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
         protected readonly byte[] _virtualPortSendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x00, 0x02, 0x00, 0x00 };
         protected readonly byte[] _virtualPortSetupBuffer = new byte[] { 6, 0x00, 0x61, 0x01, 0x00, 0x00 };
         protected readonly int[] _outputValues = new int[4];
@@ -25,8 +24,8 @@ namespace BrickController2.DeviceManagement
         protected volatile int _sendAttemptsLeft;
 
         private IGattCharacteristic _characteristic;
-        public ControlPlusDevice(string name, string address, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
-            : base(name, address, deviceRepository, uiThreadService, bleService)
+        public ControlPlusDevice(string name, string address, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
+            : base(name, address, deviceRepository, bleService)
         {
         }
 
@@ -47,13 +46,13 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
-        public override void SetOutputMaxServoAngle(int channel, int maxServoAngle)
-        {
-            CheckChannel(channel);
-            _maxServoAngles[channel] = Math.Min(maxServoAngle, 360);
-        }
+        //public override void SetOutputMaxServoAngle(int channel, int maxServoAngle)
+        //{
+        //    CheckChannel(channel);
+        //    _maxServoAngles[channel] = Math.Min(maxServoAngle, 360);
+        //}
 
-        protected override bool ProcessServices(IEnumerable<IGattService> services)
+        protected override bool ValidateServices(IEnumerable<IGattService> services)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
@@ -141,13 +140,8 @@ namespace BrickController2.DeviceManagement
                 if (_lastOutputValues[channel] != value)
                 {
                     var servoValue = maxValue * value / 100;
-                    _servoSendBuffer[3] = (byte)channel;
-                    _servoSendBuffer[6] = (byte)(servoValue & 0xff);
-                    _servoSendBuffer[7] = (byte)((servoValue >> 8) & 0xff);
-                    _servoSendBuffer[8] = (byte)((servoValue >> 16) & 0xff);
-                    _servoSendBuffer[9] = (byte)((servoValue >> 24) & 0xff);
 
-                    if (await _bleDevice?.WriteAsync(_characteristic, _servoSendBuffer))
+                    if (await WriteRawServoValueAsync(channel, servoValue))
                     {
                         _lastOutputValues[channel] = value;
                         return true;
@@ -164,6 +158,87 @@ namespace BrickController2.DeviceManagement
             {
                 return false;
             }
+        }
+
+        private async Task<bool> WriteRawServoValueAsync(int channel, int rawValue)
+        {
+            try
+            {
+                _servoSendBuffer[3] = (byte)channel;
+                _servoSendBuffer[6] = (byte)(rawValue & 0xff);
+                _servoSendBuffer[7] = (byte)((rawValue >> 8) & 0xff);
+                _servoSendBuffer[8] = (byte)((rawValue >> 16) & 0xff);
+                _servoSendBuffer[9] = (byte)((rawValue >> 24) & 0xff);
+
+                return await _bleDevice?.WriteAsync(_characteristic, _servoSendBuffer);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private async Task<bool> SetupChannelForPortInformationAsync(int channel)
+        {
+            try
+            {
+                var lockBuffer = new byte[] { 0x05, 0x00, 0x42, (byte)channel, 0x02 };
+                var inputFormatForAbsAngleBuffer = new byte[] { 0x0a, 0x00, 0x41, (byte)channel, 0x03, 0x02, 0x00, 0x00, 0x00, 0x01 };
+                var inputFormatForRelAngleBuffer = new byte[] { 0x0a, 0x00, 0x41, (byte)channel, 0x02, 0x02, 0x00, 0x00, 0x00, 0x01 };
+                var modeAndDataSetBuffer = new byte[] { 0x08, 0x00, 0x42, (byte)channel, 0x01, 0x00, 0x30, 0x20 };
+                var unlockAndEnableBuffer = new byte[] { 0x05, 0x00, 0x42, (byte)channel, 0x03 };
+
+                return
+                    await _bleDevice?.WriteAsync(_characteristic, lockBuffer) &&
+                    await _bleDevice?.WriteAsync(_characteristic, inputFormatForAbsAngleBuffer) &&
+                    await _bleDevice?.WriteAsync(_characteristic, inputFormatForRelAngleBuffer) &&
+                    await _bleDevice?.WriteAsync(_characteristic, modeAndDataSetBuffer) &&
+                    await _bleDevice?.WriteAsync(_characteristic, unlockAndEnableBuffer);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        
+        private async Task<bool> ResetServoAsync(int channel, int baseAngle, int currentAbsAngle)
+        {
+            try
+            {
+                baseAngle = Math.Max(-180, Math.Min(179, baseAngle));
+
+                var ba0 = (byte)(currentAbsAngle - baseAngle & 0xff);
+                var ba1 = (byte)((currentAbsAngle - baseAngle >> 8) & 0xff);
+                var ba2 = (byte)((currentAbsAngle - baseAngle >> 16) & 0xff);
+                var ba3 = (byte)((currentAbsAngle - baseAngle >> 24) & 0xff);
+
+                var resetToZeroBuffer = new byte[] { 0x0b, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x02, 0x00, 0x00, 0x00, 0x00 };
+                var stopBuffer = new byte[] { 0x08, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x00, 0x00 };
+                var turnToZeroBuffer = new byte[] { 0x0e, 0x00, 0x81, (byte)channel, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, CalculateServoSpeed(0, 0), 0x64, 0x7e, 0x00 };
+                var resetToBaseBuffer = new byte[] { 0x0b, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x02, ba0, ba1, ba2, ba3 };
+
+                var result = true;
+
+                result = result && await _bleDevice.WriteAsync(_characteristic, resetToBaseBuffer);
+                result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer);
+                result = result && await _bleDevice.WriteAsync(_characteristic, turnToZeroBuffer);
+                result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer);
+                result = result && await _bleDevice.WriteAsync(_characteristic, resetToBaseBuffer);
+                result = result && await _bleDevice.WriteAsync(_characteristic, turnToZeroBuffer);
+                await Task.Delay(500);
+
+                return result;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private byte CalculateServoSpeed(int currentAngle, int TargetAngle)
+        {
+            // Temp
+            return 100;
         }
     }
 }

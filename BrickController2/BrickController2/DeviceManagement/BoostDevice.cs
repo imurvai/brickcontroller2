@@ -1,5 +1,4 @@
 ﻿using BrickController2.PlatformServices.BluetoothLE;
-using BrickController2.UI.Services.UIThread;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,9 +12,8 @@ namespace BrickController2.DeviceManagement
             string address,
             byte[] deviceData,
             IDeviceRepository deviceRepository,
-            IUIThreadService uiThreadService,
             IBluetoothLEService bleService)
-            : base(name, address, deviceRepository, uiThreadService, bleService)
+            : base(name, address, deviceRepository, bleService)
         {
         }
 

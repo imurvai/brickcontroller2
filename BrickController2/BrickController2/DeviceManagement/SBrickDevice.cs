@@ -1,5 +1,4 @@
 ﻿using BrickController2.PlatformServices.BluetoothLE;
-using BrickController2.UI.Services.UIThread;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +21,8 @@ namespace BrickController2.DeviceManagement
 
         private IGattCharacteristic _characteristic;
 
-        public SBrickDevice(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
-            : base(name, address, deviceRepository, uiThreadService, bleService)
+        public SBrickDevice(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
+            : base(name, address, deviceRepository, bleService)
         {
         }
 
@@ -46,7 +45,7 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
-        protected override bool ProcessServices(IEnumerable<IGattService> services)
+        protected override bool ValidateServices(IEnumerable<IGattService> services)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_REMOTE_CONTROL);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_QUICK_DRIVE);

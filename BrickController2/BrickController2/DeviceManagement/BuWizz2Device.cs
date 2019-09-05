@@ -1,5 +1,4 @@
 ﻿using BrickController2.PlatformServices.BluetoothLE;
-using BrickController2.UI.Services.UIThread;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +24,8 @@ namespace BrickController2.DeviceManagement
 
         private IGattCharacteristic _characteristic;
 
-        public BuWizz2Device(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
-            : base(name, address, deviceRepository, uiThreadService, bleService)
+        public BuWizz2Device(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
+            : base(name, address, deviceRepository, bleService)
         {
             // On BuWizz2 with manufacturer data 0x4e054257001e the ports are swapped
             // (no normal BuWizz2es manufacturer data is 0x4e054257001b)
@@ -59,7 +58,7 @@ namespace BrickController2.DeviceManagement
             _outputLevelValue = Math.Max(0, Math.Min(NumberOfOutputLevels - 1, value));
         }
 
-        protected override bool ProcessServices(IEnumerable<IGattService> services)
+        protected override bool ValidateServices(IEnumerable<IGattService> services)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);

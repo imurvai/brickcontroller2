@@ -47,11 +47,11 @@ namespace BrickController2.UI.Controls
                     MaximumTrackColor = Color.LightGray
                 };
 
-                slider.SetBinding<DeviceOutputViewModel>(ExtendedSlider.ValueProperty, vm => vm.Output, BindingMode.TwoWay);
-                slider.SetBinding<DeviceOutputViewModel>(ExtendedSlider.TouchUpCommandProperty, vm => vm.TouchUpCommand);
-                slider.SetBinding<DeviceOutputViewModel>(ExtendedSlider.IsEnabledProperty, vm => vm.Device.DeviceState, BindingMode.Default, new DeviceConnectedToBoolConverter());
-                slider.SetBinding<DeviceOutputViewModel>(ExtendedSlider.MinimumProperty, vm => vm.MinValue);
-                slider.SetBinding<DeviceOutputViewModel>(ExtendedSlider.MaximumProperty, vm => vm.MaxValue);
+                slider.SetBinding(ExtendedSlider.ValueProperty, nameof(DeviceOutputViewModel.Output), BindingMode.TwoWay);
+                slider.SetBinding(ExtendedSlider.TouchUpCommandProperty, nameof(DeviceOutputViewModel.TouchUpCommand));
+                slider.SetBinding(ExtendedSlider.IsEnabledProperty, nameof(DeviceOutputViewModel.Device.DeviceState), BindingMode.Default, new DeviceConnectedToBoolConverter());
+                slider.SetBinding(ExtendedSlider.MinimumProperty, nameof(DeviceOutputViewModel.MinValue));
+                slider.SetBinding(ExtendedSlider.MaximumProperty, nameof(DeviceOutputViewModel.MaxValue));
 
                 StackLayout.Children.Add(slider);
             }
@@ -82,7 +82,6 @@ namespace BrickController2.UI.Controls
                 set
                 {
                     _output = value;
-                    Device.SetOutputMaxServoAngle(Channel, -1);
                     Device.SetOutput(Channel, (float)value / MaxValue);
                     RaisePropertyChanged();
                 }

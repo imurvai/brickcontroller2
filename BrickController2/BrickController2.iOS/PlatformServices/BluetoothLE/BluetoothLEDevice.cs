@@ -16,8 +16,10 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
 
         private TaskCompletionSource<IEnumerable<IGattService>> _connectCompletionSource = null;
         private TaskCompletionSource<IEnumerable<IGattCharacteristic>> _discoverCompletionSource = null;
-        private TaskCompletionSource<byte[]> _readCompletionSource = null;
         private TaskCompletionSource<bool> _writeCompletionSource = null;
+
+        private Action<Guid, byte[]> _onCharacteristicChanged = null;
+        private Action<IBluetoothLEDevice> _onDeviceDisconnected = null;
 
         public BluetoothLEDevice(CBCentralManager centralManager, CBPeripheral peripheral)
         {
@@ -29,11 +31,18 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         public string Address => _peripheral.Identifier.ToString();
         public BluetoothLEDeviceState State { get; private set; } = BluetoothLEDeviceState.Disconnected;
 
-        public event EventHandler<EventArgs> Disconnected;
-
-        public async Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(bool reconnect, CancellationToken token)
+        public async Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(
+            bool autoConnect,
+            Action<Guid, byte[]> onCharacteristicChanged,
+            Action<IBluetoothLEDevice> onDeviceDisconnected,
+            CancellationToken token)
         {
-            lock(_lock)
+            _onCharacteristicChanged = onCharacteristicChanged;
+            _onDeviceDisconnected = onDeviceDisconnected;
+
+            CancellationTokenRegistration tokenRegistration;
+
+            lock (_lock)
             {
                 if (State != BluetoothLEDeviceState.Disconnected)
                 {
@@ -44,7 +53,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 _centralManager.ConnectPeripheral(_peripheral, new PeripheralConnectionOptions { NotifyOnConnection = true, NotifyOnDisconnection = true });
 
                 _connectCompletionSource = new TaskCompletionSource<IEnumerable<IGattService>>(TaskCreationOptions.RunContinuationsAsynchronously);
-                token.Register(() =>
+                tokenRegistration = token.Register(() =>
                 {
                     lock (_lock)
                     {
@@ -56,6 +65,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
 
             var result = await _connectCompletionSource.Task;
             _connectCompletionSource = null;
+            tokenRegistration.Dispose();
             return result;
         }
 
@@ -71,26 +81,6 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         {
             _centralManager.CancelPeripheralConnection(_peripheral);
             State = BluetoothLEDeviceState.Disconnected;
-        }
-
-        public async Task<byte[]> ReadAsync(IGattCharacteristic characteristic)
-        {
-            lock(_lock)
-            {
-                if (State != BluetoothLEDeviceState.Connected)
-                {
-                    return null;
-                }
-
-                var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
-
-                _readCompletionSource = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
-                _peripheral.ReadValue(nativeCharacteristic);
-            }
-
-            var result = await _readCompletionSource.Task;
-            _readCompletionSource = null;
-            return result;
         }
 
         public async Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data)
@@ -116,16 +106,19 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
 
         public bool WriteNoResponse(IGattCharacteristic characteristic, byte[] data)
         {
-            if (State != BluetoothLEDeviceState.Connected)
+            lock (_lock)
             {
-                return false;
+                if (State != BluetoothLEDeviceState.Connected)
+                {
+                    return false;
+                }
+
+                var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
+                var nativeData = NSData.FromArray(data);
+
+                _peripheral.WriteValue(nativeData, nativeCharacteristic, CBCharacteristicWriteType.WithoutResponse);
+                return true;
             }
-
-            var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
-            var nativeData = NSData.FromArray(data);
-
-            _peripheral.WriteValue(nativeData, nativeCharacteristic, CBCharacteristicWriteType.WithoutResponse);
-            return true;
         }
 
         public override async void DiscoveredService(CBPeripheral peripheral, NSError error)
@@ -223,14 +216,12 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         {
             lock(_lock)
             {
-                byte[] result = null;
-
                 if (error == null)
                 {
-                    result = characteristic.Value?.ToArray();
+                    var guid = characteristic.UUID.ToGuid();
+                    var data = characteristic.Value?.ToArray();
+                    _onCharacteristicChanged?.Invoke(guid, data);
                 }
-
-                _readCompletionSource?.SetResult(result);
             }
         }
 
@@ -280,7 +271,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                     case BluetoothLEDeviceState.Connected:
                         _writeCompletionSource?.SetResult(false);
                         DisconnectInternal();
-                        Disconnected?.Invoke(this, EventArgs.Empty);
+                        _onDeviceDisconnected?.Invoke(this);
                         break;
 
                     default:

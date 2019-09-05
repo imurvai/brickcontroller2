@@ -30,7 +30,7 @@ namespace BrickController2.UI.Controls
         {
             if (SelectedIndex < 0 || SelectedIndex >= Items.Count)
             {
-                SelectedItem = default(T);
+                SelectedItem = default;
             }
             else
             {

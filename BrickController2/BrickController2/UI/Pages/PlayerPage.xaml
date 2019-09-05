@@ -15,6 +15,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -40,9 +41,14 @@
                         <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
                     </StackLayout>
                 </StackLayout>
+                
+                <!-- Servo calibration controls -->
+                <StackLayout Grid.Row="2">
+                    
+                </StackLayout>
             
                 <!-- Controller profiles -->
-                <ListView Grid.Row="2" ItemsSource="{Binding Creation.ControllerProfiles}" SelectedItem="{Binding ActiveProfile, Mode=TwoWay}" SelectionMode="Single" HasUnevenRows="True">
+                <ListView Grid.Row="3" ItemsSource="{Binding Creation.ControllerProfiles}" SelectedItem="{Binding ActiveProfile, Mode=TwoWay}" SelectionMode="Single" HasUnevenRows="True">
                     <ListView.Behaviors>
                         <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerProfileTappedCommand}"/>
                     </ListView.Behaviors>

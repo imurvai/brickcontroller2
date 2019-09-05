@@ -20,8 +20,10 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
         private BluetoothGatt _bluetoothGatt = null;
 
         private TaskCompletionSource<IEnumerable<IGattService>> _connectCompletionSource = null;
-        private TaskCompletionSource<byte[]> _readCompletionSource = null;
         private TaskCompletionSource<bool> _writeCompletionSource = null;
+
+        private Action<Guid, byte[]> _onCharacteristicChanged = null;
+        private Action<IBluetoothLEDevice> _onDeviceDisconnected = null;
 
         public BluetoothLEDevice(Context context, BluetoothAdapter bluetoothAdapter, string address)
         {
@@ -33,10 +35,15 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
         public string Address { get; }
         public BluetoothLEDeviceState State { get; private set; } = BluetoothLEDeviceState.Disconnected;
 
-        public event EventHandler<EventArgs> Disconnected;
-
-        public async Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(bool autoConnect, CancellationToken token)
+        public async Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(
+            bool autoConnect,
+            Action<Guid, byte[]> onCharacteristicChanged,
+            Action<IBluetoothLEDevice> onDeviceDisconnected,
+            CancellationToken token)
         {
+            _onCharacteristicChanged = onCharacteristicChanged;
+            _onDeviceDisconnected = onDeviceDisconnected;
+
             CancellationTokenRegistration tokenRegistration;
 
             lock(_lock)
@@ -106,31 +113,6 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
                 State = BluetoothLEDeviceState.Disconnected;
             }
-        }
-
-        public async Task<byte[]> ReadAsync(IGattCharacteristic characteristic)
-        {
-            lock(_lock)
-            {
-                if (_bluetoothGatt == null || State != BluetoothLEDeviceState.Connected)
-                {
-                    return null;
-                }
-
-                var gattCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
-
-                _readCompletionSource = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-                if (!_bluetoothGatt.ReadCharacteristic(gattCharacteristic))
-                {
-                    _readCompletionSource = null;
-                    return null;
-                }
-            }
-
-            var result = await _readCompletionSource.Task;
-            _readCompletionSource = null;
-            return result;
         }
 
         public async Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data)
@@ -247,7 +229,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                             case BluetoothLEDeviceState.Connected:
                                 _writeCompletionSource?.SetResult(false);
                                 Disconnect();
-                                Disconnected?.Invoke(this, EventArgs.Empty);
+                                _onDeviceDisconnected?.Invoke(this);
                                 break;
 
                             default:
@@ -296,27 +278,19 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             }
         }
 
-        public override void OnCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, [GeneratedEnum] GattStatus status)
-        {
-            lock (_lock)
-            {
-                byte[] result = null;
-
-                if (status == GattStatus.Success)
-                {
-                    result = characteristic.GetValue();
-                }
-
-                _readCompletionSource?.SetResult(result);
-            }
-        }
-
         public override void OnCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, [GeneratedEnum] GattStatus status)
         {
             lock (_lock)
             {
                 _writeCompletionSource?.SetResult(status == GattStatus.Success);
             }
+        }
+
+        public override void OnCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic)
+        {
+            var guid = characteristic.Uuid.ToGuid();
+            var data = characteristic.GetValue();
+            _onCharacteristicChanged?.Invoke(guid, data);
         }
     }
 }
