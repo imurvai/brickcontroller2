@@ -33,6 +33,7 @@ namespace BrickController2.UI.ViewModels
         private int _maxOutputPercent;
         private int _axisDeadZonePercent;
         private int _maxServoAngle;
+        private int _servoBaseAngle;
 
         public ControllerActionPageViewModel(
             INavigationService navigationService,
@@ -65,6 +66,7 @@ namespace BrickController2.UI.ViewModels
                 AxisCharacteristic = ControllerAction.AxisCharacteristic;
                 MaxOutputPercent = ControllerAction.MaxOutputPercent;
                 AxisDeadZonePercent = ControllerAction.AxisDeadZonePercent;
+                ServoBaseAngle = ControllerAction.ServoBaseAngle;
             }
             else
             {
@@ -79,6 +81,7 @@ namespace BrickController2.UI.ViewModels
                 AxisCharacteristic = ControllerAxisCharacteristic.Linear;
                 MaxOutputPercent = 100;
                 AxisDeadZonePercent = 0;
+                ServoBaseAngle = 0;
             }
 
             SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null);
@@ -135,6 +138,12 @@ namespace BrickController2.UI.ViewModels
         {
             get { return _maxServoAngle; }
             set { _maxServoAngle = value; RaisePropertyChanged(); }
+        }
+
+        public int ServoBaseAngle
+        {
+            get { return _servoBaseAngle; }
+            set { _servoBaseAngle = value; RaisePropertyChanged(); }
         }
 
         public ControllerButtonType ButtonType
@@ -207,7 +216,8 @@ namespace BrickController2.UI.ViewModels
                             MaxOutputPercent,
                             AxisDeadZonePercent,
                             ChannelOutputType,
-                            MaxServoAngle);
+                            MaxServoAngle,
+                            ServoBaseAngle);
                     }
                     else
                     {
@@ -222,7 +232,8 @@ namespace BrickController2.UI.ViewModels
                             MaxOutputPercent,
                             AxisDeadZonePercent,
                             ChannelOutputType,
-                            MaxServoAngle);
+                            MaxServoAngle,
+                            ServoBaseAngle);
                     }
                 },
                 Translate("Saving"));

@@ -10,6 +10,8 @@ namespace BrickController2.DeviceManagement
     {
         protected readonly IBluetoothLEService _bleService;
 
+        protected readonly Guid CLIENT_CHARACTERISTIC_CONFIGURATION_UUID = new Guid("00002902-0000-1000-8000-00805f9b34fb");
+
         protected IBluetoothLEDevice _bleDevice;
         private Task _outputTask;
         private CancellationTokenSource _outputTaskTokenSource;

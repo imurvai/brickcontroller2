@@ -83,6 +83,16 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             State = BluetoothLEDeviceState.Disconnected;
         }
 
+        public bool EnableNotification(IGattCharacteristic characteristic)
+        {
+            lock(_lock)
+            {
+                var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
+                _peripheral.SetNotifyValue(true, nativeCharacteristic);
+                return true;
+            }
+        }
+
         public async Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data)
         {
             lock(_lock)

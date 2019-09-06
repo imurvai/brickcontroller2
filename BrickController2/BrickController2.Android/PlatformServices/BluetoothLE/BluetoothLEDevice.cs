@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.Bluetooth;
@@ -7,11 +8,14 @@ using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using BrickController2.PlatformServices.BluetoothLE;
+using Java.Util;
 
 namespace BrickController2.Droid.PlatformServices.BluetoothLE
 {
     public class BluetoothLEDevice : BluetoothGattCallback, IBluetoothLEDevice
     {
+        private static readonly UUID ClientCharacteristicConfigurationUUID = UUID.FromString("00002902-0000-1000-8000-00805f9b34fb");
+
         private readonly Context _context;
         private readonly BluetoothAdapter _bluetoothAdapter;
         private readonly object _lock = new object();
@@ -115,6 +119,36 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             }
         }
 
+        public bool EnableNotification(IGattCharacteristic characteristic)
+        {
+            lock (_lock)
+            {
+                if (_bluetoothGatt == null || State != BluetoothLEDeviceState.Connected)
+                {
+                    return false;
+                }
+
+                var nativeCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
+                if (!_bluetoothGatt.SetCharacteristicNotification(nativeCharacteristic, true))
+                {
+                    return false;
+                }
+
+                var descriptor = nativeCharacteristic.GetDescriptor(ClientCharacteristicConfigurationUUID);
+                if (descriptor == null)
+                {
+                    return false;
+                }
+
+                if (!descriptor.SetValue(BluetoothGattDescriptor.EnableNotificationValue.ToArray()))
+                {
+                    return false;
+                }
+
+                return _bluetoothGatt.WriteDescriptor(descriptor);
+            }
+        }
+
         public async Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data)
         {
             lock (_lock)
@@ -124,17 +158,17 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                     return false;
                 }
 
-                var gattCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
-                gattCharacteristic.WriteType = GattWriteType.Default;
+                var nativeCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
+                nativeCharacteristic.WriteType = GattWriteType.Default;
 
-                if (!gattCharacteristic.SetValue(data))
+                if (!nativeCharacteristic.SetValue(data))
                 {
                     return false;
                 }
 
                 _writeCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-                if (!_bluetoothGatt.WriteCharacteristic(gattCharacteristic))
+                if (!_bluetoothGatt.WriteCharacteristic(nativeCharacteristic))
                 {
                     _writeCompletionSource = null;
                     return false;
@@ -155,15 +189,15 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                     return false;
                 }
 
-                var gattCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
-                gattCharacteristic.WriteType = GattWriteType.NoResponse;
+                var nativeCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
+                nativeCharacteristic.WriteType = GattWriteType.NoResponse;
 
-                if (!gattCharacteristic.SetValue(data))
+                if (!nativeCharacteristic.SetValue(data))
                 {
                     return false;
                 }
 
-                if (!_bluetoothGatt.WriteCharacteristic(gattCharacteristic))
+                if (!_bluetoothGatt.WriteCharacteristic(nativeCharacteristic))
                 {
                     return false;
                 }

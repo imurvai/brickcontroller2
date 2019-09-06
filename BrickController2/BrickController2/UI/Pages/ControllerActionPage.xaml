@@ -61,7 +61,6 @@
                 <Label Text="{extensions:Translate AdvancedSettings}" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
 
                 <StackLayout Orientation="Vertical" IsVisible="{Binding SelectedDevice.DeviceType, Converter={StaticResource DeviceTypeToChannelOutputVisible}}">
-                <!--StackLayout Orientation="Vertical" IsVisible="False"-->
                     <!-- Channel output type selector -->
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -90,8 +89,32 @@
 
                             <Label Grid.Column="0" Text="{extensions:Translate ServoAngle}"/>
                             <StackLayout Grid.Column="1" Orientation="Horizontal">
-                                <Slider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="360" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                                <Label Text="{Binding MaxServoAngle}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                                <controls:ExtendedSlider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="360" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                <Label Text="{Binding MaxServoAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                                <Label Text="°"/>
+                            </StackLayout>
+                        </Grid>
+
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                    </StackLayout>
+
+                    <!-- Servo base angle setting -->
+                    <StackLayout Orientation="Vertical" IsVisible="False">
+                        <StackLayout.Triggers>
+                            <DataTrigger TargetType="StackLayout" Binding="{Binding ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
+                                <Setter Property="IsVisible" Value="True"/>
+                            </DataTrigger>
+                        </StackLayout.Triggers>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0" Text="{extensions:Translate BaseAngle}"/>
+                            <StackLayout Grid.Column="1" Orientation="Horizontal">
+                                <controls:ExtendedSlider Value="{Binding ServoBaseAngle}" Minimum="-180" Maximum="179" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                <Label Text="{Binding ServoBaseAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                                 <Label Text="°"/>
                             </StackLayout>
                         </Grid>
@@ -176,7 +199,7 @@
                         <Label Grid.Column="0" Text="{extensions:Translate MaxOutput}"/>
                         <StackLayout Grid.Column="1" Orientation="Horizontal">
                             <Slider Value="{Binding MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                            <Label Text="{Binding MaxOutputPercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                            <Label Text="{Binding MaxOutputPercent}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                             <Label Text="%"/>
                         </StackLayout>
                     </Grid>
@@ -200,7 +223,7 @@
                         <Label Grid.Column="0" Text="{extensions:Translate AxisDeadZone}"/>
                         <StackLayout Grid.Column="1" Orientation="Horizontal">
                             <Slider Value="{Binding AxisDeadZonePercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                            <Label Text="{Binding AxisDeadZonePercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                            <Label Text="{Binding AxisDeadZonePercent}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                             <Label Text="%"/>
                         </StackLayout>
                     </Grid>

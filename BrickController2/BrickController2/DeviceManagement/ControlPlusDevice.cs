@@ -10,8 +10,8 @@ namespace BrickController2.DeviceManagement
     {
         protected const int MAX_SEND_ATTEMPTS = 4;
 
-        protected readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
-        protected readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
+        protected static readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
+        protected static readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
 
         protected readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
         protected readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
@@ -58,7 +58,13 @@ namespace BrickController2.DeviceManagement
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
 
-            return _characteristic != null;
+            if (_characteristic != null)
+            {
+                _bleDevice.EnableNotification(_characteristic);
+                return true;
+            }
+
+            return false;
         }
 
         protected async Task<bool> SetupVirtualPortAsync(int channel1, int channel2)
@@ -220,7 +226,7 @@ namespace BrickController2.DeviceManagement
 
                 var result = true;
 
-                result = result && await _bleDevice.WriteAsync(_characteristic, resetToBaseBuffer);
+                result = result && await _bleDevice.WriteAsync(_characteristic, resetToZeroBuffer);
                 result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer);
                 result = result && await _bleDevice.WriteAsync(_characteristic, turnToZeroBuffer);
                 result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer);
