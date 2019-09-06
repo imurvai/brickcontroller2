@@ -17,6 +17,7 @@ namespace BrickController2.DeviceManagement
         protected readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
         protected readonly byte[] _virtualPortSendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x00, 0x02, 0x00, 0x00 };
         protected readonly byte[] _virtualPortSetupBuffer = new byte[] { 6, 0x00, 0x61, 0x01, 0x00, 0x00 };
+
         protected readonly int[] _outputValues = new int[4];
         protected readonly int[] _maxServoAngles = new int[4];
         protected readonly int[] _lastOutputValues = new int[4];
