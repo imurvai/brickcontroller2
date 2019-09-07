@@ -144,7 +144,16 @@ namespace BrickController2.UI.ViewModels
             {
                 if (device.DeviceState == DeviceState.Disconnected && !_deviceConnectionTasks.ContainsKey(device))
                 {
-                    _deviceConnectionTasks[device] = device.ConnectAsync(_reconnect, OnDeviceDisconnected, _connectionTokenSource.Token);
+                    var channelConfigs = Creation.ControllerProfiles
+                        .SelectMany(cp => cp.ControllerEvents.SelectMany(ce => ce.ControllerActions))
+                        .Where(ca => ca.DeviceId == device.Id)
+                        .Select(ca => new ChannelConfiguration { Channel = ca.Channel, ChannelOutputType = ca.ChannelOutputType, MaxServoAngle = ca.MaxServoAngle });
+
+                    _deviceConnectionTasks[device] = device.ConnectAsync(
+                        _reconnect,
+                        OnDeviceDisconnected,
+                        channelConfigs,
+                        _connectionTokenSource.Token);
                 }
             }
 

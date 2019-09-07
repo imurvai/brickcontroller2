@@ -31,6 +31,7 @@ namespace BrickController2.DeviceManagement
         public async override Task<DeviceConnectionResult> ConnectAsync(
             bool reconnect,
             Action<Device> onDeviceDisconnected,
+            IEnumerable<ChannelConfiguration> channelConfigurations,
             CancellationToken token)
         {
             using (await _asyncLock.LockAsync())

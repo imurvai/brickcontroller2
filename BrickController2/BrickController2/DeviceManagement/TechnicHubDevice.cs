@@ -27,43 +27,31 @@ namespace BrickController2.DeviceManagement
             _lastOutputValues[3] = 1;
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
 
-            bool isVirtualPortSetup = true;
-
             while (!token.IsCancellationRequested)
             {
                 try
                 {
                     if (_sendAttemptsLeft > 0)
                     {
-                        if (isVirtualPortSetup)
+                        if (await SendOutputValuesAsync())
                         {
-                            if (await SetupVirtualPortAsync(0, 1))
+                            int v0 = _outputValues[0];
+                            int v1 = _outputValues[1];
+                            int v2 = _outputValues[2];
+                            int v3 = _outputValues[3];
+
+                            if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0)
                             {
-                                isVirtualPortSetup = false;
+                                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                            }
+                            else
+                            {
+                                _sendAttemptsLeft--;
                             }
                         }
                         else
                         {
-                            if (await SendOutputValuesAsync())
-                            {
-                                int v0 = _outputValues[0];
-                                int v1 = _outputValues[1];
-                                int v2 = _outputValues[2];
-                                int v3 = _outputValues[3];
-
-                                if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0)
-                                {
-                                    _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                                }
-                                else
-                                {
-                                    _sendAttemptsLeft--;
-                                }
-                            }
-                            else
-                            {
-                                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                            }
+                            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                         }
                     }
                     else
@@ -92,29 +80,22 @@ namespace BrickController2.DeviceManagement
 
                 var result = true;
 
-                if (msa0 < 0 && msa1 < 0)
+                if (msa0 < 0)
                 {
-                    result = result && await SendOutputValueVirtualAsync(0x10, 0, 1, v0, v1);
+                    result = result && await SendOutputValueAsync(0, v0);
                 }
                 else
                 {
-                    if (msa0 < 0)
-                    {
-                        result = result && await SendOutputValueAsync(0, v0);
-                    }
-                    else
-                    {
-                        result = result && await SendServoOutputValueAsync(0, v0, msa0);
-                    }
+                    result = result && await SendServoOutputValueAsync(0, v0, msa0);
+                }
 
-                    if (msa1 < 0)
-                    {
-                        result = result && await SendOutputValueAsync(1, v1);
-                    }
-                    else
-                    {
-                        result = result && await SendServoOutputValueAsync(1, v1, msa1);
-                    }
+                if (msa1 < 0)
+                {
+                    result = result && await SendOutputValueAsync(1, v1);
+                }
+                else
+                {
+                    result = result && await SendServoOutputValueAsync(1, v1, msa1);
                 }
 
                 if (msa2 < 0)

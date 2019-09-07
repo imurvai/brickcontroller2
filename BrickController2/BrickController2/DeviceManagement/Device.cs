@@ -1,5 +1,6 @@
 ﻿using BrickController2.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,13 +50,13 @@ namespace BrickController2.DeviceManagement
         public abstract Task<DeviceConnectionResult> ConnectAsync(
             bool reconnect,
             Action<Device> onDeviceDisconnected,
+            IEnumerable<ChannelConfiguration> channelConfigurations,
             CancellationToken token);
         public abstract Task DisconnectAsync();
 
         public abstract void SetOutput(int channel, float value);
-        public virtual void SetOutputLevel(int value)
-        {
-        }
+        public virtual void SetOutputLevel(int value) { }
+        public virtual void ResetOutput(int channel, float value) { }
 
         public async Task RenameDeviceAsync(Device device, string newName)
         {

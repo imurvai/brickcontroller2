@@ -1,14 +1,15 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using BrickController2.DeviceManagement;
+using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
-using System.Threading.Tasks;
-using BrickController2.UI.Commands;
-using Device = BrickController2.DeviceManagement.Device;
-using System.Threading;
-using System;
 using BrickController2.UI.Services.Translation;
 using BrickController2.UI.Services.UIThread;
+using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -144,6 +145,7 @@ namespace BrickController2.UI.ViewModels
                     connectionResult = await Device.ConnectAsync(
                         _reconnect,
                         OnDeviceDisconnected,
+                        Enumerable.Empty<ChannelConfiguration>(),
                         _connectionTokenSource.Token);
                 },
                 Translate("Connecting"),

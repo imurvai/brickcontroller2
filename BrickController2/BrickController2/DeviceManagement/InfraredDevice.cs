@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +21,7 @@ namespace BrickController2.DeviceManagement
         public override async Task<DeviceConnectionResult> ConnectAsync(
             bool reconnect,
             Action<Device> onDeviceDisconnected,
+            IEnumerable<ChannelConfiguration> channelConfigurations,
             CancellationToken token)
         {
             DeviceState = DeviceState.Connecting;
