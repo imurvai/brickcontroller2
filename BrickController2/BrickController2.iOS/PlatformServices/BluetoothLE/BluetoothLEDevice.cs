@@ -64,9 +64,13 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             }
 
             var result = await _connectCompletionSource.Task;
-            _connectCompletionSource = null;
-            tokenRegistration.Dispose();
-            return result;
+
+            lock (_lock)
+            {
+                _connectCompletionSource = null;
+                tokenRegistration.Dispose();
+                return result;
+            }
         }
 
         public void Disconnect()
@@ -93,8 +97,10 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             }
         }
 
-        public async Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data)
+        public async Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data, CancellationToken token)
         {
+            CancellationTokenRegistration tokenRegistration;
+
             lock(_lock)
             {
                 if (State != BluetoothLEDeviceState.Connected)
@@ -106,12 +112,26 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 var nativeData = NSData.FromArray(data);
 
                 _writeCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+
                 _peripheral.WriteValue(nativeData, nativeCharacteristic, CBCharacteristicWriteType.WithResponse);
+
+                tokenRegistration = token.Register(() =>
+                {
+                    lock (_lock)
+                    {
+                        _writeCompletionSource.SetResult(false);
+                    }
+                });
             }
 
             var result = await _writeCompletionSource.Task;
-            _writeCompletionSource = null;
-            return result;
+
+            lock (_lock)
+            {
+                _writeCompletionSource = null;
+                tokenRegistration.Dispose();
+                return result;
+            }
         }
 
         public bool WriteNoResponse(IGattCharacteristic characteristic, byte[] data)

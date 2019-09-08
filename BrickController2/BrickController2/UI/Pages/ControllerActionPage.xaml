@@ -89,7 +89,7 @@
 
                             <Label Grid.Column="0" Text="{extensions:Translate ServoAngle}"/>
                             <StackLayout Grid.Column="1" Orientation="Horizontal">
-                                <controls:ExtendedSlider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="360" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                <controls:ExtendedSlider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="180" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
                                 <Label Text="{Binding MaxServoAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                                 <Label Text="°"/>
                             </StackLayout>

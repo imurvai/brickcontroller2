@@ -18,7 +18,6 @@ namespace BrickController2.DeviceManagement
         protected readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
         protected readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
         protected readonly byte[] _virtualPortSendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x00, 0x02, 0x00, 0x00 };
-        protected readonly byte[] _virtualPortSetupBuffer = new byte[] { 6, 0x00, 0x61, 0x01, 0x00, 0x00 };
 
         private readonly TimeSpan _sendDelay = TimeSpan.FromMilliseconds(40);
 
@@ -27,6 +26,7 @@ namespace BrickController2.DeviceManagement
         protected readonly int[] _maxServoAngles;
         protected readonly int[] _servoBaseAngles;
         protected readonly int[] _absolutePositions;
+        protected readonly int[] _relativePositions;
 
         protected volatile int _sendAttemptsLeft;
 
@@ -40,6 +40,7 @@ namespace BrickController2.DeviceManagement
             _maxServoAngles = new int[NumberOfChannels];
             _servoBaseAngles = new int[NumberOfChannels];
             _absolutePositions = new int[NumberOfChannels];
+            _relativePositions = new int[NumberOfChannels];
         }
 
         protected override bool AutoConnectOnFirstConnect => true;
@@ -57,6 +58,7 @@ namespace BrickController2.DeviceManagement
                 _maxServoAngles[c] = -1;
                 _servoBaseAngles[c] = 0;
                 _absolutePositions[c] = 0;
+                _relativePositions[c] = 0;
             }
 
             foreach (var channelConfig in channelConfigurations)
@@ -90,7 +92,7 @@ namespace BrickController2.DeviceManagement
         {
             CheckChannel(channel);
 
-
+            // TODO: finish
         }
 
         protected override bool ValidateServices(IEnumerable<IGattService> services)
@@ -114,47 +116,143 @@ namespace BrickController2.DeviceManagement
                 return;
             }
 
+            var text = BitConverter.ToString(data);
+
             var messageCode = data[2];
             var portId = data[3];
+
+            if (portId < 0 || portId >= NumberOfChannels)
+            {
+                return;
+            }
 
             switch (messageCode)
             {
                 case 0x46: // Port value information
-                    if (data.Length >= 8)
-                    {
-                        var modeMask = data[5];
-                        if ((modeMask & 0x01) != 0)
-                        {
-                            var absPosLowHigh = BitConverter.IsLittleEndian ?
-                                new byte[] { data[6], data[7] } :
-                                new byte[] { data[7], data[6] };
+                    var modeMask = data[5];
+                    var dataIndex = 6;
 
-                            if (portId >= 0 && portId < _absolutePositions.Length)
-                            {
-                                _absolutePositions[portId] = BitConverter.ToInt16(absPosLowHigh, 0);
-                            }
-                        }
+                    if ((modeMask & 0x01) != 0)
+                    {
+                        var absPosBuffer = BitConverter.IsLittleEndian ?
+                            new byte[] { data[dataIndex + 0], data[dataIndex + 1] } :
+                            new byte[] { data[dataIndex + 1], data[dataIndex + 0] };
+
+                        var absPosition = BitConverter.ToInt16(absPosBuffer, 0);
+                        _absolutePositions[portId] = absPosition;
+
+                        dataIndex += 2;
                     }
+
+                    if ((modeMask & 0x02) != 0)
+                    {
+                        var relPosBuffer = BitConverter.IsLittleEndian ?
+                            new byte[] { data[dataIndex + 0], data[dataIndex + 1], data[dataIndex + 2], data[dataIndex + 3] } :
+                            new byte[] { data[dataIndex + 3], data[dataIndex + 2], data[dataIndex + 1], data[dataIndex + 0] };
+
+                        var relPosition = BitConverter.ToInt32(relPosBuffer, 0);
+                        _relativePositions[portId] = relPosition;
+                    }
+
                     break;
             }
         }
 
-        //protected async Task<bool> SetupVirtualPortAsync(int channel1, int channel2)
-        //{
-        //    try
-        //    {
-        //        _virtualPortSetupBuffer[4] = (byte)channel1;
-        //        _virtualPortSetupBuffer[5] = (byte)channel2;
+        protected override async Task ProcessOutputsAsync(CancellationToken token)
+        {
+            try
+            {
+                // Wait until ports finish communicating with the hub
+                await Task.Delay(1000, token);
 
-        //        return await _bleDevice?.WriteAsync(_characteristic, _virtualPortSetupBuffer);
-        //    }
-        //    catch
-        //    {
-        //        return false;
-        //    }
-        //}
+                for (int channel = 0; channel < NumberOfChannels; channel++)
+                {
+                    if (_maxServoAngles[channel] >= 0)
+                    {
+                        await SetupChannelForPortInformationAsync(channel, token);
+                        await Task.Delay(300, token);
+                        await ResetServoAsync(channel, _servoBaseAngles[channel], token);
+                    }
+                }
 
-        protected async Task<bool> SendOutputValueAsync(int channel, int value)
+                for (int channel = 0; channel < NumberOfChannels; channel++)
+                {
+                    _outputValues[channel] = 0;
+                    _lastOutputValues[channel] = 1;
+                }
+
+                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+
+                while (true)
+                {
+                    token.ThrowIfCancellationRequested();
+
+                    if (_sendAttemptsLeft > 0)
+                    {
+                        if (await SendOutputValuesAsync(token))
+                        {
+                            var isAllZero = true;
+                            for (var channel = 0; channel < NumberOfChannels; channel++)
+                            {
+                                isAllZero = isAllZero && _outputValues[channel] == 0;
+                            }
+
+                            if (isAllZero)
+                            {
+                                _sendAttemptsLeft--;
+                            }
+                            else
+                            {
+                                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                            }
+                        }
+                        else
+                        {
+                            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                        }
+                    }
+                    else
+                    {
+                        await Task.Delay(10, token);
+                    }
+                }
+            }
+            catch
+            {
+                // Do nothing here, just exit
+            }
+        }
+
+        private async Task<bool> SendOutputValuesAsync(CancellationToken token)
+        {
+            try
+            {
+                var result = true;
+
+                for (int channel = 0; channel < NumberOfChannels; channel++)
+                {
+                    var outputValue = _outputValues[channel];
+                    var maxServoAngle = _maxServoAngles[channel];
+
+                    if (maxServoAngle < 0)
+                    {
+                        result = result && await SendOutputValueAsync(channel, outputValue, token);
+                    }
+                    else
+                    {
+                        result = result && await SendServoOutputValueAsync(channel, outputValue, maxServoAngle, token);
+                    }
+                }
+
+                return result;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private async Task<bool> SendOutputValueAsync(int channel, int value, CancellationToken token)
         {
             try
             {
@@ -167,7 +265,7 @@ namespace BrickController2.DeviceManagement
                     {
                         _lastOutputValues[channel] = value;
 
-                        await Task.Delay(_sendDelay);
+                        await Task.Delay(_sendDelay, token);
                         return true;
                     }
                     else
@@ -184,7 +282,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        protected async Task<bool> SendOutputValueVirtualAsync(int virtualChannel, int channel1, int channel2, int value1, int value2)
+        private async Task<bool> SendOutputValueVirtualAsync(int virtualChannel, int channel1, int channel2, int value1, int value2, CancellationToken token)
         {
             try
             {
@@ -199,7 +297,7 @@ namespace BrickController2.DeviceManagement
                         _lastOutputValues[channel1] = value1;
                         _lastOutputValues[channel2] = value2;
 
-                        await Task.Delay(_sendDelay);
+                        await Task.Delay(_sendDelay, token);
                         return true;
                     }
                     else
@@ -216,24 +314,25 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        protected async Task<bool> SendServoOutputValueAsync(int channel, int value, int maxValue)
+        private async Task<bool> SendServoOutputValueAsync(int channel, int value, int maxServoAngle, CancellationToken token)
         {
             try
             {
                 if (_lastOutputValues[channel] != value)
                 {
-                    var servoValue = maxValue * value / 100;
+                    var servoValue = maxServoAngle * value / 100;
                     _servoSendBuffer[3] = (byte)channel;
                     _servoSendBuffer[6] = (byte)(servoValue & 0xff);
                     _servoSendBuffer[7] = (byte)((servoValue >> 8) & 0xff);
                     _servoSendBuffer[8] = (byte)((servoValue >> 16) & 0xff);
                     _servoSendBuffer[9] = (byte)((servoValue >> 24) & 0xff);
+                    _servoSendBuffer[10] = CalculateServoSpeed(_relativePositions[channel], servoValue);
 
                     if (_bleDevice?.WriteNoResponse(_characteristic, _servoSendBuffer) == true)
                     {
                         _lastOutputValues[channel] = value;
 
-                        await Task.Delay(_sendDelay);
+                        await Task.Delay(_sendDelay, token);
                         return true;
                     }
                     else
@@ -250,7 +349,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private async Task<bool> SetupChannelForPortInformationAsync(int channel)
+        private async Task<bool> SetupChannelForPortInformationAsync(int channel, CancellationToken token)
         {
             try
             {
@@ -260,12 +359,14 @@ namespace BrickController2.DeviceManagement
                 var modeAndDataSetBuffer = new byte[] { 0x08, 0x00, 0x42, (byte)channel, 0x01, 0x00, 0x30, 0x20 };
                 var unlockAndEnableBuffer = new byte[] { 0x05, 0x00, 0x42, (byte)channel, 0x03 };
 
-                return
-                    await _bleDevice?.WriteAsync(_characteristic, lockBuffer) &&
-                    await _bleDevice?.WriteAsync(_characteristic, inputFormatForAbsAngleBuffer) &&
-                    await _bleDevice?.WriteAsync(_characteristic, inputFormatForRelAngleBuffer) &&
-                    await _bleDevice?.WriteAsync(_characteristic, modeAndDataSetBuffer) &&
-                    await _bleDevice?.WriteAsync(_characteristic, unlockAndEnableBuffer);
+                var result = true;
+                result = result && await _bleDevice?.WriteAsync(_characteristic, lockBuffer, token);
+                result = result && await _bleDevice?.WriteAsync(_characteristic, inputFormatForAbsAngleBuffer, token);
+                result = result && await _bleDevice?.WriteAsync(_characteristic, inputFormatForRelAngleBuffer, token);
+                result = result && await _bleDevice?.WriteAsync(_characteristic, modeAndDataSetBuffer, token);
+                result = result && await _bleDevice?.WriteAsync(_characteristic, unlockAndEnableBuffer, token);
+
+                return result;
             }
             catch
             {
@@ -273,14 +374,17 @@ namespace BrickController2.DeviceManagement
             }
         }
         
-        private async Task<bool> ResetServoAsync(int channel, int baseAngle)
+        private async Task<bool> ResetServoAsync(int channel, int baseAngle, CancellationToken token)
         {
             try
             {
                 baseAngle = Math.Max(-180, Math.Min(179, baseAngle));
 
                 var absAngle = _absolutePositions[channel];
-                var resetToAngle = baseAngle - absAngle;
+                var resetToAngle = absAngle - baseAngle;
+
+                if (resetToAngle < -180) resetToAngle += 360;
+                else if (resetToAngle > 179) resetToAngle -= 360;
                 
                 var ra0 = (byte)(resetToAngle & 0xff);
                 var ra1 = (byte)((resetToAngle >> 8) & 0xff);
@@ -289,19 +393,17 @@ namespace BrickController2.DeviceManagement
 
                 var resetToZeroBuffer = new byte[] { 0x0b, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x02, 0x00, 0x00, 0x00, 0x00 };
                 var stopBuffer = new byte[] { 0x08, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x00, 0x00 };
-                var turnToZeroBuffer = new byte[] { 0x0e, 0x00, 0x81, (byte)channel, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, CalculateServoSpeed(0, 0), 0x64, 0x7e, 0x00 };
+                var turnToZeroBuffer = new byte[] { 0x0e, 0x00, 0x81, (byte)channel, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 30, 0x64, 0x7e, 0x00 };
                 var resetToBaseBuffer = new byte[] { 0x0b, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x02, ra0, ra1, ra2, ra3 };
 
                 var result = true;
 
-                result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer);
-                result = result && await _bleDevice.WriteAsync(_characteristic, resetToZeroBuffer);
-                result = result && await _bleDevice.WriteAsync(_characteristic, turnToZeroBuffer);
-                result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer);
-                result = result && await _bleDevice.WriteAsync(_characteristic, resetToBaseBuffer);
-                result = result && await _bleDevice.WriteAsync(_characteristic, turnToZeroBuffer);
-                await Task.Delay(500);
-                result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer);
+                result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer, token);
+                result = result && await _bleDevice.WriteAsync(_characteristic, resetToZeroBuffer, token);
+                result = result && await _bleDevice.WriteAsync(_characteristic, turnToZeroBuffer, token);
+                result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer, token);
+                result = result && await _bleDevice.WriteAsync(_characteristic, resetToBaseBuffer, token);
+                result = result && await _bleDevice.WriteAsync(_characteristic, turnToZeroBuffer, token);
 
                 return result;
             }
@@ -311,10 +413,11 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private byte CalculateServoSpeed(int currentAngle, int TargetAngle)
+        private byte CalculateServoSpeed(int currentAngle, int targetAngle)
         {
-            // Temp
-            return 40;
+            var diff = Math.Abs(currentAngle - targetAngle);
+            var result = (byte)Math.Max(5, Math.Min(100, diff));
+            return result;
         }
     }
 }

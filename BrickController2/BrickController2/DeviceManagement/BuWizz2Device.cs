@@ -68,22 +68,24 @@ namespace BrickController2.DeviceManagement
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
         {
-            _outputValues[0] = 0;
-            _outputValues[1] = 0;
-            _outputValues[2] = 0;
-            _outputValues[3] = 0;
-            _outputLevelValue = DefaultOutputLevel;
-            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-
-            var _lastSentOutputLevelValue = -1;
-
-            while (!token.IsCancellationRequested)
+            try
             {
-                try
+                _outputValues[0] = 0;
+                _outputValues[1] = 0;
+                _outputValues[2] = 0;
+                _outputValues[3] = 0;
+                _outputLevelValue = DefaultOutputLevel;
+                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+
+                var _lastSentOutputLevelValue = -1;
+
+                while (true)
                 {
+                    token.ThrowIfCancellationRequested();
+
                     if (_lastSentOutputLevelValue != _outputLevelValue)
                     {
-                        if (await SendOutputLevelValueAsync(_outputLevelValue))
+                        if (await SendOutputLevelValueAsync(_outputLevelValue, token))
                         {
                             _lastSentOutputLevelValue = _outputLevelValue;
                         }
@@ -95,7 +97,7 @@ namespace BrickController2.DeviceManagement
                         int v2 = _outputValues[2];
                         int v3 = _outputValues[3];
 
-                        if (await SendOutputValuesAsync(v0, v1, v2, v3))
+                        if (await SendOutputValuesAsync(v0, v1, v2, v3, token))
                         {
                             if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0)
                             {
@@ -113,16 +115,16 @@ namespace BrickController2.DeviceManagement
                     }
                     else
                     {
-                        await Task.Delay(10);
+                        await Task.Delay(10, token);
                     }
                 }
-                catch (OperationCanceledException)
-                {
-                }
+            }
+            catch
+            {
             }
         }
 
-        private async Task<bool> SendOutputValuesAsync(int v0, int v1, int v2, int v3)
+        private async Task<bool> SendOutputValuesAsync(int v0, int v1, int v2, int v3, CancellationToken token)
         {
             try
             {
@@ -141,7 +143,7 @@ namespace BrickController2.DeviceManagement
                     _sendOutputBuffer[4] = (byte)(v3 / 2);
                 }
 
-                await _bleDevice?.WriteAsync(_characteristic, _sendOutputBuffer);
+                await _bleDevice?.WriteAsync(_characteristic, _sendOutputBuffer, token);
                 return true;
             }
             catch (Exception)
@@ -150,13 +152,13 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private async Task<bool> SendOutputLevelValueAsync(int outputLevelValue)
+        private async Task<bool> SendOutputLevelValueAsync(int outputLevelValue, CancellationToken token)
         {
             try
             {
                 _sendOutputLevelBuffer[1] = (byte)(outputLevelValue + 1);
 
-                await _bleDevice?.WriteAsync(_characteristic, _sendOutputLevelBuffer);
+                await _bleDevice?.WriteAsync(_characteristic, _sendOutputLevelBuffer, token);
                 return true;
             }
             catch (Exception)

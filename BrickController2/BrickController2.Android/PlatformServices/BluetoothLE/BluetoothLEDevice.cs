@@ -95,9 +95,13 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             }
 
             var result = await _connectCompletionSource.Task;
-            _connectCompletionSource = null;
-            tokenRegistration.Dispose();
-            return result;
+
+            lock (_lock)
+            {
+                _connectCompletionSource = null;
+                tokenRegistration.Dispose();
+                return result;
+            }
         }
 
         public void Disconnect()
@@ -149,8 +153,10 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             }
         }
 
-        public async Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data)
+        public async Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data, CancellationToken token)
         {
+            CancellationTokenRegistration tokenRegistration;
+
             lock (_lock)
             {
                 if (_bluetoothGatt == null || State != BluetoothLEDeviceState.Connected)
@@ -173,11 +179,24 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                     _writeCompletionSource = null;
                     return false;
                 }
+
+                tokenRegistration = token.Register(() =>
+                {
+                    lock (_lock)
+                    {
+                        _writeCompletionSource?.SetResult(false);
+                    }
+                });
             }
 
             var result = await _writeCompletionSource.Task;
-            _writeCompletionSource = null;
-            return result;
+
+            lock (_lock)
+            {
+                _writeCompletionSource = null;
+                tokenRegistration.Dispose();
+                return result;
+            }
         }
 
         public bool WriteNoResponse(IGattCharacteristic characteristic, byte[] data)

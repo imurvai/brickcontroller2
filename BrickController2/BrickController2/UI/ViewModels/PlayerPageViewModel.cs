@@ -147,7 +147,13 @@ namespace BrickController2.UI.ViewModels
                     var channelConfigs = Creation.ControllerProfiles
                         .SelectMany(cp => cp.ControllerEvents.SelectMany(ce => ce.ControllerActions))
                         .Where(ca => ca.DeviceId == device.Id)
-                        .Select(ca => new ChannelConfiguration { Channel = ca.Channel, ChannelOutputType = ca.ChannelOutputType, MaxServoAngle = ca.MaxServoAngle });
+                        .Select(ca => new ChannelConfiguration
+                        {
+                            Channel = ca.Channel,
+                            ChannelOutputType = ca.ChannelOutputType,
+                            MaxServoAngle = ca.MaxServoAngle,
+                            ServoBaseAngle = ca.ServoBaseAngle
+                        });
 
                     _deviceConnectionTasks[device] = device.ConnectAsync(
                         _reconnect,
