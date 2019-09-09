@@ -33,7 +33,7 @@ namespace BrickController2.Droid.UI.Services
                 .SetPositiveButton(buttonText ?? "Ok", (sender, args) =>
                 {
                     dialog.Dismiss();
-                    completionSource.SetResult(true);
+                    completionSource.TrySetResult(true);
                 })
                 .Create();
 
@@ -44,7 +44,7 @@ namespace BrickController2.Droid.UI.Services
             using (token.Register(() =>
             {
                 dialog.Dismiss();
-                completionSource.SetResult(true);
+                completionSource.TrySetResult(true);
             }))
             {
                 await completionSource.Task;
@@ -62,12 +62,12 @@ namespace BrickController2.Droid.UI.Services
                 .SetPositiveButton(positiveButtonText ?? "Ok", (sender, args) =>
                 {
                     dialog.Dismiss();
-                    completionSource.SetResult(true);
+                    completionSource.TrySetResult(true);
                 })
                 .SetNegativeButton(negativeButtonText ?? "Cancel", (sender, args) =>
                 {
                     dialog.Dismiss();
-                    completionSource.SetResult(false);
+                    completionSource.TrySetResult(false);
                 })
                 .Create();
 
@@ -78,7 +78,7 @@ namespace BrickController2.Droid.UI.Services
             using (token.Register(() =>
             {
                 dialog.Dismiss();
-                completionSource.SetCanceled();
+                completionSource.TrySetCanceled();
             }))
             {
                 return await completionSource.Task;
@@ -106,13 +106,13 @@ namespace BrickController2.Droid.UI.Services
                 {
                     inputMethodManager.HideSoftInputFromWindow(valueEditText.ApplicationWindowToken, 0);
                     dialog.Dismiss();
-                    completionSource.SetResult(new InputDialogResult(true, valueEditText.Text));
+                    completionSource.TrySetResult(new InputDialogResult(true, valueEditText.Text));
                 })
                 .SetNegativeButton(negativeButtonText ?? "Cancel", (sender, args) =>
                 {
                     inputMethodManager.HideSoftInputFromWindow(valueEditText.ApplicationWindowToken, 0);
                     dialog.Dismiss();
-                    completionSource.SetResult(new InputDialogResult(false, valueEditText.Text));
+                    completionSource.TrySetResult(new InputDialogResult(false, valueEditText.Text));
                 })
                 .Create();
 
@@ -126,7 +126,7 @@ namespace BrickController2.Droid.UI.Services
             using (token.Register(() =>
             {
                 dialog.Dismiss();
-                completionSource.SetCanceled();
+                completionSource.TrySetCanceled();
             }))
             {
                 return await completionSource.Task;
@@ -196,7 +196,7 @@ namespace BrickController2.Droid.UI.Services
             {
                 _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
                 dialog.Dismiss();
-                completionSource.SetResult(new GameControllerEventDialogResult(false, GameControllerEventType.Button, null));
+                completionSource.TrySetResult(new GameControllerEventDialogResult(false, GameControllerEventType.Button, null));
             });
 
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
@@ -209,7 +209,7 @@ namespace BrickController2.Droid.UI.Services
             {
                 _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
                 dialog.Dismiss();
-                completionSource.SetCanceled();
+                completionSource.TrySetCanceled();
             }))
             {
                 return await completionSource.Task;
@@ -229,7 +229,7 @@ namespace BrickController2.Droid.UI.Services
                     {
                         _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
                         dialog.Dismiss();
-                        completionSource.SetResult(new GameControllerEventDialogResult(true, controllerEvent.Key.EventType, controllerEvent.Key.EventCode));
+                        completionSource.TrySetResult(new GameControllerEventDialogResult(true, controllerEvent.Key.EventType, controllerEvent.Key.EventCode));
                         return;
                     }
                 }

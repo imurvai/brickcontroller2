@@ -10,25 +10,25 @@ namespace BrickController2.DeviceManagement
 {
     internal abstract class ControlPlusDevice : BluetoothDevice
     {
-        protected const int MAX_SEND_ATTEMPTS = 4;
+        private const int MAX_SEND_ATTEMPTS = 4;
 
-        protected static readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
-        protected static readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
+        private static readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
+        private static readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
 
-        protected readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
-        protected readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
-        protected readonly byte[] _virtualPortSendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x00, 0x02, 0x00, 0x00 };
+        private readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
+        private readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
+        private readonly byte[] _virtualPortSendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x00, 0x02, 0x00, 0x00 };
 
         private readonly TimeSpan _sendDelay = TimeSpan.FromMilliseconds(40);
 
-        protected readonly int[] _outputValues;
-        protected readonly int[] _lastOutputValues;
-        protected readonly int[] _maxServoAngles;
-        protected readonly int[] _servoBaseAngles;
-        protected readonly int[] _absolutePositions;
-        protected readonly int[] _relativePositions;
+        private readonly int[] _outputValues;
+        private readonly int[] _lastOutputValues;
+        private readonly int[] _maxServoAngles;
+        private readonly int[] _servoBaseAngles;
+        private readonly int[] _absolutePositions;
+        private readonly int[] _relativePositions;
 
-        protected volatile int _sendAttemptsLeft;
+        private volatile int _sendAttemptsLeft;
 
         private IGattCharacteristic _characteristic;
 
@@ -51,26 +51,57 @@ namespace BrickController2.DeviceManagement
             IEnumerable<ChannelConfiguration> channelConfigurations,
             CancellationToken token)
         {
-            for (int c = 0; c < NumberOfChannels; c++)
+            try
             {
-                _outputValues[c] = 0;
-                _lastOutputValues[c] = 0;
-                _maxServoAngles[c] = -1;
-                _servoBaseAngles[c] = 0;
-                _absolutePositions[c] = 0;
-                _relativePositions[c] = 0;
-            }
-
-            foreach (var channelConfig in channelConfigurations)
-            {
-                if (channelConfig.ChannelOutputType == ChannelOutputType.ServoMotor)
+                for (int c = 0; c < NumberOfChannels; c++)
                 {
-                    _maxServoAngles[channelConfig.Channel] = channelConfig.MaxServoAngle;
-                    _servoBaseAngles[channelConfig.Channel] = channelConfig.ServoBaseAngle;
+                    _outputValues[c] = 0;
+                    _lastOutputValues[c] = 0;
+                    _maxServoAngles[c] = -1;
+                    _servoBaseAngles[c] = 0;
+                    _absolutePositions[c] = 0;
+                    _relativePositions[c] = 0;
                 }
-            }
 
-            return await base.ConnectAsync(reconnect, onDeviceDisconnected, channelConfigurations, token);
+                foreach (var channelConfig in channelConfigurations)
+                {
+                    if (channelConfig.ChannelOutputType == ChannelOutputType.ServoMotor)
+                    {
+                        _maxServoAngles[channelConfig.Channel] = channelConfig.MaxServoAngle;
+                        _servoBaseAngles[channelConfig.Channel] = channelConfig.ServoBaseAngle;
+                    }
+                }
+
+                var result = await base.ConnectAsync(reconnect, onDeviceDisconnected, channelConfigurations, token);
+
+                if (result == DeviceConnectionResult.Ok)
+                {
+                    // Wait until ports finish communicating with the hub
+                    await Task.Delay(1000, token);
+
+                    for (int channel = 0; channel < NumberOfChannels; channel++)
+                    {
+                        if (_maxServoAngles[channel] >= 0)
+                        {
+                            await SetupChannelForPortInformationAsync(channel, token);
+                            await Task.Delay(300, token);
+                            await ResetServoAsync(channel, _servoBaseAngles[channel], token);
+                        }
+                    }
+                }
+
+                return result;
+            }
+            catch (OperationCanceledException)
+            {
+                await DisconnectAsync();
+                return DeviceConnectionResult.Canceled;
+            }
+            catch
+            {
+                await DisconnectAsync();
+                return DeviceConnectionResult.Error;
+            }
         }
 
         public override void SetOutput(int channel, float value)
@@ -162,19 +193,6 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                // Wait until ports finish communicating with the hub
-                await Task.Delay(1000, token);
-
-                for (int channel = 0; channel < NumberOfChannels; channel++)
-                {
-                    if (_maxServoAngles[channel] >= 0)
-                    {
-                        await SetupChannelForPortInformationAsync(channel, token);
-                        await Task.Delay(300, token);
-                        await ResetServoAsync(channel, _servoBaseAngles[channel], token);
-                    }
-                }
-
                 for (int channel = 0; channel < NumberOfChannels; channel++)
                 {
                     _outputValues[channel] = 0;
@@ -361,9 +379,13 @@ namespace BrickController2.DeviceManagement
 
                 var result = true;
                 result = result && await _bleDevice?.WriteAsync(_characteristic, lockBuffer, token);
+                await Task.Delay(20);
                 result = result && await _bleDevice?.WriteAsync(_characteristic, inputFormatForAbsAngleBuffer, token);
+                await Task.Delay(20);
                 result = result && await _bleDevice?.WriteAsync(_characteristic, inputFormatForRelAngleBuffer, token);
+                await Task.Delay(20);
                 result = result && await _bleDevice?.WriteAsync(_characteristic, modeAndDataSetBuffer, token);
+                await Task.Delay(20);
                 result = result && await _bleDevice?.WriteAsync(_characteristic, unlockAndEnableBuffer, token);
 
                 return result;

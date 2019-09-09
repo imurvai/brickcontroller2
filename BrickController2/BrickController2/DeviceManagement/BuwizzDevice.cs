@@ -99,10 +99,10 @@ namespace BrickController2.DeviceManagement
                     }
                     else
                     {
-                        await Task.Delay(10);
+                        await Task.Delay(10, token);
                     }
                 }
-                catch (OperationCanceledException)
+                catch
                 {
                 }
             }

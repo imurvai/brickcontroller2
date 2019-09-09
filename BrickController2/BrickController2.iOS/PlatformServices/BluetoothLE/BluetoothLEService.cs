@@ -26,29 +26,30 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         public bool IsBluetoothLESupported => true;
         public bool IsBluetoothOn => _centralManager.State == CBCentralManagerState.PoweredOn;
 
-        public Task<bool> ScanDevicesAsync(Action<ScanResult> scanCallback, CancellationToken token)
+        public async Task<bool> ScanDevicesAsync(Action<ScanResult> scanCallback, CancellationToken token)
         {
             if (!IsBluetoothLESupported || !IsBluetoothOn || _centralManager.IsScanning)
             {
-                return Task.FromResult(false);
+                return false;
             }
-
-            _scanCallback = scanCallback;
-            _centralManager.ScanForPeripherals(null, new PeripheralScanningOptions { AllowDuplicatesKey = true });
 
             var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            token.Register(() =>
+            using (token.Register(() =>
             {
-                lock(_lock)
+                lock (_lock)
                 {
                     _centralManager.StopScan();
                     _scanCallback = null;
-                    tcs.SetResult(true);
+                    tcs.TrySetResult(true);
                 }
-            });
+            }))
+            {
+                _scanCallback = scanCallback;
+                _centralManager.ScanForPeripherals(null, new PeripheralScanningOptions { AllowDuplicatesKey = true });
 
-            return tcs.Task;
+                return await tcs.Task;
+            }
         }
 
         public IBluetoothLEDevice GetKnownDevice(string address)

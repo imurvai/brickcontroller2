@@ -92,7 +92,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 #pragma warning disable CS0618 // Type or member is obsolete
                     _bluetoothAdapter.StopLeScan(leScanner);
 #pragma warning restore CS0618 // Type or member is obsolete
-                    tcs.SetResult(true);
+                    tcs.TrySetResult(true);
                 }))
                 {
                     return await tcs.Task;
@@ -119,7 +119,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                 using (token.Register(() =>
                 {
                     _bluetoothAdapter.BluetoothLeScanner.StopScan(leScanner);
-                    tcs.SetResult(true);
+                    tcs.TrySetResult(true);
                 }))
                 {
                     return await tcs.Task;

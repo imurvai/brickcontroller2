@@ -25,7 +25,7 @@ namespace BrickController2.iOS.UI.Services
 
             alert.AddAction(UIAlertAction.Create(buttonText ?? "Ok", UIAlertActionStyle.Default, action =>
             {
-                completionSource.SetResult(true);
+                completionSource.TrySetResult(true);
             }));
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
@@ -33,7 +33,7 @@ namespace BrickController2.iOS.UI.Services
             using (token.Register(async () =>
             {
                 await alert.DismissViewControllerAsync(true);
-                completionSource.SetResult(true);
+                completionSource.TrySetResult(true);
             }))
             {
                 await completionSource.Task;
@@ -47,12 +47,12 @@ namespace BrickController2.iOS.UI.Services
 
             alert.AddAction(UIAlertAction.Create(positiveButtonText ?? "Ok", UIAlertActionStyle.Default, action =>
             {
-                completionSource.SetResult(true);
+                completionSource.TrySetResult(true);
             }));
 
             alert.AddAction(UIAlertAction.Create(negativeButtonText ?? "Cancel", UIAlertActionStyle.Cancel, action =>
             {
-                completionSource.SetResult(false);
+                completionSource.TrySetResult(false);
             }));
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
@@ -60,7 +60,7 @@ namespace BrickController2.iOS.UI.Services
             using (token.Register(async () =>
             {
                 await alert.DismissViewControllerAsync(true);
-                completionSource.SetCanceled();
+                completionSource.TrySetCanceled();
             }))
             {
                 return await completionSource.Task;
@@ -80,12 +80,12 @@ namespace BrickController2.iOS.UI.Services
 
             alert.AddAction(UIAlertAction.Create(positiveButtonText ?? "Ok", UIAlertActionStyle.Default, action =>
             {
-                completionSource.SetResult(new InputDialogResult(true, alert.TextFields.First().Text));
+                completionSource.TrySetResult(new InputDialogResult(true, alert.TextFields.First().Text));
             }));
 
             alert.AddAction(UIAlertAction.Create(negativeButtonText ?? "Cancel", UIAlertActionStyle.Cancel, action =>
             {
-                completionSource.SetResult(new InputDialogResult(false, alert.TextFields.First().Text));
+                completionSource.TrySetResult(new InputDialogResult(false, alert.TextFields.First().Text));
             }));
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
@@ -93,7 +93,7 @@ namespace BrickController2.iOS.UI.Services
             using (token.Register(async () =>
             {
                 await alert.DismissViewControllerAsync(true);
-                completionSource.SetCanceled();
+                completionSource.TrySetCanceled();
             }))
             {
                 return await completionSource.Task;
@@ -161,7 +161,7 @@ namespace BrickController2.iOS.UI.Services
             alert.AddAction(UIAlertAction.Create(cancelButtonText ?? "Cancel", UIAlertActionStyle.Cancel, action =>
             {
                 _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
-                completionSource.SetResult(new GameControllerEventDialogResult(false, GameControllerEventType.Button, null));
+                completionSource.TrySetResult(new GameControllerEventDialogResult(false, GameControllerEventType.Button, null));
             }));
 
             UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
@@ -170,7 +170,7 @@ namespace BrickController2.iOS.UI.Services
             {
                 _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
                 await alert.DismissViewControllerAsync(true);
-                completionSource.SetCanceled();
+                completionSource.TrySetCanceled();
             }))
             {
                 return await completionSource.Task;
@@ -190,7 +190,7 @@ namespace BrickController2.iOS.UI.Services
                     {
                         _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
                         await alert.DismissViewControllerAsync(true);
-                        completionSource.SetResult(new GameControllerEventDialogResult(true, controllerEvent.Key.EventType, controllerEvent.Key.EventCode));
+                        completionSource.TrySetResult(new GameControllerEventDialogResult(true, controllerEvent.Key.EventType, controllerEvent.Key.EventCode));
                         return;
                     }
                 }

@@ -172,11 +172,12 @@ namespace BrickController2.UI.ViewModels
                 false,
                 async (progressDialog, token) =>
                 {
-                    token.Register(() => _connectionTokenSource?.Cancel());
-
-                    while (_deviceConnectionTasks.Values.Any(t => !t.IsCompleted))
+                    using (token.Register(() => _connectionTokenSource?.Cancel()))
                     {
-                        await Task.WhenAll(_deviceConnectionTasks.Values);
+                        while (_deviceConnectionTasks.Values.Any(t => !t.IsCompleted))
+                        {
+                            await Task.WhenAll(_deviceConnectionTasks.Values);
+                        }
                     }
                 },
                 Translate("Connecting"),
@@ -185,7 +186,7 @@ namespace BrickController2.UI.ViewModels
 
             _connectionTokenSource.Dispose();
             _connectionTokenSource = null;
-            _connectionCompletionSource.SetResult(true);
+            _connectionCompletionSource.TrySetResult(true);
             _deviceConnectionTasks.Clear();
 
             if (_devices.All(d => d.DeviceState == DeviceState.Connected))
