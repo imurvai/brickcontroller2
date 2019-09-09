@@ -51,57 +51,26 @@ namespace BrickController2.DeviceManagement
             IEnumerable<ChannelConfiguration> channelConfigurations,
             CancellationToken token)
         {
-            try
+            for (int c = 0; c < NumberOfChannels; c++)
             {
-                for (int c = 0; c < NumberOfChannels; c++)
-                {
-                    _outputValues[c] = 0;
-                    _lastOutputValues[c] = 0;
-                    _maxServoAngles[c] = -1;
-                    _servoBaseAngles[c] = 0;
-                    _absolutePositions[c] = 0;
-                    _relativePositions[c] = 0;
-                }
-
-                foreach (var channelConfig in channelConfigurations)
-                {
-                    if (channelConfig.ChannelOutputType == ChannelOutputType.ServoMotor)
-                    {
-                        _maxServoAngles[channelConfig.Channel] = channelConfig.MaxServoAngle;
-                        _servoBaseAngles[channelConfig.Channel] = channelConfig.ServoBaseAngle;
-                    }
-                }
-
-                var result = await base.ConnectAsync(reconnect, onDeviceDisconnected, channelConfigurations, token);
-
-                if (result == DeviceConnectionResult.Ok)
-                {
-                    // Wait until ports finish communicating with the hub
-                    await Task.Delay(1000, token);
-
-                    for (int channel = 0; channel < NumberOfChannels; channel++)
-                    {
-                        if (_maxServoAngles[channel] >= 0)
-                        {
-                            await SetupChannelForPortInformationAsync(channel, token);
-                            await Task.Delay(300, token);
-                            await ResetServoAsync(channel, _servoBaseAngles[channel], token);
-                        }
-                    }
-                }
-
-                return result;
+                _outputValues[c] = 0;
+                _lastOutputValues[c] = 0;
+                _maxServoAngles[c] = -1;
+                _servoBaseAngles[c] = 0;
+                _absolutePositions[c] = 0;
+                _relativePositions[c] = 0;
             }
-            catch (OperationCanceledException)
+
+            foreach (var channelConfig in channelConfigurations)
             {
-                await DisconnectAsync();
-                return DeviceConnectionResult.Canceled;
+                if (channelConfig.ChannelOutputType == ChannelOutputType.ServoMotor)
+                {
+                    _maxServoAngles[channelConfig.Channel] = channelConfig.MaxServoAngle;
+                    _servoBaseAngles[channelConfig.Channel] = channelConfig.ServoBaseAngle;
+                }
             }
-            catch
-            {
-                await DisconnectAsync();
-                return DeviceConnectionResult.Error;
-            }
+
+            return await base.ConnectAsync(reconnect, onDeviceDisconnected, channelConfigurations, token);
         }
 
         public override void SetOutput(int channel, float value)
@@ -238,6 +207,31 @@ namespace BrickController2.DeviceManagement
             catch
             {
                 // Do nothing here, just exit
+            }
+        }
+
+        protected override async Task<bool> AfterConnectSetupAsync(CancellationToken token)
+        {
+            try
+            {
+                // Wait until ports finish communicating with the hub
+                await Task.Delay(1000, token);
+
+                for (int channel = 0; channel < NumberOfChannels; channel++)
+                {
+                    if (_maxServoAngles[channel] >= 0)
+                    {
+                        await SetupChannelForPortInformationAsync(channel, token);
+                        await Task.Delay(300, token);
+                        await ResetServoAsync(channel, _servoBaseAngles[channel], token);
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 

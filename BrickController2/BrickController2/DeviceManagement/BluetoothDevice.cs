@@ -60,7 +60,7 @@ namespace BrickController2.DeviceManagement
 
                     token.ThrowIfCancellationRequested();
 
-                    if (ValidateServices(services))
+                    if (ValidateServices(services) && await AfterConnectSetupAsync(token))
                     {
                         await StartOutputTaskAsync();
 
@@ -99,6 +99,11 @@ namespace BrickController2.DeviceManagement
 
         protected virtual void OnCharacteristicChanged(Guid characteristicGuid, byte[] data)
         {
+        }
+
+        protected virtual Task<bool> AfterConnectSetupAsync(CancellationToken token)
+        {
+            return Task.FromResult(true);
         }
 
         private async Task DisconnectInternalAsync()
