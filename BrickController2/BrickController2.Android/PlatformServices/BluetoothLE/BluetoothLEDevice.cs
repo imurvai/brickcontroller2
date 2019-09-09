@@ -45,9 +45,6 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             Action<IBluetoothLEDevice> onDeviceDisconnected,
             CancellationToken token)
         {
-            _onCharacteristicChanged = onCharacteristicChanged;
-            _onDeviceDisconnected = onDeviceDisconnected;
-
             CancellationTokenRegistration tokenRegistration;
 
             lock(_lock)
@@ -56,6 +53,9 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                 {
                     return null;
                 }
+
+                _onCharacteristicChanged = onCharacteristicChanged;
+                _onDeviceDisconnected = onDeviceDisconnected;
 
                 State = BluetoothLEDeviceState.Connecting;
 
@@ -108,6 +108,9 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
         {
             lock(_lock)
             {
+                _onDeviceDisconnected = null;
+                _onCharacteristicChanged = null;
+
                 if (_bluetoothGatt != null)
                 {
                     _bluetoothGatt.Disconnect();
@@ -281,8 +284,13 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
                             case BluetoothLEDeviceState.Connected:
                                 _writeCompletionSource?.SetResult(false);
+
+                                // Copy the _onDeviceDisconnected callback to call it
+                                // in case of an unexpected disconnection
+                                var onDeviceDisconnected = _onDeviceDisconnected;
+
                                 Disconnect();
-                                _onDeviceDisconnected?.Invoke(this);
+                                onDeviceDisconnected?.Invoke(this);
                                 break;
 
                             default:
@@ -341,9 +349,12 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
         public override void OnCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic)
         {
-            var guid = characteristic.Uuid.ToGuid();
-            var data = characteristic.GetValue();
-            _onCharacteristicChanged?.Invoke(guid, data);
+            lock (_lock)
+            {
+                var guid = characteristic.Uuid.ToGuid();
+                var data = characteristic.GetValue();
+                _onCharacteristicChanged?.Invoke(guid, data);
+            }
         }
     }
 }

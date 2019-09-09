@@ -37,9 +37,6 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             Action<IBluetoothLEDevice> onDeviceDisconnected,
             CancellationToken token)
         {
-            _onCharacteristicChanged = onCharacteristicChanged;
-            _onDeviceDisconnected = onDeviceDisconnected;
-
             CancellationTokenRegistration tokenRegistration;
 
             lock (_lock)
@@ -49,6 +46,9 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                     return null;
                 }
 
+                _onCharacteristicChanged = onCharacteristicChanged;
+                _onDeviceDisconnected = onDeviceDisconnected;
+
                 State = BluetoothLEDeviceState.Connecting;
                 _centralManager.ConnectPeripheral(_peripheral, new PeripheralConnectionOptions { NotifyOnConnection = true, NotifyOnDisconnection = true });
 
@@ -57,7 +57,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 {
                     lock (_lock)
                     {
-                        DisconnectInternal();
+                        Disconnect();
                         _connectCompletionSource?.SetResult(null);
                     }
                 });
@@ -77,14 +77,12 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         {
             lock (_lock)
             {
-                DisconnectInternal();
-            }
-        }
+                _onDeviceDisconnected = null;
+                _onCharacteristicChanged = null;
 
-        private void DisconnectInternal()
-        {
-            _centralManager.CancelPeripheralConnection(_peripheral);
-            State = BluetoothLEDeviceState.Disconnected;
+                _centralManager.CancelPeripheralConnection(_peripheral);
+                State = BluetoothLEDeviceState.Disconnected;
+            }
         }
 
         public bool EnableNotification(IGattCharacteristic characteristic)
@@ -177,7 +175,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                             {
                                 lock (_lock)
                                 {
-                                    DisconnectInternal();
+                                    Disconnect();
                                     _connectCompletionSource?.SetResult(null);
                                 }
                                 return;
@@ -196,7 +194,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 {
                     lock(_lock)
                     {
-                        DisconnectInternal();
+                        Disconnect();
                         _connectCompletionSource?.SetResult(null);
                     }
                 }
@@ -205,7 +203,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             {
                 lock (_lock)
                 {
-                    DisconnectInternal();
+                    Disconnect();
                     _connectCompletionSource?.SetResult(null);
                 }
             }
@@ -294,14 +292,19 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 {
                     case BluetoothLEDeviceState.Connecting:
                     case BluetoothLEDeviceState.Discovering:
-                        DisconnectInternal();
+                        Disconnect();
                         _connectCompletionSource?.SetResult(null);
                         break;
 
                     case BluetoothLEDeviceState.Connected:
                         _writeCompletionSource?.SetResult(false);
-                        DisconnectInternal();
-                        _onDeviceDisconnected?.Invoke(this);
+
+                        // Copy the _onDeviceDisconnected callback to call it
+                        // in case of an unexpected disconnection
+                        var onDeviceDisconnected = _onDeviceDisconnected;
+
+                        Disconnect();
+                        onDeviceDisconnected?.Invoke(this);
                         break;
 
                     default:
