@@ -87,6 +87,7 @@ namespace BrickController2.UI.ViewModels
             SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null);
             DeleteControllerActionCommand = new SafeCommand(async () => await DeleteControllerActionAsync());
             OpenDeviceDetailsCommand = new SafeCommand(async () => await OpenDeviceDetailsAsync(), () => SelectedDevice != null);
+            OpenChannelSetupCommand = new SafeCommand(async () => await OpenChannelSetupAsync(), () => SelectedDevice != null);
         }
 
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
@@ -173,6 +174,7 @@ namespace BrickController2.UI.ViewModels
         public ICommand SaveControllerActionCommand { get; }
         public ICommand DeleteControllerActionCommand { get; }
         public ICommand OpenDeviceDetailsCommand { get; }
+        public ICommand OpenChannelSetupCommand { get; }
 
         public override void OnAppearing()
         {
@@ -276,6 +278,16 @@ namespace BrickController2.UI.ViewModels
             }
 
             await NavigationService.NavigateToAsync<DevicePageViewModel>(new NavigationParameters(("device", SelectedDevice)));
+        }
+
+        private async Task OpenChannelSetupAsync()
+        {
+            if (SelectedDevice == null)
+            {
+                return;
+            }
+
+            await NavigationService.NavigateToAsync<ChannelSetupPageViewModel>(new NavigationParameters(("device", SelectedDevice), ("channel", Channel)));
         }
     }
 }

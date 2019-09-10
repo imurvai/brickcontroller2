@@ -69,10 +69,23 @@
                         </Grid.ColumnDefinitions>
 
                         <Label Grid.Column="0" Text="{extensions:Translate ChannelType}" VerticalOptions="Center"/>
-                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ChannelOutputType" SelectedItem="{Binding ChannelOutputType}"/>
-                    </Grid>
 
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <controls:EnumPicker Grid.Column="0" x:TypeArguments="creationManagement:ChannelOutputType" SelectedItem="{Binding ChannelOutputType}"/>
+                            <controls:FloatingActionButton Grid.Column="1" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
+                                <controls:FloatingActionButton.Triggers>
+                                    <DataTrigger TargetType="controls:FloatingActionButton" Binding="{Binding ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
+                                        <Setter Property="IsVisible" Value="True"/>
+                                    </DataTrigger>
+                                </controls:FloatingActionButton.Triggers>
+                            </controls:FloatingActionButton>
+                        </Grid>
+                    </Grid>
 
                     <!-- Max servo angle setting -->
                     <StackLayout Orientation="Vertical" IsVisible="False">
@@ -94,33 +107,9 @@
                                 <Label Text="°"/>
                             </StackLayout>
                         </Grid>
-
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
                     </StackLayout>
 
-                    <!-- Servo base angle setting -->
-                    <StackLayout Orientation="Vertical" IsVisible="False">
-                        <StackLayout.Triggers>
-                            <DataTrigger TargetType="StackLayout" Binding="{Binding ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
-                                <Setter Property="IsVisible" Value="True"/>
-                            </DataTrigger>
-                        </StackLayout.Triggers>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Label Grid.Column="0" Text="{extensions:Translate BaseAngle}"/>
-                            <StackLayout Grid.Column="1" Orientation="Horizontal">
-                                <controls:ExtendedSlider Value="{Binding ServoBaseAngle}" Minimum="-180" Maximum="179" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                                <Label Text="{Binding ServoBaseAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
-                                <Label Text="°"/>
-                            </StackLayout>
-                        </Grid>
-
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
-                    </StackLayout>
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
                 </StackLayout>
 
                 <!-- Button type selector -->

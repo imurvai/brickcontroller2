@@ -51,12 +51,17 @@ namespace BrickController2.DeviceManagement
             bool reconnect,
             Action<Device> onDeviceDisconnected,
             IEnumerable<ChannelConfiguration> channelConfigurations,
+            bool startOutputProcessing,
             CancellationToken token);
         public abstract Task DisconnectAsync();
 
         public abstract void SetOutput(int channel, float value);
         public virtual void SetOutputLevel(int value) { }
-        public virtual void ResetOutput(int channel, float value) { }
+
+        public virtual Task ResetOutputAsync(int channel, float value, CancellationToken token)
+        {
+            return Task.FromResult(true);
+        }
 
         public async Task RenameDeviceAsync(Device device, string newName)
         {

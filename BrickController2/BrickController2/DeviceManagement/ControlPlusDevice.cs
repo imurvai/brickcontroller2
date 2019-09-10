@@ -49,6 +49,7 @@ namespace BrickController2.DeviceManagement
             bool reconnect,
             Action<Device> onDeviceDisconnected,
             IEnumerable<ChannelConfiguration> channelConfigurations,
+            bool startOutputProcessing,
             CancellationToken token)
         {
             for (int c = 0; c < NumberOfChannels; c++)
@@ -70,7 +71,7 @@ namespace BrickController2.DeviceManagement
                 }
             }
 
-            return await base.ConnectAsync(reconnect, onDeviceDisconnected, channelConfigurations, token);
+            return await base.ConnectAsync(reconnect, onDeviceDisconnected, channelConfigurations, startOutputProcessing, token);
         }
 
         public override void SetOutput(int channel, float value)
@@ -88,11 +89,13 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
-        public override void ResetOutput(int channel, float value)
+        public override async Task ResetOutputAsync(int channel, float value, CancellationToken token)
         {
             CheckChannel(channel);
 
-            // TODO: finish
+            await SetupChannelForPortInformationAsync(channel, token);
+            await Task.Delay(300);
+            await ResetServoAsync(channel, Convert.ToInt32(value * 180), token);
         }
 
         protected override bool ValidateServices(IEnumerable<IGattService> services)
@@ -420,6 +423,8 @@ namespace BrickController2.DeviceManagement
                 result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer, token);
                 result = result && await _bleDevice.WriteAsync(_characteristic, resetToBaseBuffer, token);
                 result = result && await _bleDevice.WriteAsync(_characteristic, turnToZeroBuffer, token);
+                await Task.Delay(300);
+                result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer, token);
 
                 return result;
             }

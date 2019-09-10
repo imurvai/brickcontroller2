@@ -32,6 +32,7 @@ namespace BrickController2.DeviceManagement
             bool reconnect,
             Action<Device> onDeviceDisconnected,
             IEnumerable<ChannelConfiguration> channelConfigurations,
+            bool startOutputProcessing,
             CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
@@ -62,7 +63,10 @@ namespace BrickController2.DeviceManagement
 
                     if (ValidateServices(services) && await AfterConnectSetupAsync(token))
                     {
-                        await StartOutputTaskAsync();
+                        if (startOutputProcessing)
+                        {
+                            await StartOutputTaskAsync();
+                        }
 
                         token.ThrowIfCancellationRequested();
 

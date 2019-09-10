@@ -30,6 +30,7 @@
     <None Remove="UI\Images\ic_play_black.png" />
     <None Remove="UI\Images\ic_play_white.png" />
     <None Remove="UI\Images\ic_search.png" />
+    <None Remove="UI\Images\ic_settings_white.png" />
     <None Remove="UI\Images\infra_image.png" />
     <None Remove="UI\Images\infra_image_small.png" />
     <None Remove="UI\Images\poweredup_image.png" />
@@ -45,6 +46,7 @@
     <EmbeddedResource Include="UI\Images\boost_image_small.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image_small.png" />
+    <EmbeddedResource Include="UI\Images\ic_settings_white.png" />
     <EmbeddedResource Include="UI\Images\technichub_image.png" />
     <EmbeddedResource Include="UI\Images\technichub_image_small.png" />
     <EmbeddedResource Include="UI\Images\ic_add.png" />

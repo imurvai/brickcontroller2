@@ -22,6 +22,7 @@ namespace BrickController2.DeviceManagement
             bool reconnect,
             Action<Device> onDeviceDisconnected,
             IEnumerable<ChannelConfiguration> channelConfigurations,
+            bool startOutputProcessing,
             CancellationToken token)
         {
             DeviceState = DeviceState.Connecting;
