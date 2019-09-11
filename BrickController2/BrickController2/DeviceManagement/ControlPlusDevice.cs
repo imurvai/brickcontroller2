@@ -89,6 +89,8 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
+        public override bool CanResetOutput => true;
+
         public override async Task ResetOutputAsync(int channel, float value, CancellationToken token)
         {
             CheckChannel(channel);
@@ -97,6 +99,8 @@ namespace BrickController2.DeviceManagement
             await Task.Delay(300, token);
             await ResetServoAsync(channel, Convert.ToInt32(value * 180), token);
         }
+
+        public override bool CanAutoCalibrateOutput => true;
 
         public override async Task<float> AutoCalibrateOutputAsync(int channel, CancellationToken token)
         {
@@ -409,32 +413,19 @@ namespace BrickController2.DeviceManagement
             {
                 baseAngle = Math.Max(-180, Math.Min(179, baseAngle));
 
-                var absAngle = _absolutePositions[channel];
-                var resetToAngle = absAngle - baseAngle;
-
-                if (resetToAngle < -180) resetToAngle += 360;
-                else if (resetToAngle > 179) resetToAngle -= 360;
-                
-                var ra0 = (byte)(resetToAngle & 0xff);
-                var ra1 = (byte)((resetToAngle >> 8) & 0xff);
-                var ra2 = (byte)((resetToAngle >> 16) & 0xff);
-                var ra3 = (byte)((resetToAngle >> 24) & 0xff);
-
-                var resetToZeroBuffer = new byte[] { 0x0b, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x02, 0x00, 0x00, 0x00, 0x00 };
-                var stopBuffer = new byte[] { 0x08, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x00, 0x00 };
-                var turnToZeroBuffer = new byte[] { 0x0e, 0x00, 0x81, (byte)channel, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 30, 0x64, 0x7e, 0x00 };
-                var resetToBaseBuffer = new byte[] { 0x0b, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x02, ra0, ra1, ra2, ra3 };
+                var resetToAngle = NormalizeAngle(_absolutePositions[channel] - baseAngle);
 
                 var result = true;
 
-                result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer, token);
-                result = result && await _bleDevice.WriteAsync(_characteristic, resetToZeroBuffer, token);
-                result = result && await _bleDevice.WriteAsync(_characteristic, turnToZeroBuffer, token);
-                result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer, token);
-                result = result && await _bleDevice.WriteAsync(_characteristic, resetToBaseBuffer, token);
-                result = result && await _bleDevice.WriteAsync(_characteristic, turnToZeroBuffer, token);
-                await Task.Delay(300);
-                result = result && await _bleDevice.WriteAsync(_characteristic, stopBuffer, token);
+                result = result && await Reset(channel, 0, token);
+                result = result && await Stop(channel, token);
+                result = result && await Turn(channel, 0, 50, token);
+                await Task.Delay(50);
+                result = result && await Stop(channel, token);
+                result = result && await Reset(channel, resetToAngle, token);
+                result = result && await Turn(channel, 0, 40, token);
+                await Task.Delay(500);
+                result = result && await Stop(channel, token);
 
                 return result;
             }
@@ -446,8 +437,76 @@ namespace BrickController2.DeviceManagement
 
         private async Task<float> AutoCalibrateServoAsync(int channel, CancellationToken token)
         {
-            // TODO: implement
-            return 0F;
+            try
+            {
+                var result = true;
+
+                result = result && await Reset(channel, 0, token);
+                result = result && await Stop(channel, token);
+                result = result && await Turn(channel, 0, 50, token);
+                await Task.Delay(600);
+                result = result && await Stop(channel, token);
+                await Task.Delay(500);
+                var absPositionAt0 = _absolutePositions[channel];
+                result = result && await Turn(channel, -160, CalculateServoSpeed(_relativePositions[channel], -160), token);
+                await Task.Delay(600);
+                result = result && await Stop(channel, token);
+                await Task.Delay(500);
+                var absPositionAtMin160 = _absolutePositions[channel];
+                result = result && await Turn(channel, 160, CalculateServoSpeed(_relativePositions[channel], 160), token);
+                await Task.Delay(600);
+                result = result && await Stop(channel, token);
+                await Task.Delay(500);
+                var absPositionAt160 = _absolutePositions[channel];
+
+                var midPoint1 = NormalizeAngle((absPositionAtMin160 + absPositionAt160) / 2);
+                var midPoint2 = NormalizeAngle(midPoint1 + 180);
+
+                var baseAngle = (Math.Abs(NormalizeAngle(midPoint1 - absPositionAt0)) < Math.Abs(NormalizeAngle(midPoint2 - absPositionAt0))) ?
+                    RoundAngleToNearest90(midPoint1) :
+                    RoundAngleToNearest90(midPoint2);
+                var resetToAngle = NormalizeAngle(_absolutePositions[channel] - baseAngle);
+
+                result = result && await Reset(channel, 0, token);
+                result = result && await Stop(channel, token);
+                result = result && await Turn(channel, 0, 50, token);
+                await Task.Delay(50);
+                result = result && await Stop(channel, token);
+                result = result && await Reset(channel, resetToAngle, token);
+                result = result && await Turn(channel, 0, 40, token);
+                await Task.Delay(600);
+                result = result && await Stop(channel, token);
+
+                return baseAngle / 180F;
+            }
+            catch
+            {
+                return 0F;
+            }
+        }
+
+        private int NormalizeAngle(int angle)
+        {
+            if (angle >= 180)
+            {
+                return angle - (360 * ((angle + 180) / 360));
+            }
+            else if (angle < -180)
+            {
+                return angle + (360 * ((180 - angle) / 360));
+            }
+
+            return angle;
+        }
+
+        private int RoundAngleToNearest90(int angle)
+        {
+            angle = NormalizeAngle(angle);
+            if (angle < -135) return -180;
+            if (angle < -45) return -90;
+            if (angle < 45) return 0;
+            if (angle < 135) return 90;
+            return -180;
         }
 
         private byte CalculateServoSpeed(int currentAngle, int targetAngle)
@@ -455,6 +514,35 @@ namespace BrickController2.DeviceManagement
             var diff = Math.Abs(currentAngle - targetAngle);
             var result = (byte)Math.Max(5, Math.Min(100, diff));
             return result;
+        }
+
+        private Task<bool> Stop(int channel, CancellationToken token)
+        {
+            return _bleDevice.WriteAsync(_characteristic, new byte[] { 0x08, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x00, 0x00 }, token);
+        }
+
+        private Task<bool> Turn(int channel, int angle, int speed, CancellationToken token)
+        {
+            angle = NormalizeAngle(angle);
+
+            var a0 = (byte)(angle & 0xff);
+            var a1 = (byte)((angle >> 8) & 0xff);
+            var a2 = (byte)((angle >> 16) & 0xff);
+            var a3 = (byte)((angle >> 24) & 0xff);
+
+            return _bleDevice.WriteAsync(_characteristic, new byte[] { 0x0e, 0x00, 0x81, (byte)channel, 0x11, 0x0d, a0, a1, a2, a3, (byte)speed, 0x64, 0x7e, 0x00 }, token);
+        }
+
+        private Task<bool> Reset(int channel, int angle, CancellationToken token)
+        {
+            angle = NormalizeAngle(angle);
+
+            var a0 = (byte)(angle & 0xff);
+            var a1 = (byte)((angle >> 8) & 0xff);
+            var a2 = (byte)((angle >> 16) & 0xff);
+            var a3 = (byte)((angle >> 24) & 0xff);
+
+            return _bleDevice.WriteAsync(_characteristic, new byte[] { 0x0b, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x02, a0, a1, a2, a3 }, token);
         }
     }
 }

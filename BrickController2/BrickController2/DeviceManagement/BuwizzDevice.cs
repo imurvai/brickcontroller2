@@ -48,6 +48,8 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
+        public override bool CanSetOutputLevel => true;
+
         public override void SetOutputLevel(int value)
         {
             _outputLevelValue = Math.Max(0, Math.Min(NumberOfOutputLevels - 1, value));

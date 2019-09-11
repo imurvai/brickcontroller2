@@ -56,13 +56,17 @@ namespace BrickController2.DeviceManagement
         public abstract Task DisconnectAsync();
 
         public abstract void SetOutput(int channel, float value);
+
+        public virtual bool CanSetOutputLevel => false;
         public virtual void SetOutputLevel(int value) { }
 
+        public virtual bool CanResetOutput => false;
         public virtual Task ResetOutputAsync(int channel, float value, CancellationToken token)
         {
             return Task.FromResult(true);
         }
 
+        public virtual bool CanAutoCalibrateOutput => false;
         public virtual Task<float> AutoCalibrateOutputAsync(int channel, CancellationToken token)
         {
             return Task.FromResult(0F);

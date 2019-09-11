@@ -117,7 +117,7 @@
                 <Image Grid.Column="1" Grid.Row="1" Source="{extensions:ImageResource Source=boost_image.png}" WidthRequest="150" HeightRequest="80"/>
             </Grid>
 
-            <!-- Control+ -->
+            <!-- Technic Hub -->
             <Grid x:Name="TechnicHubSection">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -131,10 +131,10 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="0" x:Name="TechnicHubChannel0" Channel="0" Text="1" HorizontalOptions="Start" VerticalOptions="Start"/>
-                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="1" x:Name="TechnicHubChannel1" Channel="1" Text="2" HorizontalOptions="Start" VerticalOptions="Start"/>
-                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="2" x:Name="TechnicHubChannel2" Channel="2" Text="3" HorizontalOptions="Start" VerticalOptions="Start"/>
-                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="3" x:Name="TechnicHubChannel3" Channel="3" Text="4" HorizontalOptions="Start" VerticalOptions="Start"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="0" x:Name="TechnicHubChannel0" Channel="0" Text="A" HorizontalOptions="Start" VerticalOptions="Start"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="1" x:Name="TechnicHubChannel1" Channel="1" Text="B" HorizontalOptions="Start" VerticalOptions="Start"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="2" x:Name="TechnicHubChannel2" Channel="2" Text="C" HorizontalOptions="Start" VerticalOptions="Start"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="3" x:Name="TechnicHubChannel3" Channel="3" Text="D" HorizontalOptions="Start" VerticalOptions="Start"/>
 
                 <Image Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Source="{extensions:ImageResource Source=technichub_image.png}" WidthRequest="150" HeightRequest="80"/>
             </Grid>

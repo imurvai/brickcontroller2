@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
@@ -37,15 +38,16 @@ namespace BrickController2.UI.ViewModels
             _uIThreadService = uIThreadService;
 
             Device = parameters.Get<Device>("device");
-            Channel = parameters.Get<int>("channel");
+            Action = parameters.Get<ControllerAction>("controlleraction");
 
+            AutoCalibrateServoCommand = new SafeCommand(async () => await AutoCalibrateServoAsync());
             ResetServoBaseCommand = new SafeCommand(async () => await ResetServoBaseAngleAsync());
         }
 
         public Device Device { get; }
-        public int Channel { get; }
-        public int ServoBaseAngle { get; set; }
+        public ControllerAction Action { get; }
 
+        public ICommand AutoCalibrateServoCommand { get; }
         public ICommand ResetServoBaseCommand { get; }
 
         public override async void OnAppearing()
@@ -145,6 +147,24 @@ namespace BrickController2.UI.ViewModels
             });
         }
 
+        private async Task AutoCalibrateServoAsync()
+        {
+            _tokenSource = new CancellationTokenSource();
+
+            await _dialogService.ShowProgressDialogAsync(
+                false,
+                async (progressDialog, token) =>
+                {
+                    using (token.Register(() => _tokenSource.Cancel()))
+                    {
+                        Action.ServoBaseAngle = (int)(await Device.AutoCalibrateOutputAsync(Action.Channel, _tokenSource.Token) * 180);
+                    }
+                },
+                Translate("Calibrating"),
+                null,
+                null);
+        }
+
         private async Task ResetServoBaseAngleAsync()
         {
             _tokenSource = new CancellationTokenSource();
@@ -155,7 +175,7 @@ namespace BrickController2.UI.ViewModels
                 {
                     using (token.Register(() => _tokenSource.Cancel()))
                     {
-                        await Device.ResetOutputAsync(Channel, ServoBaseAngle / 180F, _tokenSource.Token);
+                        await Device.ResetOutputAsync(Action.Channel, Action.ServoBaseAngle / 180F, _tokenSource.Token);
                     }
                 },
                 Translate("Reseting"),
