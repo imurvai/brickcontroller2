@@ -63,6 +63,11 @@ namespace BrickController2.DeviceManagement
             return Task.FromResult(true);
         }
 
+        public virtual Task<float> AutoCalibrateOutputAsync(int channel, CancellationToken token)
+        {
+            return Task.FromResult(0F);
+        }
+
         public async Task RenameDeviceAsync(Device device, string newName)
         {
             using (await _asyncLock.LockAsync())

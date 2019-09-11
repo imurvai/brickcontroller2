@@ -94,8 +94,18 @@ namespace BrickController2.DeviceManagement
             CheckChannel(channel);
 
             await SetupChannelForPortInformationAsync(channel, token);
-            await Task.Delay(300);
+            await Task.Delay(300, token);
             await ResetServoAsync(channel, Convert.ToInt32(value * 180), token);
+        }
+
+        public override async Task<float> AutoCalibrateOutputAsync(int channel, CancellationToken token)
+        {
+            CheckChannel(channel);
+
+            await SetupChannelForPortInformationAsync(channel, token);
+            await Task.Delay(300, token);
+
+            return await AutoCalibrateServoAsync(channel, token);
         }
 
         protected override bool ValidateServices(IEnumerable<IGattService> services)
@@ -432,6 +442,12 @@ namespace BrickController2.DeviceManagement
             {
                 return false;
             }
+        }
+
+        private async Task<float> AutoCalibrateServoAsync(int channel, CancellationToken token)
+        {
+            // TODO: implement
+            return 0F;
         }
 
         private byte CalculateServoSpeed(int currentAngle, int targetAngle)
