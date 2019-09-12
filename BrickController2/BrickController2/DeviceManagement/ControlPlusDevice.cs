@@ -355,8 +355,7 @@ namespace BrickController2.DeviceManagement
                     _servoSendBuffer[7] = (byte)((servoValue >> 8) & 0xff);
                     _servoSendBuffer[8] = (byte)((servoValue >> 16) & 0xff);
                     _servoSendBuffer[9] = (byte)((servoValue >> 24) & 0xff);
-                    // TODO: relative position may not be update at this time
-                    _servoSendBuffer[10] = CalculateServoSpeed(_relativePositions[channel], servoValue);
+                    _servoSendBuffer[10] = CalculateServoSpeed(maxServoAngle * _lastOutputValues[channel] / 100, servoValue);
 
                     if (_bleDevice?.WriteNoResponse(_characteristic, _servoSendBuffer) == true)
                     {
@@ -428,7 +427,16 @@ namespace BrickController2.DeviceManagement
                 await Task.Delay(500);
                 result = result && await Stop(channel, token);
 
-                // TODO: make sure the servo doesn't stress the creation
+                var diff = Math.Abs(NormalizeAngle(_absolutePositions[channel] - baseAngle));
+                if (diff > 5)
+                {
+                    // Can't reset to base angle, rebease to current position not to stress the plastic
+                    result = result && await Reset(channel, 0, token);
+                    result = result && await Stop(channel, token);
+                    result = result && await Turn(channel, 0, 40, token);
+                    await Task.Delay(50);
+                    result = result && await Stop(channel, token);
+                }
 
                 return result;
             }
@@ -451,12 +459,12 @@ namespace BrickController2.DeviceManagement
                 result = result && await Stop(channel, token);
                 await Task.Delay(500);
                 var absPositionAt0 = _absolutePositions[channel];
-                result = result && await Turn(channel, -160, CalculateServoSpeed(_relativePositions[channel], -160), token);
+                result = result && await Turn(channel, -160, 60, token);
                 await Task.Delay(600);
                 result = result && await Stop(channel, token);
                 await Task.Delay(500);
                 var absPositionAtMin160 = _absolutePositions[channel];
-                result = result && await Turn(channel, 160, CalculateServoSpeed(_relativePositions[channel], 160), token);
+                result = result && await Turn(channel, 160, 60, token);
                 await Task.Delay(600);
                 result = result && await Stop(channel, token);
                 await Task.Delay(500);
