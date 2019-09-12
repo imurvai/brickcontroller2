@@ -367,7 +367,7 @@
     <value>Select a device before saving.</value>
   </data>
   <data name="ServoAngle" xml:space="preserve">
-    <value>Servo angle</value>
+    <value>Servo range</value>
   </data>
   <data name="ShortChannel" xml:space="preserve">
     <value>Ch</value>

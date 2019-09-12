@@ -102,7 +102,7 @@ namespace BrickController2.DeviceManagement
 
         public override bool CanAutoCalibrateOutput => true;
 
-        public override async Task<float> AutoCalibrateOutputAsync(int channel, CancellationToken token)
+        public override async Task<(bool Success, float BaseServoAngle)> AutoCalibrateOutputAsync(int channel, CancellationToken token)
         {
             CheckChannel(channel);
 
@@ -355,6 +355,7 @@ namespace BrickController2.DeviceManagement
                     _servoSendBuffer[7] = (byte)((servoValue >> 8) & 0xff);
                     _servoSendBuffer[8] = (byte)((servoValue >> 16) & 0xff);
                     _servoSendBuffer[9] = (byte)((servoValue >> 24) & 0xff);
+                    // TODO: relative position may not be update at this time
                     _servoSendBuffer[10] = CalculateServoSpeed(_relativePositions[channel], servoValue);
 
                     if (_bleDevice?.WriteNoResponse(_characteristic, _servoSendBuffer) == true)
@@ -419,13 +420,15 @@ namespace BrickController2.DeviceManagement
 
                 result = result && await Reset(channel, 0, token);
                 result = result && await Stop(channel, token);
-                result = result && await Turn(channel, 0, 50, token);
+                result = result && await Turn(channel, 0, 40, token);
                 await Task.Delay(50);
                 result = result && await Stop(channel, token);
                 result = result && await Reset(channel, resetToAngle, token);
                 result = result && await Turn(channel, 0, 40, token);
                 await Task.Delay(500);
                 result = result && await Stop(channel, token);
+
+                // TODO: make sure the servo doesn't stress the creation
 
                 return result;
             }
@@ -435,7 +438,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private async Task<float> AutoCalibrateServoAsync(int channel, CancellationToken token)
+        private async Task<(bool, float)> AutoCalibrateServoAsync(int channel, CancellationToken token)
         {
             try
             {
@@ -469,7 +472,7 @@ namespace BrickController2.DeviceManagement
 
                 result = result && await Reset(channel, 0, token);
                 result = result && await Stop(channel, token);
-                result = result && await Turn(channel, 0, 50, token);
+                result = result && await Turn(channel, 0, 40, token);
                 await Task.Delay(50);
                 result = result && await Stop(channel, token);
                 result = result && await Reset(channel, resetToAngle, token);
@@ -477,11 +480,11 @@ namespace BrickController2.DeviceManagement
                 await Task.Delay(600);
                 result = result && await Stop(channel, token);
 
-                return baseAngle / 180F;
+                return (result, baseAngle / 180F);
             }
             catch
             {
-                return 0F;
+                return (false, 0F);
             }
         }
 

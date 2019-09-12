@@ -157,7 +157,11 @@ namespace BrickController2.UI.ViewModels
                 {
                     using (token.Register(() => _tokenSource.Cancel()))
                     {
-                        Action.ServoBaseAngle = (int)(await Device.AutoCalibrateOutputAsync(Action.Channel, _tokenSource.Token) * 180);
+                        var result = await Device.AutoCalibrateOutputAsync(Action.Channel, _tokenSource.Token);
+                        if (result.Success)
+                        {
+                            Action.ServoBaseAngle = (int)(result.BaseServoAngle * 180);
+                        }
                     }
                 },
                 Translate("Calibrating"),

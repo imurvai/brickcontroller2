@@ -808,7 +808,7 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Servo angle.
+        ///   Looks up a localized string similar to Servo range.
         /// </summary>
         internal static string ServoAngle {
             get {

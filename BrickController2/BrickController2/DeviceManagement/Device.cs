@@ -67,9 +67,9 @@ namespace BrickController2.DeviceManagement
         }
 
         public virtual bool CanAutoCalibrateOutput => false;
-        public virtual Task<float> AutoCalibrateOutputAsync(int channel, CancellationToken token)
+        public virtual Task<(bool Success, float BaseServoAngle)> AutoCalibrateOutputAsync(int channel, CancellationToken token)
         {
-            return Task.FromResult(0F);
+            return Task.FromResult((true, 0F));
         }
 
         public async Task RenameDeviceAsync(Device device, string newName)
