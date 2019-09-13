@@ -1,5 +1,4 @@
 ﻿using BrickController2.PlatformServices.BluetoothLE;
-using BrickController2.UI.Services.UIThread;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +22,8 @@ namespace BrickController2.DeviceManagement
 
         private IGattCharacteristic _characteristic;
 
-        public BuWizzDevice(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IUIThreadService uiThreadService, IBluetoothLEService bleService)
-            : base(name, address, deviceRepository, uiThreadService, bleService)
+        public BuWizzDevice(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
+            : base(name, address, deviceRepository, bleService)
         {
         }
 
@@ -49,12 +48,14 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
+        public override bool CanSetOutputLevel => true;
+
         public override void SetOutputLevel(int value)
         {
             _outputLevelValue = Math.Max(0, Math.Min(NumberOfOutputLevels - 1, value));
         }
 
-        protected override bool ProcessServices(IEnumerable<IGattService> services)
+        protected override bool ValidateServices(IEnumerable<IGattService> services)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
@@ -100,10 +101,10 @@ namespace BrickController2.DeviceManagement
                     }
                     else
                     {
-                        await Task.Delay(10);
+                        await Task.Delay(10, token);
                     }
                 }
-                catch (OperationCanceledException)
+                catch
                 {
                 }
             }

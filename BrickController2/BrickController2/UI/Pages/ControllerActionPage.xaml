@@ -42,7 +42,7 @@
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
 
                 <!-- Device channel selector -->
-                <controls:DeviceChannelSelector DeviceType="{Binding SelectedDevice.DeviceType}" SelectedChannel="{Binding Channel}"/>
+                <controls:DeviceChannelSelector DeviceType="{Binding SelectedDevice.DeviceType}" SelectedChannel="{Binding Action.Channel}"/>
                 
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
 
@@ -54,14 +54,13 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Grid.Column="0" Text="{extensions:Translate Invert}" VerticalOptions="Center"/>
-                    <Switch Grid.Column="1" IsToggled="{Binding IsInvert}" HorizontalOptions="Start"/>
+                    <Switch Grid.Column="1" IsToggled="{Binding Action.IsInvert}" HorizontalOptions="Start"/>
                 </Grid>
 
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
                 <Label Text="{extensions:Translate AdvancedSettings}" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
 
                 <StackLayout Orientation="Vertical" IsVisible="{Binding SelectedDevice.DeviceType, Converter={StaticResource DeviceTypeToChannelOutputVisible}}">
-                <!--StackLayout Orientation="Vertical" IsVisible="False"-->
                     <!-- Channel output type selector -->
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -70,15 +69,28 @@
                         </Grid.ColumnDefinitions>
 
                         <Label Grid.Column="0" Text="{extensions:Translate ChannelType}" VerticalOptions="Center"/>
-                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ChannelOutputType" SelectedItem="{Binding ChannelOutputType}"/>
-                    </Grid>
 
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <controls:EnumPicker Grid.Column="0" x:TypeArguments="creationManagement:ChannelOutputType" SelectedItem="{Binding Action.ChannelOutputType}"/>
+                            <controls:FloatingActionButton Grid.Column="1" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
+                                <controls:FloatingActionButton.Triggers>
+                                    <DataTrigger TargetType="controls:FloatingActionButton" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
+                                        <Setter Property="IsVisible" Value="True"/>
+                                    </DataTrigger>
+                                </controls:FloatingActionButton.Triggers>
+                            </controls:FloatingActionButton>
+                        </Grid>
+                    </Grid>
 
                     <!-- Max servo angle setting -->
                     <StackLayout Orientation="Vertical" IsVisible="False">
                         <StackLayout.Triggers>
-                            <DataTrigger TargetType="StackLayout" Binding="{Binding ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
+                            <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
                                 <Setter Property="IsVisible" Value="True"/>
                             </DataTrigger>
                         </StackLayout.Triggers>
@@ -90,14 +102,14 @@
 
                             <Label Grid.Column="0" Text="{extensions:Translate ServoAngle}"/>
                             <StackLayout Grid.Column="1" Orientation="Horizontal">
-                                <Slider Value="{Binding MaxServoAngle}" Minimum="0" Maximum="360" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                                <Label Text="{Binding MaxServoAngle}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                                <controls:ExtendedSlider Value="{Binding Action.MaxServoAngle}" Minimum="0" Maximum="180" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                <Label Text="{Binding Action.MaxServoAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                                 <Label Text="°"/>
                             </StackLayout>
                         </Grid>
-
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
                     </StackLayout>
+
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
                 </StackLayout>
 
                 <!-- Button type selector -->
@@ -114,7 +126,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Label Grid.Column="0" Text="{extensions:Translate ButtonType}" VerticalOptions="Center"/>
-                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding ButtonType}"/>
+                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding Action.ButtonType}"/>
                     </Grid>
 
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
@@ -134,7 +146,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Label Grid.Column="0" Text="{extensions:Translate AxisType}" VerticalOptions="Center"/>
-                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisType" SelectedItem="{Binding AxisType}"/>
+                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisType" SelectedItem="{Binding Action.AxisType}"/>
                     </Grid>
 
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
@@ -154,7 +166,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Label Grid.Column="0" Text="{extensions:Translate AxisCharacteristic}" VerticalOptions="Center"/>
-                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding AxisCharacteristic}"/>
+                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding Action.AxisCharacteristic}"/>
                     </Grid>
 
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
@@ -163,7 +175,7 @@
                 <!-- Max output percent -->
                 <StackLayout Orientation="Vertical" IsVisible="False">
                     <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.NormalMotor}">
+                        <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.NormalMotor}">
                             <Setter Property="IsVisible" Value="True"/>
                         </DataTrigger>
                     </StackLayout.Triggers>
@@ -175,8 +187,8 @@
 
                         <Label Grid.Column="0" Text="{extensions:Translate MaxOutput}"/>
                         <StackLayout Grid.Column="1" Orientation="Horizontal">
-                            <Slider Value="{Binding MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                            <Label Text="{Binding MaxOutputPercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                            <Slider Value="{Binding Action.MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                            <Label Text="{Binding Action.MaxOutputPercent}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                             <Label Text="%"/>
                         </StackLayout>
                     </Grid>
@@ -199,8 +211,8 @@
 
                         <Label Grid.Column="0" Text="{extensions:Translate AxisDeadZone}"/>
                         <StackLayout Grid.Column="1" Orientation="Horizontal">
-                            <Slider Value="{Binding AxisDeadZonePercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                            <Label Text="{Binding AxisDeadZonePercent}" WidthRequest="30" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                            <Slider Value="{Binding Action.AxisDeadZonePercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                            <Label Text="{Binding Action.AxisDeadZonePercent}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
                             <Label Text="%"/>
                         </StackLayout>
                     </Grid>

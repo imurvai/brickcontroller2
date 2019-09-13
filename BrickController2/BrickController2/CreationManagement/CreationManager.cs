@@ -142,7 +142,8 @@ namespace BrickController2.CreationManagement
             int maxOutputPercent,
             int axisDeadZonePercent,
             ChannelOutputType channelOutputType,
-            int maxServoAngle)
+            int maxServoAngle,
+            int servoBaseAngle)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -157,6 +158,7 @@ namespace BrickController2.CreationManagement
                     controllerAction.AxisDeadZonePercent = axisDeadZonePercent;
                     controllerAction.ChannelOutputType = channelOutputType;
                     controllerAction.MaxServoAngle = maxServoAngle;
+                    controllerAction.ServoBaseAngle = servoBaseAngle;
                     await _creationRepository.UpdateControllerActionAsync(controllerAction);
                 }
                 else
@@ -172,7 +174,8 @@ namespace BrickController2.CreationManagement
                         MaxOutputPercent = maxOutputPercent,
                         AxisDeadZonePercent = axisDeadZonePercent,
                         ChannelOutputType = channelOutputType,
-                        MaxServoAngle = maxServoAngle
+                        MaxServoAngle = maxServoAngle,
+                        ServoBaseAngle = servoBaseAngle
                     };
                     await _creationRepository.InsertControllerActionAsync(controllerEvent, controllerAction);
                 }
@@ -202,7 +205,8 @@ namespace BrickController2.CreationManagement
             int maxOutputPercent,
             int axisDeadZonePercent,
             ChannelOutputType channelOutputType,
-            int maxServoAngle)
+            int maxServoAngle,
+            int servoBaseAngle)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -224,6 +228,7 @@ namespace BrickController2.CreationManagement
                 controllerAction.AxisDeadZonePercent = axisDeadZonePercent;
                 controllerAction.ChannelOutputType = channelOutputType;
                 controllerAction.MaxServoAngle = maxServoAngle;
+                controllerAction.ServoBaseAngle = servoBaseAngle;
                 await _creationRepository.UpdateControllerActionAsync(controllerAction);
             }
         }

@@ -1,31 +1,30 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
 using BrickController2.UI.Commands;
-using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
+using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Translation;
 using BrickController2.UI.Services.UIThread;
-using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.ViewModels
 {
-    public class DevicePageViewModel : PageViewModelBase
+    public class ChannelSetupPageViewModel : PageViewModelBase
     {
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
         private readonly IUIThreadService _uIThreadService;
 
-        private CancellationTokenSource _connectionTokenSource;
+        private CancellationTokenSource _tokenSource;
         private Task _connectionTask;
         private bool _reconnect = false;
         private CancellationTokenSource _disappearingTokenSource;
         private bool _isDisappearing = false;
 
-        public DevicePageViewModel(
+        public ChannelSetupPageViewModel(
             INavigationService navigationService,
             ITranslationService translationService,
             IDeviceManager deviceManager,
@@ -39,22 +38,17 @@ namespace BrickController2.UI.ViewModels
             _uIThreadService = uIThreadService;
 
             Device = parameters.Get<Device>("device");
+            Action = parameters.Get<ControllerAction>("controlleraction");
 
-            RenameCommand = new SafeCommand(async () => await RenameDeviceAsync());
-            BuWizzOutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
-            BuWizz2OutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
+            AutoCalibrateServoCommand = new SafeCommand(async () => await AutoCalibrateServoAsync());
+            ResetServoBaseCommand = new SafeCommand(async () => await ResetServoBaseAngleAsync());
         }
 
         public Device Device { get; }
-        public bool IsBuWizzDevice => Device.DeviceType == DeviceType.BuWizz;
-        public bool IsBuWizz2Device => Device.DeviceType == DeviceType.BuWizz2;
+        public ControllerAction Action { get; }
 
-        public ICommand RenameCommand { get; }
-        public ICommand BuWizzOutputLevelChangedCommand { get; }
-        public ICommand BuWizz2OutputLevelChangedCommand { get; }
-
-        public int BuWizzOutputLevel { get; set; } = 1;
-        public int BuWizz2OutputLevel { get; set; } = 1;
+        public ICommand AutoCalibrateServoCommand { get; }
+        public ICommand ResetServoBaseCommand { get; }
 
         public override async void OnAppearing()
         {
@@ -85,90 +79,44 @@ namespace BrickController2.UI.ViewModels
             _isDisappearing = true;
             _disappearingTokenSource.Cancel();
 
-            if (_connectionTokenSource != null)
+            if (_tokenSource != null)
             {
-                _connectionTokenSource.Cancel();
+                _tokenSource.Cancel();
                 await _connectionTask;
             }
 
             await Device.DisconnectAsync();
         }
 
-        private async Task RenameDeviceAsync()
-        {
-            try
-            {
-                var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("Rename"),
-                    Translate("EnterDeviceName"),
-                    Device.Name,
-                    Translate("DeviceName"),
-                    Translate("Rename"),
-                    Translate("Cancel"),
-                    _disappearingTokenSource.Token);
-
-                if (result.IsOk)
-                {
-                    if (string.IsNullOrWhiteSpace(result.Result))
-                    {
-                        await _dialogService.ShowMessageBoxAsync(
-                            Translate("Warning"),
-                            Translate("DeviceNameCanNotBeEmpty"),
-                            Translate("Ok"),
-                            _disappearingTokenSource.Token);
-
-                        return;
-                    }
-
-                    await _dialogService.ShowProgressDialogAsync(
-                        false,
-                        async (progressDialog, token) => await Device.RenameDeviceAsync(Device, result.Result),
-                        Translate("Renaming"));
-                }
-            }
-            catch (OperationCanceledException)
-            {
-            }
-        }
-
         private async Task ConnectAsync()
         {
-            _connectionTokenSource = new CancellationTokenSource();
+            _tokenSource = new CancellationTokenSource();
             DeviceConnectionResult connectionResult = DeviceConnectionResult.Ok;
 
             await _dialogService.ShowProgressDialogAsync(
                 false,
                 async (progressDialog, token) =>
                 {
-                    using (token.Register(() => _connectionTokenSource.Cancel()))
+                    using (token.Register(() => _tokenSource.Cancel()))
                     {
                         connectionResult = await Device.ConnectAsync(
                             _reconnect,
                             OnDeviceDisconnected,
                             Enumerable.Empty<ChannelConfiguration>(),
-                            true,
-                            _connectionTokenSource.Token);
+                            false,
+                            _tokenSource.Token);
                     }
                 },
                 Translate("Connecting"),
                 null,
                 Translate("Cancel"));
 
-            _connectionTokenSource.Dispose();
-            _connectionTokenSource = null;
+            _tokenSource.Dispose();
+            _tokenSource = null;
 
             if (Device.DeviceState == DeviceState.Connected)
             {
                 _reconnect = true;
-
-                if (Device.DeviceType == DeviceType.BuWizz)
-                {
-                    SetBuWizzOutputLevel(BuWizzOutputLevel);
-                }
-                else if (Device.DeviceType == DeviceType.BuWizz2)
-                {
-                    SetBuWizzOutputLevel(BuWizz2OutputLevel);
-                }
             }
             else
             {
@@ -199,9 +147,44 @@ namespace BrickController2.UI.ViewModels
             });
         }
 
-        private void SetBuWizzOutputLevel(int level)
+        private async Task AutoCalibrateServoAsync()
         {
-            Device.SetOutputLevel(level);
+            _tokenSource = new CancellationTokenSource();
+
+            await _dialogService.ShowProgressDialogAsync(
+                false,
+                async (progressDialog, token) =>
+                {
+                    using (token.Register(() => _tokenSource.Cancel()))
+                    {
+                        var result = await Device.AutoCalibrateOutputAsync(Action.Channel, _tokenSource.Token);
+                        if (result.Success)
+                        {
+                            Action.ServoBaseAngle = (int)(result.BaseServoAngle * 180);
+                        }
+                    }
+                },
+                Translate("Calibrating"),
+                null,
+                null);
+        }
+
+        private async Task ResetServoBaseAngleAsync()
+        {
+            _tokenSource = new CancellationTokenSource();
+
+            await _dialogService.ShowProgressDialogAsync(
+                false,
+                async (progressDialog, token) =>
+                {
+                    using (token.Register(() => _tokenSource.Cancel()))
+                    {
+                        await Device.ResetOutputAsync(Action.Channel, Action.ServoBaseAngle / 180F, _tokenSource.Token);
+                    }
+                },
+                Translate("Reseting"),
+                null,
+                null);
         }
     }
 }

@@ -150,11 +150,17 @@
   <data name="AreYouSureToDeleteThisControllerAcrion" xml:space="preserve">
     <value>Are you sure to delete this controller action?</value>
   </data>
+  <data name="AutoCalibrate" xml:space="preserve">
+    <value>Auto calibrate</value>
+  </data>
   <data name="AxisCharacteristic" xml:space="preserve">
     <value>Axis characteristic</value>
   </data>
   <data name="AxisDeadZone" xml:space="preserve">
     <value>Axis dead zone</value>
+  </data>
+  <data name="BaseAngle" xml:space="preserve">
+    <value>Base angle</value>
   </data>
   <data name="Blue" xml:space="preserve">
     <value>Blue</value>
@@ -174,8 +180,14 @@
   <data name="BuWizzOutputLevel" xml:space="preserve">
     <value>BuWizz output level</value>
   </data>
+  <data name="Calibrating" xml:space="preserve">
+    <value>Calibrating...</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="ChannelSetup" xml:space="preserve">
+    <value>Channel setup</value>
   </data>
   <data name="ChannelType" xml:space="preserve">
     <value>Channel type</value>
@@ -330,6 +342,12 @@
   <data name="Renaming" xml:space="preserve">
     <value>Renaming...</value>
   </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Reseting" xml:space="preserve">
+    <value>Reseting...</value>
+  </data>
   <data name="Saving" xml:space="preserve">
     <value>Saving...</value>
   </data>
@@ -349,7 +367,7 @@
     <value>Select a device before saving.</value>
   </data>
   <data name="ServoAngle" xml:space="preserve">
-    <value>Servo angle</value>
+    <value>Servo range</value>
   </data>
   <data name="ShortChannel" xml:space="preserve">
     <value>Ch</value>

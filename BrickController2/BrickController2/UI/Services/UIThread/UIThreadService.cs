@@ -30,11 +30,11 @@ namespace BrickController2.UI.Services.UIThread
                     try
                     {
                         action.Invoke();
-                        tcs.SetResult(true);
+                        tcs.TrySetResult(true);
                     }
                     catch (Exception e)
                     {
-                        tcs.SetException(e);
+                        tcs.TrySetException(e);
                     }
                 });
 

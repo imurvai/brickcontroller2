@@ -79,19 +79,24 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             try
             {
                 var leScanner = new BluetoothLEOldScanner(scanCallback);
+#pragma warning disable CS0618 // Type or member is obsolete
                 if (!_bluetoothAdapter.StartLeScan(leScanner))
+#pragma warning restore CS0618 // Type or member is obsolete
                 {
                     return false;
                 }
 
                 var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-                token.Register(() =>
+                using (token.Register(() =>
                 {
+#pragma warning disable CS0618 // Type or member is obsolete
                     _bluetoothAdapter.StopLeScan(leScanner);
-                    tcs.SetResult(true);
-                });
-
-                return await tcs.Task;
+#pragma warning restore CS0618 // Type or member is obsolete
+                    tcs.TrySetResult(true);
+                }))
+                {
+                    return await tcs.Task;
+                }
             }
             catch (Exception)
             {
@@ -111,13 +116,14 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                 _bluetoothAdapter.BluetoothLeScanner.StartScan(null, settingsBuilder.Build(), leScanner);
 
                 var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-                token.Register(() =>
+                using (token.Register(() =>
                 {
                     _bluetoothAdapter.BluetoothLeScanner.StopScan(leScanner);
-                    tcs.SetResult(true);
-                });
-
-                return await tcs.Task;
+                    tcs.TrySetResult(true);
+                }))
+                {
+                    return await tcs.Task;
+                }
             }
             catch (Exception)
             {

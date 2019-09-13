@@ -24,15 +24,6 @@ namespace BrickController2.UI.ViewModels
         private CancellationTokenSource _disappearingTokenSource;
 
         private Device _selectedDevice;
-        private int _channel;
-        private ChannelOutputType _channelOutputType;
-        private bool _isInvert;
-        private ControllerButtonType _buttonType;
-        private ControllerAxisType _axisType;
-        private ControllerAxisCharacteristic _axisCharacteristic;
-        private int _maxOutputPercent;
-        private int _axisDeadZonePercent;
-        private int _maxServoAngle;
 
         public ControllerActionPageViewModel(
             INavigationService navigationService,
@@ -56,34 +47,37 @@ namespace BrickController2.UI.ViewModels
             if (ControllerAction != null && device != null)
             {
                 SelectedDevice = device;
-                Channel = ControllerAction.Channel;
-                IsInvert = ControllerAction.IsInvert;
-                ChannelOutputType = ControllerAction.ChannelOutputType;
-                MaxServoAngle = ControllerAction.MaxServoAngle;
-                ButtonType = ControllerAction.ButtonType;
-                AxisType = ControllerAction.AxisType;
-                AxisCharacteristic = ControllerAction.AxisCharacteristic;
-                MaxOutputPercent = ControllerAction.MaxOutputPercent;
-                AxisDeadZonePercent = ControllerAction.AxisDeadZonePercent;
+                Action.Channel = ControllerAction.Channel;
+                Action.IsInvert = ControllerAction.IsInvert;
+                Action.ChannelOutputType = ControllerAction.ChannelOutputType;
+                Action.MaxServoAngle = ControllerAction.MaxServoAngle;
+                Action.ButtonType = ControllerAction.ButtonType;
+                Action.AxisType = ControllerAction.AxisType;
+                Action.AxisCharacteristic = ControllerAction.AxisCharacteristic;
+                Action.MaxOutputPercent = ControllerAction.MaxOutputPercent;
+                Action.AxisDeadZonePercent = ControllerAction.AxisDeadZonePercent;
+                Action.ServoBaseAngle = ControllerAction.ServoBaseAngle;
             }
             else
             {
                 var lastSelectedDeviceId = _preferences.Get<string>("LastSelectedDeviceId", null, "com.scn.BrickController2.ControllerActionPage");
                 SelectedDevice = _deviceManager.GetDeviceById(lastSelectedDeviceId) ?? _deviceManager.Devices.FirstOrDefault();
-                Channel = 0;
-                IsInvert = false;
-                ChannelOutputType = ChannelOutputType.NormalMotor;
-                MaxServoAngle = 90;
-                ButtonType = ControllerButtonType.Normal;
-                AxisType = ControllerAxisType.Normal;
-                AxisCharacteristic = ControllerAxisCharacteristic.Linear;
-                MaxOutputPercent = 100;
-                AxisDeadZonePercent = 0;
+                Action.Channel = 0;
+                Action.IsInvert = false;
+                Action.ChannelOutputType = ChannelOutputType.NormalMotor;
+                Action.MaxServoAngle = 90;
+                Action.ButtonType = ControllerButtonType.Normal;
+                Action.AxisType = ControllerAxisType.Normal;
+                Action.AxisCharacteristic = ControllerAxisCharacteristic.Linear;
+                Action.MaxOutputPercent = 100;
+                Action.AxisDeadZonePercent = 0;
+                Action.ServoBaseAngle = 0;
             }
 
             SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null);
             DeleteControllerActionCommand = new SafeCommand(async () => await DeleteControllerActionAsync());
             OpenDeviceDetailsCommand = new SafeCommand(async () => await OpenDeviceDetailsAsync(), () => SelectedDevice != null);
+            OpenChannelSetupCommand = new SafeCommand(async () => await OpenChannelSetupAsync(), () => SelectedDevice != null);
         }
 
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
@@ -97,73 +91,23 @@ namespace BrickController2.UI.ViewModels
             set
             {
                 _selectedDevice = value;
+                Action.DeviceId = value.Id;
 
-                if (_selectedDevice.NumberOfChannels <= Channel)
+                if (_selectedDevice.NumberOfChannels <= Action.Channel)
                 {
-                    Channel = 0;
+                    Action.Channel = 0;
                 }
 
                 RaisePropertyChanged();
             }
         }
 
-        public int Channel
-        {
-            get { return _channel; }
-            set { _channel = value; RaisePropertyChanged(); }
-        }
-
-        public bool IsInvert
-        {
-            get { return _isInvert; }
-            set { _isInvert = value; RaisePropertyChanged(); }
-        }
-
-        public int MaxOutputPercent
-        {
-            get { return _maxOutputPercent; }
-            set { _maxOutputPercent = value; RaisePropertyChanged(); }
-        }
-
-        public ChannelOutputType ChannelOutputType
-        {
-            get { return _channelOutputType; }
-            set { _channelOutputType = value; RaisePropertyChanged(); }
-        }
-
-        public int MaxServoAngle
-        {
-            get { return _maxServoAngle; }
-            set { _maxServoAngle = value; RaisePropertyChanged(); }
-        }
-
-        public ControllerButtonType ButtonType
-        {
-            get { return _buttonType; }
-            set { _buttonType = value; RaisePropertyChanged(); }
-        }
-
-        public ControllerAxisType AxisType
-        {
-            get { return _axisType; }
-            set { _axisType = value; RaisePropertyChanged(); }
-        }
-
-        public ControllerAxisCharacteristic AxisCharacteristic
-        {
-            get { return _axisCharacteristic; }
-            set { _axisCharacteristic = value; RaisePropertyChanged(); }
-        }
-
-        public int AxisDeadZonePercent
-        {
-            get { return _axisDeadZonePercent; }
-            set { _axisDeadZonePercent = value; RaisePropertyChanged(); }
-        }
+        public ControllerAction Action { get; } = new ControllerAction();
 
         public ICommand SaveControllerActionCommand { get; }
         public ICommand DeleteControllerActionCommand { get; }
         public ICommand OpenDeviceDetailsCommand { get; }
+        public ICommand OpenChannelSetupCommand { get; }
 
         public override void OnAppearing()
         {
@@ -198,31 +142,33 @@ namespace BrickController2.UI.ViewModels
                     {
                         await _creationManager.UpdateControllerActionAsync(
                             ControllerAction,
-                            SelectedDevice.Id,
-                            Channel,
-                            IsInvert,
-                            ButtonType,
-                            AxisType,
-                            AxisCharacteristic,
-                            MaxOutputPercent,
-                            AxisDeadZonePercent,
-                            ChannelOutputType,
-                            MaxServoAngle);
+                            Action.DeviceId,
+                            Action.Channel,
+                            Action.IsInvert,
+                            Action.ButtonType,
+                            Action.AxisType,
+                            Action.AxisCharacteristic,
+                            Action.MaxOutputPercent,
+                            Action.AxisDeadZonePercent,
+                            Action.ChannelOutputType,
+                            Action.MaxServoAngle,
+                            Action.ServoBaseAngle);
                     }
                     else
                     {
                         await _creationManager.AddOrUpdateControllerActionAsync(
                             ControllerEvent,
-                            SelectedDevice.Id,
-                            Channel,
-                            IsInvert,
-                            ButtonType,
-                            AxisType,
-                            AxisCharacteristic,
-                            MaxOutputPercent,
-                            AxisDeadZonePercent,
-                            ChannelOutputType,
-                            MaxServoAngle);
+                            Action.DeviceId,
+                            Action.Channel,
+                            Action.IsInvert,
+                            Action.ButtonType,
+                            Action.AxisType,
+                            Action.AxisCharacteristic,
+                            Action.MaxOutputPercent,
+                            Action.AxisDeadZonePercent,
+                            Action.ChannelOutputType,
+                            Action.MaxServoAngle,
+                            Action.ServoBaseAngle);
                     }
                 },
                 Translate("Saving"));
@@ -265,6 +211,16 @@ namespace BrickController2.UI.ViewModels
             }
 
             await NavigationService.NavigateToAsync<DevicePageViewModel>(new NavigationParameters(("device", SelectedDevice)));
+        }
+
+        private async Task OpenChannelSetupAsync()
+        {
+            if (SelectedDevice == null)
+            {
+                return;
+            }
+
+            await NavigationService.NavigateToAsync<ChannelSetupPageViewModel>(new NavigationParameters(("device", SelectedDevice), ("controlleraction", Action)));
         }
     }
 }

@@ -19,7 +19,7 @@ namespace BrickController2.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class TranslationResources {
@@ -160,6 +160,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto calibrate.
+        /// </summary>
+        internal static string AutoCalibrate {
+            get {
+                return ResourceManager.GetString("AutoCalibrate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Axis characteristic.
         /// </summary>
         internal static string AxisCharacteristic {
@@ -174,6 +183,15 @@ namespace BrickController2.Resources {
         internal static string AxisDeadZone {
             get {
                 return ResourceManager.GetString("AxisDeadZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Base angle.
+        /// </summary>
+        internal static string BaseAngle {
+            get {
+                return ResourceManager.GetString("BaseAngle", resourceCulture);
             }
         }
         
@@ -232,11 +250,29 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Calibrating....
+        /// </summary>
+        internal static string Calibrating {
+            get {
+                return ResourceManager.GetString("Calibrating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel setup.
+        /// </summary>
+        internal static string ChannelSetup {
+            get {
+                return ResourceManager.GetString("ChannelSetup", resourceCulture);
             }
         }
         
@@ -700,6 +736,24 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        internal static string Reset {
+            get {
+                return ResourceManager.GetString("Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reseting....
+        /// </summary>
+        internal static string Reseting {
+            get {
+                return ResourceManager.GetString("Reseting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Saving....
         /// </summary>
         internal static string Saving {
@@ -754,7 +808,7 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Servo angle.
+        ///   Looks up a localized string similar to Servo range.
         /// </summary>
         internal static string ServoAngle {
             get {

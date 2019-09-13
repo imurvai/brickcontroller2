@@ -1,4 +1,5 @@
-﻿using BrickController2.UI.Services.UIThread;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,8 +9,8 @@ namespace BrickController2.DeviceManagement
     {
         private readonly IInfraredDeviceManager _infraredDeviceManager;
 
-        public InfraredDevice(string name, string address, byte[] deviceData, IInfraredDeviceManager infraredDeviceManager, IUIThreadService uiThreadService, IDeviceRepository deviceRepository)
-            : base(name, address, deviceRepository, uiThreadService)
+        public InfraredDevice(string name, string address, byte[] deviceData, IInfraredDeviceManager infraredDeviceManager, IDeviceRepository deviceRepository)
+            : base(name, address, deviceRepository)
         {
             _infraredDeviceManager = infraredDeviceManager;
         }
@@ -17,23 +18,28 @@ namespace BrickController2.DeviceManagement
         public override DeviceType DeviceType => DeviceType.Infrared;
         public override int NumberOfChannels => 2;
 
-        public override async Task<DeviceConnectionResult> ConnectAsync(bool reconnect, CancellationToken token)
+        public override async Task<DeviceConnectionResult> ConnectAsync(
+            bool reconnect,
+            Action<Device> onDeviceDisconnected,
+            IEnumerable<ChannelConfiguration> channelConfigurations,
+            bool startOutputProcessing,
+            CancellationToken token)
         {
-            await SetStateAsync(DeviceState.Connecting, false);
+            DeviceState = DeviceState.Connecting;
 
             var result = await _infraredDeviceManager.ConnectDevice(this);
 
-            await SetStateAsync(result == DeviceConnectionResult.Ok ? DeviceState.Connected : DeviceState.Disconnected, result == DeviceConnectionResult.Error);
+            DeviceState = result == DeviceConnectionResult.Ok ? DeviceState.Connected : DeviceState.Disconnected;
             return result;
         }
 
         public override async Task DisconnectAsync()
         {
-            await SetStateAsync(DeviceState.Disconnecting, false);
+            DeviceState = DeviceState.Disconnecting;
 
             await _infraredDeviceManager.DisconnectDevice(this);
 
-            await SetStateAsync(DeviceState.Disconnected, false);
+            DeviceState = DeviceState.Disconnected;
         }
 
         public override void SetOutput(int channel, float value)

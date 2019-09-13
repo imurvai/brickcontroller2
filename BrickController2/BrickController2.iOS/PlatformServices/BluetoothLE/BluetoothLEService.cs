@@ -13,7 +13,6 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
     public class BluetoothLEService : CBCentralManagerDelegate, IBluetoothLEService
     {
         private readonly CBCentralManager _centralManager;
-        private readonly CBPeripheralManager _peripheralManager;
         private readonly IDictionary<CBPeripheral, BluetoothLEDevice> _peripheralMap = new Dictionary<CBPeripheral, BluetoothLEDevice>();
         private readonly object _lock = new object();
 
@@ -22,35 +21,35 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         public BluetoothLEService()
         {
             _centralManager = new CBCentralManager(this, DispatchQueue.CurrentQueue);
-            _peripheralManager = new CBPeripheralManager();
         }
 
         public bool IsBluetoothLESupported => true;
         public bool IsBluetoothOn => _centralManager.State == CBCentralManagerState.PoweredOn;
 
-        public Task<bool> ScanDevicesAsync(Action<ScanResult> scanCallback, CancellationToken token)
+        public async Task<bool> ScanDevicesAsync(Action<ScanResult> scanCallback, CancellationToken token)
         {
             if (!IsBluetoothLESupported || !IsBluetoothOn || _centralManager.IsScanning)
             {
-                return Task.FromResult(false);
+                return false;
             }
-
-            _scanCallback = scanCallback;
-            _centralManager.ScanForPeripherals(null, new PeripheralScanningOptions { AllowDuplicatesKey = true });
 
             var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            token.Register(() =>
+            using (token.Register(() =>
             {
-                lock(_lock)
+                lock (_lock)
                 {
                     _centralManager.StopScan();
                     _scanCallback = null;
-                    tcs.SetResult(true);
+                    tcs.TrySetResult(true);
                 }
-            });
+            }))
+            {
+                _scanCallback = scanCallback;
+                _centralManager.ScanForPeripherals(null, new PeripheralScanningOptions { AllowDuplicatesKey = true });
 
-            return tcs.Task;
+                return await tcs.Task;
+            }
         }
 
         public IBluetoothLEDevice GetKnownDevice(string address)

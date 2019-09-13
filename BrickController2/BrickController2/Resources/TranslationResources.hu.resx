@@ -349,7 +349,7 @@
     <value>Válassz egy eszközt mentés előtt!</value>
   </data>
   <data name="ServoAngle" xml:space="preserve">
-    <value>Szervó elfordulás</value>
+    <value>Szervó tart.</value>
   </data>
   <data name="ShortChannel" xml:space="preserve">
     <value>Cs</value>
@@ -368,5 +368,20 @@
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Igen</value>
+  </data>
+  <data name="AutoCalibrate" xml:space="preserve">
+    <value>Auto kalibrálás</value>
+  </data>
+  <data name="Calibrating" xml:space="preserve">
+    <value>Kalibrálás...</value>
+  </data>
+  <data name="ChannelSetup" xml:space="preserve">
+    <value>Csatorna beállítás</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Átállít</value>
+  </data>
+  <data name="Reseting" xml:space="preserve">
+    <value>Átállítás...</value>
   </data>
 </root>
