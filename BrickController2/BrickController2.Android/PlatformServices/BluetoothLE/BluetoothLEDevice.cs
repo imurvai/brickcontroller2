@@ -227,8 +227,6 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
         public override void OnConnectionStateChange(BluetoothGatt gatt, [GeneratedEnum] GattStatus status, [GeneratedEnum] ProfileState newState)
         {
-            System.Diagnostics.Debug.WriteLine($"OnConnectionStateChanged - status: {status}, newState: {newState}");
-
             switch (newState)
             {
                 case ProfileState.Connecting:
@@ -301,8 +299,6 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
         public override void OnServicesDiscovered(BluetoothGatt gatt, [GeneratedEnum] GattStatus status)
         {
-            System.Diagnostics.Debug.WriteLine($"OnServiceDiscovered - status: {status}");
-
             lock (_lock)
             {
                 if (status == GattStatus.Success && State == BluetoothLEDeviceState.Discovering)
