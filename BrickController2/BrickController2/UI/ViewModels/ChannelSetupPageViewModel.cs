@@ -24,6 +24,8 @@ namespace BrickController2.UI.ViewModels
         private CancellationTokenSource _disappearingTokenSource;
         private bool _isDisappearing = false;
 
+        private int _servoBaseAngle;
+
         public ChannelSetupPageViewModel(
             INavigationService navigationService,
             ITranslationService translationService,
@@ -39,7 +41,9 @@ namespace BrickController2.UI.ViewModels
 
             Device = parameters.Get<Device>("device");
             Action = parameters.Get<ControllerAction>("controlleraction");
+            ServoBaseAngle = Action.ServoBaseAngle;
 
+            SaveChannelSettingsCommand = new SafeCommand(async () => await SaveChannelSettingsAsync());
             AutoCalibrateServoCommand = new SafeCommand(async () => await AutoCalibrateServoAsync());
             ResetServoBaseCommand = new SafeCommand(async () => await ResetServoBaseAngleAsync());
         }
@@ -47,6 +51,13 @@ namespace BrickController2.UI.ViewModels
         public Device Device { get; }
         public ControllerAction Action { get; }
 
+        public int ServoBaseAngle
+        {
+            get { return _servoBaseAngle; }
+            set { _servoBaseAngle = value; RaisePropertyChanged(); }
+        }
+
+        public ICommand SaveChannelSettingsCommand { get; }
         public ICommand AutoCalibrateServoCommand { get; }
         public ICommand ResetServoBaseCommand { get; }
 
@@ -147,6 +158,12 @@ namespace BrickController2.UI.ViewModels
             });
         }
 
+        private async Task SaveChannelSettingsAsync()
+        {
+            Action.ServoBaseAngle = ServoBaseAngle;
+            await NavigationService.NavigateModalBackAsync();
+        }
+
         private async Task AutoCalibrateServoAsync()
         {
             _tokenSource = new CancellationTokenSource();
@@ -160,7 +177,7 @@ namespace BrickController2.UI.ViewModels
                         var result = await Device.AutoCalibrateOutputAsync(Action.Channel, _tokenSource.Token);
                         if (result.Success)
                         {
-                            Action.ServoBaseAngle = (int)(result.BaseServoAngle * 180);
+                            ServoBaseAngle = (int)(result.BaseServoAngle * 180);
                         }
                     }
                 },
@@ -179,7 +196,7 @@ namespace BrickController2.UI.ViewModels
                 {
                     using (token.Register(() => _tokenSource.Cancel()))
                     {
-                        await Device.ResetOutputAsync(Action.Channel, Action.ServoBaseAngle / 180F, _tokenSource.Token);
+                        await Device.ResetOutputAsync(Action.Channel, ServoBaseAngle / 180F, _tokenSource.Token);
                     }
                 },
                 Translate("Reseting"),
