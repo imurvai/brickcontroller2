@@ -113,8 +113,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignProvision>BrickController2 iOS dist profile</CodesignProvision>
-    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignKey>iPhone Distribution: Istvan Murvai (D672JMLT87)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CopyAppBundle>true</CopyAppBundle>
     <OptimizePNGs>true</OptimizePNGs>
@@ -122,6 +121,7 @@
     <IpaPackageName>com.scn.brickcontroller2</IpaPackageName>
     <IpaIncludeArtwork>true</IpaIncludeArtwork>
     <LangVersion>latest</LangVersion>
+    <CodesignProvision>BrickController2 iOS Distribution Profile</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <AppExtensionDebugBundleId />
