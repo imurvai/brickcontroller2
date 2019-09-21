@@ -107,15 +107,14 @@ namespace BrickController2.DeviceManagement
             return await AutoCalibrateServoAsync(channel, token);
         }
 
-        protected override bool ValidateServices(IEnumerable<IGattService> services)
+        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
 
             if (_characteristic != null)
             {
-                _bleDevice.EnableNotification(_characteristic);
-                return true;
+                return await _bleDevice.EnableNotificationAsync(_characteristic, token);
             }
 
             return false;
@@ -257,7 +256,7 @@ namespace BrickController2.DeviceManagement
                     _sendBuffer[3] = (byte)channel;
                     _sendBuffer[7] = (byte)(value < 0 ? (255 + value) : value);
 
-                    if (_bleDevice?.WriteNoResponse(_characteristic, _sendBuffer) == true)
+                    if (await _bleDevice?.WriteNoResponseAsync(_characteristic, _sendBuffer, token))
                     {
                         _lastOutputValues[channel] = value;
 
@@ -288,7 +287,7 @@ namespace BrickController2.DeviceManagement
                     _virtualPortSendBuffer[6] = (byte)(value1 < 0 ? (255 + value1) : value1);
                     _virtualPortSendBuffer[7] = (byte)(value2 < 0 ? (255 + value2) : value2);
 
-                    if (_bleDevice?.WriteNoResponse(_characteristic, _virtualPortSendBuffer) == true)
+                    if (await _bleDevice?.WriteNoResponseAsync(_characteristic, _virtualPortSendBuffer, token))
                     {
                         _lastOutputValues[channel1] = value1;
                         _lastOutputValues[channel2] = value2;
@@ -324,7 +323,7 @@ namespace BrickController2.DeviceManagement
                     _servoSendBuffer[9] = (byte)((servoValue >> 24) & 0xff);
                     _servoSendBuffer[10] = CalculateServoSpeed(maxServoAngle * _lastOutputValues[channel] / 100, servoValue);
 
-                    if (_bleDevice?.WriteNoResponse(_characteristic, _servoSendBuffer) == true)
+                    if (await _bleDevice?.WriteNoResponseAsync(_characteristic, _servoSendBuffer, token))
                     {
                         _lastOutputValues[channel] = value;
 
@@ -489,10 +488,9 @@ namespace BrickController2.DeviceManagement
 
         private byte CalculateServoSpeed(int currentAngle, int targetAngle)
         {
-            return 60;
-            //var diff = Math.Abs(currentAngle - targetAngle);
-            //var result = (byte)Math.Max(40, Math.Min(100, diff * 2));
-            //return result;
+            var diff = Math.Abs(currentAngle - targetAngle);
+            var result = (byte)Math.Max(60, Math.Min(100, diff * 2));
+            return result;
         }
 
         private Task<bool> Stop(int channel, CancellationToken token)

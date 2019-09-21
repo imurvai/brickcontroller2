@@ -84,13 +84,13 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             }
         }
 
-        public bool EnableNotification(IGattCharacteristic characteristic)
+        public Task<bool> EnableNotificationAsync(IGattCharacteristic characteristic, CancellationToken token)
         {
             lock(_lock)
             {
                 var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
                 _peripheral.SetNotifyValue(true, nativeCharacteristic);
-                return true;
+                return Task.FromResult(true);
             }
         }
 
@@ -129,20 +129,20 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             }
         }
 
-        public bool WriteNoResponse(IGattCharacteristic characteristic, byte[] data)
+        public Task<bool> WriteNoResponseAsync(IGattCharacteristic characteristic, byte[] data, CancellationToken token)
         {
             lock (_lock)
             {
                 if (State != BluetoothLEDeviceState.Connected)
                 {
-                    return false;
+                    return Task.FromResult(false);
                 }
 
                 var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
                 var nativeData = NSData.FromArray(data);
 
                 _peripheral.WriteValue(nativeData, nativeCharacteristic, CBCharacteristicWriteType.WithoutResponse);
-                return true;
+                return Task.FromResult(true);
             }
         }
 

@@ -45,12 +45,12 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
-        protected override bool ValidateServices(IEnumerable<IGattService> services)
+        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_REMOTE_CONTROL);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_QUICK_DRIVE);
 
-            return _characteristic != null;
+            return Task.FromResult(_characteristic != null);
         }
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)

@@ -17,9 +17,9 @@ namespace BrickController2.PlatformServices.BluetoothLE
             CancellationToken token);
         void Disconnect();
 
-        bool EnableNotification(IGattCharacteristic characteristic);
+        Task<bool> EnableNotificationAsync(IGattCharacteristic characteristic, CancellationToken token);
 
         Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data, CancellationToken token);
-        bool WriteNoResponse(IGattCharacteristic characteristic, byte[] data);
+        Task<bool> WriteNoResponseAsync(IGattCharacteristic characteristic, byte[] data, CancellationToken token);
     }
 }

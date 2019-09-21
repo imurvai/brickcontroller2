@@ -55,12 +55,12 @@ namespace BrickController2.DeviceManagement
             _outputLevelValue = Math.Max(0, Math.Min(NumberOfOutputLevels - 1, value));
         }
 
-        protected override bool ValidateServices(IEnumerable<IGattService> services)
+        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
 
-            return _characteristic != null;
+            return Task.FromResult(_characteristic != null);
         }
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
@@ -120,7 +120,7 @@ namespace BrickController2.DeviceManagement
                 _sendBuffer[3] = (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0));
                 _sendBuffer[4] = (byte)(_outputLevelValue * 0x20);
 
-                _bleDevice?.WriteNoResponse(_characteristic, _sendBuffer);
+                await _bleDevice?.WriteNoResponseAsync(_characteristic, _sendBuffer, token);
                 await Task.Delay(60, token);
                 return true;
             }

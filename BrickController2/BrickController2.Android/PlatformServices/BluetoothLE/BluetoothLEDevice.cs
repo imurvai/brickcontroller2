@@ -125,33 +125,34 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             }
         }
 
-        public bool EnableNotification(IGattCharacteristic characteristic)
+        public Task<bool> EnableNotificationAsync(IGattCharacteristic characteristic, CancellationToken token)
         {
             lock (_lock)
             {
                 if (_bluetoothGatt == null || State != BluetoothLEDeviceState.Connected)
                 {
-                    return false;
+                    return Task.FromResult(false);
                 }
 
                 var nativeCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
                 if (!_bluetoothGatt.SetCharacteristicNotification(nativeCharacteristic, true))
                 {
-                    return false;
+                    return Task.FromResult(false);
                 }
 
                 var descriptor = nativeCharacteristic.GetDescriptor(ClientCharacteristicConfigurationUUID);
                 if (descriptor == null)
                 {
-                    return false;
+                    return Task.FromResult(false);
                 }
 
                 if (!descriptor.SetValue(BluetoothGattDescriptor.EnableNotificationValue.ToArray()))
                 {
-                    return false;
+                    return Task.FromResult(false);
                 }
 
-                return _bluetoothGatt.WriteDescriptor(descriptor);
+                var result = _bluetoothGatt.WriteDescriptor(descriptor);
+                return Task.FromResult(result);
             }
         }
 
@@ -199,13 +200,13 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             }
         }
 
-        public bool WriteNoResponse(IGattCharacteristic characteristic, byte[] data)
+        public Task<bool> WriteNoResponseAsync(IGattCharacteristic characteristic, byte[] data, CancellationToken token)
         {
             lock (_lock)
             {
                 if (_bluetoothGatt == null || State != BluetoothLEDeviceState.Connected)
                 {
-                    return false;
+                    return Task.FromResult(false);
                 }
 
                 var nativeCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
@@ -213,15 +214,11 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
                 if (!nativeCharacteristic.SetValue(data))
                 {
-                    return false;
+                    return Task.FromResult(false);
                 }
 
-                if (!_bluetoothGatt.WriteCharacteristic(nativeCharacteristic))
-                {
-                    return false;
-                }
-
-                return true;
+                var result = _bluetoothGatt.WriteCharacteristic(nativeCharacteristic);
+                return Task.FromResult(result);
             }
         }
 
