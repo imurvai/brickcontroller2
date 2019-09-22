@@ -127,8 +127,6 @@ namespace BrickController2.DeviceManagement
                 return;
             }
 
-            var text = BitConverter.ToString(data);
-
             var messageCode = data[2];
             var portId = data[3];
 
