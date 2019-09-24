@@ -487,7 +487,7 @@ namespace BrickController2.DeviceManagement
         private byte CalculateServoSpeed(int currentAngle, int targetAngle)
         {
             var diff = Math.Abs(currentAngle - targetAngle);
-            var result = (byte)Math.Max(60, Math.Min(100, diff * 2));
+            var result = (byte)Math.Max(40, Math.Min(100, diff * 3));
             return result;
         }
 
