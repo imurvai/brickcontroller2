@@ -66,41 +66,26 @@ namespace BrickController2.DeviceManagement
                 return (DeviceType.Unknown, null);
             }
 
-            var data1 = manufacturerData[0];
-            var data2 = manufacturerData[1];
+            var manufacturerDataString = BitConverter.ToString(manufacturerData).ToLower();
+            var manufacturerId = manufacturerDataString.Substring(0, 5);
 
-            if ((data1 & 0xFF) == 0x98 && data2 == 0x01)
+            switch (manufacturerId)
             {
-                return (DeviceType.SBrick, manufacturerData);
-            }
-
-            if (data1 == 0x48 && data2 == 0x4D)
-            {
-                return (DeviceType.BuWizz, manufacturerData);
-            }
-
-            if (data1 == 0x4e && data2 == 0x05)
-            {
-                return (DeviceType.BuWizz2, manufacturerData);
-            }
-
-            if ((data1 & 0xFF) == 0x97 && data2 == 0x03)
-            {
-                if (manufacturerData.Length >= 4)
-                {
-                    if (manufacturerData[3] == 0x40)
+                case "98-01": return (DeviceType.SBrick, manufacturerData);
+                case "48-4d": return (DeviceType.BuWizz, manufacturerData);
+                case "4e-05": return (DeviceType.BuWizz2, manufacturerData);
+                case "97-03":
+                    if (manufacturerDataString.Length >= 11)
                     {
-                        return (DeviceType.Boost, manufacturerData);
+                        var pupType = manufacturerDataString.Substring(9, 2);
+                        switch (pupType)
+                        {
+                            case "40": return (DeviceType.Boost, manufacturerData);
+                            case "41": return (DeviceType.PoweredUp, manufacturerData);
+                            case "80": return (DeviceType.TechnicHub, manufacturerData);
+                        }
                     }
-                    else if (manufacturerData[3] == 0x41)
-                    {
-                        return (DeviceType.PoweredUp, manufacturerData);
-                    }
-                    else if (manufacturerData[3] == 0x80)
-                    {
-                        return (DeviceType.TechnicHub, manufacturerData);
-                    }
-                }
+                    break;
             }
 
             return (DeviceType.Unknown, null);
