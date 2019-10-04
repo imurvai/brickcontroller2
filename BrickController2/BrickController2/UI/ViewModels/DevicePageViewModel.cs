@@ -140,7 +140,7 @@ namespace BrickController2.UI.ViewModels
                 false,
                 async (progressDialog, token) =>
                 {
-                    using (token.Register(() => _connectionTokenSource.Cancel()))
+                    using (token.Register(() => _connectionTokenSource?.Cancel()))
                     {
                         connectionResult = await Device.ConnectAsync(
                             _reconnect,
