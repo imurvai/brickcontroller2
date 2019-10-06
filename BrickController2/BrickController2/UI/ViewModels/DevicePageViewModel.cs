@@ -10,6 +10,7 @@ using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Translation;
 using BrickController2.UI.Services.UIThread;
 using Device = BrickController2.DeviceManagement.Device;
+using System.Collections.ObjectModel;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -40,6 +41,8 @@ namespace BrickController2.UI.ViewModels
 
             Device = parameters.Get<Device>("device");
 
+            ChannelOutputs = new ObservableCollection<ChannelOutputViewModel>(Device.RegisteredPorts.Select(port => new ChannelOutputViewModel(Device, port)));
+
             RenameCommand = new SafeCommand(async () => await RenameDeviceAsync());
             BuWizzOutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
             BuWizz2OutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
@@ -48,6 +51,8 @@ namespace BrickController2.UI.ViewModels
         public Device Device { get; }
         public bool IsBuWizzDevice => Device.DeviceType == DeviceType.BuWizz;
         public bool IsBuWizz2Device => Device.DeviceType == DeviceType.BuWizz2;
+
+        public ObservableCollection<ChannelOutputViewModel> ChannelOutputs { get; }
 
         public ICommand RenameCommand { get; }
         public ICommand BuWizzOutputLevelChangedCommand { get; }

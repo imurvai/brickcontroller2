@@ -12,5 +12,16 @@ namespace BrickController2.DeviceManagement
         public override DeviceType DeviceType => DeviceType.TechnicHub;
         public override int NumberOfChannels => 4;
 
+        protected override void RegisterDefaultPorts()
+        {
+            RegisterPorts(new[]
+            {
+                new DevicePort(0, "A"),
+                new DevicePort(1, "B"),
+                new DevicePort(2, "C"),
+                new DevicePort(3, "D"),
+            });
+        }
+
     }
 }

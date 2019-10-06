@@ -99,7 +99,7 @@
                 <!-- Outputs -->
                 <StackLayout Orientation="Vertical">
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,4,10,8"/>
-                    <controls:DeviceOutputTesterControl Device="{Binding Device}"/>
+                    <controls:DeviceOutputTesterControl />
                 </StackLayout> 
             
             </StackLayout>

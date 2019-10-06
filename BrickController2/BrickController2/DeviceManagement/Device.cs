@@ -1,6 +1,7 @@
 ﻿using BrickController2.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace BrickController2.DeviceManagement
     {
         private readonly IDeviceRepository _deviceRepository;
         protected readonly AsyncLock _asyncLock = new AsyncLock();
+        private ObservableCollectionExt<DevicePort> _registeredPorts;
 
         private string _name;
         private string _firmwareVersion = "-";
@@ -22,6 +24,7 @@ namespace BrickController2.DeviceManagement
         internal Device(string name, string address, IDeviceRepository deviceRepository)
         {
             _deviceRepository = deviceRepository;
+            _registeredPorts = new ObservableCollectionExt<DevicePort>();
 
             _name = name;
             Address = address;
@@ -38,6 +41,8 @@ namespace BrickController2.DeviceManagement
             get { return _name; }
             set { _name = value; RaisePropertyChanged(); }
         }
+
+        public ObservableCollection<DevicePort> RegisteredPorts => _registeredPorts;
 
         public string FirmwareVersion
         {
@@ -122,6 +127,17 @@ namespace BrickController2.DeviceManagement
         protected float CutOutputValue(float outputValue)
         {
             return Math.Max(-1F, Math.Min(1F, outputValue));
+        }
+
+        /// <summary>
+        /// Apply the specified list of ports as currently registered.
+        /// </summary>
+        /// <param name="ports">List of ports</param>
+        protected void RegisterPorts(IList<DevicePort> ports)
+        {
+            if (ports == null) throw new ArgumentNullException(nameof(ports));
+
+            _registeredPorts.AddRange(ports);
         }
     }
 }

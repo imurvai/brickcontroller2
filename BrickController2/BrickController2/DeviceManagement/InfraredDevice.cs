@@ -13,6 +13,14 @@ namespace BrickController2.DeviceManagement
             : base(name, address, deviceRepository)
         {
             _infraredDeviceManager = infraredDeviceManager;
+
+            // setup default list of ports here as the list does not change
+            RegisterPorts(
+                new[]
+                {
+                    new DevicePort(0, "Blue"),
+                    new DevicePort(1, "Red"),
+                });
         }
 
         public override DeviceType DeviceType => DeviceType.Infrared;

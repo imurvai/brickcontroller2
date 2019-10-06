@@ -22,11 +22,16 @@ namespace BrickController2.DeviceManagement
             : base(name, address, deviceRepository)
         {
             _bleService = bleService;
+
+            // right now it's not expected to be changed
+            RegisterDefaultPorts();
         }
 
         protected abstract bool AutoConnectOnFirstConnect { get; }
         protected abstract Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token);
         protected abstract Task ProcessOutputsAsync(CancellationToken token);
+
+        protected abstract void RegisterDefaultPorts();
 
         public async override Task<DeviceConnectionResult> ConnectAsync(
             bool reconnect,

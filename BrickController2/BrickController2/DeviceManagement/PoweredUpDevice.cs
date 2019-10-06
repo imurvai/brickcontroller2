@@ -11,5 +11,14 @@ namespace BrickController2.DeviceManagement
 
         public override DeviceType DeviceType => DeviceType.PoweredUp;
         public override int NumberOfChannels => 2;
+
+        protected override void RegisterDefaultPorts()
+        {
+            RegisterPorts(new[]
+            {
+                new DevicePort(0, "1"),
+                new DevicePort(1, "2"),
+            });
+        }
     }
 }

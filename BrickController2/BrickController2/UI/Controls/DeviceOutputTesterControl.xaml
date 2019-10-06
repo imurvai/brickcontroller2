@@ -1,10 +1,43 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+             xmlns:converters="clr-namespace:BrickController2.UI.Converters"
              x:Class="BrickController2.UI.Controls.DeviceOutputTesterControl">
 
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <!-- Converters -->
+            <converters:DeviceConnectedToBoolConverter x:Key="DeviceConnectedToBool"/>
+            <converters:TextToCapitalInitialConverter x:Key="TextToCapitalInitial"/>
+            <converters:TextToColorConverter x:Key="TextToColor"/>
+        </ResourceDictionary>
+    </ContentView.Resources>    
+    
     <ContentView.Content>
-        <StackLayout x:Name="StackLayout" Orientation="Vertical">
+        <StackLayout BindableLayout.ItemsSource="{Binding ChannelOutputs, Mode=OneWay}" Orientation="Vertical">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Frame Grid.Column="0" WidthRequest="40" HeightRequest="40" BackgroundColor="{Binding Name, Converter={StaticResource TextToColor}}" CornerRadius="20" Padding="0" HasShadow="False" VerticalOptions="Center">
+                            <Label Text="{Binding Name, Converter={StaticResource TextToCapitalInitial}}" TextColor="White" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Frame>
+                        <controls:ExtendedSlider Grid.Column="2" HeightRequest="50" VerticalOptions="Center" MinimumTrackColor="LightGray" MaximumTrackColor="LightGray"
+                                                    Value="{Binding Output, Mode=TwoWay}"
+                                                    TouchUpCommand="{Binding TouchUpCommand}"
+                                                    IsEnabled="{Binding Device.DeviceState, Mode=Default, Converter={StaticResource DeviceConnectedToBool}}"
+                                                    Minimum="{Binding MinValue}"
+                                                    Maximum="{Binding MaxValue}"
+                                                    />
+                    </Grid>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
         </StackLayout>
     </ContentView.Content>
 </ContentView>
