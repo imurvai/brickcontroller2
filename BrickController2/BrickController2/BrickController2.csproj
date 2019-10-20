@@ -72,7 +72,7 @@
     <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="Plugin.Permissions" Version="3.0.0.12" />
     <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
-    <PackageReference Include="Xamarin.Forms" Version="4.2.0.815419" />
+    <PackageReference Include="Xamarin.Forms" Version="4.2.0.848062" />
   </ItemGroup>
 
   <ItemGroup>

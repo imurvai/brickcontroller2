@@ -8,13 +8,13 @@ namespace BrickController2.Helpers
     {
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        public async Task<Releaser> LockAsync()
+        public async Task<IDisposable> LockAsync()
         {
             await _semaphore.WaitAsync();
             return new Releaser(_semaphore);
         }
 
-        public struct Releaser : IDisposable
+        private struct Releaser : IDisposable
         {
             private SemaphoreSlim _semaphore;
 

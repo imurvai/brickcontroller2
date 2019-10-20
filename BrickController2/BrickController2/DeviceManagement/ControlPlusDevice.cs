@@ -137,7 +137,47 @@ namespace BrickController2.DeviceManagement
 
             switch (messageCode)
             {
-                case 0x46: // Port value information
+                case 0x01: // Hub properties
+                    DumpData("Hub properties", data);
+                    break;
+
+                case 0x02: // Hub actions
+                    DumpData("Hub actions", data);
+                    break;
+
+                case 0x03: // Hub alerts
+                    DumpData("Hub alerts", data);
+                    break;
+
+                case 0x04: // Hub attached I/O
+                    DumpData("Hub attached I/O", data);
+                    break;
+
+                case 0x05: // Generic error messages
+                    DumpData("Generic error messages", data);
+                    break;
+
+                case 0x08: // HW network commands
+                    DumpData("HW network commands", data);
+                    break;
+
+                case 0x13: // FW lock status
+                    DumpData("FW lock status", data);
+                    break;
+
+                case 0x43: // Port information
+                    DumpData("Port information", data);
+                    break;
+
+                case 0x44: // Port mode information
+                    DumpData("Port mode information", data);
+                    break;
+
+                case 0x45: // Port value (single mode)
+                    DumpData("Port value (single)", data);
+                    break;
+
+                case 0x46: // Port value (combined mode)
                     var modeMask = data[5];
                     var dataIndex = 6;
 
@@ -155,16 +195,50 @@ namespace BrickController2.DeviceManagement
 
                     if ((modeMask & 0x02) != 0)
                     {
-                        var relPosBuffer = BitConverter.IsLittleEndian ?
-                            new byte[] { data[dataIndex + 0], data[dataIndex + 1], data[dataIndex + 2], data[dataIndex + 3] } :
-                            new byte[] { data[dataIndex + 3], data[dataIndex + 2], data[dataIndex + 1], data[dataIndex + 0] };
+                        // TODO: Read the post value format response and determine the value length accordingly
+                        if ((dataIndex + 3) < data.Length)
+                        {
+                            var relPosBuffer = BitConverter.IsLittleEndian ?
+                                new byte[] { data[dataIndex + 0], data[dataIndex + 1], data[dataIndex + 2], data[dataIndex + 3] } :
+                                new byte[] { data[dataIndex + 3], data[dataIndex + 2], data[dataIndex + 1], data[dataIndex + 0] };
 
-                        var relPosition = BitConverter.ToInt32(relPosBuffer, 0);
-                        _relativePositions[portId] = relPosition;
+                            var relPosition = BitConverter.ToInt32(relPosBuffer, 0);
+                            _relativePositions[portId] = relPosition;
+                        }
+                        else if ((dataIndex + 1) < data.Length)
+                        {
+                            var relPosBuffer = BitConverter.IsLittleEndian ?
+                                new byte[] { data[dataIndex + 0], data[dataIndex + 1] } :
+                                new byte[] { data[dataIndex + 1], data[dataIndex + 0] };
+
+                            var relPosition = BitConverter.ToInt16(relPosBuffer, 0);
+                            _relativePositions[portId] = relPosition;
+                        }
+                        else
+                        {
+                            _relativePositions[portId] = data[dataIndex];
+                        }
                     }
 
                     break;
+
+                case 0x47: // Port input format (Single mode)
+                    DumpData("Port input format (single)", data);
+                    break;
+
+                case 0x48: // Port input format (Combined mode)
+                    DumpData("Port input format (combined)", data);
+                    break;
+
+                case 0x82: // Port output command feedback
+                    break;
             }
+        }
+
+        private void DumpData(string header, byte[] data)
+        {
+            //var s = BitConverter.ToString(data);
+            //Console.WriteLine(header + " - " + s);
         }
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
