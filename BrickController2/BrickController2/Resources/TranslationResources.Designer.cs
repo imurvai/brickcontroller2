@@ -826,6 +826,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stepper angle.
+        /// </summary>
+        internal static string StepperAngle {
+            get {
+                return ResourceManager.GetString("StepperAngle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Turn bluetooth on to connect to a bluetooth device..
         /// </summary>
         internal static string TurnOnBluetoothToConnect {

@@ -372,6 +372,9 @@
   <data name="ShortChannel" xml:space="preserve">
     <value>Ch</value>
   </data>
+  <data name="StepperAngle" xml:space="preserve">
+    <value>Stepper angle</value>
+  </data>
   <data name="TurnOnBluetoothToConnect" xml:space="preserve">
     <value>Turn bluetooth on to connect to a bluetooth device.</value>
   </data>

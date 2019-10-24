@@ -143,7 +143,8 @@ namespace BrickController2.CreationManagement
             int axisDeadZonePercent,
             ChannelOutputType channelOutputType,
             int maxServoAngle,
-            int servoBaseAngle)
+            int servoBaseAngle,
+            int stepperAngle)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -159,6 +160,7 @@ namespace BrickController2.CreationManagement
                     controllerAction.ChannelOutputType = channelOutputType;
                     controllerAction.MaxServoAngle = maxServoAngle;
                     controllerAction.ServoBaseAngle = servoBaseAngle;
+                    controllerAction.StepperAngle = stepperAngle;
                     await _creationRepository.UpdateControllerActionAsync(controllerAction);
                 }
                 else
@@ -175,7 +177,8 @@ namespace BrickController2.CreationManagement
                         AxisDeadZonePercent = axisDeadZonePercent,
                         ChannelOutputType = channelOutputType,
                         MaxServoAngle = maxServoAngle,
-                        ServoBaseAngle = servoBaseAngle
+                        ServoBaseAngle = servoBaseAngle,
+                        StepperAngle = stepperAngle
                     };
                     await _creationRepository.InsertControllerActionAsync(controllerEvent, controllerAction);
                 }
@@ -206,7 +209,8 @@ namespace BrickController2.CreationManagement
             int axisDeadZonePercent,
             ChannelOutputType channelOutputType,
             int maxServoAngle,
-            int servoBaseAngle)
+            int servoBaseAngle,
+            int stepperAngle)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -229,6 +233,7 @@ namespace BrickController2.CreationManagement
                 controllerAction.ChannelOutputType = channelOutputType;
                 controllerAction.MaxServoAngle = maxServoAngle;
                 controllerAction.ServoBaseAngle = servoBaseAngle;
+                controllerAction.StepperAngle = stepperAngle;
                 await _creationRepository.UpdateControllerActionAsync(controllerAction);
             }
         }

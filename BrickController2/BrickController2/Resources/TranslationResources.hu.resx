@@ -384,4 +384,7 @@
   <data name="Reseting" xml:space="preserve">
     <value>Átállítás...</value>
   </data>
+  <data name="StepperAngle" xml:space="preserve">
+    <value>Léptetési szög</value>
+  </data>
 </root>

@@ -17,12 +17,17 @@ namespace BrickController2.DeviceManagement
 
         private readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
         private readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
+        private readonly byte[] _stepperSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0b, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
         private readonly byte[] _virtualPortSendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x00, 0x02, 0x00, 0x00 };
 
         private readonly int[] _outputValues;
         private readonly int[] _lastOutputValues;
+
+        private readonly ChannelOutputType[] _channelOutputTypes;
         private readonly int[] _maxServoAngles;
         private readonly int[] _servoBaseAngles;
+        private readonly int[] _stepperAngles;
+        
         private readonly int[] _absolutePositions;
         private readonly int[] _relativePositions;
 
@@ -33,8 +38,12 @@ namespace BrickController2.DeviceManagement
         {
             _outputValues = new int[NumberOfChannels];
             _lastOutputValues = new int[NumberOfChannels];
+
+            _channelOutputTypes = new ChannelOutputType[NumberOfChannels];
             _maxServoAngles = new int[NumberOfChannels];
             _servoBaseAngles = new int[NumberOfChannels];
+            _stepperAngles = new int[NumberOfChannels];
+            
             _absolutePositions = new int[NumberOfChannels];
             _relativePositions = new int[NumberOfChannels];
         }
@@ -52,18 +61,33 @@ namespace BrickController2.DeviceManagement
             {
                 _outputValues[c] = 0;
                 _lastOutputValues[c] = 0;
-                _maxServoAngles[c] = -1;
+
+                _channelOutputTypes[c] = ChannelOutputType.NormalMotor;
+                _maxServoAngles[c] = 0;
                 _servoBaseAngles[c] = 0;
+                _stepperAngles[c] = 0;
+
                 _absolutePositions[c] = 0;
                 _relativePositions[c] = 0;
             }
 
             foreach (var channelConfig in channelConfigurations)
             {
-                if (channelConfig.ChannelOutputType == ChannelOutputType.ServoMotor)
+                _channelOutputTypes[channelConfig.Channel] = channelConfig.ChannelOutputType;
+
+                switch (channelConfig.ChannelOutputType)
                 {
-                    _maxServoAngles[channelConfig.Channel] = channelConfig.MaxServoAngle;
-                    _servoBaseAngles[channelConfig.Channel] = channelConfig.ServoBaseAngle;
+                    case ChannelOutputType.NormalMotor:
+                        break;
+
+                    case ChannelOutputType.ServoMotor:
+                        _maxServoAngles[channelConfig.Channel] = channelConfig.MaxServoAngle;
+                        _servoBaseAngles[channelConfig.Channel] = channelConfig.ServoBaseAngle;
+                        break;
+
+                    case ChannelOutputType.StepperMotor:
+                        _stepperAngles[channelConfig.Channel] = channelConfig.StepperAngle;
+                        break;
                 }
             }
 
@@ -274,7 +298,7 @@ namespace BrickController2.DeviceManagement
 
                 for (int channel = 0; channel < NumberOfChannels; channel++)
                 {
-                    if (_maxServoAngles[channel] >= 0)
+                    if (_channelOutputTypes[channel] == ChannelOutputType.ServoMotor)
                     {
                         await SetupChannelForPortInformationAsync(channel, token);
                         await Task.Delay(300, token);
@@ -299,15 +323,22 @@ namespace BrickController2.DeviceManagement
                 for (int channel = 0; channel < NumberOfChannels; channel++)
                 {
                     var outputValue = _outputValues[channel];
-                    var maxServoAngle = _maxServoAngles[channel];
 
-                    if (maxServoAngle < 0)
+                    switch (_channelOutputTypes[channel])
                     {
-                        result = result && await SendOutputValueAsync(channel, outputValue, token);
-                    }
-                    else
-                    {
-                        result = result && await SendServoOutputValueAsync(channel, outputValue, maxServoAngle, token);
+                        case ChannelOutputType.NormalMotor:
+                            result = result && await SendOutputValueAsync(channel, outputValue, token);
+                            break;
+
+                        case ChannelOutputType.ServoMotor:
+                            var maxServoAngle = _maxServoAngles[channel];
+                            result = result && await SendServoOutputValueAsync(channel, outputValue, maxServoAngle, token);
+                            break;
+
+                        case ChannelOutputType.StepperMotor:
+                            var stepperAngle = _stepperAngles[channel];
+                            result = result && await SendStepperOutputValueAsync(channel, outputValue, stepperAngle, token);
+                            break;
                     }
                 }
 
@@ -406,6 +437,44 @@ namespace BrickController2.DeviceManagement
                     {
                         return false;
                     }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private async Task<bool> SendStepperOutputValueAsync(int channel, int value, int stepperAngle, CancellationToken token)
+        {
+            try
+            {
+                _stepperSendBuffer[3] = (byte)channel;
+                _stepperSendBuffer[6] = (byte)(stepperAngle & 0xff);
+                _stepperSendBuffer[7] = (byte)((stepperAngle >> 8) & 0xff);
+                _stepperSendBuffer[8] = (byte)((stepperAngle >> 16) & 0xff);
+                _stepperSendBuffer[9] = (byte)((stepperAngle >> 24) & 0xff);
+                _stepperSendBuffer[10] = (byte)(value > 0 ? 50 : -50);
+
+                if (_lastOutputValues[channel] != value && Math.Abs(value) == 100)
+                {
+                    if (await _bleDevice?.WriteNoResponseAsync(_characteristic, _stepperSendBuffer, token))
+                    {
+                        _lastOutputValues[channel] = value;
+
+                        await Task.Delay(SEND_DELAY, token);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    _lastOutputValues[channel] = value;
                 }
 
                 return true;

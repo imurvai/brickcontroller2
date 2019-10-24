@@ -17,6 +17,7 @@ namespace BrickController2.CreationManagement
         private int _axisDeadZonePercent;
         private int _maxServoAngle;
         private int _servoBaseAngle;
+        private int _stepperAngle;
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -91,6 +92,12 @@ namespace BrickController2.CreationManagement
         {
             get { return _servoBaseAngle; }
             set { _servoBaseAngle = value; RaisePropertyChanged(); }
+        }
+
+        public int StepperAngle
+        {
+            get { return _stepperAngle; }
+            set { _stepperAngle = value; RaisePropertyChanged(); }
         }
 
         public override string ToString()

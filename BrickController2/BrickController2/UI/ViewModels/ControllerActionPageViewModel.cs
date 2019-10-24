@@ -57,6 +57,7 @@ namespace BrickController2.UI.ViewModels
                 Action.MaxOutputPercent = ControllerAction.MaxOutputPercent;
                 Action.AxisDeadZonePercent = ControllerAction.AxisDeadZonePercent;
                 Action.ServoBaseAngle = ControllerAction.ServoBaseAngle;
+                Action.StepperAngle = ControllerAction.StepperAngle;
             }
             else
             {
@@ -72,6 +73,7 @@ namespace BrickController2.UI.ViewModels
                 Action.MaxOutputPercent = 100;
                 Action.AxisDeadZonePercent = 0;
                 Action.ServoBaseAngle = 0;
+                Action.StepperAngle = 90;
             }
 
             SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null);
@@ -152,7 +154,8 @@ namespace BrickController2.UI.ViewModels
                             Action.AxisDeadZonePercent,
                             Action.ChannelOutputType,
                             Action.MaxServoAngle,
-                            Action.ServoBaseAngle);
+                            Action.ServoBaseAngle,
+                            Action.StepperAngle);
                     }
                     else
                     {
@@ -168,7 +171,8 @@ namespace BrickController2.UI.ViewModels
                             Action.AxisDeadZonePercent,
                             Action.ChannelOutputType,
                             Action.MaxServoAngle,
-                            Action.ServoBaseAngle);
+                            Action.ServoBaseAngle,
+                            Action.StepperAngle);
                     }
                 },
                 Translate("Saving"));

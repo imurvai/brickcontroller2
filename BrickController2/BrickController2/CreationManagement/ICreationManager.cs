@@ -35,7 +35,8 @@ namespace BrickController2.CreationManagement
             int axisDeadZonePercent,
             ChannelOutputType channelOutputType,
             int maxServoAngle,
-            int servoBaseAngle);
+            int servoBaseAngle,
+            int stepperAngle);
         Task DeleteControllerActionAsync(ControllerAction controllerAction);
         Task UpdateControllerActionAsync(
             ControllerAction controllerAction,
@@ -49,6 +50,7 @@ namespace BrickController2.CreationManagement
             int axisDeadZonePercent,
             ChannelOutputType channelOutputType,
             int maxServoAngle,
-            int servoBaseAngle);
+            int servoBaseAngle,
+            int stepperAngle);
     }
 }

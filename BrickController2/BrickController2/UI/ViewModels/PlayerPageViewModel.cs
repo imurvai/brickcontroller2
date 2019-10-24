@@ -152,7 +152,8 @@ namespace BrickController2.UI.ViewModels
                             Channel = ca.Channel,
                             ChannelOutputType = ca.ChannelOutputType,
                             MaxServoAngle = ca.MaxServoAngle,
-                            ServoBaseAngle = ca.ServoBaseAngle
+                            ServoBaseAngle = ca.ServoBaseAngle,
+                            StepperAngle = ca.StepperAngle
                         });
 
                     _deviceConnectionTasks[device] = device.ConnectAsync(

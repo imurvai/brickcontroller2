@@ -8,5 +8,6 @@ namespace BrickController2.DeviceManagement
         public ChannelOutputType ChannelOutputType { get; set; }
         public int MaxServoAngle { get; set; }
         public int ServoBaseAngle { get; set; }
+        public int StepperAngle { get; set; }
     }
 }

@@ -3,6 +3,7 @@
     public enum ChannelOutputType
     {
         NormalMotor,
-        ServoMotor
+        ServoMotor,
+        StepperMotor
     }
 }
