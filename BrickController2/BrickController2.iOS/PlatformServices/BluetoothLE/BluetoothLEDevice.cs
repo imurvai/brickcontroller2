@@ -16,6 +16,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
 
         private TaskCompletionSource<IEnumerable<IGattService>> _connectCompletionSource = null;
         private TaskCompletionSource<IEnumerable<IGattCharacteristic>> _discoverCompletionSource = null;
+        private TaskCompletionSource<byte[]> _readCompletionSource = null;
         private TaskCompletionSource<bool> _writeCompletionSource = null;
 
         private Action<Guid, byte[]> _onCharacteristicChanged = null;
@@ -91,6 +92,40 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
                 _peripheral.SetNotifyValue(true, nativeCharacteristic);
                 return Task.FromResult(true);
+            }
+        }
+
+        public async Task<byte[]> ReadAsync(IGattCharacteristic characteristic, CancellationToken token)
+        {
+            using (token.Register(() =>
+            {
+                lock (_lock)
+                {
+                    _readCompletionSource.TrySetResult(null);
+                }
+            }))
+            {
+                lock (_lock)
+                {
+                    if (State != BluetoothLEDeviceState.Connected)
+                    {
+                        return null;
+                    }
+
+                    var nativeCharacteristic = ((GattCharacteristic)characteristic).Characteristic;
+
+                    _readCompletionSource = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+                    _peripheral.ReadValue(nativeCharacteristic);
+                }
+
+                var result = await _readCompletionSource.Task;
+
+                lock (_lock)
+                {
+                    _readCompletionSource = null;
+                    return result;
+                }
             }
         }
 
@@ -241,14 +276,24 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         {
             lock(_lock)
             {
-                if (error == null)
+                var data = error == null ? characteristic.Value?.ToArray() : null;
+
+                if (_readCompletionSource != null)
                 {
-                    var guid = characteristic.UUID.ToGuid();
-                    var data = characteristic.Value?.ToArray();
-                    _onCharacteristicChanged?.Invoke(guid, data);
+                    _readCompletionSource.TrySetResult(data);
+                }
+                else
+                {
+                    if (error == null)
+                    {
+                        var guid = characteristic.UUID.ToGuid();
+                        _onCharacteristicChanged?.Invoke(guid, data);
+                    }
                 }
             }
         }
+
+        public override 
 
         public override void WroteCharacteristicValue(CBPeripheral peripheral, CBCharacteristic characteristic, NSError error)
         {

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +12,11 @@ namespace BrickController2.DeviceManagement
     {
         private const int MAX_SEND_ATTEMPTS = 4;
 
+        private readonly Guid SERVICE_UUID_DEVICE_INFORMATION = new Guid("0000180a-0000-1000-8000-00805f9b34fb");
+        private readonly Guid CHARACTERISTIC_FIRMWARE_REVISION = new Guid("00002a26-0000-1000-8000-00805f9b34fb");
+        private readonly Guid CHARACTERISTIC_HARDWARE_REVISION = new Guid("00002a27-0000-1000-8000-00805f9b34fb");
         private readonly Guid SERVICE_UUID_REMOTE_CONTROL = new Guid("4dc591b0-857c-41de-b5f1-15abda665b0c");
+        private readonly Guid CHARACTERISTIC_REMOTE_CONTROL = new Guid("02b8cbcc-0e25-4bda-8790-a15f53e6010f");
         private readonly Guid CHARACTERISTIC_UUID_QUICK_DRIVE = new Guid("489a6ae0-c1ab-4c9c-bdb2-11d373c1b7fb");
 
         private readonly byte[] _sendBuffer = new byte[4];
@@ -19,7 +24,8 @@ namespace BrickController2.DeviceManagement
 
         private volatile int _sendAttemptsLeft;
 
-        private IGattCharacteristic _characteristic;
+        private IGattCharacteristic _remoteControlCharacteristic;
+        private IGattCharacteristic _quickDriveCharacteristic;
 
         public SBrickDevice(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, bleService)
@@ -45,12 +51,29 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
-        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
         {
-            var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_REMOTE_CONTROL);
-            _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_QUICK_DRIVE);
+            var deviceInformationService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_DEVICE_INFORMATION);
+            var firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_FIRMWARE_REVISION);
+            var hardwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_HARDWARE_REVISION);
 
-            return Task.FromResult(_characteristic != null);
+            var remoteControlService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_REMOTE_CONTROL);
+            _remoteControlCharacteristic = remoteControlService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_REMOTE_CONTROL);
+            _quickDriveCharacteristic = remoteControlService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_QUICK_DRIVE);
+
+            if (firmwareRevisionCharacteristic != null)
+            {
+                var firmwareData = await _bleDevice?.ReadAsync(firmwareRevisionCharacteristic, token);
+                FirmwareVersion = ByteArrayToString(firmwareData);
+            }
+
+            if (hardwareRevisionCharacteristic != null)
+            {
+                var hardwareData = await _bleDevice?.ReadAsync(hardwareRevisionCharacteristic, token);
+                HardwareVersion = ByteArrayToString(hardwareData);
+            }
+
+            return _remoteControlCharacteristic != null && _quickDriveCharacteristic != null;
         }
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
@@ -99,6 +122,22 @@ namespace BrickController2.DeviceManagement
             }
         }
 
+        private string ByteArrayToString(byte[] data)
+        {
+            try
+            {
+                if (data != null)
+                {
+                    return Encoding.ASCII.GetString(data);
+                }
+            }
+            catch
+            {
+            }
+
+            return "-";
+        }
+
         private async Task<bool> SendOutputValuesAsync(int v0, int v1, int v2, int v3, CancellationToken token)
         {
             try
@@ -108,7 +147,7 @@ namespace BrickController2.DeviceManagement
                 _sendBuffer[2] = (byte)((Math.Abs(v2) & 0xfe) | 0x02 | (v2 < 0 ? 1 : 0));
                 _sendBuffer[3] = (byte)((Math.Abs(v3) & 0xfe) | 0x02 | (v3 < 0 ? 1 : 0));
 
-                return await _bleDevice?.WriteAsync(_characteristic, _sendBuffer, token);
+                return await _bleDevice?.WriteAsync(_quickDriveCharacteristic, _sendBuffer, token);
             }
             catch
             {
