@@ -53,7 +53,7 @@ namespace BrickController2.DeviceManagement
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
-        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
         {
             var deviceInformationService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_DEVICE_INFORMATION);
             _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_FIRMWARE_REVISION);
@@ -63,18 +63,25 @@ namespace BrickController2.DeviceManagement
             _remoteControlCharacteristic = remoteControlService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_REMOTE_CONTROL);
             _quickDriveCharacteristic = remoteControlService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_QUICK_DRIVE);
 
-            var result =
+            return Task.FromResult(
                 _firmwareRevisionCharacteristic != null &&
                 _hardwareRevisionCharacteristic != null &&
                 _remoteControlCharacteristic != null && 
-                _quickDriveCharacteristic != null;
+                _quickDriveCharacteristic != null);
+        }
 
-            if (result)
+        protected override async Task<bool> AfterConnectSetupAsync(bool requestDeviceInformation, CancellationToken token)
+        {
+            try
             {
-                await ReadDeviceInfo(token);
+                if (requestDeviceInformation)
+                {
+                    await ReadDeviceInfo(token);
+                }
             }
+            catch { }
 
-            return result;
+            return true;
         }
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
@@ -118,9 +125,7 @@ namespace BrickController2.DeviceManagement
                     }
                 }
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         private async Task<bool> SendOutputValuesAsync(int v0, int v1, int v2, int v3, CancellationToken token)

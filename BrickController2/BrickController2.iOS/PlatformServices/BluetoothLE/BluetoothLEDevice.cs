@@ -293,8 +293,6 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             }
         }
 
-        public override 
-
         public override void WroteCharacteristicValue(CBPeripheral peripheral, CBCharacteristic characteristic, NSError error)
         {
             lock(_lock)

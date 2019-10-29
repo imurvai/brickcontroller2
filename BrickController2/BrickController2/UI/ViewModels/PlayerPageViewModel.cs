@@ -161,6 +161,7 @@ namespace BrickController2.UI.ViewModels
                         OnDeviceDisconnected,
                         channelConfigs,
                         true,
+                        false,
                         _connectionTokenSource.Token);
                 }
             }

@@ -147,6 +147,7 @@ namespace BrickController2.UI.ViewModels
                             OnDeviceDisconnected,
                             Enumerable.Empty<ChannelConfiguration>(),
                             true,
+                            true,
                             _connectionTokenSource.Token);
                     }
                 },
