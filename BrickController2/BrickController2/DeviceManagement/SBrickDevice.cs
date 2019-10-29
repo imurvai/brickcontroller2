@@ -1,8 +1,8 @@
-﻿using BrickController2.PlatformServices.BluetoothLE;
+﻿using BrickController2.Helpers;
+using BrickController2.PlatformServices.BluetoothLE;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,6 +24,8 @@ namespace BrickController2.DeviceManagement
 
         private volatile int _sendAttemptsLeft;
 
+        private IGattCharacteristic _firmwareRevisionCharacteristic;
+        private IGattCharacteristic _hardwareRevisionCharacteristic;
         private IGattCharacteristic _remoteControlCharacteristic;
         private IGattCharacteristic _quickDriveCharacteristic;
 
@@ -54,26 +56,25 @@ namespace BrickController2.DeviceManagement
         protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
         {
             var deviceInformationService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_DEVICE_INFORMATION);
-            var firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_FIRMWARE_REVISION);
-            var hardwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_HARDWARE_REVISION);
+            _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_FIRMWARE_REVISION);
+            _hardwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_HARDWARE_REVISION);
 
             var remoteControlService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_REMOTE_CONTROL);
             _remoteControlCharacteristic = remoteControlService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_REMOTE_CONTROL);
             _quickDriveCharacteristic = remoteControlService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_QUICK_DRIVE);
 
-            if (firmwareRevisionCharacteristic != null)
+            var result =
+                _firmwareRevisionCharacteristic != null &&
+                _hardwareRevisionCharacteristic != null &&
+                _remoteControlCharacteristic != null && 
+                _quickDriveCharacteristic != null;
+
+            if (result)
             {
-                var firmwareData = await _bleDevice?.ReadAsync(firmwareRevisionCharacteristic, token);
-                FirmwareVersion = ByteArrayToString(firmwareData);
+                await ReadDeviceInfo(token);
             }
 
-            if (hardwareRevisionCharacteristic != null)
-            {
-                var hardwareData = await _bleDevice?.ReadAsync(hardwareRevisionCharacteristic, token);
-                HardwareVersion = ByteArrayToString(hardwareData);
-            }
-
-            return _remoteControlCharacteristic != null && _quickDriveCharacteristic != null;
+            return result;
         }
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
@@ -122,22 +123,6 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private string ByteArrayToString(byte[] data)
-        {
-            try
-            {
-                if (data != null)
-                {
-                    return Encoding.ASCII.GetString(data);
-                }
-            }
-            catch
-            {
-            }
-
-            return "-";
-        }
-
         private async Task<bool> SendOutputValuesAsync(int v0, int v1, int v2, int v3, CancellationToken token)
         {
             try
@@ -152,6 +137,32 @@ namespace BrickController2.DeviceManagement
             catch
             {
                 return false;
+            }
+        }
+
+        private async Task ReadDeviceInfo(CancellationToken token)
+        {
+            var firmwareData = await _bleDevice?.ReadAsync(_firmwareRevisionCharacteristic, token);
+            var firmwareVersion = firmwareData?.ToAsciiStringSafe();
+            if (!string.IsNullOrEmpty(firmwareVersion))
+            {
+                FirmwareVersion = firmwareVersion;
+            }
+
+            var hardwareData = await _bleDevice?.ReadAsync(_hardwareRevisionCharacteristic, token);
+            var hardwareVersion = hardwareData?.ToAsciiStringSafe();
+            if (!string.IsNullOrEmpty(hardwareVersion))
+            {
+                HardwareVersion = hardwareVersion;
+            }
+
+            await _bleDevice?.WriteAsync(_remoteControlCharacteristic, new byte[] { 0x0f, 0x08 }, token);
+            var voltageBuffer = await _bleDevice?.ReadAsync(_remoteControlCharacteristic, token);
+            if (voltageBuffer != null && voltageBuffer.Length >= 2)
+            {
+                var rawVoltage = voltageBuffer[0] + (voltageBuffer[1] << 8);
+                var voltage = (rawVoltage * 0.83875F) / 2047;
+                BatteryVoltage = voltage.ToString("F2");
             }
         }
     }
