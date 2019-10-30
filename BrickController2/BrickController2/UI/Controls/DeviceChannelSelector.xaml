@@ -86,8 +86,8 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <controls:ChannelSelectorRadioButton x:Name="PoweredUpChannel0" Channel="0" Text="1" HorizontalOptions="End" VerticalOptions="Start"/>
-                    <controls:ChannelSelectorRadioButton x:Name="PoweredUpChannel1" Channel="1" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="PoweredUpChannel0" Channel="0" Text="A" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="PoweredUpChannel1" Channel="1" Text="B" HorizontalOptions="End" VerticalOptions="End"/>
                 </Grid>
 
                 <Image Grid.Column="1" Source="{extensions:ImageResource Source=poweredup_image.png}" WidthRequest="150" HeightRequest="120"/>

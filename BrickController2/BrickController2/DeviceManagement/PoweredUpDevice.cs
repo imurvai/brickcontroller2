@@ -16,8 +16,8 @@ namespace BrickController2.DeviceManagement
         {
             RegisterPorts(new[]
             {
-                new DevicePort(0, "1"),
-                new DevicePort(1, "2"),
+                new DevicePort(0, "A"),
+                new DevicePort(1, "B"),
             });
         }
     }
