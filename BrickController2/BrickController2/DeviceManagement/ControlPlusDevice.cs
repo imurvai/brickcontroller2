@@ -48,6 +48,8 @@ namespace BrickController2.DeviceManagement
             _relativePositions = new int[NumberOfChannels];
         }
 
+        public override string BatteryVoltageSign => "%";
+
         protected override bool AutoConnectOnFirstConnect => true;
 
         public async override Task<DeviceConnectionResult> ConnectAsync(

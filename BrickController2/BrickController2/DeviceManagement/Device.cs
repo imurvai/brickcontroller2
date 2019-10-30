@@ -57,6 +57,8 @@ namespace BrickController2.DeviceManagement
             protected set { _batteryVoltage = value; RaisePropertyChanged(); }
         }
 
+        public virtual string BatteryVoltageSign => string.Empty;
+
         public DeviceState DeviceState
         {
             get { return _deviceState; }

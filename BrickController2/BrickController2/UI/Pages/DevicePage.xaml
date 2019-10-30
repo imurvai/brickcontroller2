@@ -73,8 +73,9 @@
                                 <Label Text="{Binding Device.HardwareVersion}" FontSize="Small" FontAttributes="Bold"/>
                             </StackLayout>
                             <StackLayout Grid.Column="2" Orientation="Horizontal">
-                                <Label Text="V: " FontSize="Small"/>
+                                <Label Text="Ba: " FontSize="Small"/>
                                 <Label Text="{Binding Device.BatteryVoltage}" FontSize="Small" FontAttributes="Bold"/>
+                                <Label Text="{Binding Device.BatteryVoltageSign}" FontSize="Small"/>
                             </StackLayout>
                         </Grid>
                     </Grid>
