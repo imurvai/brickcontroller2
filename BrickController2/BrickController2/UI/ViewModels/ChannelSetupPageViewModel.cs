@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
+using BrickController2.Helpers;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
@@ -42,6 +43,7 @@ namespace BrickController2.UI.ViewModels
             Device = parameters.Get<Device>("device");
             Action = parameters.Get<ControllerAction>("controlleraction");
             ServoBaseAngle = Action.ServoBaseAngle;
+            ChannelName = Device.GetChannelName(Action.Channel, TranslationService);
 
             SaveChannelSettingsCommand = new SafeCommand(async () => await SaveChannelSettingsAsync());
             AutoCalibrateServoCommand = new SafeCommand(async () => await AutoCalibrateServoAsync());
@@ -50,6 +52,8 @@ namespace BrickController2.UI.ViewModels
 
         public Device Device { get; }
         public ControllerAction Action { get; }
+
+        public string ChannelName { get; } 
 
         public int ServoBaseAngle
         {

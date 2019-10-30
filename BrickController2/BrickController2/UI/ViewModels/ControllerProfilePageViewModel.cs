@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 using System;
 using System.Threading;
 using BrickController2.UI.Services.Translation;
+using System.Linq;
+using BrickController2.Helpers;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -222,7 +224,7 @@ namespace BrickController2.UI.ViewModels
 
                 DeviceMissing = device == null;
                 DeviceName = device != null ? device.Name : Translate("Missing");
-                ChannelName = (device == null || device.DeviceType != DeviceType.Infrared) ? $"{controllerAction.Channel + 1}" : (controllerAction.Channel == 0 ? Translate("Blue") : Translate("Red"));
+                ChannelName = device.GetChannelName(controllerAction.Channel, _translationService);
                 InvertName = controllerAction.IsInvert ? Translate("Inv") : string.Empty;
             }
 
