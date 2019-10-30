@@ -387,4 +387,7 @@
   <data name="StepperAngle" xml:space="preserve">
     <value>Léptetési szög</value>
   </data>
+  <data name="Battery" xml:space="preserve">
+    <value>Elem</value>
+  </data>
 </root>

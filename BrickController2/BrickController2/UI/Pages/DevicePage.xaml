@@ -46,6 +46,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate DeviceName}" FontSize="Small"/>
@@ -57,9 +58,14 @@
                         <Label Grid.Column="0" Grid.Row="2" Text="{extensions:Translate Address}" FontSize="Small"/>
                         <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Text="{Binding Device.Address}" FontSize="Micro" FontAttributes="Bold"/>
 
-                        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4">
+                        <Label Grid.Column="0" Grid.Row="4" Text="{extensions:Translate Battery}" FontSize="Small"/>
+                        <StackLayout Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
+                            <Label Text="{Binding Device.BatteryVoltage}" FontSize="Medium" FontAttributes="Bold"/>
+                            <Label Text="{Binding Device.BatteryVoltageSign}" FontSize="Medium"/>
+                        </StackLayout>
+
+                        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
@@ -71,11 +77,6 @@
                             <StackLayout Grid.Column="1" Orientation="Horizontal">
                                 <Label Text="HW: " FontSize="Small"/>
                                 <Label Text="{Binding Device.HardwareVersion}" FontSize="Small" FontAttributes="Bold"/>
-                            </StackLayout>
-                            <StackLayout Grid.Column="2" Orientation="Horizontal">
-                                <Label Text="Ba: " FontSize="Small"/>
-                                <Label Text="{Binding Device.BatteryVoltage}" FontSize="Small" FontAttributes="Bold"/>
-                                <Label Text="{Binding Device.BatteryVoltageSign}" FontSize="Small"/>
                             </StackLayout>
                         </Grid>
                     </Grid>

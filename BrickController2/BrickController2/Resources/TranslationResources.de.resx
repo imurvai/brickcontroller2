@@ -156,6 +156,9 @@
   <data name="AxisDeadZone" xml:space="preserve">
     <value>Achse inaktive Zone</value>
   </data>
+  <data name="Battery" xml:space="preserve">
+    <value>Batterie</value>
+  </data>
   <data name="Blue" xml:space="preserve">
     <value>Blau</value>
   </data>
