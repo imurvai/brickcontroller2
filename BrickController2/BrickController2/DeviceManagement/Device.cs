@@ -12,6 +12,10 @@ namespace BrickController2.DeviceManagement
         protected readonly AsyncLock _asyncLock = new AsyncLock();
 
         private string _name;
+        private string _firmwareVersion = "-";
+        private string _hardwareVersion = "-";
+        private string _batteryVoltage = "-";
+
         private DeviceState _deviceState;
         protected int _outputLevel;
 
@@ -35,10 +39,30 @@ namespace BrickController2.DeviceManagement
             set { _name = value; RaisePropertyChanged(); }
         }
 
+        public string FirmwareVersion
+        {
+            get { return _firmwareVersion; }
+            protected set { _firmwareVersion = value; RaisePropertyChanged(); }
+        }
+
+        public string HardwareVersion
+        {
+            get { return _hardwareVersion; }
+            protected set { _hardwareVersion = value; RaisePropertyChanged(); }
+        }
+
+        public string BatteryVoltage
+        {
+            get { return _batteryVoltage; }
+            protected set { _batteryVoltage = value; RaisePropertyChanged(); }
+        }
+
+        public virtual string BatteryVoltageSign => string.Empty;
+
         public DeviceState DeviceState
         {
             get { return _deviceState; }
-            set { _deviceState = value; RaisePropertyChanged(); }
+            protected set { _deviceState = value; RaisePropertyChanged(); }
         }
 
         public int OutputLevel => _outputLevel;
@@ -52,6 +76,7 @@ namespace BrickController2.DeviceManagement
             Action<Device> onDeviceDisconnected,
             IEnumerable<ChannelConfiguration> channelConfigurations,
             bool startOutputProcessing,
+            bool requestDeviceInformation,
             CancellationToken token);
         public abstract Task DisconnectAsync();
 

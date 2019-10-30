@@ -33,6 +33,7 @@ namespace BrickController2.DeviceManagement
             Action<Device> onDeviceDisconnected,
             IEnumerable<ChannelConfiguration> channelConfigurations,
             bool startOutputProcessing,
+            bool requestDeviceInformation,
             CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
@@ -62,7 +63,7 @@ namespace BrickController2.DeviceManagement
                     token.ThrowIfCancellationRequested();
 
                     if (await ValidateServicesAsync(services, token) && 
-                        await AfterConnectSetupAsync(token))
+                        await AfterConnectSetupAsync(requestDeviceInformation, token))
                     {
                         if (startOutputProcessing)
                         {
@@ -106,7 +107,7 @@ namespace BrickController2.DeviceManagement
         {
         }
 
-        protected virtual Task<bool> AfterConnectSetupAsync(CancellationToken token)
+        protected virtual Task<bool> AfterConnectSetupAsync(bool requestDeviceInformation, CancellationToken token)
         {
             return Task.FromResult(true);
         }

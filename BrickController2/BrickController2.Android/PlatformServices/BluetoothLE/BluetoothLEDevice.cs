@@ -24,6 +24,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
         private BluetoothGatt _bluetoothGatt = null;
 
         private TaskCompletionSource<IEnumerable<IGattService>> _connectCompletionSource = null;
+        private TaskCompletionSource<byte[]> _readCompletionSource = null;
         private TaskCompletionSource<bool> _writeCompletionSource = null;
 
         private Action<Guid, byte[]> _onCharacteristicChanged = null;
@@ -153,6 +154,39 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
                 var result = _bluetoothGatt.WriteDescriptor(descriptor);
                 return Task.FromResult(result);
+            }
+        }
+
+        public async Task<byte[]> ReadAsync(IGattCharacteristic characteristic, CancellationToken token)
+        {
+            using (token.Register(() =>
+            {
+                lock (_lock)
+                {
+                    _readCompletionSource?.TrySetResult(null);
+                }
+            }))
+            {
+                lock (_lock)
+                {
+                    var nativeCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
+
+                    _readCompletionSource = new TaskCompletionSource<byte[]>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+                    if (!_bluetoothGatt.ReadCharacteristic(nativeCharacteristic))
+                    {
+                        _readCompletionSource = null;
+                        return null;
+                    }
+                }
+
+                var result = await _readCompletionSource.Task;
+
+                lock (_lock)
+                {
+                    _readCompletionSource = null;
+                    return result;
+                }
             }
         }
 
@@ -326,6 +360,14 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                     Disconnect();
                     _connectCompletionSource?.TrySetResult(null);
                 }
+            }
+        }
+
+        public override void OnCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, [GeneratedEnum] GattStatus status)
+        {
+            lock (_lock)
+            {
+                _readCompletionSource?.TrySetResult(characteristic.GetValue());
             }
         }
 

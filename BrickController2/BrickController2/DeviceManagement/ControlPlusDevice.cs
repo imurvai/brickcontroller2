@@ -48,6 +48,8 @@ namespace BrickController2.DeviceManagement
             _relativePositions = new int[NumberOfChannels];
         }
 
+        public override string BatteryVoltageSign => "%";
+
         protected override bool AutoConnectOnFirstConnect => true;
 
         public async override Task<DeviceConnectionResult> ConnectAsync(
@@ -55,6 +57,7 @@ namespace BrickController2.DeviceManagement
             Action<Device> onDeviceDisconnected,
             IEnumerable<ChannelConfiguration> channelConfigurations,
             bool startOutputProcessing,
+            bool requestDeviceInformation,
             CancellationToken token)
         {
             for (int c = 0; c < NumberOfChannels; c++)
@@ -91,7 +94,7 @@ namespace BrickController2.DeviceManagement
                 }
             }
 
-            return await base.ConnectAsync(reconnect, onDeviceDisconnected, channelConfigurations, startOutputProcessing, token);
+            return await base.ConnectAsync(reconnect, onDeviceDisconnected, channelConfigurations, startOutputProcessing, requestDeviceInformation, token);
         }
 
         public override void SetOutput(int channel, float value)
@@ -126,7 +129,8 @@ namespace BrickController2.DeviceManagement
             CheckChannel(channel);
 
             await SetupChannelForPortInformationAsync(channel, token);
-            await Task.Delay(300, token);
+
+            await Task.Delay(TimeSpan.FromMilliseconds(300), token);
 
             return await AutoCalibrateServoAsync(channel, token);
         }
@@ -138,7 +142,7 @@ namespace BrickController2.DeviceManagement
 
             if (_characteristic != null)
             {
-                return await _bleDevice.EnableNotificationAsync(_characteristic, token);
+                return await _bleDevice?.EnableNotificationAsync(_characteristic, token);
             }
 
             return false;
@@ -152,17 +156,11 @@ namespace BrickController2.DeviceManagement
             }
 
             var messageCode = data[2];
-            var portId = data[3];
-
-            if (portId < 0 || portId >= NumberOfChannels)
-            {
-                return;
-            }
 
             switch (messageCode)
             {
                 case 0x01: // Hub properties
-                    DumpData("Hub properties", data);
+                    ProcessHubPropertyData(data);
                     break;
 
                 case 0x02: // Hub actions
@@ -202,6 +200,7 @@ namespace BrickController2.DeviceManagement
                     break;
 
                 case 0x46: // Port value (combined mode)
+                    var portId = data[3];
                     var modeMask = data[5];
                     var dataIndex = 6;
 
@@ -289,12 +288,17 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        protected override async Task<bool> AfterConnectSetupAsync(CancellationToken token)
+        protected override async Task<bool> AfterConnectSetupAsync(bool requestDeviceInformation, CancellationToken token)
         {
             try
             {
                 // Wait until ports finish communicating with the hub
                 await Task.Delay(1000, token);
+
+                if (requestDeviceInformation)
+                {
+                    await RequestHubProperties(token);
+                }
 
                 for (int channel = 0; channel < NumberOfChannels; channel++)
                 {
@@ -661,6 +665,101 @@ namespace BrickController2.DeviceManagement
             var a3 = (byte)((angle >> 24) & 0xff);
 
             return _bleDevice.WriteAsync(_characteristic, new byte[] { 0x0b, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x02, a0, a1, a2, a3 }, token);
+        }
+
+        private async Task RequestHubProperties(CancellationToken token)
+        {
+            try
+            {
+                // Request firmware version
+                await Task.Delay(TimeSpan.FromMilliseconds(300));
+                await _bleDevice?.WriteAsync(_characteristic, new byte[] { 0x05, 0x00, 0x01, 0x03, 0x05 }, token);
+                var data = await _bleDevice?.ReadAsync(_characteristic, token);
+                ProcessHubPropertyData(data);
+
+                // Request hardware version
+                await Task.Delay(TimeSpan.FromMilliseconds(300));
+                await _bleDevice?.WriteAsync(_characteristic, new byte[] { 0x05, 0x00, 0x01, 0x04, 0x05 }, token);
+                data = await _bleDevice?.ReadAsync(_characteristic, token);
+                ProcessHubPropertyData(data);
+
+                // Request battery voltage
+                await Task.Delay(TimeSpan.FromMilliseconds(300));
+                await _bleDevice?.WriteAsync(_characteristic, new byte[] { 0x05, 0x00, 0x01, 0x06, 0x05 }, token);
+                data = await _bleDevice?.ReadAsync(_characteristic, token);
+                ProcessHubPropertyData(data);
+            }
+            catch { }
+        }
+
+        private void ProcessHubPropertyData(byte[] data)
+        {
+            try
+            {
+                if (data == null || data.Length < 6)
+                {
+                    return;
+                }
+
+                var s = BitConverter.ToString(data);
+                Console.WriteLine("*** Hub property - " + s);
+
+                var dataLength = data[0];
+                var messageId = data[2];
+                var propertyId = data[3];
+                var propertyOperation = data[4];
+
+                if (messageId != 0x01 || propertyOperation != 0x06)
+                {
+                    // Operation is not 'update'
+                    return;
+                }
+
+                switch (propertyId)
+                {
+                    case 0x03: // FW version
+                        var firmwareVersion = ProcessVersionNumber(data, 5);
+                        if (!string.IsNullOrEmpty(firmwareVersion))
+                        {
+                            FirmwareVersion = firmwareVersion;
+                        }
+                        break;
+
+                    case 0x04: // HW version
+                        var hardwareVersion = ProcessVersionNumber(data, 5);
+                        if (!string.IsNullOrEmpty(hardwareVersion))
+                        {
+                            HardwareVersion = hardwareVersion;
+                        }
+                        break;
+
+                    case 0x06: // Battery voltage
+                        var voltage = data[5];
+                        BatteryVoltage = voltage.ToString("F0");
+                        break;
+                }
+            }
+            catch { }
+        }
+
+        private string ProcessVersionNumber(byte[] data, int index)
+        {
+            if (data.Length < index + 4)
+            {
+                return null;
+            }
+
+            var v0 = data[index];
+            var v1 = data[index + 1];
+            var v2 = data[index + 2];
+            var v3 = data[index + 3];
+
+            var major = v0 >> 4;
+            var minor = v0 & 0xf;
+            var bugfix = ((v1 >> 4) * 10) + (v1 & 0xf);
+            var build = ((v2 >> 4) * 1000) + ((v2 & 0xf) * 100) + ((v3 >> 4) * 10) + (v3 & 0xf);
+
+            return $"{major}.{minor}.{bugfix}.{build}";
         }
     }
 }
