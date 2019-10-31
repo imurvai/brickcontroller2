@@ -732,9 +732,6 @@ namespace BrickController2.DeviceManagement
                     return;
                 }
 
-                var s = BitConverter.ToString(data);
-                Console.WriteLine("*** Hub property - " + s);
-
                 var dataLength = data[0];
                 var messageId = data[2];
                 var propertyId = data[3];
