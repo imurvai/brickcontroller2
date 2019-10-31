@@ -43,10 +43,18 @@
 	<key>CFBundleShortVersionString</key>
 	<string>2.1</string>
 	<key>CFBundleVersion</key>
-	<string>29</string>
+	<string>30</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Bluetooth access is required to use SBrick, BuWizz or Powered-Up devices.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Allow the application to access contacts (actually not used by the app)</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow the application to access microphone (actually not used by the app)</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Allow the application to access apple music (actually not used by the app)</string>
+	<key>NSSiriUsageDescription</key>
+	<string>Allow the application to access siri (actually not used by the app)</string>
 </dict>
 </plist>
