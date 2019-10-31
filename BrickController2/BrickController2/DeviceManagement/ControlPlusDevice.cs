@@ -14,6 +14,7 @@ namespace BrickController2.DeviceManagement
         private static readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
 
         private static readonly TimeSpan SEND_DELAY = TimeSpan.FromMilliseconds(40);
+        private static readonly TimeSpan POSITION_EXPIRATION = TimeSpan.FromMilliseconds(200);
 
         private readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
         private readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
@@ -30,6 +31,8 @@ namespace BrickController2.DeviceManagement
         
         private readonly int[] _absolutePositions;
         private readonly int[] _relativePositions;
+        private readonly bool[] _positionsUpdated;
+        private readonly DateTime[] _positionUpdateTimes;
 
         private IGattCharacteristic _characteristic;
 
@@ -46,6 +49,8 @@ namespace BrickController2.DeviceManagement
             
             _absolutePositions = new int[NumberOfChannels];
             _relativePositions = new int[NumberOfChannels];
+            _positionsUpdated = new bool[NumberOfChannels];
+            _positionUpdateTimes = new DateTime[NumberOfChannels];
         }
 
         public override string BatteryVoltageSign => "%";
@@ -72,6 +77,8 @@ namespace BrickController2.DeviceManagement
 
                 _absolutePositions[c] = 0;
                 _relativePositions[c] = 0;
+                _positionsUpdated[c] = false;
+                _positionUpdateTimes[c] = DateTime.MinValue;
             }
 
             foreach (var channelConfig in channelConfigurations)
@@ -241,6 +248,9 @@ namespace BrickController2.DeviceManagement
                         {
                             _relativePositions[portId] = data[dataIndex];
                         }
+
+                        _positionsUpdated[portId] = true;
+                        _positionUpdateTimes[portId] = DateTime.Now;
                     }
 
                     break;
@@ -272,6 +282,8 @@ namespace BrickController2.DeviceManagement
                 {
                     _outputValues[channel] = 0;
                     _lastOutputValues[channel] = 1;
+                    _positionsUpdated[channel] = false;
+                    _positionUpdateTimes[channel] = DateTime.MinValue;
                 }
 
                 while (true)
@@ -282,10 +294,7 @@ namespace BrickController2.DeviceManagement
                     await Task.Delay(10, token);
                 }
             }
-            catch
-            {
-                // Do nothing here, just exit
-            }
+            catch { }
         }
 
         protected override async Task<bool> AfterConnectSetupAsync(bool requestDeviceInformation, CancellationToken token)
@@ -423,12 +432,19 @@ namespace BrickController2.DeviceManagement
                 if (_lastOutputValues[channel] != value)
                 {
                     var servoValue = maxServoAngle * value / 100;
+                    var servoSpeed = CalculateServoSpeed(channel, servoValue);
+
+                    if (servoSpeed == 0)
+                    {
+                        return true;
+                    }
+
                     _servoSendBuffer[3] = (byte)channel;
                     _servoSendBuffer[6] = (byte)(servoValue & 0xff);
                     _servoSendBuffer[7] = (byte)((servoValue >> 8) & 0xff);
                     _servoSendBuffer[8] = (byte)((servoValue >> 16) & 0xff);
                     _servoSendBuffer[9] = (byte)((servoValue >> 24) & 0xff);
-                    _servoSendBuffer[10] = CalculateServoSpeed(maxServoAngle * _lastOutputValues[channel] / 100, servoValue);
+                    _servoSendBuffer[10] = (byte)servoSpeed;
 
                     if (await _bleDevice?.WriteNoResponseAsync(_characteristic, _servoSendBuffer, token))
                     {
@@ -631,11 +647,26 @@ namespace BrickController2.DeviceManagement
             return -180;
         }
 
-        private byte CalculateServoSpeed(int currentAngle, int targetAngle)
+        private int CalculateServoSpeed(int channel, int targetAngle)
         {
-            var diff = Math.Abs(currentAngle - targetAngle);
-            var result = (byte)Math.Max(40, Math.Min(100, diff * 3));
-            return result;
+            var positionUpdateTime = _positionUpdateTimes[channel];
+
+            if (positionUpdateTime == DateTime.MinValue ||
+                POSITION_EXPIRATION < DateTime.Now - positionUpdateTime)
+            {
+                // Position update never happened or too old
+                return 50;
+            }
+
+            if (_positionsUpdated[channel])
+            {
+                var diff = Math.Abs(_relativePositions[channel] - targetAngle);
+                _positionsUpdated[channel] = false;
+
+                return Math.Max(20, Math.Min(100, diff));
+            }
+
+            return 0;
         }
 
         private Task<bool> Stop(int channel, CancellationToken token)
