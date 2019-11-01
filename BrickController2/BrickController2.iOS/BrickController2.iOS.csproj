@@ -123,7 +123,7 @@
     <IpaPackageName>com.scn.brickcontroller2</IpaPackageName>
     <IpaIncludeArtwork>true</IpaIncludeArtwork>
     <LangVersion>latest</LangVersion>
-    <CodesignProvision>BrickController2 iOS Distribution Profile</CodesignProvision>
+    <CodesignProvision>BrickController2_dist_profile</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <AppExtensionDebugBundleId />
@@ -213,7 +213,7 @@
     <PackageReference Include="Plugin.Permissions">
       <Version>3.0.0.12</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.2.0.848062" />
+    <PackageReference Include="Xamarin.Forms" Version="4.3.0.947036" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

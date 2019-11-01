@@ -649,21 +649,20 @@ namespace BrickController2.DeviceManagement
 
         private int CalculateServoSpeed(int channel, int targetAngle)
         {
-            var positionUpdateTime = _positionUpdateTimes[channel];
-
-            if (positionUpdateTime == DateTime.MinValue ||
-                POSITION_EXPIRATION < DateTime.Now - positionUpdateTime)
-            {
-                // Position update never happened or too old
-                return 50;
-            }
-
             if (_positionsUpdated[channel])
             {
                 var diff = Math.Abs(_relativePositions[channel] - targetAngle);
                 _positionsUpdated[channel] = false;
 
                 return Math.Max(20, Math.Min(100, diff));
+            }
+
+            var positionUpdateTime = _positionUpdateTimes[channel];
+            if (positionUpdateTime == DateTime.MinValue ||
+                POSITION_EXPIRATION < DateTime.Now - positionUpdateTime)
+            {
+                // Position update never happened or too old
+                return 50;
             }
 
             return 0;

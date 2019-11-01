@@ -21,7 +21,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>MinimumOSVersion</key>
-	<string>9.0</string>
+	<string>8.0</string>
 	<key>CFBundleDisplayName</key>
 	<string>BrickController2</string>
 	<key>CFBundleIdentifier</key>
@@ -41,9 +41,9 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.1</string>
+	<string>2.2</string>
 	<key>CFBundleVersion</key>
-	<string>30</string>
+	<string>34</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
