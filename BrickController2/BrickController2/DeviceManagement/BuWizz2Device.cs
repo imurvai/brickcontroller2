@@ -16,8 +16,8 @@ namespace BrickController2.DeviceManagement
         private readonly Guid CHARACTERISTIC_UUID = new Guid("000092d1-0000-1000-8000-00805f9b34fb");
 
         private readonly Guid SERVICE_UUID_DEVICE_INFORMATION = new Guid("0000180a-0000-1000-8000-00805f9b34fb");
-        private readonly Guid CHARACTERISTIC_MODEL_NUMBER = new Guid("00002a24-0000-1000-8000-00805f9b34fb");
-        private readonly Guid CHARACTERISTIC_FIRMWARE_REVISION = new Guid("00002a26-0000-1000-8000-00805f9b34fb");
+        private readonly Guid CHARACTERISTIC_UUID_MODEL_NUMBER = new Guid("00002a24-0000-1000-8000-00805f9b34fb");
+        private readonly Guid CHARACTERISTIC_UUID_FIRMWARE_REVISION = new Guid("00002a26-0000-1000-8000-00805f9b34fb");
 
         private readonly byte[] _sendOutputBuffer = new byte[] { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 };
         private readonly byte[] _sendOutputLevelBuffer = new byte[] { 0x11, 0x00 };
@@ -73,8 +73,8 @@ namespace BrickController2.DeviceManagement
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
 
             var deviceInformationService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_DEVICE_INFORMATION);
-            _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_FIRMWARE_REVISION);
-            _modelNumberCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_MODEL_NUMBER);
+            _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_FIRMWARE_REVISION);
+            _modelNumberCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_MODEL_NUMBER);
 
             return Task.FromResult(_characteristic != null && _firmwareRevisionCharacteristic != null && _modelNumberCharacteristic != null);
         }
@@ -91,23 +91,6 @@ namespace BrickController2.DeviceManagement
             catch { }
 
             return true;
-        }
-
-        private async Task ReadDeviceInfo(CancellationToken token)
-        {
-            var firmwareData = await _bleDevice?.ReadAsync(_firmwareRevisionCharacteristic, token);
-            var firmwareVersion = firmwareData?.ToAsciiStringSafe();
-            if (!string.IsNullOrEmpty(firmwareVersion))
-            {
-                FirmwareVersion = firmwareVersion;
-            }
-
-            var modelNumberData = await _bleDevice?.ReadAsync(_modelNumberCharacteristic, token);
-            var modelNumber = modelNumberData?.ToAsciiStringSafe();
-            if (!string.IsNullOrEmpty(modelNumber))
-            {
-                HardwareVersion = modelNumber;
-            }
         }
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
@@ -208,6 +191,23 @@ namespace BrickController2.DeviceManagement
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        private async Task ReadDeviceInfo(CancellationToken token)
+        {
+            var firmwareData = await _bleDevice?.ReadAsync(_firmwareRevisionCharacteristic, token);
+            var firmwareVersion = firmwareData?.ToAsciiStringSafe();
+            if (!string.IsNullOrEmpty(firmwareVersion))
+            {
+                FirmwareVersion = firmwareVersion;
+            }
+
+            var modelNumberData = await _bleDevice?.ReadAsync(_modelNumberCharacteristic, token);
+            var modelNumber = modelNumberData?.ToAsciiStringSafe();
+            if (!string.IsNullOrEmpty(modelNumber))
+            {
+                HardwareVersion = modelNumber;
             }
         }
     }
