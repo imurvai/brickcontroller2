@@ -781,10 +781,10 @@ namespace BrickController2.DeviceManagement
             var v2 = data[index + 2];
             var v3 = data[index + 3];
 
-            var major = v0 >> 4;
-            var minor = v0 & 0xf;
-            var bugfix = ((v1 >> 4) * 10) + (v1 & 0xf);
-            var build = ((v2 >> 4) * 1000) + ((v2 & 0xf) * 100) + ((v3 >> 4) * 10) + (v3 & 0xf);
+            var major = v3 >> 4;
+            var minor = v3 & 0xf;
+            var bugfix = ((v2 >> 4) * 10) + (v2 & 0xf);
+            var build = ((v1 >> 4) * 1000) + ((v1 & 0xf) * 100) + ((v0 >> 4) * 10) + (v0 & 0xf);
 
             return $"{major}.{minor}.{bugfix}.{build}";
         }
