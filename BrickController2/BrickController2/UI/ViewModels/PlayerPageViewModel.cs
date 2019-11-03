@@ -399,18 +399,18 @@ namespace BrickController2.UI.ViewModels
             if (controllerAction.AxisCharacteristic == ControllerAxisCharacteristic.Exponential)
             {
                 // Cheat :)
-                axisValue = axisValue * Math.Abs(axisValue);
+                axisValue = axisValue * axisValue * axisValue;
             }
             else if (controllerAction.AxisCharacteristic == ControllerAxisCharacteristic.Logarithmic)
             {
                 // Another cheat :)
                 if (axisValue < 0)
                 {
-                    axisValue = -(float)Math.Sqrt(Math.Abs(axisValue));
+                    axisValue = -(float)Math.Pow(Math.Abs(axisValue), 1F / 3);
                 }
                 else
                 {
-                    axisValue = (float)Math.Sqrt(Math.Abs(axisValue));
+                    axisValue = (float)Math.Pow(axisValue, 1F / 3);
                 }
             }
 
