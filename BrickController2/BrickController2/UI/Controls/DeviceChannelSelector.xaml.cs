@@ -32,6 +32,7 @@ namespace BrickController2.UI.Controls
             TechnicHubChannel1.Command = new SafeCommand(() => SelectedChannel = 1);
             TechnicHubChannel2.Command = new SafeCommand(() => SelectedChannel = 2);
             TechnicHubChannel3.Command = new SafeCommand(() => SelectedChannel = 3);
+            DuploTrainHubChannel0.Command = new SafeCommand(() => SelectedChannel = 0);
         }
 
         public static BindableProperty DeviceTypeProperty = BindableProperty.Create(nameof(DeviceType), typeof(DeviceType), typeof(DeviceChannelSelector), default(DeviceType), BindingMode.OneWay, null, OnDeviceTypeChanged);
@@ -60,6 +61,7 @@ namespace BrickController2.UI.Controls
                 dcs.PoweredUpSection.IsVisible = deviceType == DeviceType.PoweredUp;
                 dcs.BoostSection.IsVisible = deviceType == DeviceType.Boost;
                 dcs.TechnicHubSection.IsVisible = deviceType == DeviceType.TechnicHub;
+                dcs.DuploTrainHubSection.IsVisible = deviceType == DeviceType.DuploTrainHub;
             }
         }
 
@@ -88,6 +90,7 @@ namespace BrickController2.UI.Controls
                 dcs.TechnicHubChannel1.SelectedChannel = selectedChannel;
                 dcs.TechnicHubChannel2.SelectedChannel = selectedChannel;
                 dcs.TechnicHubChannel3.SelectedChannel = selectedChannel;
+                dcs.DuploTrainHubChannel0.SelectedChannel = selectedChannel;
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using BrickController2.DeviceManagement;
+using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -12,10 +13,16 @@ namespace BrickController2.UI.Controls
             InitializeComponent();
         }
 
+        public static BindableProperty DeviceTypeProperty = BindableProperty.Create(nameof(DeviceType), typeof(DeviceType), typeof(ChannelSelectorRadioButton), default(DeviceType), BindingMode.OneWay, null, OnDeviceTypeChanged);
         public static BindableProperty ChannelProperty = BindableProperty.Create(nameof(Channel), typeof(int), typeof(ChannelSelectorRadioButton), 0, BindingMode.OneWay, null, OnChannelChanged);
         public static BindableProperty SelectedChannelProperty = BindableProperty.Create(nameof(SelectedChannel), typeof(int), typeof(ChannelSelectorRadioButton), 0, BindingMode.OneWay, null, OnSelectedChannelChanged);
-        public static BindableProperty TextProperty = BindableProperty.Create(nameof(Text), typeof(string), typeof(ChannelSelectorRadioButton), null, BindingMode.OneWay, null, OnTextChanged);
         public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ChannelSelectorRadioButton), null, BindingMode.OneWay, null, OnCommandChanged);
+
+        public DeviceType DeviceType
+        {
+            get => (DeviceType)GetValue(DeviceTypeProperty);
+            set => SetValue(DeviceTypeProperty, value);
+        }
 
         public int Channel
         {
@@ -29,23 +36,27 @@ namespace BrickController2.UI.Controls
             set => SetValue(SelectedChannelProperty, value);
         }
 
-        public string Text
-        {
-            get => (string)GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
-        }
-
         public ICommand Command
         {
             get => (ICommand)GetValue(CommandProperty);
             set => SetValue(CommandProperty, value);
         }
 
+        private static void OnDeviceTypeChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (bindable is ChannelSelectorRadioButton csrb)
+            {
+                csrb.ChannelLabel.DeviceType = (DeviceType)newValue;
+            }
+        }
+
         private static void OnChannelChanged(BindableObject bindable, object oldValue, object newValue)
         {
             if (bindable is ChannelSelectorRadioButton csrb)
             {
-                csrb.CheckedIndicatorFrame.IsVisible = csrb.SelectedChannel == (int)newValue;
+                int channel = (int)newValue;
+                csrb.CheckedIndicatorFrame.IsVisible = csrb.SelectedChannel == channel;
+                csrb.ChannelLabel.Channel = channel;
             }
         }
 
@@ -54,14 +65,6 @@ namespace BrickController2.UI.Controls
             if (bindable is ChannelSelectorRadioButton csrb)
             {
                 csrb.CheckedIndicatorFrame.IsVisible = csrb.Channel == (int)newValue;
-            }
-        }
-
-        private static void OnTextChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            if (bindable is ChannelSelectorRadioButton csrb)
-            {
-                csrb.TextLabel.Text = (string)newValue;
             }
         }
 

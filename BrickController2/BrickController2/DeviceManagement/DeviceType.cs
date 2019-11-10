@@ -9,6 +9,7 @@
         Infrared,
         Boost,
         PoweredUp,
-        TechnicHub
+        TechnicHub,
+        DuploTrainHub
     }
 }

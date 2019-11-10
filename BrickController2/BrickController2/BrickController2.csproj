@@ -16,6 +16,8 @@
     <None Remove="UI\Images\boost_image_small.png" />
     <None Remove="UI\Images\buwizz_image.png" />
     <None Remove="UI\Images\buwizz_image_small.png" />
+    <None Remove="UI\Images\duplotrainhub_image.png" />
+    <None Remove="UI\Images\duplotrainhub_image_small.png" />
     <None Remove="UI\Images\ic_add.png" />
     <None Remove="UI\Images\ic_buttons.png" />
     <None Remove="UI\Images\ic_console.png" />
@@ -46,6 +48,8 @@
     <EmbeddedResource Include="UI\Images\boost_image_small.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image_small.png" />
+    <EmbeddedResource Include="UI\Images\duplotrainhub_image.png" />
+    <EmbeddedResource Include="UI\Images\duplotrainhub_image_small.png" />
     <EmbeddedResource Include="UI\Images\ic_settings_white.png" />
     <EmbeddedResource Include="UI\Images\technichub_image.png" />
     <EmbeddedResource Include="UI\Images\technichub_image_small.png" />

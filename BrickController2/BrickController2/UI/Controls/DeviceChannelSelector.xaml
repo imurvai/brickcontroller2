@@ -25,15 +25,15 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel0" Channel="0" Text="1" HorizontalOptions="End" VerticalOptions="Start"/>
-                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel1" Channel="1" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel0" DeviceType="SBrick" Channel="0" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel1" DeviceType="SBrick" Channel="1" HorizontalOptions="End" VerticalOptions="End"/>
                 </Grid>
 
                 <Image Grid.Column="1" Source="{extensions:ImageResource Source=sbrick_image.png}" WidthRequest="150" HeightRequest="130"/>
 
                 <Grid Grid.Column="2">
-                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel2" Channel="2" Text="3" HorizontalOptions="Start" VerticalOptions="Start"/>
-                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel3" Channel="3" Text="4" HorizontalOptions="Start" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel2" DeviceType="SBrick" Channel="2" HorizontalOptions="Start" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="SBrickChannel3" DeviceType="SBrick" Channel="3" HorizontalOptions="Start" VerticalOptions="End"/>
                 </Grid>
             </Grid>
 
@@ -46,15 +46,15 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel0" Channel="0" Text="1" HorizontalOptions="End" VerticalOptions="Start"/>
-                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel1" Channel="1" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel0" DeviceType="BuWizz" Channel="0" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel1" DeviceType="BuWizz" Channel="1" HorizontalOptions="End" VerticalOptions="End"/>
                 </Grid>
 
                 <Image Grid.Column="1" Source="{extensions:ImageResource Source=buwizz_image.png}" WidthRequest="150" HeightRequest="100"/>
 
                 <Grid Grid.Column="2">
-                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel3" Channel="3" Text="4" HorizontalOptions="Start" VerticalOptions="Start"/>
-                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel2" Channel="2" Text="3" HorizontalOptions="Start" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel3" DeviceType="BuWizz" Channel="3" HorizontalOptions="Start" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizzChannel2" DeviceType="BuWizz" Channel="2" HorizontalOptions="Start" VerticalOptions="End"/>
                 </Grid>
             </Grid>
 
@@ -67,13 +67,13 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <controls:ChannelSelectorRadioButton x:Name="InfraredChannel0" Channel="0" Text="{extensions:Translate Blue}" HorizontalOptions="End" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="InfraredChannel0" DeviceType="Infrared" Channel="0" HorizontalOptions="End" VerticalOptions="End"/>
                 </Grid>
 
                 <Image Grid.Column="1" Source="{extensions:ImageResource Source=infra_image.png}" WidthRequest="150" HeightRequest="150"/>
 
                 <Grid Grid.Column="2">
-                    <controls:ChannelSelectorRadioButton x:Name="InfraredChannel1" Channel="1" Text="{extensions:Translate Red}" HorizontalOptions="Start" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="InfraredChannel1" DeviceType="Infrared" Channel="1" HorizontalOptions="Start" VerticalOptions="End"/>
                 </Grid>
             </Grid>
             
@@ -86,8 +86,8 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <controls:ChannelSelectorRadioButton x:Name="PoweredUpChannel0" Channel="0" Text="1" HorizontalOptions="End" VerticalOptions="Start"/>
-                    <controls:ChannelSelectorRadioButton x:Name="PoweredUpChannel1" Channel="1" Text="2" HorizontalOptions="End" VerticalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="PoweredUpChannel0" DeviceType="PoweredUp" Channel="0" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="PoweredUpChannel1" DeviceType="PoweredUp" Channel="1" HorizontalOptions="End" VerticalOptions="End"/>
                 </Grid>
 
                 <Image Grid.Column="1" Source="{extensions:ImageResource Source=poweredup_image.png}" WidthRequest="150" HeightRequest="120"/>
@@ -109,10 +109,10 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <controls:ChannelSelectorRadioButton Grid.Column="1" Grid.Row="0" x:Name="BoostChannelD" Channel="3" Text="D" HorizontalOptions="Center" VerticalOptions="Center"/>
-                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="1" x:Name="BoostChannelB" Channel="1" Text="B" HorizontalOptions="End" VerticalOptions="Start"/>
-                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="1" x:Name="BoostChannelA" Channel="0" Text="A" HorizontalOptions="End" VerticalOptions="End"/>
-                <controls:ChannelSelectorRadioButton Grid.Column="1" Grid.Row="2" x:Name="BoostChannelC" Channel="2" Text="C" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="1" Grid.Row="0" x:Name="BoostChannelD" DeviceType="Boost" Channel="3" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="1" x:Name="BoostChannelB" DeviceType="Boost" Channel="1" HorizontalOptions="End" VerticalOptions="Start"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="1" x:Name="BoostChannelA" DeviceType="Boost" Channel="0" HorizontalOptions="End" VerticalOptions="End"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="1" Grid.Row="2" x:Name="BoostChannelC" DeviceType="Boost" Channel="2" HorizontalOptions="Center" VerticalOptions="Center"/>
 
                 <Image Grid.Column="1" Grid.Row="1" Source="{extensions:ImageResource Source=boost_image.png}" WidthRequest="150" HeightRequest="80"/>
             </Grid>
@@ -126,16 +126,31 @@
                 </Grid.ColumnDefinitions>
 
                 <StackLayout Grid.Column="0" Orientation="Vertical" VerticalOptions="End">
-                    <controls:ChannelSelectorRadioButton x:Name="TechnicHubChannel0" Channel="0" Text="A" HorizontalOptions="End"/>
-                    <controls:ChannelSelectorRadioButton x:Name="TechnicHubChannel2" Channel="2" Text="C" HorizontalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="TechnicHubChannel0" DeviceType="TechnicHub" Channel="0" HorizontalOptions="End"/>
+                    <controls:ChannelSelectorRadioButton x:Name="TechnicHubChannel2" DeviceType="TechnicHub" Channel="2" HorizontalOptions="End"/>
                 </StackLayout>
 
                 <Image Grid.Column="1" Source="{extensions:ImageResource Source=technichub_image.png}" WidthRequest="150" HeightRequest="80"/>
 
                 <StackLayout Grid.Column="2" Orientation="Vertical" VerticalOptions="End">
-                    <controls:ChannelSelectorRadioButton x:Name="TechnicHubChannel1" Channel="1" Text="B" HorizontalOptions="Start"/>
-                    <controls:ChannelSelectorRadioButton x:Name="TechnicHubChannel3" Channel="3" Text="D" HorizontalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="TechnicHubChannel1" DeviceType="TechnicHub" Channel="1" HorizontalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="TechnicHubChannel3" DeviceType="TechnicHub" Channel="3" HorizontalOptions="Start"/>
                 </StackLayout>
+            </Grid>
+            
+            <!-- Duplo Train Hub -->
+            <Grid x:Name="DuploTrainHubSection">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackLayout Grid.Column="0" Orientation="Vertical" VerticalOptions="Center">
+                    <controls:ChannelSelectorRadioButton x:Name="DuploTrainHubChannel0" DeviceType="DuploTrainHub" Channel="0" HorizontalOptions="End"/>
+                </StackLayout>
+
+                <Image Grid.Column="1" Source="{extensions:ImageResource Source=duplotrainhub_image.png}" WidthRequest="150" HeightRequest="80" HorizontalOptions="Center"/>
             </Grid>
 
         </Grid>

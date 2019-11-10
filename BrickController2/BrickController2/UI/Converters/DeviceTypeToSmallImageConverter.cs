@@ -32,6 +32,9 @@ namespace BrickController2.UI.Converters
                 case DeviceType.TechnicHub:
                     return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.technichub_image_small.png");
 
+                case DeviceType.DuploTrainHub:
+                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.duplotrainhub_image_small.png");
+
                 default:
                     return null;
             }

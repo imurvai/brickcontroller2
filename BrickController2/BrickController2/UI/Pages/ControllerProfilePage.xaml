@@ -85,7 +85,7 @@
                                     <Label Text="{Binding DeviceName}" FontAttributes="Bold"/>
                                     <Label Text="{extensions:Translate ShortChannel}"/>
                                     <Label Text=": "/>
-                                    <Label Text="{Binding ChannelName}" FontAttributes="Bold"/>
+                                    <controls:DeviceChannelLabel DeviceType="{Binding DeviceType}" Channel="{Binding Channel}" FontAttributes="Bold"/>
                                     <Label Text=" - "/>
                                     <Label Text="{Binding InvertName}" FontAttributes="Bold"/>
                                 </StackLayout>
