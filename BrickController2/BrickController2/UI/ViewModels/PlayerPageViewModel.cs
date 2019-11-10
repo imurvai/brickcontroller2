@@ -264,7 +264,6 @@ namespace BrickController2.UI.ViewModels
                         {
                             var device = _deviceManager.GetDeviceById(controllerAction.DeviceId);
                             var channel = controllerAction.Channel;
-                            float outputValue = 0F;
 
                             if (gameControllerEvent.Key.EventType == GameControllerEventType.Button)
                             {
@@ -274,16 +273,19 @@ namespace BrickController2.UI.ViewModels
                                     continue;
                                 }
 
-                                outputValue = ProcessButtonEvent(gameControllerEvent.Key.EventCode, isPressed, controllerAction);
+                                var outputValue = ProcessButtonEvent(gameControllerEvent.Key.EventCode, isPressed, controllerAction);
+                                device.SetOutput(channel, outputValue);
                             }
                             else if (gameControllerEvent.Key.EventType == GameControllerEventType.Axis)
                             {
-                                outputValue = ProcessAxisEvent(gameControllerEvent.Key.EventCode, gameControllerEvent.Value, controllerAction);
-                                StoreAxisOutputValue(outputValue, controllerAction.DeviceId, controllerAction.Channel, controllerEvent.EventType, controllerEvent.EventCode);
-                                outputValue = CombineAxisOutputValues(controllerAction.DeviceId, controllerAction.Channel);
+                                var (useAxisValue, axisValue) = ProcessAxisEvent(gameControllerEvent.Key.EventCode, gameControllerEvent.Value, controllerAction);
+                                if (useAxisValue)
+                                {
+                                    StoreAxisOutputValue(axisValue, controllerAction.DeviceId, controllerAction.Channel, controllerEvent.EventType, controllerEvent.EventCode);
+                                    var outputValue = CombineAxisOutputValues(controllerAction.DeviceId, controllerAction.Channel);
+                                    device.SetOutput(channel, outputValue);
+                                }
                             }
-
-                            device.SetOutput(channel, outputValue);
                         }
                     }
                 }
@@ -374,7 +376,7 @@ namespace BrickController2.UI.ViewModels
             buttonOutputs[0] = value;
         }
 
-        private float ProcessAxisEvent(string gameControllerEventCode, float axisValue, ControllerAction controllerAction)
+        private (bool UseAxisValue, float AxisValue) ProcessAxisEvent(string gameControllerEventCode, float axisValue, ControllerAction controllerAction)
         {
             var previousAxisValue = GetPreviousAxisOutput(gameControllerEventCode, controllerAction);
 
@@ -383,7 +385,7 @@ namespace BrickController2.UI.ViewModels
             {
                 if (Math.Abs(axisValue) <= axisDeadZone)
                 {
-                    return 0;
+                    return (false, 0);
                 }
 
                 if (axisValue < 0)
@@ -414,6 +416,8 @@ namespace BrickController2.UI.ViewModels
                 }
             }
 
+            var useAxisValue = true;
+
             if (controllerAction.AxisType == ControllerAxisType.Train)
             {
                 if (GetIsOutputDisableForAxises(controllerAction))
@@ -423,17 +427,17 @@ namespace BrickController2.UI.ViewModels
                         SetIsOutputDisabledForAxises(controllerAction, false);
                     }
 
-                    axisValue = previousAxisValue;
+                    useAxisValue = false;
                 }
-                else
+                else if (previousAxisValue != 0)
                 {
-                    if (axisValue * previousAxisValue >= 0)
+                    if (Math.Sign(axisValue) == Math.Sign(previousAxisValue))
                     {
                         // The sign of axisValue and previouAxisValue are same
                         if (Math.Abs(axisValue) < Math.Abs(previousAxisValue))
                         {
                             // Don't accelarate
-                            axisValue = previousAxisValue;
+                            useAxisValue = false;
                         }
                     }
                     else
@@ -442,7 +446,7 @@ namespace BrickController2.UI.ViewModels
                         if (Math.Abs(previousAxisValue - axisValue) < 1)
                         {
                             // Don't slow down
-                            axisValue = previousAxisValue;
+                            useAxisValue = false;
                         }
                         else
                         {
@@ -465,8 +469,13 @@ namespace BrickController2.UI.ViewModels
                 }
             }
 
-            SetPreviousAxisOutput(gameControllerEventCode, controllerAction, axisValue);
-            return AdjustOutputValue(axisValue, controllerAction);
+            if (useAxisValue)
+            {
+                SetPreviousAxisOutput(gameControllerEventCode, controllerAction, axisValue);
+                axisValue = AdjustOutputValue(axisValue, controllerAction);
+            }
+
+            return (useAxisValue, axisValue);
         }
 
         private float GetPreviousAxisOutput(string gameControllerEventCode, ControllerAction controllerAction)
