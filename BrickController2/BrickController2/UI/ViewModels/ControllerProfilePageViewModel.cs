@@ -222,14 +222,16 @@ namespace BrickController2.UI.ViewModels
 
                 DeviceMissing = device == null;
                 DeviceName = device != null ? device.Name : Translate("Missing");
-                ChannelName = (device == null || device.DeviceType != DeviceType.Infrared) ? $"{controllerAction.Channel + 1}" : (controllerAction.Channel == 0 ? Translate("Blue") : Translate("Red"));
+                DeviceType = device != null ? device.DeviceType : DeviceType.Unknown;
+                Channel = controllerAction.Channel;
                 InvertName = controllerAction.IsInvert ? Translate("Inv") : string.Empty;
             }
 
             public ControllerAction ControllerAction { get; }
             public bool DeviceMissing { get; }
             public string DeviceName { get; }
-            public string ChannelName { get; }
+            public DeviceType DeviceType { get; }
+            public int Channel { get; }
             public string InvertName { get; }
 
             private string Translate(string key) => _translationService.Translate(key);
