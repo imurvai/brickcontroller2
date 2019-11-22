@@ -89,6 +89,13 @@ namespace BrickController2.Droid.PlatformServices.GameController
                         axisValue = Math.Min(1, Math.Max(-1, axisValue / 0.69F));
                     }
 
+                    if (e.Device.VendorId == 1118 && e.Device.ProductId == 765 &&
+                        axisCode == Axis.Generic1)
+                    {
+                        // XBox One controller reports a constant value on Generic 1 - filter it out
+                        continue;
+                    }
+
                     axisValue = AdjustControllerValue(axisValue);
 
                     if (_lastAxisValues.TryGetValue(axisCode, out float lastValue))
