@@ -127,6 +127,11 @@ namespace BrickController2.BusinessLogic
                     ResetPreviousAxisOutputsForOutput(controllerAction);
 
                     break;
+
+                case ControllerButtonType.Accelerator:
+
+                    // TODO:
+                    break;
             }
 
             SetPreviousButtonOutput(gameControllerEventCode, controllerAction, currentOutput);
