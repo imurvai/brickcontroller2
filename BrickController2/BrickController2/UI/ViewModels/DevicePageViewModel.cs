@@ -10,6 +10,8 @@ using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Translation;
 using BrickController2.UI.Services.UIThread;
 using Device = BrickController2.DeviceManagement.Device;
+using System.Collections.ObjectModel;
+using BrickController2.Helpers;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -39,6 +41,9 @@ namespace BrickController2.UI.ViewModels
             _uIThreadService = uIThreadService;
 
             Device = parameters.Get<Device>("device");
+            ChannelOutputs = Enumerable.Range(0, Device.NumberOfChannels)
+                    .Select(channel => new DeviceChannelOutputViewModel(Device, channel))
+                    .ToObservableCollection();
 
             RenameCommand = new SafeCommand(async () => await RenameDeviceAsync());
             BuWizzOutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
@@ -55,6 +60,8 @@ namespace BrickController2.UI.ViewModels
 
         public int BuWizzOutputLevel { get; set; } = 1;
         public int BuWizz2OutputLevel { get; set; } = 1;
+
+        public ObservableCollection<DeviceChannelOutputViewModel> ChannelOutputs { get; }
 
         public override async void OnAppearing()
         {
