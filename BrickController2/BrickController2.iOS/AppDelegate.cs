@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using BrickController2.BusinessLogic.DI;
 using BrickController2.CreationManagement.DI;
 using BrickController2.Database.DI;
 using BrickController2.DeviceManagement.DI;
@@ -44,6 +45,7 @@ namespace BrickController2.iOS
             builder.RegisterModule(new PlatformServicesModule());
             builder.RegisterModule(new UIServicesModule());
 
+            builder.RegisterModule(new BusinessLogicModule());
             builder.RegisterModule(new DatabaseModule());
             builder.RegisterModule(new CreationManagementModule());
             builder.RegisterModule(new DeviceManagementModule());

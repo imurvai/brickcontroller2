@@ -3,6 +3,7 @@
     public enum ControllerAxisType
     {
         Normal,
-        Train
+        Train,
+        Accelerator
     }
 }

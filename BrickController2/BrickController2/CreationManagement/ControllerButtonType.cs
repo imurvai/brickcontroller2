@@ -7,6 +7,7 @@
         Alternating,
         Circular,
         PingPong,
-        Stop
+        Stop,
+        Accelerator
     }
 }

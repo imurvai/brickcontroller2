@@ -61,6 +61,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
                         _didDisconnectNotification?.Dispose();
                         _didConnectNotification = null;
                         _didDisconnectNotification = null;
+                        _gameController?.Dispose();
                         _gameController = null;
                     }
                 }
@@ -76,7 +77,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
                     FoundController();
                 });
 
-                GCController.StartWirelessControllerDiscoveryAsync();
+                GCController.StartWirelessControllerDiscovery(() => { });
             }
         }
 
