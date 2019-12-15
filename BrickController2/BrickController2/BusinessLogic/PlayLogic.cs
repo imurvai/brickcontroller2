@@ -12,8 +12,8 @@ namespace BrickController2.BusinessLogic
         private readonly IDeviceManager _deviceManager;
 
         private readonly IDictionary<(string DeviceId, int Channel), float[]> _previousOutputs = new Dictionary<(string, int), float[]>();
-        private readonly IDictionary<(string EventCode, ControllerAction ControllerAction), float> _previousAxisOutputs = new Dictionary<(string, ControllerAction), float>();
-        private readonly IDictionary<ControllerAction, bool> _disabledOutputForAxises = new Dictionary<ControllerAction, bool>();
+        private readonly IDictionary<(string EventCode, string DeviceId, int Channel), float> _previousAxisOutputs = new Dictionary<(string, string, int), float>();
+        private readonly IDictionary<(string DeviceId, int Channel), bool> _disabledOutputForAxises = new Dictionary<(string, int), bool>();
         private readonly IDictionary<(string DeviceId, int Channel), IDictionary<(GameControllerEventType EventType, string EventCode), float>> _axisOutputValues = new Dictionary<(string, int), IDictionary<(GameControllerEventType, string), float>>();
 
         public PlayLogic(IDeviceManager deviceManager)
@@ -279,21 +279,21 @@ namespace BrickController2.BusinessLogic
 
         private float GetPreviousAxisOutput(string gameControllerEventCode, ControllerAction controllerAction)
         {
-            if (_previousAxisOutputs.ContainsKey((gameControllerEventCode, controllerAction)))
+            if (_previousAxisOutputs.ContainsKey((gameControllerEventCode, controllerAction.DeviceId, controllerAction.Channel)))
             {
-                return _previousAxisOutputs[(gameControllerEventCode, controllerAction)];
+                return _previousAxisOutputs[(gameControllerEventCode, controllerAction.DeviceId, controllerAction.Channel)];
             }
             else
             {
                 var prevOutput = 0.0f;
-                _previousAxisOutputs[(gameControllerEventCode, controllerAction)] = prevOutput;
+                _previousAxisOutputs[(gameControllerEventCode, controllerAction.DeviceId, controllerAction.Channel)] = prevOutput;
                 return prevOutput;
             }
         }
 
         private void SetPreviousAxisOutput(string gameControllerEventCode, ControllerAction controllerAction, float value)
         {
-            _previousAxisOutputs[(gameControllerEventCode, controllerAction)] = value;
+            _previousAxisOutputs[(gameControllerEventCode, controllerAction.DeviceId, controllerAction.Channel)] = value;
         }
 
         private void StoreAxisOutputValue(float outputValue, string deviceId, int channel, GameControllerEventType controllerEventType, string controllerEventCode)
@@ -309,22 +309,22 @@ namespace BrickController2.BusinessLogic
 
         private bool GetIsOutputDisableForAxises(ControllerAction controllerAction)
         {
-            if (!_disabledOutputForAxises.ContainsKey(controllerAction))
+            if (!_disabledOutputForAxises.ContainsKey((controllerAction.DeviceId, controllerAction.Channel)))
             {
-                _disabledOutputForAxises[controllerAction] = false;
+                _disabledOutputForAxises[(controllerAction.DeviceId, controllerAction.Channel)] = false;
             }
 
-            return _disabledOutputForAxises[controllerAction];
+            return _disabledOutputForAxises[(controllerAction.DeviceId, controllerAction.Channel)];
         }
 
         private void SetIsOutputDisabledForAxises(ControllerAction controllerAction, bool value)
         {
-            _disabledOutputForAxises[controllerAction] = value;
+            _disabledOutputForAxises[(controllerAction.DeviceId, controllerAction.Channel)] = value;
         }
 
         private void ResetPreviousAxisOutputsForOutput(ControllerAction controllerAction)
         {
-            foreach (var key in _previousAxisOutputs.Keys.Where(k => k.ControllerAction.DeviceId == controllerAction.DeviceId && k.ControllerAction.Channel == controllerAction.Channel).ToArray())
+            foreach (var key in _previousAxisOutputs.Keys.Where(k => k.DeviceId == controllerAction.DeviceId && k.Channel == controllerAction.Channel).ToArray())
             {
                 _previousAxisOutputs[key] = 0;
             }
