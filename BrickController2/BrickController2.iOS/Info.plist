@@ -56,5 +56,7 @@
 	<string>Allow the application to access apple music (actually not used by the app)</string>
 	<key>NSSiriUsageDescription</key>
 	<string>Allow the application to access siri (actually not used by the app)</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>
