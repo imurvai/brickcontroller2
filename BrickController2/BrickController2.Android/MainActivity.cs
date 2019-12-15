@@ -14,6 +14,7 @@ using BrickController2.Droid.UI.Services.DI;
 using BrickController2.UI.DI;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
+using BrickController2.BusinessLogic.DI;
 
 namespace BrickController2.Droid
 {
@@ -80,6 +81,7 @@ namespace BrickController2.Droid
             builder.RegisterModule(new PlatformServicesModule());
             builder.RegisterModule(new UIServicesModule());
 
+            builder.RegisterModule(new BusinessLogicModule());
             builder.RegisterModule(new DatabaseModule());
             builder.RegisterModule(new CreationManagementModule());
             builder.RegisterModule(new DeviceManagementModule());

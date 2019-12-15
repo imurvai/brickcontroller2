@@ -21,12 +21,11 @@ namespace BrickController2.UI.ViewModels
         private readonly IDialogService _dialogService;
         private readonly IGameControllerService _gameControllerService;
         private readonly IUIThreadService _uIThreadService;
+        private readonly IPlayLogic _playLogic;
 
         private readonly IList<Device> _devices = new List<Device>();
         private readonly IList<Device> _buwizzDevices = new List<Device>();
         private readonly IList<Device> _buwizz2Devices = new List<Device>();
-
-        private readonly PlayLogic _playLogic;
 
         private readonly IDictionary<Device, Task<DeviceConnectionResult>> _deviceConnectionTasks = new Dictionary<Device, Task<DeviceConnectionResult>>();
         private Task _connectionTask;
@@ -43,6 +42,7 @@ namespace BrickController2.UI.ViewModels
             IDialogService dialogService,
             IGameControllerService gameControllerService,
             IUIThreadService uIThreadService,
+            IPlayLogic playLogic,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
@@ -50,8 +50,7 @@ namespace BrickController2.UI.ViewModels
             _dialogService = dialogService;
             _gameControllerService = gameControllerService;
             _uIThreadService = uIThreadService;
-
-            _playLogic = new PlayLogic(_deviceManager);
+            _playLogic = playLogic;
 
             Creation = parameters.Get<Creation>("creation");
             ActiveProfile = Creation.ControllerProfiles.First();

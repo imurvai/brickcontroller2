@@ -7,11 +7,11 @@ using System.Linq;
 
 namespace BrickController2.BusinessLogic
 {
-    public class PlayLogic
+    public class PlayLogic : IPlayLogic
     {
         private readonly IDeviceManager _deviceManager;
 
-        private readonly IDictionary<(string EventCode, ControllerAction ControllerAction), float[]> _previousButtonOutputs = new Dictionary<(string, ControllerAction), float[]>();
+        private readonly IDictionary<(string DeviceId, int Channel), float[]> _previousOutputs = new Dictionary<(string, int), float[]>();
         private readonly IDictionary<(string EventCode, ControllerAction ControllerAction), float> _previousAxisOutputs = new Dictionary<(string, ControllerAction), float>();
         private readonly IDictionary<ControllerAction, bool> _disabledOutputForAxises = new Dictionary<ControllerAction, bool>();
         private readonly IDictionary<(string DeviceId, int Channel), IDictionary<(GameControllerEventType EventType, string EventCode), float>> _axisOutputValues = new Dictionary<(string, int), IDictionary<(GameControllerEventType, string), float>>();
@@ -50,12 +50,12 @@ namespace BrickController2.BusinessLogic
                                     continue;
                                 }
 
-                                var outputValue = ProcessButtonEvent(gameControllerEvent.Key.EventCode, isPressed, controllerAction);
+                                var outputValue = ProcessButtonEvent(isPressed, controllerAction, device.DeviceType);
                                 device.SetOutput(channel, outputValue);
                             }
                             else if (gameControllerEvent.Key.EventType == GameControllerEventType.Axis)
                             {
-                                var (useAxisValue, axisValue) = ProcessAxisEvent(gameControllerEvent.Key.EventCode, gameControllerEvent.Value, controllerAction);
+                                var (useAxisValue, axisValue) = ProcessAxisEvent(gameControllerEvent.Key.EventCode, gameControllerEvent.Value, controllerAction, device.DeviceType);
                                 if (useAxisValue)
                                 {
                                     StoreAxisOutputValue(axisValue, controllerAction.DeviceId, controllerAction.Channel, controllerEvent.EventType, controllerEvent.EventCode);
@@ -68,55 +68,52 @@ namespace BrickController2.BusinessLogic
                 }
             }
         }
-
-
+        
         private static bool ShouldProcessButtonEvent(bool isPressed, ControllerAction controllerAction)
         {
             return controllerAction.ButtonType == ControllerButtonType.Normal || isPressed;
         }
 
-        private float ProcessButtonEvent(string gameControllerEventCode, bool isPressed, ControllerAction controllerAction)
+        private float ProcessButtonEvent(bool isPressed, ControllerAction controllerAction, DeviceType deviceType)
         {
-            var previousButtonOutputs = GetPreviousButtonOutputs(gameControllerEventCode, controllerAction);
+            var previousOutputs = GetPreviousOutputs(controllerAction);
             float currentOutput = 0;
-
+            float buttonValue = isPressed ? (controllerAction.IsInvert ? -1 : 1) : 0;
+            
             switch (controllerAction.ButtonType)
             {
                 case ControllerButtonType.Normal:
-                    currentOutput = isPressed ? 1 : 0;
+                    currentOutput = buttonValue;
                     break;
 
                 case ControllerButtonType.SimpleToggle:
-                    currentOutput = previousButtonOutputs[0] != 0 ? 0 : 1;
+                    currentOutput = previousOutputs[0] != 0 ? 0 : buttonValue;
                     break;
 
                 case ControllerButtonType.Alternating:
-                    currentOutput = previousButtonOutputs[0] < 0 ? 1 : -1;
+                    currentOutput = (previousOutputs[0] * buttonValue) <= 0 ? buttonValue : -buttonValue;
                     break;
 
                 case ControllerButtonType.Circular:
-                    if (previousButtonOutputs[0] < 0)
-                    {
-                        currentOutput = 0;
-                    }
-                    else if (previousButtonOutputs[0] == 0)
-                    {
-                        currentOutput = 1;
-                    }
-                    else
+                    currentOutput = previousOutputs[0] += buttonValue;
+                    if (currentOutput > 1)
                     {
                         currentOutput = -1;
+                    }
+                    else if (currentOutput < -1)
+                    {
+                        currentOutput = 1;
                     }
                     break;
 
                 case ControllerButtonType.PingPong:
-                    if (previousButtonOutputs[0] != 0)
+                    if (previousOutputs[0] != 0)
                     {
                         currentOutput = 0;
                     }
                     else
                     {
-                        currentOutput = previousButtonOutputs[1] < 0 ? 1 : -1;
+                        currentOutput = (previousOutputs[1] * buttonValue) <= 0 ? buttonValue : -buttonValue;
                     }
                     break;
 
@@ -129,39 +126,42 @@ namespace BrickController2.BusinessLogic
                     break;
 
                 case ControllerButtonType.Accelerator:
-
-                    // TODO:
+                    var accelarationStep = GetAccelarationStep(deviceType);
+                    accelarationStep = controllerAction.IsInvert ? -accelarationStep : accelarationStep;
+                    currentOutput = Math.Min(Math.Max(previousOutputs[0] + accelarationStep, -1), 1);
                     break;
             }
 
-            SetPreviousButtonOutput(gameControllerEventCode, controllerAction, currentOutput);
+            SetPreviousOutput(controllerAction, currentOutput);
             return AdjustOutputValue(currentOutput, controllerAction);
         }
 
-        private float[] GetPreviousButtonOutputs(string gameControllerEventCode, ControllerAction controllerAction)
+        private float[] GetPreviousOutputs(ControllerAction controllerAction)
         {
-            if (_previousButtonOutputs.ContainsKey((gameControllerEventCode, controllerAction)))
+            if (_previousOutputs.ContainsKey((controllerAction.DeviceId, controllerAction.Channel)))
             {
-                return _previousButtonOutputs[(gameControllerEventCode, controllerAction)];
+                return _previousOutputs[(controllerAction.DeviceId, controllerAction.Channel)];
             }
             else
             {
                 var prevOutputs = new float[2] { 0, 0 };
-                _previousButtonOutputs[(gameControllerEventCode, controllerAction)] = prevOutputs;
+                _previousOutputs[(controllerAction.DeviceId, controllerAction.Channel)] = prevOutputs;
                 return prevOutputs;
             }
         }
 
-        private void SetPreviousButtonOutput(string gameControllerEventCode, ControllerAction controllerAction, float value)
+        private void SetPreviousOutput(ControllerAction controllerAction, float value)
         {
-            var buttonOutputs = _previousButtonOutputs[(gameControllerEventCode, controllerAction)];
+            var buttonOutputs = _previousOutputs[(controllerAction.DeviceId, controllerAction.Channel)];
             buttonOutputs[1] = buttonOutputs[0];
             buttonOutputs[0] = value;
         }
 
-        private (bool UseAxisValue, float AxisValue) ProcessAxisEvent(string gameControllerEventCode, float axisValue, ControllerAction controllerAction)
+        private (bool UseAxisValue, float AxisValue) ProcessAxisEvent(string gameControllerEventCode, float axisValue, ControllerAction controllerAction, DeviceType deviceType)
         {
             var previousAxisValue = GetPreviousAxisOutput(gameControllerEventCode, controllerAction);
+
+            axisValue = controllerAction.IsInvert ? -axisValue : axisValue;
 
             var axisDeadZone = controllerAction.AxisDeadZonePercent / 100F;
             if (axisDeadZone > 0)
@@ -201,55 +201,71 @@ namespace BrickController2.BusinessLogic
 
             var useAxisValue = true;
 
-            if (controllerAction.AxisType == ControllerAxisType.Train)
+            switch (controllerAction.AxisType)
             {
-                if (GetIsOutputDisableForAxises(controllerAction))
-                {
-                    if (axisValue == 0)
+                case ControllerAxisType.Train:
+                    if (GetIsOutputDisableForAxises(controllerAction))
                     {
-                        SetIsOutputDisabledForAxises(controllerAction, false);
-                    }
-
-                    useAxisValue = false;
-                }
-                else if (previousAxisValue != 0)
-                {
-                    if (Math.Sign(axisValue) == Math.Sign(previousAxisValue))
-                    {
-                        // The sign of axisValue and previouAxisValue are same
-                        if (Math.Abs(axisValue) < Math.Abs(previousAxisValue))
+                        if (axisValue == 0)
                         {
-                            // Don't accelarate
-                            useAxisValue = false;
+                            SetIsOutputDisabledForAxises(controllerAction, false);
                         }
+
+                        useAxisValue = false;
                     }
-                    else
+                    else if (previousAxisValue != 0)
                     {
-                        // The sign of axisValue and previousAxisValue are different
-                        if (Math.Abs(previousAxisValue - axisValue) < 1)
+                        if (Math.Sign(axisValue) == Math.Sign(previousAxisValue))
                         {
-                            // Don't slow down
-                            useAxisValue = false;
+                            // The sign of axisValue and previouAxisValue are same
+                            if (Math.Abs(axisValue) < Math.Abs(previousAxisValue))
+                            {
+                                // Don't accelarate
+                                useAxisValue = false;
+                            }
                         }
                         else
                         {
-                            // Slow down
-                            if (previousAxisValue > 0)
+                            // The sign of axisValue and previousAxisValue are different
+                            if (Math.Abs(previousAxisValue - axisValue) < 1)
                             {
-                                axisValue = previousAxisValue - (previousAxisValue - axisValue - 1);
+                                // Don't slow down
+                                useAxisValue = false;
                             }
                             else
                             {
-                                axisValue = previousAxisValue - (previousAxisValue - axisValue + 1);
-                            }
+                                // Slow down
+                                if (previousAxisValue > 0)
+                                {
+                                    axisValue = previousAxisValue - (previousAxisValue - axisValue - 1);
+                                }
+                                else
+                                {
+                                    axisValue = previousAxisValue - (previousAxisValue - axisValue + 1);
+                                }
 
-                            if (axisValue == 0)
-                            {
-                                SetIsOutputDisabledForAxises(controllerAction, true);
+                                if (axisValue == 0)
+                                {
+                                    SetIsOutputDisabledForAxises(controllerAction, true);
+                                }
                             }
                         }
                     }
-                }
+
+                    break;
+
+                case ControllerAxisType.Accelerator:
+                    if (Math.Abs(axisValue) == 1)
+                    {
+                        var accelarationStep = GetAccelarationStep(deviceType);
+                        axisValue = Math.Min(Math.Max(previousAxisValue + (axisValue * accelarationStep), -1), 1);
+                    }
+                    else
+                    {
+                        useAxisValue = false;
+                    }
+
+                    break;
             }
 
             if (useAxisValue)
@@ -338,7 +354,22 @@ namespace BrickController2.BusinessLogic
                 outputValue = (outputValue * controllerAction.MaxOutputPercent) / 100;
             }
 
-            return controllerAction.IsInvert ? -outputValue : outputValue;
+            return outputValue;
+        }
+
+        private float GetAccelarationStep(DeviceType deviceType)
+        {
+            switch (deviceType)
+            {
+                case DeviceType.BuWizz:
+                case DeviceType.BuWizz2:
+                case DeviceType.Infrared:
+                case DeviceType.SBrick:
+                    return 1F / 7;
+
+                default:
+                    return 0.1F;
+            }
         }
     }
 }
