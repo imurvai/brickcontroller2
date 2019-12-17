@@ -1,4 +1,5 @@
 ﻿using BrickController2.CreationManagement;
+using BrickController2.Helpers;
 using BrickController2.PlatformServices.BluetoothLE;
 using System;
 using System.Collections.Generic;
@@ -21,36 +22,36 @@ namespace BrickController2.DeviceManagement
         private readonly byte[] _stepperSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0b, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
         private readonly byte[] _virtualPortSendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x00, 0x02, 0x00, 0x00 };
 
-        private readonly int[] _outputValues;
-        private readonly int[] _lastOutputValues;
+        private readonly VolatileBuffer<int> _outputValues;
+        private readonly VolatileBuffer<int> _lastOutputValues;
 
-        private readonly ChannelOutputType[] _channelOutputTypes;
-        private readonly int[] _maxServoAngles;
-        private readonly int[] _servoBaseAngles;
-        private readonly int[] _stepperAngles;
+        private readonly VolatileBuffer<ChannelOutputType> _channelOutputTypes;
+        private readonly VolatileBuffer<int> _maxServoAngles;
+        private readonly VolatileBuffer<int> _servoBaseAngles;
+        private readonly VolatileBuffer<int> _stepperAngles;
         
-        private readonly int[] _absolutePositions;
-        private readonly int[] _relativePositions;
-        private readonly bool[] _positionsUpdated;
-        private readonly DateTime[] _positionUpdateTimes;
+        private readonly VolatileBuffer<int> _absolutePositions;
+        private readonly VolatileBuffer<int> _relativePositions;
+        private readonly VolatileBuffer<bool> _positionsUpdated;
+        private readonly VolatileBuffer<DateTime> _positionUpdateTimes;
 
         private IGattCharacteristic _characteristic;
 
         public ControlPlusDevice(string name, string address, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, bleService)
         {
-            _outputValues = new int[NumberOfChannels];
-            _lastOutputValues = new int[NumberOfChannels];
+            _outputValues = new VolatileBuffer<int>(NumberOfChannels);
+            _lastOutputValues = new VolatileBuffer<int>(NumberOfChannels);
 
-            _channelOutputTypes = new ChannelOutputType[NumberOfChannels];
-            _maxServoAngles = new int[NumberOfChannels];
-            _servoBaseAngles = new int[NumberOfChannels];
-            _stepperAngles = new int[NumberOfChannels];
-            
-            _absolutePositions = new int[NumberOfChannels];
-            _relativePositions = new int[NumberOfChannels];
-            _positionsUpdated = new bool[NumberOfChannels];
-            _positionUpdateTimes = new DateTime[NumberOfChannels];
+            _channelOutputTypes = new VolatileBuffer<ChannelOutputType>(NumberOfChannels);
+            _maxServoAngles = new VolatileBuffer<int>(NumberOfChannels);
+            _servoBaseAngles = new VolatileBuffer<int>(NumberOfChannels);
+            _stepperAngles = new VolatileBuffer<int>(NumberOfChannels);
+
+            _absolutePositions = new VolatileBuffer<int>(NumberOfChannels);
+            _relativePositions = new VolatileBuffer<int>(NumberOfChannels);
+            _positionsUpdated = new VolatileBuffer<bool>(NumberOfChannels);
+            _positionUpdateTimes = new VolatileBuffer<DateTime>(NumberOfChannels);
         }
 
         public override string BatteryVoltageSign => "%";
@@ -291,7 +292,7 @@ namespace BrickController2.DeviceManagement
                     token.ThrowIfCancellationRequested();
 
                     await SendOutputValuesAsync(token);
-                    await Task.Delay(10, token);
+                    await Task.Delay(2, token);
                 }
             }
             catch { }

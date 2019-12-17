@@ -21,8 +21,8 @@ namespace BrickController2.DeviceManagement
         private readonly IInfraredService _infraredService;
         private readonly AsyncLock _asyncLock = new AsyncLock();
 
-        private readonly int[,] _outputValues = new int[4, 2];
-        private readonly int[] _sendAttemptsLeft = new int[4];
+        private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4 * 2);
+        private readonly VolatileBuffer<int> _sendAttemptsLeft = new VolatileBuffer<int>(4);
         private readonly int[] _irData = new int[18 * 2];
 
         private int _connectedDevicesCount = 0;
@@ -95,23 +95,23 @@ namespace BrickController2.DeviceManagement
         {
             if (int.TryParse(device.Address, out int address))
             {
-                if (_outputValues[address, channel] == value)
+                if (_outputValues[address * 2 + channel] == value)
                 {
                     return;
                 }
 
-                _outputValues[address, channel] = value;
+                _outputValues[address * 2 + channel] = value;
                 _sendAttemptsLeft[address] = MAX_SEND_ATTEMPTS;
             }
         }
 
         private void ResetOutputs()
         {
-            for (int i = 0; i < 4; i++)
+            for (int address = 0; address < 4; address++)
             {
-                _outputValues[i, 0] = 0;
-                _outputValues[i, 1] = 0;
-                _sendAttemptsLeft[i] = MAX_SEND_ATTEMPTS;
+                _outputValues[address * 2 + 0] = 0;
+                _outputValues[address * 2 + 1] = 0;
+                _sendAttemptsLeft[address] = MAX_SEND_ATTEMPTS;
             }
         }
 
@@ -160,8 +160,8 @@ namespace BrickController2.DeviceManagement
 
                     if (_sendAttemptsLeft[address] > 0)
                     {
-                        int value0 = _outputValues[address, 0];
-                        int value1 = _outputValues[address, 1];
+                        int value0 = _outputValues[address * 2 + 0];
+                        int value1 = _outputValues[address * 2 + 1];
 
                         FillIrBuffer(value0, value1, address);
 

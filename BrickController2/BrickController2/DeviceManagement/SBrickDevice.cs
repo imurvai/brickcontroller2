@@ -20,7 +20,7 @@ namespace BrickController2.DeviceManagement
         private readonly Guid CHARACTERISTIC_UUID_QUICK_DRIVE = new Guid("489a6ae0-c1ab-4c9c-bdb2-11d373c1b7fb");
 
         private readonly byte[] _sendBuffer = new byte[4];
-        private readonly int[] _outputValues = new int[4];
+        private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
 
         private volatile int _sendAttemptsLeft;
 
@@ -122,7 +122,7 @@ namespace BrickController2.DeviceManagement
                     }
                     else
                     {
-                        await Task.Delay(10, token);
+                        await Task.Delay(2, token);
                     }
                 }
             }

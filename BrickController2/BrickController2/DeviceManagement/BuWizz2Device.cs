@@ -21,7 +21,7 @@ namespace BrickController2.DeviceManagement
 
         private readonly byte[] _sendOutputBuffer = new byte[] { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 };
         private readonly byte[] _sendOutputLevelBuffer = new byte[] { 0x11, 0x00 };
-        private readonly int[] _outputValues = new int[4];
+        private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
         private readonly bool _swapChannels;
 
         private volatile int _outputLevelValue;
@@ -142,7 +142,7 @@ namespace BrickController2.DeviceManagement
                     }
                     else
                     {
-                        await Task.Delay(10, token);
+                        await Task.Delay(2, token);
                     }
                 }
             }

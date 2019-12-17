@@ -1,4 +1,5 @@
-﻿using BrickController2.PlatformServices.BluetoothLE;
+﻿using BrickController2.Helpers;
+using BrickController2.PlatformServices.BluetoothLE;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace BrickController2.DeviceManagement
         private readonly Guid CHARACTERISTIC_UUID = new Guid("0000ffe1-0000-1000-8000-00805f9b34fb");
 
         private readonly byte[] _sendBuffer = new byte[5];
-        private readonly int[] _outputValues = new int[4];
+        private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
 
         private volatile int _outputLevelValue;
         private volatile int _sendAttemptsLeft;
@@ -101,7 +102,7 @@ namespace BrickController2.DeviceManagement
                     }
                     else
                     {
-                        await Task.Delay(10, token);
+                        await Task.Delay(2, token);
                     }
                 }
                 catch
