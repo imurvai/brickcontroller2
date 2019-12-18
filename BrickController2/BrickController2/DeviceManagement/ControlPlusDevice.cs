@@ -14,12 +14,12 @@ namespace BrickController2.DeviceManagement
         private static readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
         private static readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
 
-        private static readonly TimeSpan SEND_DELAY = TimeSpan.FromMilliseconds(40);
+        private static readonly TimeSpan SEND_DELAY = TimeSpan.FromMilliseconds(20);
         private static readonly TimeSpan POSITION_EXPIRATION = TimeSpan.FromMilliseconds(200);
 
         private readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
-        private readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
-        private readonly byte[] _stepperSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0b, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
+        private readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 80, 126, 0x00 };
+        private readonly byte[] _stepperSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0b, 0x00, 0x00, 0x00, 0x00, 50, 80, 126, 0x00 };
         private readonly byte[] _virtualPortSendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x00, 0x02, 0x00, 0x00 };
 
         private readonly VolatileBuffer<int> _outputValues;
@@ -655,7 +655,7 @@ namespace BrickController2.DeviceManagement
                 var diff = Math.Abs(_relativePositions[channel] - targetAngle);
                 _positionsUpdated[channel] = false;
 
-                return Math.Max(20, Math.Min(100, diff));
+                return Math.Max(40, Math.Min(100, diff));
             }
 
             var positionUpdateTime = _positionUpdateTimes[channel];
