@@ -35,10 +35,25 @@ namespace BrickController2.CreationManagement
         }
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
-        private ObservableCollection<ControlPoint> ControlPoints
+        public ObservableCollection<ControlPoint> ControlPoints
         {
             get { return _controlPoints; }
             set { _controlPoints = value; RaisePropertyChanged(); }
+        }
+
+        [Ignore]
+        public TimeSpan TotalDuration
+        {
+            get
+            {
+                var td = TimeSpan.Zero;
+                foreach (var cp in ControlPoints)
+                {
+                    td += cp.Duration;
+                }
+
+                return td;
+            }
         }
 
         public override string ToString()
