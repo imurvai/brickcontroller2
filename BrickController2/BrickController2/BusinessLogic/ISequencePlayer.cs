@@ -1,11 +1,11 @@
 ﻿using BrickController2.CreationManagement;
-using BrickController2.DeviceManagement;
+using System.Threading.Tasks;
 
 namespace BrickController2.BusinessLogic
 {
     public interface ISequencePlayer
     {
-        void ToggleSequence(Device device, int channel, Sequence sequence);
-        void StopAllSequences();
+        Task ToggleSequenceAsync(string deviceId, int channel, Sequence sequence);
+        Task StopAllSequencesAsync();
     }
 }
