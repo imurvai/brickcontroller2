@@ -44,6 +44,9 @@ namespace BrickController2.BusinessLogic
                 {
                     _sequences.Remove((deviceId, channel));
 
+                    var device = _deviceManager.GetDeviceById(deviceId);
+                    device?.SetOutput(channel, 0);
+
                     if (!_sequences.Keys.Any())
                     {
                         await StopPlayerAsync();
@@ -108,10 +111,10 @@ namespace BrickController2.BusinessLogic
             IEnumerable<(string DeviceId, int Channel, Sequence Sequence, DateTime StartTime)> sequencesToPlay;
             IList<(string DeviceId, int Channel)> sequencesToRemove = new List<(string, int)>();
 
-            var now = DateTime.Now;
-
             using (await _lock.LockAsync(token))
             {
+                var now = DateTime.Now;
+
                 foreach (var kvp in _sequences)
                 {
                     // Start the sequence "now" if it hasn't been started yet
@@ -119,21 +122,13 @@ namespace BrickController2.BusinessLogic
                     {
                         _sequences[kvp.Key] = (kvp.Value.Sequence, now);
                     }
+
+                    if (!ProcessSequence(kvp.Key.DeviceId, kvp.Key.Channel, kvp.Value.Sequence, kvp.Value.StartTime.Value, now))
+                    {
+                        sequencesToRemove.Add((kvp.Key.DeviceId, kvp.Key.Channel));
+                    }
                 }
 
-                sequencesToPlay = _sequences.Select(kvp => (kvp.Key.DeviceId, kvp.Key.Channel, kvp.Value.Sequence, kvp.Value.StartTime.Value)).ToArray();
-            }
-
-            foreach (var item in sequencesToPlay)
-            {
-                if (!ProcessSequence(item.DeviceId, item.Channel, item.Sequence, item.StartTime, now))
-                {
-                    sequencesToRemove.Add((item.DeviceId, item.Channel));
-                }
-            }
-
-            using (await _lock.LockAsync(token))
-            {
                 foreach (var key in sequencesToRemove)
                 {
                     _sequences.Remove(key);
@@ -151,7 +146,7 @@ namespace BrickController2.BusinessLogic
             var totalDurationMs = sequence.TotalDuration.TotalMilliseconds;
             var elapsedTimeMs = (now - startTime).TotalMilliseconds;
 
-            if ((!sequence.Loop && (totalDurationMs <= elapsedTimeMs)) || totalDurationMs == 0)
+            if ((!sequence.Loop && (totalDurationMs < elapsedTimeMs)) || totalDurationMs == 0)
             {
                 // Sequence is not looping and has expired
                 return false;
@@ -160,16 +155,21 @@ namespace BrickController2.BusinessLogic
             var sequenceTimeMs = elapsedTimeMs - ((int)(elapsedTimeMs / totalDurationMs) * totalDurationMs);
 
             ControlPoint controlPoint1 = sequence.ControlPoints[0];
-            ControlPoint controlPoint2 = null;
+            ControlPoint controlPoint2 = controlPoint1;
             var controlPoint1StartTimeMs = 0D;
             var controlPoint1DurationMs = controlPoint1.Duration.TotalMilliseconds;
 
             for (int i = 1; i <= sequence.ControlPoints.Count; i++)
             {
-                controlPoint2 = i < sequence.ControlPoints.Count ? sequence.ControlPoints[i] : null;
+                controlPoint2 = i < sequence.ControlPoints.Count ? 
+                    sequence.ControlPoints[i] :
+                    sequence.Loop ?
+                        sequence.ControlPoints[0] :
+                        controlPoint1;
+
                 var controlPoint2StartTimeMs = controlPoint1StartTimeMs + controlPoint1DurationMs;
 
-                if ((controlPoint1StartTimeMs <= sequenceTimeMs && sequenceTimeMs < controlPoint2StartTimeMs) || controlPoint2 == null)
+                if (controlPoint1StartTimeMs <= sequenceTimeMs && sequenceTimeMs < controlPoint2StartTimeMs)
                 {
                     // Found the 2 control points where the player is currently
                     break;
@@ -183,10 +183,9 @@ namespace BrickController2.BusinessLogic
                 }
             }
 
-            var device = _deviceManager.GetDeviceById(deviceId);
             var value = controlPoint1.Value;
 
-            if (sequence.Interpolate && controlPoint2 != null)
+            if (sequence.Interpolate)
             {
                 var value1 = controlPoint1.Value;
                 var value2 = controlPoint2.Value;
@@ -199,7 +198,9 @@ namespace BrickController2.BusinessLogic
                 }
             }
 
-            device.SetOutput(channel, (float)value);
+            var device = _deviceManager.GetDeviceById(deviceId);
+            device?.SetOutput(channel, value);
+
             return true;
         }
     }
