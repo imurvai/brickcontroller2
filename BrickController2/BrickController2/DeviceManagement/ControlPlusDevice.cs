@@ -11,19 +11,22 @@ namespace BrickController2.DeviceManagement
 {
     internal abstract class ControlPlusDevice : BluetoothDevice
     {
+        private const int MAX_SEND_ATTEMPTS = 4;
+
         private static readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
         private static readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
 
-        private static readonly TimeSpan SEND_DELAY = TimeSpan.FromMilliseconds(20);
+        private static readonly TimeSpan SEND_DELAY = TimeSpan.FromMilliseconds(10);
         private static readonly TimeSpan POSITION_EXPIRATION = TimeSpan.FromMilliseconds(200);
 
         private readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
-        private readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 80, 126, 0x00 };
-        private readonly byte[] _stepperSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0b, 0x00, 0x00, 0x00, 0x00, 50, 80, 126, 0x00 };
+        private readonly byte[] _servoSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0d, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
+        private readonly byte[] _stepperSendBuffer = new byte[] { 14, 0x00, 0x81, 0x00, 0x11, 0x0b, 0x00, 0x00, 0x00, 0x00, 50, 50, 126, 0x00 };
         private readonly byte[] _virtualPortSendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x00, 0x02, 0x00, 0x00 };
 
         private readonly VolatileBuffer<int> _outputValues;
         private readonly VolatileBuffer<int> _lastOutputValues;
+        private readonly VolatileBuffer<int> _sendAttemptsLeft;
 
         private readonly VolatileBuffer<ChannelOutputType> _channelOutputTypes;
         private readonly VolatileBuffer<int> _maxServoAngles;
@@ -42,6 +45,7 @@ namespace BrickController2.DeviceManagement
         {
             _outputValues = new VolatileBuffer<int>(NumberOfChannels);
             _lastOutputValues = new VolatileBuffer<int>(NumberOfChannels);
+            _sendAttemptsLeft = new VolatileBuffer<int>(NumberOfChannels);
 
             _channelOutputTypes = new VolatileBuffer<ChannelOutputType>(NumberOfChannels);
             _maxServoAngles = new VolatileBuffer<int>(NumberOfChannels);
@@ -117,6 +121,7 @@ namespace BrickController2.DeviceManagement
             }
 
             _outputValues[channel] = intValue;
+            _sendAttemptsLeft[channel] = MAX_SEND_ATTEMPTS;
         }
 
         public override bool CanResetOutput => true;
@@ -283,6 +288,7 @@ namespace BrickController2.DeviceManagement
                 {
                     _outputValues[channel] = 0;
                     _lastOutputValues[channel] = 1;
+                    _sendAttemptsLeft[channel] = MAX_SEND_ATTEMPTS;
                     _positionsUpdated[channel] = false;
                     _positionUpdateTimes[channel] = DateTime.MinValue;
                 }
@@ -368,10 +374,13 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                if (_lastOutputValues[channel] != value)
+                var sendAttemptsLeft = _sendAttemptsLeft[channel];
+
+                if (_lastOutputValues[channel] != value || sendAttemptsLeft > 0)
                 {
                     _sendBuffer[3] = (byte)channel;
                     _sendBuffer[7] = (byte)(value < 0 ? (255 + value) : value);
+                    _sendAttemptsLeft[channel] = sendAttemptsLeft > 0 ? sendAttemptsLeft - 1 : 0;
 
                     if (await _bleDevice?.WriteNoResponseAsync(_characteristic, _sendBuffer, token))
                     {
@@ -430,10 +439,13 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                if (_lastOutputValues[channel] != value)
+                var sendAttemptsLeft = _sendAttemptsLeft[channel];
+
+                if (_lastOutputValues[channel] != value || sendAttemptsLeft > 0)
                 {
                     var servoValue = maxServoAngle * value / 100;
                     var servoSpeed = CalculateServoSpeed(channel, servoValue);
+                    _sendAttemptsLeft[channel] = sendAttemptsLeft > 0 ? sendAttemptsLeft - 1 : 0;
 
                     if (servoSpeed == 0)
                     {
@@ -655,7 +667,7 @@ namespace BrickController2.DeviceManagement
                 var diff = Math.Abs(_relativePositions[channel] - targetAngle);
                 _positionsUpdated[channel] = false;
 
-                return Math.Max(40, Math.Min(100, diff));
+                return Math.Max(20, Math.Min(100, diff));
             }
 
             var positionUpdateTime = _positionUpdateTimes[channel];
