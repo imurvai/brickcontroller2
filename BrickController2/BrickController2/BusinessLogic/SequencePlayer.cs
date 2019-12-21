@@ -108,12 +108,10 @@ namespace BrickController2.BusinessLogic
 
         private async Task ProcessSequencesAsync(CancellationToken token)
         {
-            IEnumerable<(string DeviceId, int Channel, Sequence Sequence, DateTime StartTime)> sequencesToPlay;
-            IList<(string DeviceId, int Channel)> sequencesToRemove = new List<(string, int)>();
-
             using (await _lock.LockAsync(token))
             {
                 var now = DateTime.Now;
+                IList<(string DeviceId, int Channel)> sequencesToRemove = new List<(string, int)>();
 
                 foreach (var kvp in _sequences)
                 {
