@@ -17,8 +17,9 @@ namespace BrickController2.CreationManagement
         }
 
         public ObservableCollection<Creation> Creations { get; } = new ObservableCollection<Creation>();
+        public ObservableCollection<Sequence> Sequences { get; } = new ObservableCollection<Sequence>();
 
-        public async Task LoadCreationsAsync()
+        public async Task LoadCreationsAndSequencesAsync()
         {
             using (await _asyncLock.LockAsync())
             {
@@ -28,6 +29,14 @@ namespace BrickController2.CreationManagement
                 foreach (var creation in creations)
                 {
                     Creations.Add(creation);
+                }
+
+                Sequences.Clear();
+
+                var sequences = await _creationRepository.GetSequencesAsync();
+                foreach (var sequence in sequences)
+                {
+                    Sequences.Add(sequence);
                 }
             }
         }
@@ -235,6 +244,75 @@ namespace BrickController2.CreationManagement
                 controllerAction.ServoBaseAngle = servoBaseAngle;
                 controllerAction.StepperAngle = stepperAngle;
                 await _creationRepository.UpdateControllerActionAsync(controllerAction);
+            }
+        }
+
+        public async Task<bool> IsSequenceNameAvailable(string sequenceName)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                return Sequences.All(s => s.Name != sequenceName);
+            }
+        }
+
+        public async Task<Sequence> AddSequenceAsync(string sequenceName, bool loop, bool interpolate)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var sequence = new Sequence { Name = sequenceName, Loop = loop, Interpolate = interpolate };
+                await _creationRepository.InsertSequenceAsync(sequence);
+                Sequences.Add(sequence);
+                return sequence;
+            }
+        }
+
+        public async Task UpdateSequenceAsync(Sequence sequence, string sequenceName, bool loop, bool interpolate)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                sequence.Name = sequenceName;
+                sequence.Loop = loop;
+                sequence.Interpolate = interpolate;
+                await _creationRepository.UpdateSequenceAsync(sequence);
+            }
+        }
+
+        public async Task DeleteSequenceAsync(Sequence sequence)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                await _creationRepository.DeleteSequenceAsync(sequence);
+                Sequences.Remove(sequence);
+            }
+        }
+
+        public async Task<SequenceControlPoint> AddSequenceControlPointAsync(Sequence sequence, float value, int durationMs)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var controlePoint = new SequenceControlPoint { Value = value, DurationMs = durationMs };
+                await _creationRepository.InsertSequenceControlPointAsync(sequence, controlePoint);
+                return controlePoint;
+            }
+        }
+
+        public async Task UpdateSequenceControlPointAsync(SequenceControlPoint controlPoint, float value, int durationMs)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                controlPoint.Value = value;
+                controlPoint.DurationMs = durationMs;
+                await _creationRepository.UpdateSequenceControlPointAsync(controlPoint);
+            }
+        }
+
+        public async Task DeleteSequenceControlPointAsync(SequenceControlPoint controlPoint)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var parent = controlPoint.Sequence;
+                await _creationRepository.DeleteSequenceControlPointAsync(controlPoint);
+                parent.ControlPoints.Remove(controlPoint);
             }
         }
     }

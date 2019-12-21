@@ -6,7 +6,7 @@ namespace BrickController2.CreationManagement
     public interface ICreationRepository
     {
         Task<List<Creation>> GetCreationsAsync();
-        Task<List<Sequence>> GetSequences();
+        Task<List<Sequence>> GetSequencesAsync();
 
         Task InsertCreationAsync(Creation creation);
         Task UpdateCreationAsync(Creation creation);

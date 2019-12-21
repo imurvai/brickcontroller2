@@ -105,7 +105,7 @@ namespace BrickController2.UI.ViewModels
                     false,
                     async (progressDialog, token) =>
                     {
-                        await _creationManager.LoadCreationsAsync();
+                        await _creationManager.LoadCreationsAndSequencesAsync();
                         await _deviceManager.LoadDevicesAsync();
                         _isLoaded = true;
                     },

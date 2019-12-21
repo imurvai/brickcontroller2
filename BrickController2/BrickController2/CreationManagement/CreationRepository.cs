@@ -45,7 +45,7 @@ namespace BrickController2.CreationManagement
             }
         }
 
-        public async Task<List<Sequence>> GetSequences()
+        public async Task<List<Sequence>> GetSequencesAsync()
         {
             using (await _lock.LockAsync())
             {
