@@ -141,7 +141,7 @@ namespace BrickController2.BusinessLogic
                 return false;
             }
 
-            var totalDurationMs = sequence.TotalDuration.TotalMilliseconds;
+            var totalDurationMs = sequence.TotalDurationMs;
             var elapsedTimeMs = (now - startTime).TotalMilliseconds;
 
             if ((!sequence.Loop && (totalDurationMs < elapsedTimeMs)) || totalDurationMs == 0)
@@ -152,10 +152,10 @@ namespace BrickController2.BusinessLogic
 
             var sequenceTimeMs = elapsedTimeMs - ((int)(elapsedTimeMs / totalDurationMs) * totalDurationMs);
 
-            ControlPoint controlPoint1 = sequence.ControlPoints[0];
-            ControlPoint controlPoint2 = controlPoint1;
+            SequenceControlPoint controlPoint1 = sequence.ControlPoints[0];
+            SequenceControlPoint controlPoint2 = controlPoint1;
             var controlPoint1StartTimeMs = 0D;
-            var controlPoint1DurationMs = controlPoint1.Duration.TotalMilliseconds;
+            var controlPoint1DurationMs = controlPoint1.DurationMs;
 
             for (int i = 1; i <= sequence.ControlPoints.Count; i++)
             {
@@ -176,7 +176,7 @@ namespace BrickController2.BusinessLogic
                 {
                     controlPoint1 = controlPoint2;
                     controlPoint1StartTimeMs = controlPoint2StartTimeMs;
-                    controlPoint1DurationMs = controlPoint2.Duration.TotalMilliseconds;
+                    controlPoint1DurationMs = controlPoint2.DurationMs;
                     controlPoint2 = null;
                 }
             }

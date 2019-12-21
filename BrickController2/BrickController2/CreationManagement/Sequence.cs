@@ -11,7 +11,7 @@ namespace BrickController2.CreationManagement
         private string _name;
         private bool _loop;
         private bool _interpolate;
-        private ObservableCollection<ControlPoint> _controlPoints = new ObservableCollection<ControlPoint>();
+        private ObservableCollection<SequenceControlPoint> _controlPoints = new ObservableCollection<SequenceControlPoint>();
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -35,21 +35,21 @@ namespace BrickController2.CreationManagement
         }
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
-        public ObservableCollection<ControlPoint> ControlPoints
+        public ObservableCollection<SequenceControlPoint> ControlPoints
         {
             get { return _controlPoints; }
             set { _controlPoints = value; RaisePropertyChanged(); }
         }
 
         [Ignore]
-        public TimeSpan TotalDuration
+        public int TotalDurationMs
         {
             get
             {
-                var td = TimeSpan.Zero;
+                var td = 0;
                 foreach (var cp in ControlPoints)
                 {
-                    td += cp.Duration;
+                    td += cp.DurationMs;
                 }
 
                 return td;
@@ -59,27 +59,6 @@ namespace BrickController2.CreationManagement
         public override string ToString()
         {
             return Name;
-        }
-    }
-
-    public class ControlPoint : NotifyPropertyChangedSource
-    {
-        private float _value;
-        private TimeSpan _duration;
-
-        [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
-
-        public float Value
-        {
-            get { return _value; }
-            set { _value = value; RaisePropertyChanged(); }
-        }
-
-        public TimeSpan Duration
-        {
-            get { return _duration; }
-            set { _duration = value; RaisePropertyChanged(); }
         }
     }
 }

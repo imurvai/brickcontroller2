@@ -31,6 +31,8 @@ namespace BrickController2.CreationManagement
             await _databaseConnection.CreateTableAsync<ControllerProfile>();
             await _databaseConnection.CreateTableAsync<ControllerEvent>();
             await _databaseConnection.CreateTableAsync<ControllerAction>();
+            await _databaseConnection.CreateTableAsync<Sequence>();
+            await _databaseConnection.CreateTableAsync<SequenceControlPoint>();
             _inited = true;
         }
 
@@ -40,6 +42,15 @@ namespace BrickController2.CreationManagement
             {
                 await InitAsync();
                 return await _databaseConnection.GetAllWithChildrenAsync<Creation>(null, true);
+            }
+        }
+
+        public async Task<List<Sequence>> GetSequences()
+        {
+            using (await _lock.LockAsync())
+            {
+                await InitAsync();
+                return await _databaseConnection.GetAllWithChildrenAsync<Sequence>(null, true);
             }
         }
 
@@ -161,6 +172,63 @@ namespace BrickController2.CreationManagement
             using (await _lock.LockAsync())
             {
                 await _databaseConnection.DeleteAsync(controllerAction);
+            }
+        }
+
+        public async Task InsertSequenceAsync(Sequence sequence)
+        {
+            using (await _lock.LockAsync())
+            {
+                await InitAsync();
+                await _databaseConnection.InsertAsync(sequence);
+            }
+        }
+
+        public async Task UpdateSequenceAsync(Sequence sequence)
+        {
+            using (await _lock.LockAsync())
+            {
+                await _databaseConnection.UpdateAsync(sequence);
+            }
+        }
+
+        public async Task DeleteSequenceAsync(Sequence sequence)
+        {
+            using (await _lock.LockAsync())
+            {
+                await _databaseConnection.DeleteAsync(sequence, true);
+            }
+        }
+
+        public async Task InsertSequenceControlPointAsync(Sequence sequence, SequenceControlPoint controlPoint)
+        {
+            using (await _lock.LockAsync())
+            {
+                await _databaseConnection.InsertAsync(controlPoint);
+
+                if (sequence.ControlPoints == null)
+                {
+                    sequence.ControlPoints = new ObservableCollection<SequenceControlPoint>();
+                }
+
+                sequence.ControlPoints.Add(controlPoint);
+                await _databaseConnection.UpdateWithChildrenAsync(sequence);
+            }
+        }
+
+        public async Task UpdateSequenceControlPointAsync(SequenceControlPoint controlPoint)
+        {
+            using (await _lock.LockAsync())
+            {
+                await _databaseConnection.UpdateAsync(controlPoint);
+            }
+        }
+
+        public async Task DeleteSequenceControlPointAsync(SequenceControlPoint controlPoint)
+        {
+            using (await _lock.LockAsync())
+            {
+                await _databaseConnection.DeleteAsync(controlPoint);
             }
         }
     }
