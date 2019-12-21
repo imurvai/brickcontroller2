@@ -40,6 +40,7 @@ namespace BrickController2.UI.ViewModels
             DeleteCreationCommand = new SafeCommand<Creation>(async creation => await DeleteCreationAsync(creation));
             NavigateToDevicesCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<DeviceListPageViewModel>());
             NavigateToControllerTesterCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>());
+            NavigateToSequencesCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<SequenceListPageViewModel>());
             NavigateToAboutCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<AboutPageViewModel>());
         }
 
@@ -50,6 +51,7 @@ namespace BrickController2.UI.ViewModels
         public ICommand DeleteCreationCommand { get; }
         public ICommand NavigateToDevicesCommand { get; }
         public ICommand NavigateToControllerTesterCommand { get; }
+        public ICommand NavigateToSequencesCommand { get; }
         public ICommand NavigateToAboutCommand { get; }
 
         public override async void OnAppearing()

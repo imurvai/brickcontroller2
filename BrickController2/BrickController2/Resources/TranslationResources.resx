@@ -369,6 +369,12 @@
   <data name="SelectDeviceBeforeSaving" xml:space="preserve">
     <value>Select a device before saving.</value>
   </data>
+  <data name="Sequence" xml:space="preserve">
+    <value>Sequence</value>
+  </data>
+  <data name="Sequences" xml:space="preserve">
+    <value>Sequences</value>
+  </data>
   <data name="ServoAngle" xml:space="preserve">
     <value>Servo range</value>
   </data>

@@ -390,4 +390,10 @@
   <data name="Battery" xml:space="preserve">
     <value>Elem</value>
   </data>
+  <data name="Sequence" xml:space="preserve">
+    <value>Szekvencia</value>
+  </data>
+  <data name="Sequences" xml:space="preserve">
+    <value>Szekvenciák</value>
+  </data>
 </root>

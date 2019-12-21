@@ -74,6 +74,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <Frame Grid.Column="0" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
@@ -95,6 +96,15 @@
                     </StackLayout>
                 </Frame>
                 <Frame Grid.Column="2" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToSequencesCommand}"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                        <Image Source="{extensions:ImageResource Source=ic_sequence.png}" WidthRequest="20" HeightRequest="20"/>
+                        <Label Text="{extensions:Translate Sequences}" FontSize="Small"/>
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Column="3" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateToAboutCommand}"/>
                     </Frame.GestureRecognizers>
