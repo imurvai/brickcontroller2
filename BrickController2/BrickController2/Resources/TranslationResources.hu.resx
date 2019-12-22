@@ -390,8 +390,26 @@
   <data name="Battery" xml:space="preserve">
     <value>Elem</value>
   </data>
+  <data name="AddSequences" xml:space="preserve">
+    <value>Hozz létre szekvenciákat</value>
+  </data>
+  <data name="AreYouSureToDeleteSequence" xml:space="preserve">
+    <value>Biztos törölni szeretnéd ezt a szekvenciát:</value>
+  </data>
+  <data name="EnterSequenceName" xml:space="preserve">
+    <value>Adj meg egy szekvencia nevet</value>
+  </data>
   <data name="Sequence" xml:space="preserve">
     <value>Szekvencia</value>
+  </data>
+  <data name="SequenceName" xml:space="preserve">
+    <value>Szekvencia neve</value>
+  </data>
+  <data name="SequenceNameCanNotBeEmpty" xml:space="preserve">
+    <value>A szekvencia neve nem lehet üres</value>
+  </data>
+  <data name="SequenceNameIsUsed" xml:space="preserve">
+    <value>Ez a szekvencia név már foglalt</value>
   </data>
   <data name="Sequences" xml:space="preserve">
     <value>Szekvenciák</value>

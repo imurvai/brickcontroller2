@@ -129,6 +129,9 @@
   <data name="Address" xml:space="preserve">
     <value>Adresse</value>
   </data>
+  <data name="AddSequences" xml:space="preserve">
+    <value>Sequenzen estellen</value>
+  </data>
   <data name="AdvancedSettings" xml:space="preserve">
     <value>Erweiterte Einstellungen</value>
   </data>
@@ -146,6 +149,9 @@
   </data>
   <data name="AreYouSureToDeleteProfile" xml:space="preserve">
     <value>Wollen Sie dieses Profil wirklich löschen:</value>
+  </data>
+  <data name="AreYouSureToDeleteSequence" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie diese Sequenze löschen wollen:</value>
   </data>
   <data name="AreYouSureToDeleteThisControllerAcrion" xml:space="preserve">
     <value>Wollen Sie diese Controllersaktion wirklich löschen?</value>
@@ -255,6 +261,9 @@
   <data name="EnterProfileName" xml:space="preserve">
     <value>Einen Profilnamen eingeben</value>
   </data>
+  <data name="EnterSequenceName" xml:space="preserve">
+    <value>Einen Sequenze eingeben</value>
+  </data>
   <data name="Error" xml:space="preserve">
     <value>Fehler</value>
   </data>
@@ -353,6 +362,12 @@
   </data>
   <data name="Sequence" xml:space="preserve">
     <value>Sequenz</value>
+  </data>
+  <data name="SequenceName" xml:space="preserve">
+    <value>Name der Sequenze</value>
+  </data>
+  <data name="SequenceNameCanNotBeEmpty" xml:space="preserve">
+    <value>Neme der Sequenze darf nicht leer bleiben</value>
   </data>
   <data name="Sequences" xml:space="preserve">
     <value>Sequenzen</value>

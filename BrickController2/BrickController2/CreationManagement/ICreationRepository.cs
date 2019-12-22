@@ -27,9 +27,5 @@ namespace BrickController2.CreationManagement
         Task InsertSequenceAsync(Sequence sequence);
         Task UpdateSequenceAsync(Sequence sequence);
         Task DeleteSequenceAsync(Sequence sequence);
-
-        Task InsertSequenceControlPointAsync(Sequence sequence, SequenceControlPoint controlPoint);
-        Task UpdateSequenceControlPointAsync(SequenceControlPoint controlPoint);
-        Task DeleteSequenceControlPointAsync(SequenceControlPoint controlPoint);
     }
 }

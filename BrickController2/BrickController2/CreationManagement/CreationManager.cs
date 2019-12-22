@@ -3,6 +3,7 @@ using BrickController2.Helpers;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace BrickController2.CreationManagement
 {
@@ -247,7 +248,7 @@ namespace BrickController2.CreationManagement
             }
         }
 
-        public async Task<bool> IsSequenceNameAvailable(string sequenceName)
+        public async Task<bool> IsSequenceNameAvailableAsync(string sequenceName)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -255,24 +256,26 @@ namespace BrickController2.CreationManagement
             }
         }
 
-        public async Task<Sequence> AddSequenceAsync(string sequenceName, bool loop, bool interpolate)
+        public async Task<Sequence> AddSequenceAsync(string sequenceName)
         {
             using (await _asyncLock.LockAsync())
             {
-                var sequence = new Sequence { Name = sequenceName, Loop = loop, Interpolate = interpolate };
+                var sequence = new Sequence { Name = sequenceName };
                 await _creationRepository.InsertSequenceAsync(sequence);
+
                 Sequences.Add(sequence);
                 return sequence;
             }
         }
 
-        public async Task UpdateSequenceAsync(Sequence sequence, string sequenceName, bool loop, bool interpolate)
+        public async Task UpdateSequenceAsync(Sequence sequence, string sequenceName, bool loop, bool interpolate, IEnumerable<SequenceControlPoint> controlPoints)
         {
             using (await _asyncLock.LockAsync())
             {
                 sequence.Name = sequenceName;
                 sequence.Loop = loop;
                 sequence.Interpolate = interpolate;
+                sequence.ControlPoints = new ObservableCollection<SequenceControlPoint>(controlPoints);
                 await _creationRepository.UpdateSequenceAsync(sequence);
             }
         }
@@ -283,36 +286,6 @@ namespace BrickController2.CreationManagement
             {
                 await _creationRepository.DeleteSequenceAsync(sequence);
                 Sequences.Remove(sequence);
-            }
-        }
-
-        public async Task<SequenceControlPoint> AddSequenceControlPointAsync(Sequence sequence, float value, int durationMs)
-        {
-            using (await _asyncLock.LockAsync())
-            {
-                var controlePoint = new SequenceControlPoint { Value = value, DurationMs = durationMs };
-                await _creationRepository.InsertSequenceControlPointAsync(sequence, controlePoint);
-                return controlePoint;
-            }
-        }
-
-        public async Task UpdateSequenceControlPointAsync(SequenceControlPoint controlPoint, float value, int durationMs)
-        {
-            using (await _asyncLock.LockAsync())
-            {
-                controlPoint.Value = value;
-                controlPoint.DurationMs = durationMs;
-                await _creationRepository.UpdateSequenceControlPointAsync(controlPoint);
-            }
-        }
-
-        public async Task DeleteSequenceControlPointAsync(SequenceControlPoint controlPoint)
-        {
-            using (await _asyncLock.LockAsync())
-            {
-                var parent = controlPoint.Sequence;
-                await _creationRepository.DeleteSequenceControlPointAsync(controlPoint);
-                parent.ControlPoints.Remove(controlPoint);
             }
         }
     }

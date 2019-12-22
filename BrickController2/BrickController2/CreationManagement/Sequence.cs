@@ -34,12 +34,14 @@ namespace BrickController2.CreationManagement
             set { _interpolate = value; RaisePropertyChanged(); }
         }
 
-        [OneToMany(CascadeOperations = CascadeOperation.All)]
+        [TextBlob(nameof(ControlPointsBlobbed))]
         public ObservableCollection<SequenceControlPoint> ControlPoints
         {
             get { return _controlPoints; }
             set { _controlPoints = value; RaisePropertyChanged(); }
         }
+
+        public string ControlPointsBlobbed { get; set; }
 
         [Ignore]
         public int TotalDurationMs

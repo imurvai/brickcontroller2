@@ -1,4 +1,5 @@
 ﻿using BrickController2.PlatformServices.GameController;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace BrickController2.CreationManagement
     public interface ICreationManager
     {
         ObservableCollection<Creation> Creations { get; }
+        ObservableCollection<Sequence> Sequences { get; }
 
         Task LoadCreationsAndSequencesAsync();
 
@@ -53,14 +55,9 @@ namespace BrickController2.CreationManagement
             int servoBaseAngle,
             int stepperAngle);
 
-        Task<bool> IsSequenceNameAvailable(string sequenceName);
-
-        Task<Sequence> AddSequenceAsync(string sequenceName, bool loop, bool interpolate);
-        Task UpdateSequenceAsync(Sequence sequence, string sequenceName, bool loop, bool interpolate);
+        Task<bool> IsSequenceNameAvailableAsync(string sequenceName);
+        Task<Sequence> AddSequenceAsync(string sequenceName);
+        Task UpdateSequenceAsync(Sequence sequence, string sequenceName, bool loop, bool interpolate, IEnumerable<SequenceControlPoint> controlPoints);
         Task DeleteSequenceAsync(Sequence sequence);
-
-        Task<SequenceControlPoint> AddSequenceControlPointAsync(Sequence sequence, float value, int durationMs);
-        Task UpdateSequenceControlPointAsync(SequenceControlPoint controlPoint, float value, int durationMs);
-        Task DeleteSequenceControlPointAsync(SequenceControlPoint controlPoint);
     }
 }

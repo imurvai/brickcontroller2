@@ -1,6 +1,4 @@
 ﻿using BrickController2.Helpers;
-using SQLite;
-using SQLiteNetExtensions.Attributes;
 
 namespace BrickController2.CreationManagement
 {
@@ -8,15 +6,6 @@ namespace BrickController2.CreationManagement
     {
         private float _value;
         private int _durationMs;
-
-        [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
-
-        [ForeignKey(typeof(Creation))]
-        public int SequenceId { get; set; }
-
-        [ManyToOne]
-        public Sequence Sequence { get; set; }
 
         public float Value
         {

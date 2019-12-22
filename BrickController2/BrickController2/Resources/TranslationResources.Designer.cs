@@ -97,6 +97,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add sequences.
+        /// </summary>
+        internal static string AddSequences {
+            get {
+                return ResourceManager.GetString("AddSequences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advanced settings.
         /// </summary>
         internal static string AdvancedSettings {
@@ -147,6 +156,15 @@ namespace BrickController2.Resources {
         internal static string AreYouSureToDeleteProfile {
             get {
                 return ResourceManager.GetString("AreYouSureToDeleteProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure to delete sequence.
+        /// </summary>
+        internal static string AreYouSureToDeleteSequence {
+            get {
+                return ResourceManager.GetString("AreYouSureToDeleteSequence", resourceCulture);
             }
         }
         
@@ -511,6 +529,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter a sequence name.
+        /// </summary>
+        internal static string EnterSequenceName {
+            get {
+                return ResourceManager.GetString("EnterSequenceName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         internal static string Error {
@@ -822,6 +849,33 @@ namespace BrickController2.Resources {
         internal static string Sequence {
             get {
                 return ResourceManager.GetString("Sequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sequence name.
+        /// </summary>
+        internal static string SequenceName {
+            get {
+                return ResourceManager.GetString("SequenceName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sequence name can not be empty.
+        /// </summary>
+        internal static string SequenceNameCanNotBeEmpty {
+            get {
+                return ResourceManager.GetString("SequenceNameCanNotBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This sequence name is already used.
+        /// </summary>
+        internal static string SequenceNameIsUsed {
+            get {
+                return ResourceManager.GetString("SequenceNameIsUsed", resourceCulture);
             }
         }
         

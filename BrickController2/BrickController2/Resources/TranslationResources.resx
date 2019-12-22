@@ -129,6 +129,9 @@
   <data name="Address" xml:space="preserve">
     <value>Address</value>
   </data>
+  <data name="AddSequences" xml:space="preserve">
+    <value>Add sequences</value>
+  </data>
   <data name="AdvancedSettings" xml:space="preserve">
     <value>Advanced settings</value>
   </data>
@@ -146,6 +149,9 @@
   </data>
   <data name="AreYouSureToDeleteProfile" xml:space="preserve">
     <value>Are you sure to delete profile</value>
+  </data>
+  <data name="AreYouSureToDeleteSequence" xml:space="preserve">
+    <value>Are you sure to delete sequence</value>
   </data>
   <data name="AreYouSureToDeleteThisControllerAcrion" xml:space="preserve">
     <value>Are you sure to delete this controller action?</value>
@@ -267,6 +273,9 @@
   <data name="EnterProfileName" xml:space="preserve">
     <value>Enter a new profile name</value>
   </data>
+  <data name="EnterSequenceName" xml:space="preserve">
+    <value>Enter a sequence name</value>
+  </data>
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
@@ -371,6 +380,15 @@
   </data>
   <data name="Sequence" xml:space="preserve">
     <value>Sequence</value>
+  </data>
+  <data name="SequenceName" xml:space="preserve">
+    <value>Sequence name</value>
+  </data>
+  <data name="SequenceNameCanNotBeEmpty" xml:space="preserve">
+    <value>Sequence name can not be empty</value>
+  </data>
+  <data name="SequenceNameIsUsed" xml:space="preserve">
+    <value>This sequence name is already used</value>
   </data>
   <data name="Sequences" xml:space="preserve">
     <value>Sequences</value>
