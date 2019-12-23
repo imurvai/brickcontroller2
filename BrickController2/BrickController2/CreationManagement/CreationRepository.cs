@@ -179,7 +179,7 @@ namespace BrickController2.CreationManagement
             using (await _lock.LockAsync())
             {
                 await InitAsync();
-                await _databaseConnection.InsertAsync(sequence);
+                await _databaseConnection.InsertWithChildrenAsync(sequence);
             }
         }
 
@@ -187,7 +187,7 @@ namespace BrickController2.CreationManagement
         {
             using (await _lock.LockAsync())
             {
-                await _databaseConnection.UpdateAsync(sequence);
+                await _databaseConnection.UpdateWithChildrenAsync(sequence);
             }
         }
 

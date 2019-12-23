@@ -120,8 +120,14 @@
   <data name="About" xml:space="preserve">
     <value>Über</value>
   </data>
+  <data name="AddControllerEvents" xml:space="preserve">
+    <value>Controller-event</value>
+  </data>
   <data name="AddControllerProfiles" xml:space="preserve">
     <value>Controllerprofile erstellen</value>
+  </data>
+  <data name="AddControlPoints" xml:space="preserve">
+    <value>Controll-punkt erstellen</value>
   </data>
   <data name="AddCreations" xml:space="preserve">
     <value>Kreationen erstellen</value>
@@ -140,6 +146,9 @@
   </data>
   <data name="AreYouSureToDeleteControllerEvent" xml:space="preserve">
     <value>Wollen Sie dieses Steuerungsereignis löschen:</value>
+  </data>
+  <data name="AreYouSureToDeleteControlPoint" xml:space="preserve">
+    <value>Wollen Sie diese controller punkt wirklich löschen?</value>
   </data>
   <data name="AreYouSureToDeleteCreation" xml:space="preserve">
     <value>Sind Sie sicher, dass Sie diese Erstellung löschen wollen:</value>
@@ -251,6 +260,9 @@
   </data>
   <data name="Disconnecting" xml:space="preserve">
     <value>Verbindung trennen...</value>
+  </data>
+  <data name="DurationMs" xml:space="preserve">
+    <value>Dauer (ms)</value>
   </data>
   <data name="EnterCreationName" xml:space="preserve">
     <value>Einen Namen für die Kreation eingeben</value>
@@ -383,6 +395,9 @@
   </data>
   <data name="TurnOnBluetoothToConnectBluetoothDevices" xml:space="preserve">
     <value>Bluetooth einschalten, um eine Verbindung zu Bluetooth-Geräten herzustellen</value>
+  </data>
+  <data name="ValuePercent" xml:space="preserve">
+    <value>Wert (%)</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>

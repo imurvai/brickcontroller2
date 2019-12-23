@@ -38,7 +38,7 @@ namespace BrickController2.CreationManagement
         public ObservableCollection<SequenceControlPoint> ControlPoints
         {
             get { return _controlPoints; }
-            set { _controlPoints = value; RaisePropertyChanged(); }
+            set { _controlPoints = value ?? new ObservableCollection<SequenceControlPoint>(); RaisePropertyChanged(); }
         }
 
         public string ControlPointsBlobbed { get; set; }
@@ -49,9 +49,13 @@ namespace BrickController2.CreationManagement
             get
             {
                 var td = 0;
-                foreach (var cp in ControlPoints)
+
+                if (ControlPoints != null)
                 {
-                    td += cp.DurationMs;
+                    foreach (var cp in ControlPoints)
+                    {
+                        td += cp.DurationMs;
+                    }
                 }
 
                 return td;

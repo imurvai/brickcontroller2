@@ -142,7 +142,7 @@
     <value>Biztos törölni szeretnéd ezt az alkotást:</value>
   </data>
   <data name="AreYouSureToDeleteDevice" xml:space="preserve">
-    <value>Biztos törölni akarod ezt az eszközt:</value>
+    <value>Biztos törölni szeretnéd ezt az eszközt:</value>
   </data>
   <data name="AreYouSureToDeleteProfile" xml:space="preserve">
     <value>Biztos törölni szeretnéd ezt a profilet:</value>
@@ -413,5 +413,20 @@
   </data>
   <data name="Sequences" xml:space="preserve">
     <value>Szekvenciák</value>
+  </data>
+  <data name="AddControllerEvents" xml:space="preserve">
+    <value>Hozz létre vezérlő eseményt</value>
+  </data>
+  <data name="AddControlPoints" xml:space="preserve">
+    <value>Hozz létre kontrol-pontokat</value>
+  </data>
+  <data name="AreYouSureToDeleteControlPoint" xml:space="preserve">
+    <value>Biztos törölni szeretnéd ezt a kontrol pontot?</value>
+  </data>
+  <data name="DurationMs" xml:space="preserve">
+    <value>Időtartam (ms)</value>
+  </data>
+  <data name="ValuePercent" xml:space="preserve">
+    <value>Érték (%)</value>
   </data>
 </root>

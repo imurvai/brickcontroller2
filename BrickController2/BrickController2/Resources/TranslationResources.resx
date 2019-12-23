@@ -120,8 +120,14 @@
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="AddControllerEvents" xml:space="preserve">
+    <value>Add controller events</value>
+  </data>
   <data name="AddControllerProfiles" xml:space="preserve">
     <value>Add controller profiles</value>
+  </data>
+  <data name="AddControlPoints" xml:space="preserve">
+    <value>Add control points</value>
   </data>
   <data name="AddCreations" xml:space="preserve">
     <value>Add creations</value>
@@ -140,6 +146,9 @@
   </data>
   <data name="AreYouSureToDeleteControllerEvent" xml:space="preserve">
     <value>Are you sure to delete controller event</value>
+  </data>
+  <data name="AreYouSureToDeleteControlPoint" xml:space="preserve">
+    <value>Are you sure to delete this control point?</value>
   </data>
   <data name="AreYouSureToDeleteCreation" xml:space="preserve">
     <value>Are you sure to delete creation</value>
@@ -263,6 +272,9 @@
   </data>
   <data name="Disconnecting" xml:space="preserve">
     <value>Disconnecting</value>
+  </data>
+  <data name="DurationMs" xml:space="preserve">
+    <value>Duration (ms)</value>
   </data>
   <data name="EnterCreationName" xml:space="preserve">
     <value>Enter a creation name</value>
@@ -407,6 +419,9 @@
   </data>
   <data name="TurnOnBluetoothToConnectBluetoothDevices" xml:space="preserve">
     <value>Turn bluetooth on to connect to bluetooth device(s).</value>
+  </data>
+  <data name="ValuePercent" xml:space="preserve">
+    <value>Value (%)</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>

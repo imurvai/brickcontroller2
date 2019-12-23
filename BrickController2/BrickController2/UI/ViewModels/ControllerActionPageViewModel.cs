@@ -41,7 +41,7 @@ namespace BrickController2.UI.ViewModels
             _preferences = preferences;
 
             ControllerAction = parameters.Get<ControllerAction>("controlleraction", null);
-            ControllerEvent = parameters.Get<ControllerEvent>("controllerevent", null) ?? ControllerAction.ControllerEvent;
+            ControllerEvent = parameters.Get<ControllerEvent>("controllerevent", null) ?? ControllerAction?.ControllerEvent;
 
             var device = _deviceManager.GetDeviceById(ControllerAction?.DeviceId);
             if (ControllerAction != null && device != null)

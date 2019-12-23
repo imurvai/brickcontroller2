@@ -97,7 +97,7 @@
             </ListView>
 
             <!-- Controller event list placeholder -->
-            <Label Grid.Row="1" Text="Add controller events" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <Label Grid.Row="1" Text="{extensions:Translate AddControllerEvents}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label.Triggers>
                     <DataTrigger TargetType="Label" Binding="{Binding ControllerEvents.Count}" Value="0">
                         <Setter Property="IsVisible" Value="True"/>

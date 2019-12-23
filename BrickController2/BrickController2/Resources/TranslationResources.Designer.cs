@@ -70,11 +70,29 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add controller events.
+        /// </summary>
+        internal static string AddControllerEvents {
+            get {
+                return ResourceManager.GetString("AddControllerEvents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add controller profiles.
         /// </summary>
         internal static string AddControllerProfiles {
             get {
                 return ResourceManager.GetString("AddControllerProfiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add control points.
+        /// </summary>
+        internal static string AddControlPoints {
+            get {
+                return ResourceManager.GetString("AddControlPoints", resourceCulture);
             }
         }
         
@@ -129,6 +147,15 @@ namespace BrickController2.Resources {
         internal static string AreYouSureToDeleteControllerEvent {
             get {
                 return ResourceManager.GetString("AreYouSureToDeleteControllerEvent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure to delete this control point?.
+        /// </summary>
+        internal static string AreYouSureToDeleteControlPoint {
+            get {
+                return ResourceManager.GetString("AreYouSureToDeleteControlPoint", resourceCulture);
             }
         }
         
@@ -498,6 +525,15 @@ namespace BrickController2.Resources {
         internal static string Disconnecting {
             get {
                 return ResourceManager.GetString("Disconnecting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duration (ms).
+        /// </summary>
+        internal static string DurationMs {
+            get {
+                return ResourceManager.GetString("DurationMs", resourceCulture);
             }
         }
         
@@ -930,6 +966,15 @@ namespace BrickController2.Resources {
         internal static string TurnOnBluetoothToConnectBluetoothDevices {
             get {
                 return ResourceManager.GetString("TurnOnBluetoothToConnectBluetoothDevices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value (%).
+        /// </summary>
+        internal static string ValuePercent {
+            get {
+                return ResourceManager.GetString("ValuePercent", resourceCulture);
             }
         }
         
