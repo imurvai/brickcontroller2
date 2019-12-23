@@ -27,7 +27,7 @@ namespace BrickController2.UI.MarkupExtensions
                 return null;
             }
 
-            return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.{Source}");
+            return ResourceHelper.GetImageResource(Source);
         }
     }
 }

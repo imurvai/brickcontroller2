@@ -1,6 +1,7 @@
 ﻿using BrickController2.Resources;
 using System.Reflection;
 using System.Resources;
+using Xamarin.Forms;
 
 namespace BrickController2.Helpers
 {
@@ -22,5 +23,11 @@ namespace BrickController2.Helpers
         }
 
         public static string ImageResourceRootNameSpace => "BrickController2.UI.Images";
+
+        public static ImageSource GetImageResource(string resourceName)
+        {
+            // define sourceAssembly parameter to avoid looking for assembly by Xamarin (via reflection of Assembly.GetCallingAssembly)
+            return ImageSource.FromResource($"{ImageResourceRootNameSpace}.{resourceName}", typeof(ResourceHelper).Assembly);
+        }
     }
 }

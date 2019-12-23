@@ -20,25 +20,25 @@ namespace BrickController2.UI.Converters
             {
                 case DeviceType.BuWizz:
                 case DeviceType.BuWizz2:
-                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.buwizz_image.png");
+                    return ResourceHelper.GetImageResource("buwizz_image.png");
 
                 case DeviceType.SBrick:
-                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.sbrick_image.png");
+                    return ResourceHelper.GetImageResource("sbrick_image.png");
 
                 case DeviceType.Infrared:
-                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.infra_image.png");
+                    return ResourceHelper.GetImageResource("infra_image.png");
 
                 case DeviceType.PoweredUp:
-                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.poweredup_image.png");
+                    return ResourceHelper.GetImageResource("poweredup_image.png");
 
                 case DeviceType.Boost:
-                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.boost_image.png");
+                    return ResourceHelper.GetImageResource("boost_image.png");
 
                 case DeviceType.TechnicHub:
-                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.technichub_image.png");
+                    return ResourceHelper.GetImageResource("technichub_image.png");
 
                 case DeviceType.DuploTrainHub:
-                    return ImageSource.FromResource($"{ResourceHelper.ImageResourceRootNameSpace}.duplotrainhub_image.png");
+                    return ResourceHelper.GetImageResource("duplotrainhub_image.png");
 
                 default:
                     return null;
