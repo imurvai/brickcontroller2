@@ -67,7 +67,7 @@ namespace BrickController2.iOS.UI.Services
             }
         }
 
-        public async Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, CancellationToken token)
+        public async Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, KeyboardType keyboardType, CancellationToken token)
         {
             var completionSource = new TaskCompletionSource<InputDialogResult>(TaskCreationOptions.RunContinuationsAsynchronously);
             var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
@@ -76,6 +76,7 @@ namespace BrickController2.iOS.UI.Services
             {
                 textField.Text = initialValue ?? string.Empty;
                 textField.Placeholder = placeHolder ?? string.Empty;
+                textField.KeyboardType = KeyboardTypeToUIKeyboardType(keyboardType);
             });
 
             alert.AddAction(UIAlertAction.Create(positiveButtonText ?? "Ok", UIAlertActionStyle.Default, action =>
@@ -194,6 +195,24 @@ namespace BrickController2.iOS.UI.Services
                         return;
                     }
                 }
+            }
+        }
+
+        private UIKeyboardType KeyboardTypeToUIKeyboardType(KeyboardType keyboardType)
+        {
+            switch (keyboardType)
+            {
+                case KeyboardType.Dialer:
+                    return UIKeyboardType.PhonePad;
+
+                case KeyboardType.Email:
+                    return UIKeyboardType.EmailAddress;
+
+                case KeyboardType.Numeric:
+                    return UIKeyboardType.DecimalPad;
+
+                default:
+                    return UIKeyboardType.Default;
             }
         }
     }

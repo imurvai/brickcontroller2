@@ -72,6 +72,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("CreationName"),
                     Translate("Rename"),
                     Translate("Cancel"),
+                    KeyboardType.Text,
                     _disappearingTokenSource.Token);
                 if (result.IsOk)
                 {
@@ -134,6 +135,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("ProfileName"),
                     Translate("Create"),
                     Translate("Cancel"),
+                    KeyboardType.Text,
                     _disappearingTokenSource.Token);
 
                 if (result.IsOk)

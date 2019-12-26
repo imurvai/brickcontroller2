@@ -69,39 +69,46 @@ namespace BrickController2.UI.ViewModels
 
         private async Task RenameSequenceAsync()
         {
-            var result = await _dialogService.ShowInputDialogAsync(
-                Translate("Sequence"),
-                Translate("EnterSequenceName"),
-                Sequence.Name,
-                Translate("SequenceName"),
-                Translate("Rename"),
-                Translate("Cancel"),
-                _disappearingTokenSource.Token);
-
-            if (result.IsOk)
+            try
             {
-                if (string.IsNullOrWhiteSpace(result.Result))
+                var result = await _dialogService.ShowInputDialogAsync(
+                    Translate("Sequence"),
+                    Translate("EnterSequenceName"),
+                    Sequence.Name,
+                    Translate("SequenceName"),
+                    Translate("Rename"),
+                    Translate("Cancel"),
+                    KeyboardType.Text,
+                    _disappearingTokenSource.Token);
+
+                if (result.IsOk)
                 {
-                    await _dialogService.ShowMessageBoxAsync(
-                        Translate("Warning"),
-                        Translate("SequenceNameCanNotBeEmpty"),
-                        Translate("Ok"),
-                        _disappearingTokenSource.Token);
+                    if (string.IsNullOrWhiteSpace(result.Result))
+                    {
+                        await _dialogService.ShowMessageBoxAsync(
+                            Translate("Warning"),
+                            Translate("SequenceNameCanNotBeEmpty"),
+                            Translate("Ok"),
+                            _disappearingTokenSource.Token);
 
-                    return;
+                        return;
+                    }
+                    else if (!(await _creationManager.IsSequenceNameAvailableAsync(result.Result)))
+                    {
+                        await _dialogService.ShowMessageBoxAsync(
+                            Translate("Warning"),
+                            Translate("SequenceNameIsUsed"),
+                            Translate("Ok"),
+                            _disappearingTokenSource.Token);
+
+                        return;
+                    }
+
+                    Sequence.Name = result.Result;
                 }
-                else if (!(await _creationManager.IsSequenceNameAvailableAsync(result.Result)))
-                {
-                    await _dialogService.ShowMessageBoxAsync(
-                        Translate("Warning"),
-                        Translate("SequenceNameIsUsed"),
-                        Translate("Ok"),
-                        _disappearingTokenSource.Token);
-
-                    return;
-                }
-
-                Sequence.Name = result.Result;
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 
