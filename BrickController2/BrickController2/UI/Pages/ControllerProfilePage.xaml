@@ -31,12 +31,8 @@
 
             <!-- Header -->
             <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-
-                <Label Grid.Column="0" Text="{Binding ControllerProfile.Name}" FontSize="Large" FontAttributes="Bold"/>
+                <Label Text="{Binding ControllerProfile.Name}" FontSize="Large" FontAttributes="Bold"/>
+                <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play_white.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
             </Grid>
 
             <!-- Controller event list -->

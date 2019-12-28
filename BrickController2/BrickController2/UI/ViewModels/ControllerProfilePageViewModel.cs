@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System;
 using System.Threading;
 using BrickController2.UI.Services.Translation;
+using System.Linq;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -37,6 +38,7 @@ namespace BrickController2.UI.ViewModels
 
             RenameProfileCommand = new SafeCommand(async () => await RenameControllerProfileAsync());
             AddControllerEventCommand = new SafeCommand(async () => await AddControllerEventAsync());
+            PlayCommand = new SafeCommand(async () => await PlayAsync());
             ControllerActionTappedCommand = new SafeCommand<ControllerActionViewModel>(async controllerActionViewModel => await NavigationService.NavigateToAsync<ControllerActionPageViewModel>(new NavigationParameters(("controlleraction", controllerActionViewModel.ControllerAction))));
             DeleteControllerEventCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await DeleteControllerEventAsync(controllerEvent));
             DeleteControllerActionCommand = new SafeCommand<ControllerAction>(async controllerAction => await DeleteControllerActionAsync(controllerAction));
@@ -64,6 +66,7 @@ namespace BrickController2.UI.ViewModels
 
         public ICommand RenameProfileCommand { get; }
         public ICommand AddControllerEventCommand { get; }
+        public ICommand PlayCommand { get; }
         public ICommand ControllerActionTappedCommand { get; }
         public ICommand DeleteControllerEventCommand { get; }
         public ICommand DeleteControllerActionCommand { get; }
@@ -136,6 +139,33 @@ namespace BrickController2.UI.ViewModels
             }
             catch (OperationCanceledException)
             {
+            }
+        }
+
+        private async Task PlayAsync()
+        {
+            string warning = null;
+            var deviceIds = ControllerProfile.Creation.GetDeviceIds();
+            if (deviceIds == null || deviceIds.Count() == 0)
+            {
+                warning = Translate("NoControllerActions");
+            }
+            else if (deviceIds.Any(di => _deviceManager.GetDeviceById(di) == null))
+            {
+                warning = Translate("MissingDevices");
+            }
+
+            if (warning == null)
+            {
+                await NavigationService.NavigateToAsync<PlayerPageViewModel>(new NavigationParameters(("creation", ControllerProfile.Creation)));
+            }
+            else
+            {
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    warning,
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
             }
         }
 
