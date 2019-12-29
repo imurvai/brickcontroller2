@@ -154,7 +154,8 @@ namespace BrickController2.CreationManagement
             ChannelOutputType channelOutputType,
             int maxServoAngle,
             int servoBaseAngle,
-            int stepperAngle)
+            int stepperAngle,
+            string sequenceName)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -171,6 +172,7 @@ namespace BrickController2.CreationManagement
                     controllerAction.MaxServoAngle = maxServoAngle;
                     controllerAction.ServoBaseAngle = servoBaseAngle;
                     controllerAction.StepperAngle = stepperAngle;
+                    controllerAction.SequenceName = sequenceName;
                     await _creationRepository.UpdateControllerActionAsync(controllerAction);
                 }
                 else
@@ -188,7 +190,8 @@ namespace BrickController2.CreationManagement
                         ChannelOutputType = channelOutputType,
                         MaxServoAngle = maxServoAngle,
                         ServoBaseAngle = servoBaseAngle,
-                        StepperAngle = stepperAngle
+                        StepperAngle = stepperAngle,
+                        SequenceName = sequenceName
                     };
                     await _creationRepository.InsertControllerActionAsync(controllerEvent, controllerAction);
                 }
@@ -220,7 +223,8 @@ namespace BrickController2.CreationManagement
             ChannelOutputType channelOutputType,
             int maxServoAngle,
             int servoBaseAngle,
-            int stepperAngle)
+            int stepperAngle,
+            string sequenceName)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -244,6 +248,7 @@ namespace BrickController2.CreationManagement
                 controllerAction.MaxServoAngle = maxServoAngle;
                 controllerAction.ServoBaseAngle = servoBaseAngle;
                 controllerAction.StepperAngle = stepperAngle;
+                controllerAction.SequenceName = sequenceName;
                 await _creationRepository.UpdateControllerActionAsync(controllerAction);
             }
         }

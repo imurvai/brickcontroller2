@@ -898,6 +898,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select a sequence.
+        /// </summary>
+        internal static string SelectSequence {
+            get {
+                return ResourceManager.GetString("SelectSequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sequence.
         /// </summary>
         internal static string Sequence {

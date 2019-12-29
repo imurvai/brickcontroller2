@@ -38,7 +38,8 @@ namespace BrickController2.CreationManagement
             ChannelOutputType channelOutputType,
             int maxServoAngle,
             int servoBaseAngle,
-            int stepperAngle);
+            int stepperAngle,
+            string sequenceName);
         Task DeleteControllerActionAsync(ControllerAction controllerAction);
         Task UpdateControllerActionAsync(
             ControllerAction controllerAction,
@@ -53,7 +54,8 @@ namespace BrickController2.CreationManagement
             ChannelOutputType channelOutputType,
             int maxServoAngle,
             int servoBaseAngle,
-            int stepperAngle);
+            int stepperAngle,
+            string sequenceName);
 
         Task<bool> IsSequenceNameAvailableAsync(string sequenceName);
         Task<Sequence> AddSequenceAsync(string sequenceName);

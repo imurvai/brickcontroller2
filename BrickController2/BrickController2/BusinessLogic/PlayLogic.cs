@@ -4,24 +4,63 @@ using BrickController2.PlatformServices.GameController;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BrickController2.BusinessLogic
 {
     public class PlayLogic : IPlayLogic
     {
+        private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
+        private readonly ISequencePlayer _sequencePlayer;
 
         private readonly IDictionary<(string DeviceId, int Channel), float[]> _previousOutputs = new Dictionary<(string, int), float[]>();
         private readonly IDictionary<(string EventCode, string DeviceId, int Channel), float> _previousAxisOutputs = new Dictionary<(string, string, int), float>();
         private readonly IDictionary<(string DeviceId, int Channel), bool> _disabledOutputForAxises = new Dictionary<(string, int), bool>();
         private readonly IDictionary<(string DeviceId, int Channel), IDictionary<(GameControllerEventType EventType, string EventCode), float>> _axisOutputValues = new Dictionary<(string, int), IDictionary<(GameControllerEventType, string), float>>();
 
-        public PlayLogic(IDeviceManager deviceManager)
+        public PlayLogic(
+            ICreationManager creationManager,
+            IDeviceManager deviceManager,
+            ISequencePlayer sequencePlayer)
         {
+            _creationManager = creationManager;
             _deviceManager = deviceManager;
+            _sequencePlayer = sequencePlayer;
         }
 
         public ControllerProfile ActiveProfile { get; set; }
+
+        public CreationValidationResult ValidateCreation(Creation creation)
+        {
+            var deviceIds = creation.GetDeviceIds();
+            var sequenceNames = creation.GetSequenceNames();
+
+            if (deviceIds == null || deviceIds.Count() == 0)
+            {
+                return CreationValidationResult.MissingControllerAction;
+            }
+            else if (deviceIds.Any(di => _deviceManager.GetDeviceById(di) == null))
+            {
+                return CreationValidationResult.MissingDevice;
+            }
+            else if (sequenceNames != null && sequenceNames.Any(sn => _creationManager.Sequences.FirstOrDefault(s => s.Name == sn) == null))
+            {
+                return CreationValidationResult.MissingSequence;
+            }
+
+            return CreationValidationResult.Ok;
+        }
+
+        public Task StartPlayAsync()
+        {
+            return Task.FromResult(true);
+        }
+
+        public async Task StopPlayAsync()
+        {
+            await _sequencePlayer.StopAllSequencesAsync();
+        }
 
         public void ProcessGameControllerEvent(GameControllerEventArgs e)
         {
@@ -129,6 +168,15 @@ namespace BrickController2.BusinessLogic
                     var accelarationStep = GetAccelarationStep(deviceType);
                     accelarationStep = controllerAction.IsInvert ? -accelarationStep : accelarationStep;
                     currentOutput = Math.Min(Math.Max(previousOutputs[0] + accelarationStep, -1), 1);
+                    break;
+
+                case ControllerButtonType.Sequence:
+                    var sequence = _creationManager.Sequences.FirstOrDefault(s => s.Name == controllerAction.SequenceName);
+                    if (sequence != null)
+                    {
+                        // TODO: make it awaitable
+                        _sequencePlayer.ToggleSequenceAsync(controllerAction.DeviceId, controllerAction.Channel, sequence);
+                    }
                     break;
             }
 

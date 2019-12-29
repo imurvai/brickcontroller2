@@ -9,6 +9,7 @@ using BrickController2.DeviceManagement;
 using System.Threading;
 using System;
 using BrickController2.UI.Services.Translation;
+using BrickController2.BusinessLogic;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -17,6 +18,7 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
+        private readonly IPlayLogic _playLogic;
 
         private CancellationTokenSource _disappearingTokenSource;
 
@@ -26,12 +28,14 @@ namespace BrickController2.UI.ViewModels
             ICreationManager creationManager,
             IDeviceManager deviceManager,
             IDialogService dialogService,
+            IPlayLogic playLogic,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;
             _dialogService = dialogService;
+            _playLogic = playLogic;
 
             Creation = parameters.Get<Creation>("creation");
 
@@ -99,18 +103,25 @@ namespace BrickController2.UI.ViewModels
 
         private async Task PlayAsync()
         {
+            var validationResult = _playLogic.ValidateCreation(Creation);
+
             string warning = null;
-            var deviceIds = Creation.GetDeviceIds();
-            if (deviceIds == null || deviceIds.Count() == 0)
+            switch (validationResult)
             {
-                warning = Translate("NoControllerActions");
-            }
-            else if (deviceIds.Any(di => _deviceManager.GetDeviceById(di) == null))
-            {
-                warning = Translate("MissingDevices");
+                case CreationValidationResult.MissingControllerAction:
+                    warning = Translate("NoControllerActions");
+                    break;
+
+                case CreationValidationResult.MissingDevice:
+                    warning = Translate("MissingDevices");
+                    break;
+
+                case CreationValidationResult.MissingSequence:
+                    warning = Translate("MissingSequence");
+                    break;
             }
 
-            if (warning == null)
+            if (validationResult == CreationValidationResult.Ok)
             {
                 await NavigationService.NavigateToAsync<PlayerPageViewModel>(new NavigationParameters(("creation", Creation)));
             }
@@ -185,12 +196,6 @@ namespace BrickController2.UI.ViewModels
             catch (OperationCanceledException)
             {
             }
-        }
-
-        private bool IsCreationPlayable()
-        {
-            var deviceIds = Creation.GetDeviceIds();
-            return deviceIds != null && deviceIds.Count() > 0 && deviceIds.All(di => _deviceManager.GetDeviceById(di) != null);
         }
     }
 }

@@ -378,6 +378,9 @@
   <data name="SelectDeviceBeforeSaving" xml:space="preserve">
     <value>Vor dem Speichern ein Gerät auswählen</value>
   </data>
+  <data name="SelectSequence" xml:space="preserve">
+    <value>Eine Sequenz auswählen</value>
+  </data>
   <data name="Sequence" xml:space="preserve">
     <value>Sequenz</value>
   </data>

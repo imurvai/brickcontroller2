@@ -97,6 +97,7 @@ namespace BrickController2.UI.ViewModels
 
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
 
+            await _playLogic.StartPlayAsync();
             _connectionTask = ConnectDevicesAsync();
         }
 
@@ -106,6 +107,7 @@ namespace BrickController2.UI.ViewModels
 
             _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
 
+            await _playLogic.StopPlayAsync();
             await DisconnectDevicesAsync();
         }
 

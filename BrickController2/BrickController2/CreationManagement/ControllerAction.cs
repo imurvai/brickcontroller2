@@ -18,6 +18,7 @@ namespace BrickController2.CreationManagement
         private int _maxServoAngle;
         private int _servoBaseAngle;
         private int _stepperAngle;
+        private string _sequenceName;
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -98,6 +99,12 @@ namespace BrickController2.CreationManagement
         {
             get { return _stepperAngle; }
             set { _stepperAngle = value; RaisePropertyChanged(); }
+        }
+
+        public string SequenceName
+        {
+            get { return _sequenceName; }
+            set { _sequenceName = value; RaisePropertyChanged(); }
         }
 
         public override string ToString()

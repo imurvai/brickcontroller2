@@ -396,6 +396,9 @@
   <data name="SelectDeviceBeforeSaving" xml:space="preserve">
     <value>Select a device before saving.</value>
   </data>
+  <data name="SelectSequence" xml:space="preserve">
+    <value>Select a sequence</value>
+  </data>
   <data name="Sequence" xml:space="preserve">
     <value>Sequence</value>
   </data>

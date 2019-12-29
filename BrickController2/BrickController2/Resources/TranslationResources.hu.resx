@@ -444,4 +444,7 @@
   <data name="ValueOutOfRange" xml:space="preserve">
     <value>Az érték a határokon kívül van.</value>
   </data>
+  <data name="SelectSequence" xml:space="preserve">
+    <value>Válassz egy szekvenciát</value>
+  </data>
 </root>

@@ -58,6 +58,7 @@ namespace BrickController2.UI.ViewModels
                 Action.AxisDeadZonePercent = ControllerAction.AxisDeadZonePercent;
                 Action.ServoBaseAngle = ControllerAction.ServoBaseAngle;
                 Action.StepperAngle = ControllerAction.StepperAngle;
+                Action.SequenceName = ControllerAction.SequenceName;
             }
             else
             {
@@ -74,6 +75,7 @@ namespace BrickController2.UI.ViewModels
                 Action.AxisDeadZonePercent = 0;
                 Action.ServoBaseAngle = 0;
                 Action.StepperAngle = 90;
+                Action.SequenceName = string.Empty;
             }
 
             SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null);
@@ -83,6 +85,7 @@ namespace BrickController2.UI.ViewModels
         }
 
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
+        public ObservableCollection<Sequence> Sequences => _creationManager.Sequences;
 
         public ControllerEvent ControllerEvent { get; }
         public ControllerAction ControllerAction { get; }
@@ -155,7 +158,8 @@ namespace BrickController2.UI.ViewModels
                             Action.ChannelOutputType,
                             Action.MaxServoAngle,
                             Action.ServoBaseAngle,
-                            Action.StepperAngle);
+                            Action.StepperAngle,
+                            Action.SequenceName);
                     }
                     else
                     {
@@ -172,7 +176,8 @@ namespace BrickController2.UI.ViewModels
                             Action.ChannelOutputType,
                             Action.MaxServoAngle,
                             Action.ServoBaseAngle,
-                            Action.StepperAngle);
+                            Action.StepperAngle,
+                            Action.SequenceName);
                     }
                 },
                 Translate("Saving"));
