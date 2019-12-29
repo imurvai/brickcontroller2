@@ -394,6 +394,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Control point.
+        /// </summary>
+        internal static string ControlPoint {
+            get {
+                return ResourceManager.GetString("ControlPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create.
         /// </summary>
         internal static string Create {
@@ -534,6 +543,15 @@ namespace BrickController2.Resources {
         internal static string DurationMs {
             get {
                 return ResourceManager.GetString("DurationMs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter the control point duration between 50 and 10000 ms..
+        /// </summary>
+        internal static string EnterControlPointDuration {
+            get {
+                return ResourceManager.GetString("EnterControlPointDuration", resourceCulture);
             }
         }
         
@@ -966,6 +984,33 @@ namespace BrickController2.Resources {
         internal static string TurnOnBluetoothToConnectBluetoothDevices {
             get {
                 return ResourceManager.GetString("TurnOnBluetoothToConnectBluetoothDevices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        internal static string Value {
+            get {
+                return ResourceManager.GetString("Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value must be numeric..
+        /// </summary>
+        internal static string ValueMustBeNumeric {
+            get {
+                return ResourceManager.GetString("ValueMustBeNumeric", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value out of range..
+        /// </summary>
+        internal static string ValueOutOfRange {
+            get {
+                return ResourceManager.GetString("ValueOutOfRange", resourceCulture);
             }
         }
         

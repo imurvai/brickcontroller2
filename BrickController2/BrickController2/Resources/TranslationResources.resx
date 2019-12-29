@@ -228,6 +228,9 @@
   <data name="ControllerTester" xml:space="preserve">
     <value>Controller tester</value>
   </data>
+  <data name="ControlPoint" xml:space="preserve">
+    <value>Control point</value>
+  </data>
   <data name="Create" xml:space="preserve">
     <value>Create</value>
   </data>
@@ -275,6 +278,9 @@
   </data>
   <data name="DurationMs" xml:space="preserve">
     <value>Duration (ms)</value>
+  </data>
+  <data name="EnterControlPointDuration" xml:space="preserve">
+    <value>Enter the control point duration between 50 and 10000 ms.</value>
   </data>
   <data name="EnterCreationName" xml:space="preserve">
     <value>Enter a creation name</value>
@@ -419,6 +425,15 @@
   </data>
   <data name="TurnOnBluetoothToConnectBluetoothDevices" xml:space="preserve">
     <value>Turn bluetooth on to connect to bluetooth device(s).</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="ValueMustBeNumeric" xml:space="preserve">
+    <value>Value must be numeric.</value>
+  </data>
+  <data name="ValueOutOfRange" xml:space="preserve">
+    <value>Value out of range.</value>
   </data>
   <data name="ValuePercent" xml:space="preserve">
     <value>Value (%)</value>

@@ -1,7 +1,6 @@
 ﻿using BrickController2.Helpers;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
-using System;
 using System.Collections.ObjectModel;
 
 namespace BrickController2.CreationManagement

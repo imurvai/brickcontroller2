@@ -429,4 +429,19 @@
   <data name="ValuePercent" xml:space="preserve">
     <value>Érték (%)</value>
   </data>
+  <data name="ControlPoint" xml:space="preserve">
+    <value>Kontrol pont</value>
+  </data>
+  <data name="EnterControlPointDuration" xml:space="preserve">
+    <value>Add meg a kontrol point időtartamát 50 és 10000 ms közt.</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Érték</value>
+  </data>
+  <data name="ValueMustBeNumeric" xml:space="preserve">
+    <value>Az értéknek számnak kell lennie.</value>
+  </data>
+  <data name="ValueOutOfRange" xml:space="preserve">
+    <value>Az érték a határokon kívül van.</value>
+  </data>
 </root>

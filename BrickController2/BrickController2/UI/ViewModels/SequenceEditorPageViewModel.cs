@@ -42,9 +42,9 @@ namespace BrickController2.UI.ViewModels
 
             RenameSequenceCommand = new SafeCommand(async () => await RenameSequenceAsync());
             AddControlPointCommand = new SafeCommand(() => AddControlPoint());
-            DeleteControlPointCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await DeleceControlPointAsync(controlPoint));
+            DeleteControlPointCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await DeleteControlPointAsync(controlPoint));
             SaveSequenceCommand = new SafeCommand(async () => await SaveSequenceAsync());
-            ControlPointTappedCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await EditControlPoint(controlPoint));
+            ChangeControlPointDurationCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await ChangeControlPointDurationAsync(controlPoint));
         }
 
         public Sequence OriginalSequence { get; }
@@ -54,7 +54,7 @@ namespace BrickController2.UI.ViewModels
         public ICommand AddControlPointCommand { get; }
         public ICommand DeleteControlPointCommand { get; }
         public ICommand SaveSequenceCommand { get; }
-        public ICommand ControlPointTappedCommand { get; }
+        public ICommand ChangeControlPointDurationCommand { get; }
 
         public override void OnAppearing()
         {
@@ -117,7 +117,7 @@ namespace BrickController2.UI.ViewModels
             Sequence.ControlPoints.Add(new SequenceControlPoint { Value = 0, DurationMs = 100 });
         }
 
-        private async Task DeleceControlPointAsync(SequenceControlPoint controlPoint)
+        private async Task DeleteControlPointAsync(SequenceControlPoint controlPoint)
         {
             try
             {
@@ -129,6 +129,9 @@ namespace BrickController2.UI.ViewModels
                     _disappearingTokenSource.Token))
                 {
                     Sequence.ControlPoints.Remove(controlPoint);
+
+                    // This hack is needed to rebuild the bindings properly in the listview
+                    Sequence.ControlPoints = new ObservableCollection<SequenceControlPoint>(Sequence.ControlPoints);
                 }
             }
             catch (OperationCanceledException)
@@ -136,9 +139,54 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private async Task EditControlPoint(SequenceControlPoint controlPoint)
+        private async Task ChangeControlPointDurationAsync(SequenceControlPoint controlPoint)
         {
-            await _dialogService.ShowMessageBoxAsync("title", "edit", "ok", _disappearingTokenSource.Token);
+            try
+            {
+                var result = await _dialogService.ShowInputDialogAsync(
+                    Translate("ControlPoint"),
+                    Translate("EnterControlPointDuration"),
+                    controlPoint.DurationMs.ToString(),
+                    Translate("Value"),
+                    Translate("Ok"),
+                    Translate("Cancel"),
+                    KeyboardType.Numeric,
+                    _disappearingTokenSource.Token);
+
+                if (!result.IsOk)
+                {
+                    return;
+                }
+
+                if (int.TryParse(result.Result, out int intValue))
+                {
+                    if (intValue < 50 || 10000 < intValue)
+                    {
+                        await _dialogService.ShowMessageBoxAsync(
+                            Translate("Warining"),
+                            Translate("ValueOutOfRange"),
+                            Translate("Ok"),
+                            _disappearingTokenSource.Token);
+
+                        return;
+                    }
+
+                    controlPoint.DurationMs = intValue;
+                }
+                else
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Warning"),
+                        Translate("ValueMustBeNumeric"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
+
+                    return;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
         }
 
         private async Task SaveSequenceAsync()
