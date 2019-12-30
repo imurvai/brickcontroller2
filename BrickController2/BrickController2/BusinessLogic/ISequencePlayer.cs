@@ -5,7 +5,9 @@ namespace BrickController2.BusinessLogic
 {
     public interface ISequencePlayer
     {
-        Task ToggleSequenceAsync(string deviceId, int channel, Sequence sequence);
-        Task StopAllSequencesAsync();
+        Task StartPlayerAsync();
+        Task StopPlayerAsync();
+
+        void ToggleSequence(string deviceId, int channel, Sequence sequence);
     }
 }

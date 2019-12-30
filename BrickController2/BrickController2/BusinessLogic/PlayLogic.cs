@@ -52,14 +52,14 @@ namespace BrickController2.BusinessLogic
             return CreationValidationResult.Ok;
         }
 
-        public Task StartPlayAsync()
+        public async Task StartPlayAsync()
         {
-            return Task.FromResult(true);
+            await _sequencePlayer.StartPlayerAsync();
         }
 
         public async Task StopPlayAsync()
         {
-            await _sequencePlayer.StopAllSequencesAsync();
+            await _sequencePlayer.StopPlayerAsync();
         }
 
         public void ProcessGameControllerEvent(GameControllerEventArgs e)
@@ -174,8 +174,7 @@ namespace BrickController2.BusinessLogic
                     var sequence = _creationManager.Sequences.FirstOrDefault(s => s.Name == controllerAction.SequenceName);
                     if (sequence != null)
                     {
-                        // TODO: make it awaitable
-                        _sequencePlayer.ToggleSequenceAsync(controllerAction.DeviceId, controllerAction.Channel, sequence);
+                        _sequencePlayer.ToggleSequence(controllerAction.DeviceId, controllerAction.Channel, sequence);
                     }
                     break;
             }

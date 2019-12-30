@@ -3,7 +3,6 @@ using BrickController2.DeviceManagement;
 using BrickController2.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,19 +25,37 @@ namespace BrickController2.BusinessLogic
             _deviceManager = deviceManager;
         }
 
-        public async Task StopAllSequencesAsync()
+        public async Task StartPlayerAsync()
         {
             using (await _lock.LockAsync())
             {
-                _sequences.Clear();
+                await StopPlayerInternalAsync();
 
-                await StopPlayerAsync();
+                lock (_sequences)
+                {
+                    _sequences.Clear();
+                }
+
+                StartPlayerInternal();
             }
         }
 
-        public async Task ToggleSequenceAsync(string deviceId, int channel, Sequence sequence)
+        public async Task StopPlayerAsync()
         {
             using (await _lock.LockAsync())
+            {
+                await StopPlayerInternalAsync();
+
+                lock (_sequences)
+                {
+                    _sequences.Clear();
+                }
+            }
+        }
+
+        public void ToggleSequence(string deviceId, int channel, Sequence sequence)
+        {
+            lock (_sequences)
             {
                 if (_sequences.ContainsKey((deviceId, channel)))
                 {
@@ -46,28 +63,16 @@ namespace BrickController2.BusinessLogic
 
                     var device = _deviceManager.GetDeviceById(deviceId);
                     device?.SetOutput(channel, 0);
-
-                    if (!_sequences.Keys.Any())
-                    {
-                        await StopPlayerAsync();
-                    }
                 }
                 else
                 {
                     _sequences[(deviceId, channel)] = (sequence, null);
-
-                    if (_sequences.Keys.Count == 1)
-                    {
-                        await StartPlayerAsync();
-                    }
                 }
             }
         }
 
-        private async Task StartPlayerAsync()
+        private void StartPlayerInternal()
         {
-            await StopPlayerAsync();
-
             _playerTaskTokenSource = new CancellationTokenSource();
             var token = _playerTaskTokenSource.Token;
 
@@ -79,40 +84,44 @@ namespace BrickController2.BusinessLogic
                     {
                         var sequenceProcessingStartTime = DateTime.Now;
 
-                        await ProcessSequencesAsync(token);
+                        ProcessSequences();
 
                         var waitInterval = sequenceProcessingStartTime + _playerInterval - DateTime.Now;
                         await Task.Delay(waitInterval, token);
                     }
-                    catch (OperationCanceledException)
+                    catch (Exception)
                     {
-                    }
-                    catch (Exception ex)
-                    {
-                        int a = 1;
                     }
                 }
             });
         }
 
-        private async Task StopPlayerAsync()
+        private async Task StopPlayerInternalAsync()
         {
             if (_playerTaskTokenSource == null)
             {
                 return;
             }
 
-            _playerTaskTokenSource.Cancel();
-            await _playerTask;
-
-            _playerTask = null;
-            _playerTaskTokenSource.Dispose();
-            _playerTaskTokenSource = null;
+            try
+            {
+                _playerTaskTokenSource.Cancel();
+                await _playerTask;
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                _playerTask = null;
+                _playerTaskTokenSource.Dispose();
+                _playerTaskTokenSource = null;
+            }
         }
 
-        private async Task ProcessSequencesAsync(CancellationToken token)
+        private void ProcessSequences()
         {
-            using (await _lock.LockAsync(token))
+            lock (_sequences)
             {
                 var now = DateTime.Now;
                 IList<(string DeviceId, int Channel)> sequencesToRemove = new List<(string, int)>();
