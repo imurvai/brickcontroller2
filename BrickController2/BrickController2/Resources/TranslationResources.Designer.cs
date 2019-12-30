@@ -637,6 +637,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Interpolate.
+        /// </summary>
+        internal static string Interpolate {
+            get {
+                return ResourceManager.GetString("Interpolate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inv.
         /// </summary>
         internal static string Inv {
@@ -669,6 +678,15 @@ namespace BrickController2.Resources {
         internal static string LocationPermissionIsNeeded {
             get {
                 return ResourceManager.GetString("LocationPermissionIsNeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loop.
+        /// </summary>
+        internal static string Loop {
+            get {
+                return ResourceManager.GetString("Loop", resourceCulture);
             }
         }
         

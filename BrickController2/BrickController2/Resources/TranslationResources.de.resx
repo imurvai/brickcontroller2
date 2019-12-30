@@ -297,6 +297,9 @@
   <data name="IconSet" xml:space="preserve">
     <value>Icon-Set</value>
   </data>
+  <data name="Interpolate" xml:space="preserve">
+    <value>Interpolieren</value>
+  </data>
   <data name="Inv" xml:space="preserve">
     <value>Inv</value>
   </data>
@@ -308,6 +311,9 @@
   </data>
   <data name="LocationPermissionIsNeeded" xml:space="preserve">
     <value>Für die Bluetooth-Verbindung ist eine Standortgenehmigung erforderlich</value>
+  </data>
+  <data name="Loop" xml:space="preserve">
+    <value>Schleife</value>
   </data>
   <data name="MaxOutput" xml:space="preserve">
     <value>Max Leistung</value>

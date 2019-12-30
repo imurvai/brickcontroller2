@@ -447,4 +447,10 @@
   <data name="SelectSequence" xml:space="preserve">
     <value>Válassz egy szekvenciát</value>
   </data>
+  <data name="Interpolate" xml:space="preserve">
+    <value>Interpolált</value>
+  </data>
+  <data name="Loop" xml:space="preserve">
+    <value>Ismétlődő</value>
+  </data>
 </root>

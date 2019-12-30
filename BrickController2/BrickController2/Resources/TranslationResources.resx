@@ -309,6 +309,9 @@
   <data name="IconSet" xml:space="preserve">
     <value>Icon set</value>
   </data>
+  <data name="Interpolate" xml:space="preserve">
+    <value>Interpolate</value>
+  </data>
   <data name="Inv" xml:space="preserve">
     <value>Inv</value>
   </data>
@@ -320,6 +323,9 @@
   </data>
   <data name="LocationPermissionIsNeeded" xml:space="preserve">
     <value>Location permission is needed for accessing bluetooth</value>
+  </data>
+  <data name="Loop" xml:space="preserve">
+    <value>Loop</value>
   </data>
   <data name="MaxOutput" xml:space="preserve">
     <value>Max output</value>
