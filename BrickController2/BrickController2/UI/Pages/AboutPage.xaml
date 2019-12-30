@@ -20,7 +20,7 @@
 
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
 
-                <Label Text="Copyright © 2019, István Murvai (SCN)"/>
+                <Label Text="Copyright © 2020, István Murvai (SCN)"/>
 
                 <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
 
