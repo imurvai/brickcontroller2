@@ -5,7 +5,6 @@ using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Translation;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -18,7 +17,6 @@ namespace BrickController2.UI.ViewModels
         private readonly IDialogService _dialogService;
 
         private CancellationTokenSource _disappearingTokenSource;
-        private bool _isDisappearing = false;
 
         public SequenceListPageViewModel(
             INavigationService navigationService,
@@ -43,14 +41,12 @@ namespace BrickController2.UI.ViewModels
 
         public override void OnAppearing()
         {
-            _isDisappearing = false;
             _disappearingTokenSource?.Cancel();
             _disappearingTokenSource = new CancellationTokenSource();
         }
 
         public override void OnDisappearing()
         {
-            _isDisappearing = true;
             _disappearingTokenSource.Cancel();
         }
 

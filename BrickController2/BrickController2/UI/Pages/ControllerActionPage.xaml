@@ -165,7 +165,14 @@
                             </Grid.ColumnDefinitions>
 
                             <Label Grid.Column="0" Text="{extensions:Translate Sequence}" VerticalOptions="Center"/>
-                            <Picker Grid.Column="1" Title="{extensions:Translate SelectSequence}" ItemsSource="{Binding Sequences}" SelectedItem="{Binding Action.SequenceName}"/>
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Picker Grid.Column="0" Title="{extensions:Translate SelectSequence}" ItemsSource="{Binding Sequences}" SelectedItem="{Binding Action.SequenceName}"/>
+                                <controls:FloatingActionButton Grid.Column="1" ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" Command="{Binding OpenSequenceEditorCommand}" VerticalOptions="Center"/>
+                            </Grid>
                         </Grid>
                     </StackLayout>
 

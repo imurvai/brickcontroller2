@@ -275,6 +275,8 @@ namespace BrickController2.CreationManagement
 
         public async Task UpdateSequenceAsync(Sequence sequence, string sequenceName, bool loop, bool interpolate, IEnumerable<SequenceControlPoint> controlPoints)
         {
+            var sequenceOriginalName = sequence.Name;
+
             using (await _asyncLock.LockAsync())
             {
                 sequence.Name = sequenceName;
@@ -282,6 +284,40 @@ namespace BrickController2.CreationManagement
                 sequence.Interpolate = interpolate;
                 sequence.ControlPoints = new ObservableCollection<SequenceControlPoint>(controlPoints);
                 await _creationRepository.UpdateSequenceAsync(sequence);
+            }
+
+            if (sequenceOriginalName != sequenceName)
+            {
+                foreach (var creation in Creations)
+                {
+                    foreach (var controllerProfile in creation.ControllerProfiles)
+                    {
+                        foreach (var controllerEvent in controllerProfile.ControllerEvents)
+                        {
+                            foreach (var controllerAction in controllerEvent.ControllerActions)
+                            {
+                                if (controllerAction.SequenceName == sequenceOriginalName)
+                                {
+                                    await UpdateControllerActionAsync(
+                                        controllerAction,
+                                        controllerAction.DeviceId,
+                                        controllerAction.Channel,
+                                        controllerAction.IsInvert,
+                                        controllerAction.ButtonType,
+                                        controllerAction.AxisType,
+                                        controllerAction.AxisCharacteristic,
+                                        controllerAction.MaxOutputPercent,
+                                        controllerAction.AxisDeadZonePercent,
+                                        controllerAction.ChannelOutputType,
+                                        controllerAction.MaxServoAngle,
+                                        controllerAction.ServoBaseAngle,
+                                        controllerAction.StepperAngle,
+                                        sequenceName);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 

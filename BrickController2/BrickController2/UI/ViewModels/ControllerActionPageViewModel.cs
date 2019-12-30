@@ -82,6 +82,7 @@ namespace BrickController2.UI.ViewModels
             DeleteControllerActionCommand = new SafeCommand(async () => await DeleteControllerActionAsync());
             OpenDeviceDetailsCommand = new SafeCommand(async () => await OpenDeviceDetailsAsync(), () => SelectedDevice != null);
             OpenChannelSetupCommand = new SafeCommand(async () => await OpenChannelSetupAsync(), () => SelectedDevice != null);
+            OpenSequenceEditorCommand = new SafeCommand(async () => await OpenSequenceEditorAsync());
         }
 
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
@@ -113,6 +114,7 @@ namespace BrickController2.UI.ViewModels
         public ICommand DeleteControllerActionCommand { get; }
         public ICommand OpenDeviceDetailsCommand { get; }
         public ICommand OpenChannelSetupCommand { get; }
+        public ICommand OpenSequenceEditorCommand { get; }
 
         public override void OnAppearing()
         {
@@ -230,6 +232,24 @@ namespace BrickController2.UI.ViewModels
             }
 
             await NavigationService.NavigateToAsync<ChannelSetupPageViewModel>(new NavigationParameters(("device", SelectedDevice), ("controlleraction", Action)));
+        }
+
+        private async Task OpenSequenceEditorAsync()
+        {
+            var selectedSequence = _creationManager.Sequences.FirstOrDefault(s => s.Name == Action.SequenceName);
+
+            if (selectedSequence != null)
+            {
+                await NavigationService.NavigateToAsync<SequenceEditorPageViewModel>(new NavigationParameters(("sequence", selectedSequence)));
+            }
+            else
+            {
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    Translate("MissingSequence"),
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
+            }
         }
     }
 }
