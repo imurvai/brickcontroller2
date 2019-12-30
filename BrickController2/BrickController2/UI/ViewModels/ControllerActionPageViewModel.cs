@@ -85,7 +85,7 @@ namespace BrickController2.UI.ViewModels
         }
 
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
-        public ObservableCollection<Sequence> Sequences => _creationManager.Sequences;
+        public ObservableCollection<string> Sequences => new ObservableCollection<string>(_creationManager.Sequences.Select(s => s.Name));
 
         public ControllerEvent ControllerEvent { get; }
         public ControllerAction ControllerAction { get; }

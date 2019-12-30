@@ -87,6 +87,10 @@ namespace BrickController2.BusinessLogic
                     catch (OperationCanceledException)
                     {
                     }
+                    catch (Exception ex)
+                    {
+                        int a = 1;
+                    }
                 }
             });
         }
