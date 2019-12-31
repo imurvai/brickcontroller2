@@ -9,6 +9,7 @@
     <Compile Remove="UI\Navigation\**" />
     <EmbeddedResource Remove="UI\Navigation\**" />
     <None Remove="UI\Navigation\**" />
+    <None Remove="UI\Images\ic_sequence.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,7 +33,6 @@
     <None Remove="UI\Images\ic_play_black.png" />
     <None Remove="UI\Images\ic_play_white.png" />
     <None Remove="UI\Images\ic_search.png" />
-    <None Remove="UI\Images\ic_sequence.png" />
     <None Remove="UI\Images\ic_settings_white.png" />
     <None Remove="UI\Images\infra_image.png" />
     <None Remove="UI\Images\infra_image_small.png" />
@@ -51,7 +51,6 @@
     <EmbeddedResource Include="UI\Images\buwizz_image_small.png" />
     <EmbeddedResource Include="UI\Images\duplotrainhub_image.png" />
     <EmbeddedResource Include="UI\Images\duplotrainhub_image_small.png" />
-    <EmbeddedResource Include="UI\Images\ic_sequence.png" />
     <EmbeddedResource Include="UI\Images\ic_settings_white.png" />
     <EmbeddedResource Include="UI\Images\technichub_image.png" />
     <EmbeddedResource Include="UI\Images\technichub_image_small.png" />
@@ -72,6 +71,7 @@
     <EmbeddedResource Include="UI\Images\poweredup_image_small.png" />
     <EmbeddedResource Include="UI\Images\sbrick_image.png" />
     <EmbeddedResource Include="UI\Images\sbrick_image_small.png" />
+    <EmbeddedResource Include="UI\Images\ic_sequence.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -175,12 +175,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="UI\Pages\PlayerPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="UI\Pages\SequenceEditorPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="UI\Pages\SequenceListPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

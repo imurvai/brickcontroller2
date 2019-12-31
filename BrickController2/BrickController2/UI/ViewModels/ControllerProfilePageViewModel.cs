@@ -237,7 +237,7 @@ namespace BrickController2.UI.ViewModels
             CleanupControllerEvents();
             foreach (var controllerEvent in ControllerProfile.ControllerEvents)
             {
-                ControllerEvents.Add(new ControllerEventViewModel(controllerEvent, _deviceManager, TranslationService));
+                ControllerEvents.Add(new ControllerEventViewModel(controllerEvent, _creationManager, _deviceManager, TranslationService));
             }
         }
 
@@ -255,14 +255,19 @@ namespace BrickController2.UI.ViewModels
         {
             private readonly ITranslationService _translationService;
 
-            public ControllerActionViewModel(ControllerAction controllerAction, IDeviceManager deviceManager, ITranslationService translationService)
+            public ControllerActionViewModel(
+                ControllerAction controllerAction,
+                ICreationManager creationManager,
+                IDeviceManager deviceManager,
+                ITranslationService translationService)
             {
                 _translationService = translationService;
 
                 ControllerAction = controllerAction;
                 var device = deviceManager.GetDeviceById(controllerAction.DeviceId);
+                var sequence = creationManager.Sequences.FirstOrDefault(s => s.Name == ControllerAction.SequenceName);
 
-                DeviceMissing = device == null;
+                DeviceMissing = device == null || (ControllerAction.ButtonType == ControllerButtonType.Sequence && sequence == null);
                 DeviceName = device != null ? device.Name : Translate("Missing");
                 DeviceType = device != null ? device.DeviceType : DeviceType.Unknown;
                 Channel = controllerAction.Channel;
@@ -281,16 +286,22 @@ namespace BrickController2.UI.ViewModels
 
         public class ControllerEventViewModel : ObservableCollection<ControllerActionViewModel>, IDisposable
         {
+            private readonly ICreationManager _creationManager;
             private readonly IDeviceManager _deviceManager;
             private readonly ITranslationService _translationService;
 
-            public ControllerEventViewModel(ControllerEvent controllerEvent, IDeviceManager deviceManager, ITranslationService translationService)
+            public ControllerEventViewModel(
+                ControllerEvent controllerEvent,
+                ICreationManager creationManager,
+                IDeviceManager deviceManager,
+                ITranslationService translationService)
             {
                 ControllerEvent = controllerEvent;
+                _creationManager = creationManager;
                 _deviceManager = deviceManager;
                 _translationService = translationService;
 
-                PopulateGroup(controllerEvent, deviceManager, translationService);
+                PopulateGroup(controllerEvent, creationManager, deviceManager, translationService);
                 controllerEvent.ControllerActions.CollectionChanged += OnCollectionChanged;
             }
 
@@ -304,15 +315,19 @@ namespace BrickController2.UI.ViewModels
 
             private void OnCollectionChanged(object sender, EventArgs args)
             {
-                PopulateGroup(ControllerEvent, _deviceManager, _translationService);
+                PopulateGroup(ControllerEvent, _creationManager, _deviceManager, _translationService);
             }
 
-            private void PopulateGroup(ControllerEvent controllerEvent, IDeviceManager deviceManager, ITranslationService translationService)
+            private void PopulateGroup(
+                ControllerEvent controllerEvent,
+                ICreationManager creationManager,
+                IDeviceManager deviceManager,
+                ITranslationService translationService)
             {
                 Clear();
                 foreach (var controllerAction in controllerEvent.ControllerActions)
                 {
-                    Add(new ControllerActionViewModel(controllerAction, deviceManager, translationService));
+                    Add(new ControllerActionViewModel(controllerAction, creationManager, deviceManager, translationService));
                 }
             }
         }
