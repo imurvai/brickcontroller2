@@ -52,6 +52,14 @@ namespace BrickController2.BusinessLogic
             return CreationValidationResult.Ok;
         }
 
+        public bool ValidateControllerAction(ControllerAction controllerAction)
+        {
+            var device = _deviceManager.GetDeviceById(controllerAction.DeviceId);
+            var sequence = _creationManager.Sequences.FirstOrDefault(s => s.Name == controllerAction.SequenceName);
+
+            return device != null && (controllerAction.ButtonType != ControllerButtonType.Sequence || sequence != null);
+        }
+
         public async Task StartPlayAsync()
         {
             await _sequencePlayer.StartPlayerAsync();

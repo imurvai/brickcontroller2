@@ -9,6 +9,7 @@ namespace BrickController2.BusinessLogic
         ControllerProfile ActiveProfile { get; set; }
 
         CreationValidationResult ValidateCreation(Creation creation);
+        bool ValidateControllerAction(ControllerAction controllerAction);
 
         Task StartPlayAsync();
         Task StopPlayAsync();

@@ -237,7 +237,7 @@ namespace BrickController2.UI.ViewModels
             CleanupControllerEvents();
             foreach (var controllerEvent in ControllerProfile.ControllerEvents)
             {
-                ControllerEvents.Add(new ControllerEventViewModel(controllerEvent, _creationManager, _deviceManager, TranslationService));
+                ControllerEvents.Add(new ControllerEventViewModel(controllerEvent, _deviceManager, _playLogic, TranslationService));
             }
         }
 
@@ -257,17 +257,16 @@ namespace BrickController2.UI.ViewModels
 
             public ControllerActionViewModel(
                 ControllerAction controllerAction,
-                ICreationManager creationManager,
                 IDeviceManager deviceManager,
+                IPlayLogic playLogic,
                 ITranslationService translationService)
             {
                 _translationService = translationService;
 
                 ControllerAction = controllerAction;
                 var device = deviceManager.GetDeviceById(controllerAction.DeviceId);
-                var sequence = creationManager.Sequences.FirstOrDefault(s => s.Name == ControllerAction.SequenceName);
 
-                DeviceMissing = device == null || (ControllerAction.ButtonType == ControllerButtonType.Sequence && sequence == null);
+                ControllerActionValid = playLogic.ValidateControllerAction(controllerAction);
                 DeviceName = device != null ? device.Name : Translate("Missing");
                 DeviceType = device != null ? device.DeviceType : DeviceType.Unknown;
                 Channel = controllerAction.Channel;
@@ -275,7 +274,7 @@ namespace BrickController2.UI.ViewModels
             }
 
             public ControllerAction ControllerAction { get; }
-            public bool DeviceMissing { get; }
+            public bool ControllerActionValid { get; }
             public string DeviceName { get; }
             public DeviceType DeviceType { get; }
             public int Channel { get; }
@@ -286,22 +285,22 @@ namespace BrickController2.UI.ViewModels
 
         public class ControllerEventViewModel : ObservableCollection<ControllerActionViewModel>, IDisposable
         {
-            private readonly ICreationManager _creationManager;
             private readonly IDeviceManager _deviceManager;
+            private readonly IPlayLogic _playLogic;
             private readonly ITranslationService _translationService;
 
             public ControllerEventViewModel(
                 ControllerEvent controllerEvent,
-                ICreationManager creationManager,
                 IDeviceManager deviceManager,
+                IPlayLogic playLogic,
                 ITranslationService translationService)
             {
                 ControllerEvent = controllerEvent;
-                _creationManager = creationManager;
                 _deviceManager = deviceManager;
+                _playLogic = playLogic;
                 _translationService = translationService;
 
-                PopulateGroup(controllerEvent, creationManager, deviceManager, translationService);
+                PopulateGroup(controllerEvent, deviceManager, playLogic, translationService);
                 controllerEvent.ControllerActions.CollectionChanged += OnCollectionChanged;
             }
 
@@ -315,19 +314,19 @@ namespace BrickController2.UI.ViewModels
 
             private void OnCollectionChanged(object sender, EventArgs args)
             {
-                PopulateGroup(ControllerEvent, _creationManager, _deviceManager, _translationService);
+                PopulateGroup(ControllerEvent, _deviceManager, _playLogic, _translationService);
             }
 
             private void PopulateGroup(
                 ControllerEvent controllerEvent,
-                ICreationManager creationManager,
                 IDeviceManager deviceManager,
+                IPlayLogic playLogic,
                 ITranslationService translationService)
             {
                 Clear();
                 foreach (var controllerAction in controllerEvent.ControllerActions)
                 {
-                    Add(new ControllerActionViewModel(controllerAction, creationManager, deviceManager, translationService));
+                    Add(new ControllerActionViewModel(controllerAction, deviceManager, playLogic, translationService));
                 }
             }
         }
