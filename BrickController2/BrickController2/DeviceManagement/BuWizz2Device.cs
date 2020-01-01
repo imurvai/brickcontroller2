@@ -19,8 +19,6 @@ namespace BrickController2.DeviceManagement
         private readonly Guid CHARACTERISTIC_UUID_MODEL_NUMBER = new Guid("00002a24-0000-1000-8000-00805f9b34fb");
         private readonly Guid CHARACTERISTIC_UUID_FIRMWARE_REVISION = new Guid("00002a26-0000-1000-8000-00805f9b34fb");
 
-        private readonly byte[] _sendOutputBuffer = new byte[] { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 };
-        private readonly byte[] _sendOutputLevelBuffer = new byte[] { 0x11, 0x00 };
         private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
         private readonly bool _swapChannels;
 
@@ -155,23 +153,24 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
+                var sendOutputBuffer = new byte[] { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
                 if (_swapChannels)
                 {
-                    _sendOutputBuffer[1] = (byte)(v1 / 2);
-                    _sendOutputBuffer[2] = (byte)(v0 / 2);
-                    _sendOutputBuffer[3] = (byte)(v3 / 2);
-                    _sendOutputBuffer[4] = (byte)(v2 / 2);
+                    sendOutputBuffer[1] = (byte)(v1 / 2);
+                    sendOutputBuffer[2] = (byte)(v0 / 2);
+                    sendOutputBuffer[3] = (byte)(v3 / 2);
+                    sendOutputBuffer[4] = (byte)(v2 / 2);
                 }
                 else
                 {
-                    _sendOutputBuffer[1] = (byte)(v0 / 2);
-                    _sendOutputBuffer[2] = (byte)(v1 / 2);
-                    _sendOutputBuffer[3] = (byte)(v2 / 2);
-                    _sendOutputBuffer[4] = (byte)(v3 / 2);
+                    sendOutputBuffer[1] = (byte)(v0 / 2);
+                    sendOutputBuffer[2] = (byte)(v1 / 2);
+                    sendOutputBuffer[3] = (byte)(v2 / 2);
+                    sendOutputBuffer[4] = (byte)(v3 / 2);
                 }
 
-                await _bleDevice?.WriteAsync(_characteristic, _sendOutputBuffer, token);
-                return true;
+                return await _bleDevice?.WriteAsync(_characteristic, sendOutputBuffer, token);
             }
             catch (Exception)
             {
@@ -183,10 +182,9 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                _sendOutputLevelBuffer[1] = (byte)(outputLevelValue + 1);
+                var sendOutputLevelBuffer = new byte[] { 0x11, (byte)(outputLevelValue + 1) };
 
-                await _bleDevice?.WriteAsync(_characteristic, _sendOutputLevelBuffer, token);
-                return true;
+                return await _bleDevice?.WriteAsync(_characteristic, (byte[])sendOutputLevelBuffer, token);
             }
             catch (Exception)
             {
