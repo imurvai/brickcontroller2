@@ -268,7 +268,7 @@
     <value>Dauer (ms)</value>
   </data>
   <data name="EnterControlPointDuration" xml:space="preserve">
-    <value>Zeitraum des ControllPunktes eingeben.</value>
+    <value>Zeitraum des ControllPunktes eingeben (200 - 10000ms).</value>
   </data>
   <data name="EnterCreationName" xml:space="preserve">
     <value>Einen Namen für die Kreation eingeben</value>

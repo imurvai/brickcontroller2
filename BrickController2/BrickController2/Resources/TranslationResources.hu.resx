@@ -433,7 +433,7 @@
     <value>Kontrol pont</value>
   </data>
   <data name="EnterControlPointDuration" xml:space="preserve">
-    <value>Add meg a kontrol point időtartamát 50 és 10000 ms közt.</value>
+    <value>Add meg a kontrol point időtartamát 200 és 10000 ms közt.</value>
   </data>
   <data name="Value" xml:space="preserve">
     <value>Érték</value>

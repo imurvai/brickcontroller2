@@ -114,7 +114,7 @@ namespace BrickController2.UI.ViewModels
 
         private void AddControlPoint()
         {
-            Sequence.ControlPoints.Add(new SequenceControlPoint { Value = 0, DurationMs = 100 });
+            Sequence.ControlPoints.Add(new SequenceControlPoint { Value = 0, DurationMs = 1000 });
         }
 
         private async Task DeleteControlPointAsync(SequenceControlPoint controlPoint)
@@ -160,7 +160,7 @@ namespace BrickController2.UI.ViewModels
 
                 if (int.TryParse(result.Result, out int intValue))
                 {
-                    if (intValue < 50 || 10000 < intValue)
+                    if (intValue < 200 || 10000 < intValue)
                     {
                         await _dialogService.ShowMessageBoxAsync(
                             Translate("Warining"),
