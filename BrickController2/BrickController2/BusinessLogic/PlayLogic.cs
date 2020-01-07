@@ -4,7 +4,6 @@ using BrickController2.PlatformServices.GameController;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BrickController2.BusinessLogic
 {
@@ -60,14 +59,14 @@ namespace BrickController2.BusinessLogic
             return device != null && (controllerAction.ButtonType != ControllerButtonType.Sequence || sequence != null);
         }
 
-        public async Task StartPlayAsync()
+        public void StartPlay()
         {
-            await _sequencePlayer.StartPlayerAsync();
+            _sequencePlayer.StartPlayer();
         }
 
-        public async Task StopPlayAsync()
+        public void StopPlay()
         {
-            await _sequencePlayer.StopPlayerAsync();
+            _sequencePlayer.StopPlayer();
         }
 
         public void ProcessGameControllerEvent(GameControllerEventArgs e)

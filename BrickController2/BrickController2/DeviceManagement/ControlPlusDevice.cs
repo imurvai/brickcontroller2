@@ -11,12 +11,12 @@ namespace BrickController2.DeviceManagement
 {
     internal abstract class ControlPlusDevice : BluetoothDevice
     {
-        private const int MAX_SEND_ATTEMPTS = 4;
+        private const int MAX_SEND_ATTEMPTS = 3;
 
         private static readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
         private static readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
 
-        private static readonly TimeSpan SEND_DELAY = TimeSpan.FromMilliseconds(50);
+        private static readonly TimeSpan SEND_DELAY = TimeSpan.FromMilliseconds(60);
         private static readonly TimeSpan POSITION_EXPIRATION = TimeSpan.FromMilliseconds(200);
 
         private readonly byte[] _sendBuffer = new byte[] { 8, 0x00, 0x81, 0x00, 0x11, 0x51, 0x00, 0x00 };
@@ -297,8 +297,10 @@ namespace BrickController2.DeviceManagement
                 {
                     token.ThrowIfCancellationRequested();
 
-                    await SendOutputValuesAsync(token);
-                    await Task.Delay(2, token);
+                    if (!await SendOutputValuesAsync(token))
+                    {
+                        await Task.Delay(20, token);
+                    }
                 }
             }
             catch { }

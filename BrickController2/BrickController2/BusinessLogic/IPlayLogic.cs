@@ -11,8 +11,8 @@ namespace BrickController2.BusinessLogic
         CreationValidationResult ValidateCreation(Creation creation);
         bool ValidateControllerAction(ControllerAction controllerAction);
 
-        Task StartPlayAsync();
-        Task StopPlayAsync();
+        void StartPlay();
+        void StopPlay();
 
         void ProcessGameControllerEvent(GameControllerEventArgs e);
     }

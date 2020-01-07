@@ -15,6 +15,7 @@ namespace BrickController2.DeviceManagement
         private readonly Guid SERVICE_UUID = new Guid("0000ffe0-0000-1000-8000-00805f9b34fb");
         private readonly Guid CHARACTERISTIC_UUID = new Guid("0000ffe1-0000-1000-8000-00805f9b34fb");
 
+        private readonly byte[] _sendOutputBuffer = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00 };
         private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
 
         private volatile int _outputLevelValue;
@@ -114,16 +115,13 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                var sendBuffer = new byte[]
-                {
-                    (byte)((Math.Abs(v0) >> 2) | (v0 < 0 ? 0x40 : 0) | 0x80),
-                    (byte)((Math.Abs(v1) >> 2) | (v1 < 0 ? 0x40 : 0)),
-                    (byte)((Math.Abs(v2) >> 2) | (v2 < 0 ? 0x40 : 0)),
-                    (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0)),
-                    (byte)(_outputLevelValue * 0x20)
-                };
+                _sendOutputBuffer[0] = (byte)((Math.Abs(v0) >> 2) | (v0 < 0 ? 0x40 : 0) | 0x80);
+                _sendOutputBuffer[1] = (byte)((Math.Abs(v1) >> 2) | (v1 < 0 ? 0x40 : 0));
+                _sendOutputBuffer[2] = (byte)((Math.Abs(v2) >> 2) | (v2 < 0 ? 0x40 : 0));
+                _sendOutputBuffer[3] = (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0));
+                _sendOutputBuffer[4] = (byte)(_outputLevelValue * 0x20);
 
-                var result = await _bleDevice?.WriteNoResponseAsync(_characteristic, sendBuffer, token);
+                var result = await _bleDevice?.WriteNoResponseAsync(_characteristic, _sendOutputBuffer, token);
                 await Task.Delay(60, token);
                 return result;
             }

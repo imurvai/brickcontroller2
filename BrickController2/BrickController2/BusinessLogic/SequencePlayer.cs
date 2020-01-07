@@ -1,50 +1,59 @@
 ﻿using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
-using BrickController2.Helpers;
-using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BrickController2.BusinessLogic
 {
     public class SequencePlayer : ISequencePlayer
     {
-        private static readonly TimeSpan _playerInterval = TimeSpan.FromMilliseconds(20);
-
-        private readonly IDictionary<(string DeviceId, int Channel), (Sequence Sequence, DateTime? StartTime)> _sequences = new Dictionary<(string, int), (Sequence, DateTime?)>();
-        private readonly AsyncLock _lock = new AsyncLock();
+        private const int _playerIntervalMs = 50;
 
         private readonly IDeviceManager _deviceManager;
 
-        private Task _playerTask;
-        private CancellationTokenSource _playerTaskTokenSource;
+        private readonly IDictionary<(string DeviceId, int Channel), (Sequence Sequence, int? StartTimeMs)> _sequences = new Dictionary<(string, int), (Sequence, int?)>();
+        private readonly object _lock = new object();
+
+        private Timer _playerTimer;
+        private int _timeSinceStartMs;
 
         public SequencePlayer(IDeviceManager deviceManager)
         {
             _deviceManager = deviceManager;
         }
 
-        public async Task StartPlayerAsync()
+        public void StartPlayer()
         {
-            using (await _lock.LockAsync())
+            lock (_lock)
             {
-                await StopPlayerInternalAsync();
+                StopPlayer();
 
                 lock (_sequences)
                 {
                     _sequences.Clear();
                 }
 
-                StartPlayerInternal();
+                _timeSinceStartMs = 0;
+                _playerTimer = new Timer((_) =>
+                {
+                    lock (_lock)
+                    {
+                        ProcessSequences();
+                        _timeSinceStartMs += _playerIntervalMs;
+                    }
+                },
+                null,
+                0,
+                _playerIntervalMs);
             }
         }
 
-        public async Task StopPlayerAsync()
+        public void StopPlayer()
         {
-            using (await _lock.LockAsync())
+            lock (_lock)
             {
-                await StopPlayerInternalAsync();
+                _playerTimer?.Dispose();
+                _playerTimer = null;
 
                 lock (_sequences)
                 {
@@ -71,103 +80,60 @@ namespace BrickController2.BusinessLogic
             }
         }
 
-        private void StartPlayerInternal()
-        {
-            _playerTaskTokenSource = new CancellationTokenSource();
-            var token = _playerTaskTokenSource.Token;
-
-            _playerTask = Task.Run(async () =>
-            {
-                while (!token.IsCancellationRequested)
-                {
-                    try
-                    {
-                        var sequenceProcessingStartTime = DateTime.Now;
-
-                        ProcessSequences();
-
-                        var waitInterval = sequenceProcessingStartTime + _playerInterval - DateTime.Now;
-                        await Task.Delay(waitInterval, token);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-            });
-        }
-
-        private async Task StopPlayerInternalAsync()
-        {
-            if (_playerTaskTokenSource == null)
-            {
-                return;
-            }
-
-            try
-            {
-                _playerTaskTokenSource.Cancel();
-                await _playerTask;
-            }
-            catch (Exception)
-            {
-            }
-            finally
-            {
-                _playerTask = null;
-                _playerTaskTokenSource.Dispose();
-                _playerTaskTokenSource = null;
-            }
-        }
-
         private void ProcessSequences()
         {
-            lock (_sequences)
+            try
             {
-                var now = DateTime.Now;
-                IList<(string DeviceId, int Channel)> sequencesToRemove = new List<(string, int)>();
-
-                foreach (var kvp in _sequences)
+                lock (_sequences)
                 {
-                    // Start the sequence "now" if it hasn't been started yet
-                    if (!kvp.Value.StartTime.HasValue)
+                    IList<(string DeviceId, int Channel)> sequencesToRemove = new List<(string, int)>();
+
+                    foreach (var kvp in _sequences)
                     {
-                        _sequences[kvp.Key] = (kvp.Value.Sequence, now);
+                        // Start the sequence "now" if it hasn't been started yet
+                        if (!kvp.Value.StartTimeMs.HasValue)
+                        {
+                            _sequences[kvp.Key] = (kvp.Value.Sequence, _timeSinceStartMs);
+                        }
+
+                        if (!ProcessSequence(kvp.Key.DeviceId, kvp.Key.Channel, kvp.Value.Sequence, kvp.Value.StartTimeMs.Value, _timeSinceStartMs))
+                        {
+                            sequencesToRemove.Add((kvp.Key.DeviceId, kvp.Key.Channel));
+                        }
                     }
 
-                    if (!ProcessSequence(kvp.Key.DeviceId, kvp.Key.Channel, kvp.Value.Sequence, kvp.Value.StartTime.Value, now))
+                    foreach (var key in sequencesToRemove)
                     {
-                        sequencesToRemove.Add((kvp.Key.DeviceId, kvp.Key.Channel));
+                        _sequences.Remove(key);
                     }
                 }
-
-                foreach (var key in sequencesToRemove)
-                {
-                    _sequences.Remove(key);
-                }
+            }
+            catch
+            {
             }
         }
 
-        private bool ProcessSequence(string deviceId, int channel, Sequence sequence, DateTime startTime, DateTime now)
+        private bool ProcessSequence(string deviceId, int channel, Sequence sequence, int startTimeMs, int nowMs)
         {
             if (sequence.ControlPoints.Count == 0)
             {
                 return false;
             }
 
-            var totalDurationMs = sequence.TotalDurationMs;
-            var elapsedTimeMs = (now - startTime).TotalMilliseconds;
+            var sequenceDurationMs = sequence.TotalDurationMs;
+            var elapsedTimeMs = nowMs - startTimeMs;
 
-            if ((!sequence.Loop && (totalDurationMs < elapsedTimeMs)) || totalDurationMs == 0)
+            if ((!sequence.Loop && (sequenceDurationMs < elapsedTimeMs)) || sequenceDurationMs == 0)
             {
-                // Sequence is not looping and has expired
+                // Sequence is not looping and has finished
                 return false;
             }
 
-            var sequenceTimeMs = elapsedTimeMs - ((int)(elapsedTimeMs / totalDurationMs) * totalDurationMs);
+            var sequenceTimeMs = elapsedTimeMs - ((elapsedTimeMs / sequenceDurationMs) * sequenceDurationMs);
 
             SequenceControlPoint controlPoint1 = sequence.ControlPoints[0];
             SequenceControlPoint controlPoint2 = controlPoint1;
-            var controlPoint1StartTimeMs = 0D;
+            var controlPoint1StartTimeMs = 0;
             var controlPoint1DurationMs = controlPoint1.DurationMs;
 
             for (int i = 1; i <= sequence.ControlPoints.Count; i++)
@@ -182,7 +148,7 @@ namespace BrickController2.BusinessLogic
 
                 if (controlPoint1StartTimeMs <= sequenceTimeMs && sequenceTimeMs < controlPoint2StartTimeMs)
                 {
-                    // Found the 2 control points where the player is currently
+                    // Found the 2 control points where the player is at the moment
                     break;
                 }
                 else
@@ -201,11 +167,11 @@ namespace BrickController2.BusinessLogic
                 var value1 = controlPoint1.Value;
                 var value2 = controlPoint2.Value;
 
-                var relativeSequenceTime = sequenceTimeMs - controlPoint1StartTimeMs;
+                var relativeSequenceTime = (float)(sequenceTimeMs - controlPoint1StartTimeMs);
 
-                if (relativeSequenceTime != 0)
+                if (relativeSequenceTime != 0 && controlPoint1DurationMs != 0)
                 {
-                    value = (float)(value1 + (relativeSequenceTime / controlPoint1DurationMs) * (value2 - value1));
+                    value = value1 + ((relativeSequenceTime / controlPoint1DurationMs) * (value2 - value1));
                 }
             }
 

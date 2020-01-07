@@ -19,6 +19,7 @@ namespace BrickController2.DeviceManagement
         private readonly Guid CHARACTERISTIC_UUID_REMOTE_CONTROL = new Guid("02b8cbcc-0e25-4bda-8790-a15f53e6010f");
         private readonly Guid CHARACTERISTIC_UUID_QUICK_DRIVE = new Guid("489a6ae0-c1ab-4c9c-bdb2-11d373c1b7fb");
 
+        private readonly byte[] _sendOutputBuffer = new byte[] { 0x00, 0x00, 0x00, 0x00 };
         private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
 
         private volatile int _sendAttemptsLeft;
@@ -132,15 +133,12 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                var sendBuffer = new byte[]
-                {
-                    (byte)((Math.Abs(v0) & 0xfe) | 0x02 | (v0 < 0 ? 1 : 0)),
-                    (byte)((Math.Abs(v1) & 0xfe) | 0x02 | (v1 < 0 ? 1 : 0)),
-                    (byte)((Math.Abs(v2) & 0xfe) | 0x02 | (v2 < 0 ? 1 : 0)),
-                    (byte)((Math.Abs(v3) & 0xfe) | 0x02 | (v3 < 0 ? 1 : 0))
-                };
+                _sendOutputBuffer[0] = (byte)((Math.Abs(v0) & 0xfe) | 0x02 | (v0 < 0 ? 1 : 0));
+                _sendOutputBuffer[1] = (byte)((Math.Abs(v1) & 0xfe) | 0x02 | (v1 < 0 ? 1 : 0));
+                _sendOutputBuffer[2] = (byte)((Math.Abs(v2) & 0xfe) | 0x02 | (v2 < 0 ? 1 : 0));
+                _sendOutputBuffer[3] = (byte)((Math.Abs(v3) & 0xfe) | 0x02 | (v3 < 0 ? 1 : 0));
 
-                return await _bleDevice?.WriteAsync(_quickDriveCharacteristic, sendBuffer, token);
+                return await _bleDevice?.WriteAsync(_quickDriveCharacteristic, _sendOutputBuffer, token);
             }
             catch
             {
