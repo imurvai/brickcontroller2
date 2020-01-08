@@ -121,18 +121,22 @@ namespace BrickController2.DeviceManagement
             ResetOutputs();
 
             _irTaskCancelationTokenSource = new CancellationTokenSource();
-            _irTask = Task.Run(async () =>
+            var token = _irTaskCancelationTokenSource.Token;
+
+            _irTask = Task.Factory.StartNew(async () =>
             {
                 try
                 {
-                    while (!_irTaskCancelationTokenSource.Token.IsCancellationRequested)
+                    while (!token.IsCancellationRequested)
                     {
                         await SendIrData(_irTaskCancelationTokenSource.Token);
                         await Task.Delay(5);
                     }
                 }
-                catch (OperationCanceledException) { }
-            });
+                catch
+                {
+                }
+            }, TaskCreationOptions.LongRunning);
         }
 
         private async Task StopIrThreadAsync()
