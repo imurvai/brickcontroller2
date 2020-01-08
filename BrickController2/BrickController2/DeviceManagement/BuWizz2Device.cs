@@ -10,7 +10,7 @@ namespace BrickController2.DeviceManagement
 {
     internal class BuWizz2Device : BluetoothDevice
     {
-        private const int MAX_SEND_ATTEMPTS = 4;
+        private const int MAX_SEND_ATTEMPTS = 10;
 
         private readonly Guid SERVICE_UUID = new Guid("4e050000-74fb-4481-88b3-9919b1676e93");
         private readonly Guid CHARACTERISTIC_UUID = new Guid("000092d1-0000-1000-8000-00805f9b34fb");
@@ -19,9 +19,8 @@ namespace BrickController2.DeviceManagement
         private readonly Guid CHARACTERISTIC_UUID_MODEL_NUMBER = new Guid("00002a24-0000-1000-8000-00805f9b34fb");
         private readonly Guid CHARACTERISTIC_UUID_FIRMWARE_REVISION = new Guid("00002a26-0000-1000-8000-00805f9b34fb");
 
-        private readonly byte[] _sendOutputBuffer = new byte[] { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 };
-        private readonly byte[] _sendOutputLevelBuffer = new byte[] { 0x11, 0x00 };
         private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
+        private readonly VolatileBuffer<int> _lastOutputValues = new VolatileBuffer<int>(4);
         private readonly bool _swapChannels;
 
         private volatile int _outputLevelValue;
@@ -101,15 +100,17 @@ namespace BrickController2.DeviceManagement
                 _outputValues[1] = 0;
                 _outputValues[2] = 0;
                 _outputValues[3] = 0;
+                _lastOutputValues[0] = 1;
+                _lastOutputValues[1] = 1;
+                _lastOutputValues[2] = 1;
+                _lastOutputValues[3] = 1;
                 _outputLevelValue = DefaultOutputLevel;
                 _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
 
                 var _lastSentOutputLevelValue = -1;
 
-                while (true)
+                while (!token.IsCancellationRequested)
                 {
-                    token.ThrowIfCancellationRequested();
-
                     if (_lastSentOutputLevelValue != _outputLevelValue)
                     {
                         if (await SendOutputLevelValueAsync(_outputLevelValue, token))
@@ -117,32 +118,33 @@ namespace BrickController2.DeviceManagement
                             _lastSentOutputLevelValue = _outputLevelValue;
                         }
                     }
-                    else if (_sendAttemptsLeft > 0)
+                    else
                     {
-                        int v0 = _outputValues[0];
-                        int v1 = _outputValues[1];
-                        int v2 = _outputValues[2];
-                        int v3 = _outputValues[3];
+                        var v0 = _outputValues[0];
+                        var v1 = _outputValues[1];
+                        var v2 = _outputValues[2];
+                        var v3 = _outputValues[3];
+                        var lv0 = _lastOutputValues[0];
+                        var lv1 = _lastOutputValues[1];
+                        var lv2 = _lastOutputValues[2];
+                        var lv3 = _lastOutputValues[3];
 
-                        if (await SendOutputValuesAsync(v0, v1, v2, v3, token))
+                        if (v0 != lv0 || v1 != lv1 || v2 != lv2 || v3 != lv3 || _sendAttemptsLeft > 0)
                         {
-                            if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0)
+                            _sendAttemptsLeft = _sendAttemptsLeft > 0 ? _sendAttemptsLeft - 1 : 0;
+
+                            if (await SendOutputValuesAsync(v0, v1, v2, v3, token))
                             {
-                                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                            }
-                            else
-                            {
-                                _sendAttemptsLeft--;
+                                _lastOutputValues[0] = v0;
+                                _lastOutputValues[1] = v1;
+                                _lastOutputValues[2] = v2;
+                                _lastOutputValues[3] = v3;
                             }
                         }
                         else
                         {
-                            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                            await Task.Delay(10, token);
                         }
-                    }
-                    else
-                    {
-                        await Task.Delay(2, token);
                     }
                 }
             }
@@ -155,22 +157,24 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
+                var sendOutputBuffer = new byte[] { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
                 if (_swapChannels)
                 {
-                    _sendOutputBuffer[1] = (byte)(v1 / 2);
-                    _sendOutputBuffer[2] = (byte)(v0 / 2);
-                    _sendOutputBuffer[3] = (byte)(v3 / 2);
-                    _sendOutputBuffer[4] = (byte)(v2 / 2);
+                    sendOutputBuffer[1] = (byte)(v1 / 2);
+                    sendOutputBuffer[2] = (byte)(v0 / 2);
+                    sendOutputBuffer[3] = (byte)(v3 / 2);
+                    sendOutputBuffer[4] = (byte)(v2 / 2);
                 }
                 else
                 {
-                    _sendOutputBuffer[1] = (byte)(v0 / 2);
-                    _sendOutputBuffer[2] = (byte)(v1 / 2);
-                    _sendOutputBuffer[3] = (byte)(v2 / 2);
-                    _sendOutputBuffer[4] = (byte)(v3 / 2);
+                    sendOutputBuffer[1] = (byte)(v0 / 2);
+                    sendOutputBuffer[2] = (byte)(v1 / 2);
+                    sendOutputBuffer[3] = (byte)(v2 / 2);
+                    sendOutputBuffer[4] = (byte)(v3 / 2);
                 }
 
-                return await _bleDevice?.WriteAsync(_characteristic, _sendOutputBuffer, token);
+                return await _bleDevice?.WriteAsync(_characteristic, sendOutputBuffer, token);
             }
             catch (Exception)
             {
@@ -182,9 +186,9 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                _sendOutputLevelBuffer[1] = (byte)(outputLevelValue + 1);
+                var sendOutputLevelBuffer = new byte[] { 0x11, (byte)(outputLevelValue + 1) };
 
-                return await _bleDevice?.WriteAsync(_characteristic, _sendOutputLevelBuffer, token);
+                return await _bleDevice?.WriteAsync(_characteristic, sendOutputLevelBuffer, token);
             }
             catch (Exception)
             {

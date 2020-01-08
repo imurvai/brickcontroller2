@@ -10,13 +10,13 @@ namespace BrickController2.DeviceManagement
 {
     internal class BuWizzDevice : BluetoothDevice
     {
-        private const int MAX_SEND_ATTEMPTS = 4;
+        private const int MAX_SEND_ATTEMPTS = 10;
 
         private readonly Guid SERVICE_UUID = new Guid("0000ffe0-0000-1000-8000-00805f9b34fb");
         private readonly Guid CHARACTERISTIC_UUID = new Guid("0000ffe1-0000-1000-8000-00805f9b34fb");
 
-        private readonly byte[] _sendOutputBuffer = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00 };
         private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
+        private readonly VolatileBuffer<int> _lastOutputValues = new VolatileBuffer<int>(4);
 
         private volatile int _outputLevelValue;
         private volatile int _sendAttemptsLeft;
@@ -70,6 +70,10 @@ namespace BrickController2.DeviceManagement
             _outputValues[1] = 0;
             _outputValues[2] = 0;
             _outputValues[3] = 0;
+            _lastOutputValues[0] = 1;
+            _lastOutputValues[1] = 1;
+            _lastOutputValues[2] = 1;
+            _lastOutputValues[3] = 1;
             _outputLevelValue = DefaultOutputLevel;
             _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
 
@@ -77,32 +81,30 @@ namespace BrickController2.DeviceManagement
             {
                 try
                 {
-                    if (_sendAttemptsLeft > 0)
+                    var v0 = _outputValues[0];
+                    var v1 = _outputValues[1];
+                    var v2 = _outputValues[2];
+                    var v3 = _outputValues[3];
+                    var lv0 = _lastOutputValues[0];
+                    var lv1 = _lastOutputValues[1];
+                    var lv2 = _lastOutputValues[2];
+                    var lv3 = _lastOutputValues[3];
+
+                    if (v0 != lv0 || v1 != lv1 || v2 != lv2 || v3 != lv3 || _sendAttemptsLeft > 0)
                     {
-                        int v0 = _outputValues[0];
-                        int v1 = _outputValues[1];
-                        int v2 = _outputValues[2];
-                        int v3 = _outputValues[3];
+                        _sendAttemptsLeft = _sendAttemptsLeft > 0 ? _sendAttemptsLeft - 1 : 0;
 
                         if (await SendOutputValuesAsync(v0, v1, v2, v3, token))
                         {
-                            if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0)
-                            {
-                                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                            }
-                            else
-                            {
-                                _sendAttemptsLeft--;
-                            }
-                        }
-                        else
-                        {
-                            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                            _lastOutputValues[0] = v0;
+                            _lastOutputValues[1] = v1;
+                            _lastOutputValues[2] = v2;
+                            _lastOutputValues[3] = v3;
                         }
                     }
                     else
                     {
-                        await Task.Delay(2, token);
+                        await Task.Delay(10, token);
                     }
                 }
                 catch
@@ -115,13 +117,16 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                _sendOutputBuffer[0] = (byte)((Math.Abs(v0) >> 2) | (v0 < 0 ? 0x40 : 0) | 0x80);
-                _sendOutputBuffer[1] = (byte)((Math.Abs(v1) >> 2) | (v1 < 0 ? 0x40 : 0));
-                _sendOutputBuffer[2] = (byte)((Math.Abs(v2) >> 2) | (v2 < 0 ? 0x40 : 0));
-                _sendOutputBuffer[3] = (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0));
-                _sendOutputBuffer[4] = (byte)(_outputLevelValue * 0x20);
+                var sendOutputBuffer = new byte[]
+                {
+                    (byte)((Math.Abs(v0) >> 2) | (v0 < 0 ? 0x40 : 0) | 0x80),
+                    (byte)((Math.Abs(v1) >> 2) | (v1 < 0 ? 0x40 : 0)),
+                    (byte)((Math.Abs(v2) >> 2) | (v2 < 0 ? 0x40 : 0)),
+                    (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0)),
+                    (byte)(_outputLevelValue * 0x20)
+                };
 
-                var result = await _bleDevice?.WriteNoResponseAsync(_characteristic, _sendOutputBuffer, token);
+                var result = await _bleDevice?.WriteNoResponseAsync(_characteristic, sendOutputBuffer, token);
                 await Task.Delay(60, token);
                 return result;
             }

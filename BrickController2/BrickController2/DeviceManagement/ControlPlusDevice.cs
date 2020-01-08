@@ -11,7 +11,7 @@ namespace BrickController2.DeviceManagement
 {
     internal abstract class ControlPlusDevice : BluetoothDevice
     {
-        private const int MAX_SEND_ATTEMPTS = 3;
+        private const int MAX_SEND_ATTEMPTS = 10;
 
         private static readonly Guid SERVICE_UUID = new Guid("00001623-1212-efde-1623-785feabcd123");
         private static readonly Guid CHARACTERISTIC_UUID = new Guid("00001624-1212-efde-1623-785feabcd123");
@@ -293,10 +293,8 @@ namespace BrickController2.DeviceManagement
                     _positionUpdateTimes[channel] = DateTime.MinValue;
                 }
 
-                while (true)
+                while (!token.IsCancellationRequested)
                 {
-                    token.ThrowIfCancellationRequested();
-
                     if (!await SendOutputValuesAsync(token))
                     {
                         await Task.Delay(20, token);
