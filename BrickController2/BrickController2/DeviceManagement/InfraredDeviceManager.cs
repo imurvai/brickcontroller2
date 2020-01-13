@@ -123,7 +123,7 @@ namespace BrickController2.DeviceManagement
             _irTaskCancelationTokenSource = new CancellationTokenSource();
             var token = _irTaskCancelationTokenSource.Token;
 
-            _irTask = Task.Factory.StartNew(async () =>
+            _irTask = Task.Run(async () =>
             {
                 try
                 {
@@ -136,7 +136,7 @@ namespace BrickController2.DeviceManagement
                 catch
                 {
                 }
-            }, TaskCreationOptions.LongRunning);
+            });
         }
 
         private async Task StopIrThreadAsync()

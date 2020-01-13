@@ -306,7 +306,7 @@ namespace BrickController2.DeviceManagement
                 {
                     if (!await SendOutputValuesAsync(token))
                     {
-                        await Task.Delay(20, token);
+                        await Task.Delay(10, token);
                     }
                 }
             }
