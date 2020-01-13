@@ -19,7 +19,8 @@ namespace BrickController2.DeviceManagement
         private readonly Guid CHARACTERISTIC_UUID_REMOTE_CONTROL = new Guid("02b8cbcc-0e25-4bda-8790-a15f53e6010f");
         private readonly Guid CHARACTERISTIC_UUID_QUICK_DRIVE = new Guid("489a6ae0-c1ab-4c9c-bdb2-11d373c1b7fb");
 
-        private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
+        private readonly int[] _outputValues = new int[4];
+        private readonly object _outputLock = new object();
 
         private volatile int _sendAttemptsLeft;
 
@@ -44,13 +45,15 @@ namespace BrickController2.DeviceManagement
             value = CutOutputValue(value);
 
             var intValue = (int)(value * 255);
-            if (_outputValues[channel] == intValue)
+            
+            lock (_outputLock)
             {
-                return;
+                if (_outputValues[channel] != intValue)
+                {
+                    _outputValues[channel] = intValue;
+                    _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                }
             }
-
-            _outputValues[channel] = intValue;
-            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
         protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
@@ -88,30 +91,31 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                _outputValues[0] = 0;
-                _outputValues[1] = 0;
-                _outputValues[2] = 0;
-                _outputValues[3] = 0;
-                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                lock (_outputLock)
+                {
+                    _outputValues[0] = 0;
+                    _outputValues[1] = 0;
+                    _outputValues[2] = 0;
+                    _outputValues[3] = 0;
+                    _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                }
 
                 while (!token.IsCancellationRequested)
                 {
-                    int v0 = _outputValues[0];
-                    int v1 = _outputValues[1];
-                    int v2 = _outputValues[2];
-                    int v3 = _outputValues[3];
+                    int v0, v1, v2, v3, sendAttemptsLeft;
 
-                    if (_sendAttemptsLeft > 0)
+                    lock (_outputLock)
                     {
-                        if (v0 == 0 && v1 == 0 && v2 == 0 && v3 == 0)
-                        {
-                            _sendAttemptsLeft = _sendAttemptsLeft > 0 ? _sendAttemptsLeft - 1 : 0;
-                        }
-                        else
-                        {
-                            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                        }
+                        v0 = _outputValues[0];
+                        v1 = _outputValues[1];
+                        v2 = _outputValues[2];
+                        v3 = _outputValues[3];
+                        sendAttemptsLeft = _sendAttemptsLeft;
+                        _sendAttemptsLeft = sendAttemptsLeft > 0 ? sendAttemptsLeft - 1 : 0;
+                    }
 
+                    if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0 || sendAttemptsLeft > 0)
+                    {
                         await SendOutputValuesAsync(v0, v1, v2, v3, token);
                     }
                     else

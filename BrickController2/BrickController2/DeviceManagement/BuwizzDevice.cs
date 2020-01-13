@@ -1,5 +1,4 @@
-﻿using BrickController2.Helpers;
-using BrickController2.PlatformServices.BluetoothLE;
+﻿using BrickController2.PlatformServices.BluetoothLE;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +14,9 @@ namespace BrickController2.DeviceManagement
         private readonly Guid SERVICE_UUID = new Guid("0000ffe0-0000-1000-8000-00805f9b34fb");
         private readonly Guid CHARACTERISTIC_UUID = new Guid("0000ffe1-0000-1000-8000-00805f9b34fb");
 
-        private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
-        private readonly VolatileBuffer<int> _lastOutputValues = new VolatileBuffer<int>(4);
+        private readonly int[] _outputValues = new int[4];
+        private readonly int[] _lastOutputValues = new int[4];
+        private readonly object _outputLock = new object();
 
         private volatile int _outputLevelValue;
         private volatile int _sendAttemptsLeft;
@@ -40,13 +40,15 @@ namespace BrickController2.DeviceManagement
             value = CutOutputValue(value);
 
             var intValue = (int)(value * 255);
-            if (_outputValues[channel] == intValue)
-            {
-                return;
-            }
 
-            _outputValues[channel] = intValue;
-            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+            lock (_outputLock)
+            {
+                if (_outputValues[channel] != intValue)
+                {
+                    _outputValues[channel] = intValue;
+                    _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                }
+            }
         }
 
         public override bool CanSetOutputLevel => true;
@@ -66,34 +68,38 @@ namespace BrickController2.DeviceManagement
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
         {
-            _outputValues[0] = 0;
-            _outputValues[1] = 0;
-            _outputValues[2] = 0;
-            _outputValues[3] = 0;
-            _lastOutputValues[0] = 1;
-            _lastOutputValues[1] = 1;
-            _lastOutputValues[2] = 1;
-            _lastOutputValues[3] = 1;
-            _outputLevelValue = DefaultOutputLevel;
-            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+            lock (_outputLock)
+            {
+                _outputValues[0] = 0;
+                _outputValues[1] = 0;
+                _outputValues[2] = 0;
+                _outputValues[3] = 0;
+                _lastOutputValues[0] = 1;
+                _lastOutputValues[1] = 1;
+                _lastOutputValues[2] = 1;
+                _lastOutputValues[3] = 1;
+                _outputLevelValue = DefaultOutputLevel;
+                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+            }
 
             while (!token.IsCancellationRequested)
             {
                 try
                 {
-                    var v0 = _outputValues[0];
-                    var v1 = _outputValues[1];
-                    var v2 = _outputValues[2];
-                    var v3 = _outputValues[3];
-                    var lv0 = _lastOutputValues[0];
-                    var lv1 = _lastOutputValues[1];
-                    var lv2 = _lastOutputValues[2];
-                    var lv3 = _lastOutputValues[3];
+                    int v0, v1, v2, v3, sendAttemptsLeft;
 
-                    if (v0 != lv0 || v1 != lv1 || v2 != lv2 || v3 != lv3 || _sendAttemptsLeft > 0)
+                    lock (_outputLock)
                     {
-                        _sendAttemptsLeft = _sendAttemptsLeft > 0 ? _sendAttemptsLeft - 1 : 0;
+                        v0 = _outputValues[0];
+                        v1 = _outputValues[1];
+                        v2 = _outputValues[2];
+                        v3 = _outputValues[3];
+                        sendAttemptsLeft = _sendAttemptsLeft;
+                        _sendAttemptsLeft = sendAttemptsLeft > 0 ? sendAttemptsLeft - 1 : 0;
+                    }
 
+                    if (v0 != _lastOutputValues[0] || v1 != _lastOutputValues[1] || v2 != _lastOutputValues[2] || v3 != _lastOutputValues[3] || sendAttemptsLeft > 0)
+                    {
                         if (await SendOutputValuesAsync(v0, v1, v2, v3, token))
                         {
                             _lastOutputValues[0] = v0;
