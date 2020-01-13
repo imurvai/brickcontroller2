@@ -336,6 +336,9 @@
   <data name="MissingDevices" xml:space="preserve">
     <value>There are missing devices in the creation setup.</value>
   </data>
+  <data name="MissingSequence" xml:space="preserve">
+    <value>Missing sequence</value>
+  </data>
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>

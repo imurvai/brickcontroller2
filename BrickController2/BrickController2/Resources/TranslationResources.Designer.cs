@@ -718,6 +718,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing sequence.
+        /// </summary>
+        internal static string MissingSequence {
+            get {
+                return ResourceManager.GetString("MissingSequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
         internal static string No {

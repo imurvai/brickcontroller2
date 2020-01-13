@@ -453,4 +453,7 @@
   <data name="Loop" xml:space="preserve">
     <value>Ismétlődő</value>
   </data>
+  <data name="MissingSequence" xml:space="preserve">
+    <value>Hiányzó szekvencia</value>
+  </data>
 </root>

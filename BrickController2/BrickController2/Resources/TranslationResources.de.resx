@@ -324,6 +324,9 @@
   <data name="MissingDevices" xml:space="preserve">
     <value>Fehlende Geräte in der Einstellung der Kreation</value>
   </data>
+  <data name="MissingSequence" xml:space="preserve">
+    <value>Fehlende sequenz</value>
+  </data>
   <data name="No" xml:space="preserve">
     <value>Nein</value>
   </data>
