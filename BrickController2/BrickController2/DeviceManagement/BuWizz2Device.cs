@@ -140,7 +140,7 @@ namespace BrickController2.DeviceManagement
 
                         if (v0 != _lastOutputValues[0] || v1 != _lastOutputValues[1] || v2 != _lastOutputValues[2] || v3 != _lastOutputValues[3] || sendAttemptsLeft > 0)
                         {
-                            if (await SendOutputValuesAsync(v0, v1, v2, v3, token))
+                            if (await SendOutputValuesAsync(v0, v1, v2, v3, token).ConfigureAwait(false))
                             {
                                 _lastOutputValues[0] = v0;
                                 _lastOutputValues[1] = v1;
@@ -150,7 +150,7 @@ namespace BrickController2.DeviceManagement
                         }
                         else
                         {
-                            await Task.Delay(10, token);
+                            await Task.Delay(10, token).ConfigureAwait(false);
                         }
                     }
                 }

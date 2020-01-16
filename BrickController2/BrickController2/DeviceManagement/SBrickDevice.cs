@@ -79,7 +79,7 @@ namespace BrickController2.DeviceManagement
             {
                 if (requestDeviceInformation)
                 {
-                    await ReadDeviceInfo(token);
+                    await ReadDeviceInfo(token).ConfigureAwait(false);
                 }
             }
             catch { }
@@ -116,11 +116,11 @@ namespace BrickController2.DeviceManagement
 
                     if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0 || sendAttemptsLeft > 0)
                     {
-                        await SendOutputValuesAsync(v0, v1, v2, v3, token);
+                        await SendOutputValuesAsync(v0, v1, v2, v3, token).ConfigureAwait(false);
                     }
                     else
                     {
-                        await Task.Delay(10, token);
+                        await Task.Delay(10, token).ConfigureAwait(false);
                     }
                 }
             }

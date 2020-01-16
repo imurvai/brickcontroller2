@@ -146,7 +146,7 @@ namespace BrickController2.DeviceManagement
             {
                 try
                 {
-                    await ProcessOutputsAsync(token);
+                    await ProcessOutputsAsync(token).ConfigureAwait(false);
                 }
                 catch
                 {

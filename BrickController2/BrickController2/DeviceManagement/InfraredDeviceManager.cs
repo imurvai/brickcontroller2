@@ -129,8 +129,8 @@ namespace BrickController2.DeviceManagement
                 {
                     while (!token.IsCancellationRequested)
                     {
-                        await SendIrData(_irTaskCancelationTokenSource.Token);
-                        await Task.Delay(5);
+                        await SendIrData(_irTaskCancelationTokenSource.Token).ConfigureAwait(false);
+                        await Task.Delay(5).ConfigureAwait(false);
                     }
                 }
                 catch

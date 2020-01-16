@@ -1,5 +1,4 @@
 ﻿using BrickController2.CreationManagement;
-using BrickController2.Helpers;
 using BrickController2.PlatformServices.BluetoothLE;
 using System;
 using System.Collections.Generic;
@@ -304,9 +303,9 @@ namespace BrickController2.DeviceManagement
 
                 while (!token.IsCancellationRequested)
                 {
-                    if (!await SendOutputValuesAsync(token))
+                    if (!await SendOutputValuesAsync(token).ConfigureAwait(false))
                     {
-                        await Task.Delay(10, token);
+                        await Task.Delay(10, token).ConfigureAwait(false);
                     }
                 }
             }
