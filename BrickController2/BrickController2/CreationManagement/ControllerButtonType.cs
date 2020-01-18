@@ -8,6 +8,7 @@
         Circular,
         PingPong,
         Stop,
-        Accelerator
+        Accelerator,
+        Sequence
     }
 }

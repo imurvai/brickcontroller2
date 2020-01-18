@@ -1,25 +1,50 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BrickController2.Helpers
 {
     public class VolatileBuffer<T>
     {
-        private readonly object[] _buffer;
+        private readonly T[] _buffer;
 
         public VolatileBuffer(int capacity)
         {
-            _buffer = new object[capacity];
+            _buffer = new T[capacity];
 
             for (int i = 0; i < capacity; i++)
             {
-                _buffer[i] = default(T);
+                _buffer[i] = default;
+            }
+        }
+
+        public VolatileBuffer(IEnumerable<T> buffer)
+        {
+            var length = buffer.Count();
+            _buffer = new T[length];
+
+            var index = 0;
+            foreach (var item in buffer)
+            {
+                _buffer[index++] = item;
             }
         }
 
         public T this[int index]
         {
-            get => (T)Volatile.Read(ref _buffer[index]);
-            set => Volatile.Write(ref _buffer[index], value);
+            get
+            {
+                lock (_buffer)
+                {
+                    return _buffer[index];
+                }
+            }
+            set
+            {
+                lock (_buffer)
+                {
+                    _buffer[index] = value;
+                }
+            }
         }
     }
 }

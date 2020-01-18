@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:PageBase
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    x:Class="BrickController2.UI.Pages.SequenceEditorPage"
+    x:Name="Page"
+    Title="{extensions:Translate Sequence}">
+
+    <local:PageBase.Resources>
+        <ResourceDictionary>
+            <converters:FloatValueToPercentConverter x:Key="FloatValueToPercent"/>
+        </ResourceDictionary>    
+    </local:PageBase.Resources>
+    
+    <local:PageBase.ToolbarItems>
+        <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameSequenceCommand}"/>
+        <ToolbarItem Icon="ic_add_white.png" Order="Primary" Command="{Binding AddControlPointCommand}"/>
+        <ToolbarItem Icon="ic_checkmark_white.png" Order="Primary" Command="{Binding SaveSequenceCommand}"/>
+    </local:PageBase.ToolbarItems>
+
+    <local:PageBase.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="20">
+                <Label Text="{Binding Sequence.Name}" FontSize="Large" FontAttributes="Bold"/>
+            </Grid>
+
+            <!-- Sequence properties -->
+            <Grid Grid.Row="1" Padding="20,10,20,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate Loop}" VerticalOptions="Center"/>
+                <Switch Grid.Column="1" Grid.Row="0" IsToggled="{Binding Sequence.Loop}" HorizontalOptions="Start"/>
+
+                <Label Grid.Column="0" Grid.Row="1" Text="{extensions:Translate Interpolate}" VerticalOptions="Center"/>
+                <Switch Grid.Column="1" Grid.Row="1" IsToggled="{Binding Sequence.Interpolate}" HorizontalOptions="Start"/>
+            </Grid>
+
+            <BoxView Grid.Row="2" BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,0,5,4"/>
+
+            <!-- Control point list -->
+            <ListView Grid.Row="3" ItemsSource="{Binding Sequence.ControlPoints}" IsGroupingEnabled="False" SelectionMode="None" HasUnevenRows="True" SeparatorColor="#F0F0F0">
+                <ListView.Triggers>
+                    <DataTrigger TargetType="ListView" Binding="{Binding Sequence.ControlPoints.Count}" Value="0">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                </ListView.Triggers>
+
+                <!-- Header -->
+                <ListView.Header>
+                    <Grid BackgroundColor="#F0F0F0" Padding="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Label Grid.Column="0" Text="{extensions:Translate ValuePercent}" HorizontalTextAlignment="Center" FontSize="Small"/>
+                        <Label Grid.Column="1" Text="{extensions:Translate DurationMs}" HorizontalTextAlignment="Center" FontSize="Small"/>
+                    </Grid>
+                </ListView.Header>
+
+                <!-- Control point -->
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="30"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackLayout Grid.Column="0" Orientation="Horizontal">
+                                    <controls:ExtendedSlider Value="{Binding Value, Converter={StaticResource FloatValueToPercent}}" Minimum="-100" Maximum="100" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                    <Label Text="{Binding Value, Converter={StaticResource FloatValueToPercent}}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                                </StackLayout>
+
+                                <Button Grid.Column="1" Text="{Binding DurationMs}" Command="{Binding BindingContext.ChangeControlPointDurationCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" FontSize="Small"/>
+                                
+                                <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControlPointCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center" Margin="4,0,4,0"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Control point list placeholder -->
+            <Label Grid.Row="3" Text="{extensions:Translate AddControlPoints}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding Sequence.ControlPoints.Count}" Value="0">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
+        </Grid>
+    </local:PageBase.Content>
+</local:PageBase>

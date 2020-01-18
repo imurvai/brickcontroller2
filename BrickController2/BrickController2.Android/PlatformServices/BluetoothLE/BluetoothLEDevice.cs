@@ -224,7 +224,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                     }
                 }
 
-                var result = await _writeCompletionSource.Task;
+                var result = await _writeCompletionSource.Task.ConfigureAwait(false);
 
                 lock (_lock)
                 {

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Text;
 using Android.Views.InputMethods;
 using Android.Widget;
 using BrickController2.Droid.PlatformServices.GameController;
@@ -85,7 +86,7 @@ namespace BrickController2.Droid.UI.Services
             }
         }
 
-        public async Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, CancellationToken token)
+        public async Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, KeyboardType keyboardType, CancellationToken token)
         {
             var completionSource = new TaskCompletionSource<InputDialogResult>(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -96,6 +97,7 @@ namespace BrickController2.Droid.UI.Services
             valueEditText.Text = initialValue ?? string.Empty;
             valueEditText.Hint = placeHolder ?? string.Empty;
             valueEditText.SetSelection(valueEditText.Text.Length);
+            valueEditText.SetRawInputType(KeyboardTypeToRawInputType(keyboardType));
 
             AlertDialog dialog = null;
             dialog = new AlertDialog.Builder(_context)
@@ -233,6 +235,24 @@ namespace BrickController2.Droid.UI.Services
                         return;
                     }
                 }
+            }
+        }
+
+        private InputTypes KeyboardTypeToRawInputType(KeyboardType keyboardType)
+        {
+            switch (keyboardType)
+            {
+                case KeyboardType.Dialer:
+                    return InputTypes.ClassPhone;
+
+                case KeyboardType.Email:
+                    return InputTypes.TextVariationEmailAddress;
+
+                case KeyboardType.Numeric:
+                    return InputTypes.ClassNumber;
+
+                default:
+                    return InputTypes.ClassText;
             }
         }
     }

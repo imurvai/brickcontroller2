@@ -35,7 +35,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Grid.Column="0" Text="{extensions:Translate Device}" VerticalOptions="Center"/>
-                    <Picker Grid.Column="1" Title="{extensions:Translate SelectDevice}" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"></Picker>
+                    <Picker Grid.Column="1" Title="{extensions:Translate SelectDevice}" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"/>
                     <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link_white.png}" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
                 </Grid>
 
@@ -150,6 +150,31 @@
                         <Label Grid.Column="0" Text="{extensions:Translate ButtonType}" VerticalOptions="Center"/>
                         <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding Action.ButtonType}"/>
                     </Grid>
+                    
+                    <!-- Sequence selector -->
+                    <StackLayout Orientation="Vertical" IsVisible="False">
+                        <StackLayout.Triggers>
+                            <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ButtonType}" Value="{x:Static creationManagement:ControllerButtonType.Sequence}">
+                                <Setter Property="IsVisible" Value="True"/>
+                            </DataTrigger>
+                        </StackLayout.Triggers>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0" Text="{extensions:Translate Sequence}" VerticalOptions="Center"/>
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Picker Grid.Column="0" Title="{extensions:Translate SelectSequence}" ItemsSource="{Binding Sequences}" SelectedItem="{Binding Action.SequenceName}"/>
+                                <controls:FloatingActionButton Grid.Column="1" ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" Command="{Binding OpenSequenceEditorCommand}" VerticalOptions="Center"/>
+                            </Grid>
+                        </Grid>
+                    </StackLayout>
 
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
                 </StackLayout>

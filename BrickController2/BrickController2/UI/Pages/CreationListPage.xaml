@@ -2,8 +2,8 @@
 <local:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
@@ -74,6 +74,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <Frame Grid.Column="0" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
@@ -95,6 +96,15 @@
                     </StackLayout>
                 </Frame>
                 <Frame Grid.Column="2" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NavigateToSequencesCommand}"/>
+                    </Frame.GestureRecognizers>
+                    <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                        <Image Source="{extensions:ImageResource Source=ic_sequence.png}" WidthRequest="20" HeightRequest="20"/>
+                        <Label Text="{extensions:Translate Sequences}" FontSize="Small"/>
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Column="3" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateToAboutCommand}"/>
                     </Frame.GestureRecognizers>

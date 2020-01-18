@@ -105,6 +105,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("DeviceName"),
                     Translate("Rename"),
                     Translate("Cancel"),
+                    KeyboardType.Text,
                     _disappearingTokenSource.Token);
 
                 if (result.IsOk)

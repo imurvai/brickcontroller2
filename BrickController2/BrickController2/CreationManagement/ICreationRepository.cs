@@ -6,6 +6,8 @@ namespace BrickController2.CreationManagement
     public interface ICreationRepository
     {
         Task<List<Creation>> GetCreationsAsync();
+        Task<List<Sequence>> GetSequencesAsync();
+
         Task InsertCreationAsync(Creation creation);
         Task UpdateCreationAsync(Creation creation);
         Task DeleteCreationAsync(Creation creation);
@@ -21,5 +23,9 @@ namespace BrickController2.CreationManagement
         Task InsertControllerActionAsync(ControllerEvent controllerEvent, ControllerAction controllerAction);
         Task UpdateControllerActionAsync(ControllerAction controllerAction);
         Task DeleteControllerActionAsync(ControllerAction controllerAction);
+
+        Task InsertSequenceAsync(Sequence sequence);
+        Task UpdateSequenceAsync(Sequence sequence);
+        Task DeleteSequenceAsync(Sequence sequence);
     }
 }

@@ -142,7 +142,7 @@
     <value>Biztos törölni szeretnéd ezt az alkotást:</value>
   </data>
   <data name="AreYouSureToDeleteDevice" xml:space="preserve">
-    <value>Biztos törölni akarod ezt az eszközt:</value>
+    <value>Biztos törölni szeretnéd ezt az eszközt:</value>
   </data>
   <data name="AreYouSureToDeleteProfile" xml:space="preserve">
     <value>Biztos törölni szeretnéd ezt a profilet:</value>
@@ -389,5 +389,71 @@
   </data>
   <data name="Battery" xml:space="preserve">
     <value>Elem</value>
+  </data>
+  <data name="AddSequences" xml:space="preserve">
+    <value>Hozz létre szekvenciákat</value>
+  </data>
+  <data name="AreYouSureToDeleteSequence" xml:space="preserve">
+    <value>Biztos törölni szeretnéd ezt a szekvenciát:</value>
+  </data>
+  <data name="EnterSequenceName" xml:space="preserve">
+    <value>Adj meg egy szekvencia nevet</value>
+  </data>
+  <data name="Sequence" xml:space="preserve">
+    <value>Szekvencia</value>
+  </data>
+  <data name="SequenceName" xml:space="preserve">
+    <value>Szekvencia neve</value>
+  </data>
+  <data name="SequenceNameCanNotBeEmpty" xml:space="preserve">
+    <value>A szekvencia neve nem lehet üres</value>
+  </data>
+  <data name="SequenceNameIsUsed" xml:space="preserve">
+    <value>Ez a szekvencia név már foglalt</value>
+  </data>
+  <data name="Sequences" xml:space="preserve">
+    <value>Szekvenciák</value>
+  </data>
+  <data name="AddControllerEvents" xml:space="preserve">
+    <value>Hozz létre vezérlő eseményt</value>
+  </data>
+  <data name="AddControlPoints" xml:space="preserve">
+    <value>Hozz létre kontrol-pontokat</value>
+  </data>
+  <data name="AreYouSureToDeleteControlPoint" xml:space="preserve">
+    <value>Biztos törölni szeretnéd ezt a kontrol pontot?</value>
+  </data>
+  <data name="DurationMs" xml:space="preserve">
+    <value>Időtartam (ms)</value>
+  </data>
+  <data name="ValuePercent" xml:space="preserve">
+    <value>Érték (%)</value>
+  </data>
+  <data name="ControlPoint" xml:space="preserve">
+    <value>Kontrol pont</value>
+  </data>
+  <data name="EnterControlPointDuration" xml:space="preserve">
+    <value>Add meg a kontrol point időtartamát 300 és 10000 ms közt.</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Érték</value>
+  </data>
+  <data name="ValueMustBeNumeric" xml:space="preserve">
+    <value>Az értéknek számnak kell lennie.</value>
+  </data>
+  <data name="ValueOutOfRange" xml:space="preserve">
+    <value>Az érték a határokon kívül van.</value>
+  </data>
+  <data name="SelectSequence" xml:space="preserve">
+    <value>Válassz egy szekvenciát</value>
+  </data>
+  <data name="Interpolate" xml:space="preserve">
+    <value>Interpolált</value>
+  </data>
+  <data name="Loop" xml:space="preserve">
+    <value>Ismétlődő</value>
+  </data>
+  <data name="MissingSequence" xml:space="preserve">
+    <value>Hiányzó szekvencia</value>
   </data>
 </root>

@@ -31,6 +31,7 @@ namespace BrickController2.CreationManagement
             await _databaseConnection.CreateTableAsync<ControllerProfile>();
             await _databaseConnection.CreateTableAsync<ControllerEvent>();
             await _databaseConnection.CreateTableAsync<ControllerAction>();
+            await _databaseConnection.CreateTableAsync<Sequence>();
             _inited = true;
         }
 
@@ -40,6 +41,15 @@ namespace BrickController2.CreationManagement
             {
                 await InitAsync();
                 return await _databaseConnection.GetAllWithChildrenAsync<Creation>(null, true);
+            }
+        }
+
+        public async Task<List<Sequence>> GetSequencesAsync()
+        {
+            using (await _lock.LockAsync())
+            {
+                await InitAsync();
+                return await _databaseConnection.GetAllWithChildrenAsync<Sequence>(null, true);
             }
         }
 
@@ -161,6 +171,31 @@ namespace BrickController2.CreationManagement
             using (await _lock.LockAsync())
             {
                 await _databaseConnection.DeleteAsync(controllerAction);
+            }
+        }
+
+        public async Task InsertSequenceAsync(Sequence sequence)
+        {
+            using (await _lock.LockAsync())
+            {
+                await InitAsync();
+                await _databaseConnection.InsertWithChildrenAsync(sequence);
+            }
+        }
+
+        public async Task UpdateSequenceAsync(Sequence sequence)
+        {
+            using (await _lock.LockAsync())
+            {
+                await _databaseConnection.UpdateWithChildrenAsync(sequence);
+            }
+        }
+
+        public async Task DeleteSequenceAsync(Sequence sequence)
+        {
+            using (await _lock.LockAsync())
+            {
+                await _databaseConnection.DeleteAsync(sequence, true);
             }
         }
     }

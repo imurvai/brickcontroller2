@@ -140,13 +140,15 @@ namespace BrickController2.DeviceManagement
             await StopOutputTaskAsync();
 
             _outputTaskTokenSource = new CancellationTokenSource();
+            var token = _outputTaskTokenSource.Token;
+
             _outputTask = Task.Run(async () =>
             {
                 try
                 {
-                    await ProcessOutputsAsync(_outputTaskTokenSource.Token);
+                    await ProcessOutputsAsync(token).ConfigureAwait(false);
                 }
-                catch (Exception)
+                catch
                 {
                 }
             });

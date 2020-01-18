@@ -14,6 +14,7 @@
     <local:PageBase.Resources>
         <ResourceDictionary>
             <converters:GameControllerEventTypeToImageConverter x:Key="EventTypeToImage"/>
+            <converters:InverseBoolConverter x:Key="InverseBool"/>
         </ResourceDictionary>
     </local:PageBase.Resources>
 
@@ -30,13 +31,9 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-
-                <Label Grid.Column="0" Text="{Binding ControllerProfile.Name}" FontSize="Large" FontAttributes="Bold"/>
+            <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="10">
+                <Label Text="{Binding ControllerProfile.Name}" FontSize="Large" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+                <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play_white.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
             </Grid>
 
             <!-- Controller event list -->
@@ -60,8 +57,10 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" Source="{Binding ControllerEvent.EventType, Converter={StaticResource EventTypeToImage}}" WidthRequest="30" HeightRequest="30"/>
-                                <Label Grid.Column="1" Text="{Binding ControllerEvent.EventCode}" FontSize="Large" FontAttributes="Bold" VerticalOptions="Center"/>
+                                <Image Grid.Column="0" Source="{Binding ControllerEvent.EventType, Converter={StaticResource EventTypeToImage}}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center"/>
+                                <StackLayout Grid.Column="1" Orientation="Horizontal" VerticalOptions="Center">
+                                    <Label Text="{Binding ControllerEvent.EventCode}" FontSize="Large" FontAttributes="Bold"/>
+                                </StackLayout>
                                 <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControllerEventCommand, Source={x:Reference Page}}" CommandParameter="{Binding ControllerEvent}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center" Margin="10,0,10,0"/>
                             </Grid>
                         </ViewCell>
@@ -78,7 +77,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" Source="{extensions:ImageResource Source=ic_exclamation_mark_red.png}" IsVisible="{Binding DeviceMissing}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center"/>
+                                <Image Grid.Column="0" Source="{extensions:ImageResource Source=ic_exclamation_mark_red.png}" IsVisible="{Binding ControllerActionValid, Converter={StaticResource InverseBool}}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center"/>
                                 <StackLayout Grid.Column="1" Orientation="Horizontal" VerticalOptions="Center">
                                     <Label Text="{extensions:Translate Device}"/>
                                     <Label Text=": "/>
@@ -97,7 +96,7 @@
             </ListView>
 
             <!-- Controller event list placeholder -->
-            <Label Grid.Row="1" Text="Add controller events" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <Label Grid.Row="1" Text="{extensions:Translate AddControllerEvents}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
                 <Label.Triggers>
                     <DataTrigger TargetType="Label" Binding="{Binding ControllerEvents.Count}" Value="0">
                         <Setter Property="IsVisible" Value="True"/>

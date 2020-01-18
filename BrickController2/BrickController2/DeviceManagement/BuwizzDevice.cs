@@ -1,5 +1,4 @@
-﻿using BrickController2.Helpers;
-using BrickController2.PlatformServices.BluetoothLE;
+﻿using BrickController2.PlatformServices.BluetoothLE;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +9,14 @@ namespace BrickController2.DeviceManagement
 {
     internal class BuWizzDevice : BluetoothDevice
     {
-        private const int MAX_SEND_ATTEMPTS = 4;
+        private const int MAX_SEND_ATTEMPTS = 10;
 
         private readonly Guid SERVICE_UUID = new Guid("0000ffe0-0000-1000-8000-00805f9b34fb");
         private readonly Guid CHARACTERISTIC_UUID = new Guid("0000ffe1-0000-1000-8000-00805f9b34fb");
 
-        private readonly byte[] _sendBuffer = new byte[5];
-        private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
+        private readonly int[] _outputValues = new int[4];
+        private readonly int[] _lastOutputValues = new int[4];
+        private readonly object _outputLock = new object();
 
         private volatile int _outputLevelValue;
         private volatile int _sendAttemptsLeft;
@@ -40,13 +40,15 @@ namespace BrickController2.DeviceManagement
             value = CutOutputValue(value);
 
             var intValue = (int)(value * 255);
-            if (_outputValues[channel] == intValue)
-            {
-                return;
-            }
 
-            _outputValues[channel] = intValue;
-            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+            lock (_outputLock)
+            {
+                if (_outputValues[channel] != intValue)
+                {
+                    _outputValues[channel] = intValue;
+                    _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                }
+            }
         }
 
         public override bool CanSetOutputLevel => true;
@@ -66,43 +68,49 @@ namespace BrickController2.DeviceManagement
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
         {
-            _outputValues[0] = 0;
-            _outputValues[1] = 0;
-            _outputValues[2] = 0;
-            _outputValues[3] = 0;
-            _outputLevelValue = DefaultOutputLevel;
-            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+            lock (_outputLock)
+            {
+                _outputValues[0] = 0;
+                _outputValues[1] = 0;
+                _outputValues[2] = 0;
+                _outputValues[3] = 0;
+                _lastOutputValues[0] = 1;
+                _lastOutputValues[1] = 1;
+                _lastOutputValues[2] = 1;
+                _lastOutputValues[3] = 1;
+                _outputLevelValue = DefaultOutputLevel;
+                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+            }
 
             while (!token.IsCancellationRequested)
             {
                 try
                 {
-                    if (_sendAttemptsLeft > 0)
-                    {
-                        int v0 = _outputValues[0];
-                        int v1 = _outputValues[1];
-                        int v2 = _outputValues[2];
-                        int v3 = _outputValues[3];
+                    int v0, v1, v2, v3, sendAttemptsLeft;
 
-                        if (await SendOutputValuesAsync(v0, v1, v2, v3, token))
+                    lock (_outputLock)
+                    {
+                        v0 = _outputValues[0];
+                        v1 = _outputValues[1];
+                        v2 = _outputValues[2];
+                        v3 = _outputValues[3];
+                        sendAttemptsLeft = _sendAttemptsLeft;
+                        _sendAttemptsLeft = sendAttemptsLeft > 0 ? sendAttemptsLeft - 1 : 0;
+                    }
+
+                    if (v0 != _lastOutputValues[0] || v1 != _lastOutputValues[1] || v2 != _lastOutputValues[2] || v3 != _lastOutputValues[3] || sendAttemptsLeft > 0)
+                    {
+                        if (await SendOutputValuesAsync(v0, v1, v2, v3, token).ConfigureAwait(false))
                         {
-                            if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0)
-                            {
-                                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                            }
-                            else
-                            {
-                                _sendAttemptsLeft--;
-                            }
-                        }
-                        else
-                        {
-                            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                            _lastOutputValues[0] = v0;
+                            _lastOutputValues[1] = v1;
+                            _lastOutputValues[2] = v2;
+                            _lastOutputValues[3] = v3;
                         }
                     }
                     else
                     {
-                        await Task.Delay(2, token);
+                        await Task.Delay(10, token).ConfigureAwait(false);
                     }
                 }
                 catch
@@ -115,15 +123,18 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                _sendBuffer[0] = (byte)((Math.Abs(v0) >> 2) | (v0 < 0 ? 0x40 : 0) | 0x80);
-                _sendBuffer[1] = (byte)((Math.Abs(v1) >> 2) | (v1 < 0 ? 0x40 : 0));
-                _sendBuffer[2] = (byte)((Math.Abs(v2) >> 2) | (v2 < 0 ? 0x40 : 0));
-                _sendBuffer[3] = (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0));
-                _sendBuffer[4] = (byte)(_outputLevelValue * 0x20);
+                var sendOutputBuffer = new byte[]
+                {
+                    (byte)((Math.Abs(v0) >> 2) | (v0 < 0 ? 0x40 : 0) | 0x80),
+                    (byte)((Math.Abs(v1) >> 2) | (v1 < 0 ? 0x40 : 0)),
+                    (byte)((Math.Abs(v2) >> 2) | (v2 < 0 ? 0x40 : 0)),
+                    (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0)),
+                    (byte)(_outputLevelValue * 0x20)
+                };
 
-                await _bleDevice?.WriteNoResponseAsync(_characteristic, _sendBuffer, token);
+                var result = await _bleDevice?.WriteNoResponseAsync(_characteristic, sendOutputBuffer, token);
                 await Task.Delay(60, token);
-                return true;
+                return result;
             }
             catch (Exception)
             {

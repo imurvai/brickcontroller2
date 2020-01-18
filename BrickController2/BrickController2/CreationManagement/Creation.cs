@@ -53,5 +53,30 @@ namespace BrickController2.CreationManagement
 
             return deviceIds;
         }
+
+        public IEnumerable<string> GetSequenceNames()
+        {
+            var sequenceNames = new List<string>();
+
+            foreach (var profile in ControllerProfiles)
+            {
+                foreach (var controllerEvent in profile.ControllerEvents)
+                {
+                    foreach (var controllerAction in controllerEvent.ControllerActions)
+                    {
+                        if (controllerAction.ButtonType == ControllerButtonType.Sequence)
+                        {
+                            var sequenceName = controllerAction.SequenceName;
+                            if (!sequenceNames.Contains(sequenceName))
+                            {
+                                sequenceNames.Add(sequenceName);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return sequenceNames;
+        }
     }
 }

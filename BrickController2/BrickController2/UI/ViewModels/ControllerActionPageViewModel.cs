@@ -41,7 +41,7 @@ namespace BrickController2.UI.ViewModels
             _preferences = preferences;
 
             ControllerAction = parameters.Get<ControllerAction>("controlleraction", null);
-            ControllerEvent = parameters.Get<ControllerEvent>("controllerevent", null) ?? ControllerAction.ControllerEvent;
+            ControllerEvent = parameters.Get<ControllerEvent>("controllerevent", null) ?? ControllerAction?.ControllerEvent;
 
             var device = _deviceManager.GetDeviceById(ControllerAction?.DeviceId);
             if (ControllerAction != null && device != null)
@@ -58,6 +58,7 @@ namespace BrickController2.UI.ViewModels
                 Action.AxisDeadZonePercent = ControllerAction.AxisDeadZonePercent;
                 Action.ServoBaseAngle = ControllerAction.ServoBaseAngle;
                 Action.StepperAngle = ControllerAction.StepperAngle;
+                Action.SequenceName = ControllerAction.SequenceName;
             }
             else
             {
@@ -74,15 +75,18 @@ namespace BrickController2.UI.ViewModels
                 Action.AxisDeadZonePercent = 0;
                 Action.ServoBaseAngle = 0;
                 Action.StepperAngle = 90;
+                Action.SequenceName = string.Empty;
             }
 
             SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null);
             DeleteControllerActionCommand = new SafeCommand(async () => await DeleteControllerActionAsync());
             OpenDeviceDetailsCommand = new SafeCommand(async () => await OpenDeviceDetailsAsync(), () => SelectedDevice != null);
             OpenChannelSetupCommand = new SafeCommand(async () => await OpenChannelSetupAsync(), () => SelectedDevice != null);
+            OpenSequenceEditorCommand = new SafeCommand(async () => await OpenSequenceEditorAsync());
         }
 
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
+        public ObservableCollection<string> Sequences => new ObservableCollection<string>(_creationManager.Sequences.Select(s => s.Name));
 
         public ControllerEvent ControllerEvent { get; }
         public ControllerAction ControllerAction { get; }
@@ -110,6 +114,7 @@ namespace BrickController2.UI.ViewModels
         public ICommand DeleteControllerActionCommand { get; }
         public ICommand OpenDeviceDetailsCommand { get; }
         public ICommand OpenChannelSetupCommand { get; }
+        public ICommand OpenSequenceEditorCommand { get; }
 
         public override void OnAppearing()
         {
@@ -155,7 +160,8 @@ namespace BrickController2.UI.ViewModels
                             Action.ChannelOutputType,
                             Action.MaxServoAngle,
                             Action.ServoBaseAngle,
-                            Action.StepperAngle);
+                            Action.StepperAngle,
+                            Action.SequenceName);
                     }
                     else
                     {
@@ -172,7 +178,8 @@ namespace BrickController2.UI.ViewModels
                             Action.ChannelOutputType,
                             Action.MaxServoAngle,
                             Action.ServoBaseAngle,
-                            Action.StepperAngle);
+                            Action.StepperAngle,
+                            Action.SequenceName);
                     }
                 },
                 Translate("Saving"));
@@ -225,6 +232,24 @@ namespace BrickController2.UI.ViewModels
             }
 
             await NavigationService.NavigateToAsync<ChannelSetupPageViewModel>(new NavigationParameters(("device", SelectedDevice), ("controlleraction", Action)));
+        }
+
+        private async Task OpenSequenceEditorAsync()
+        {
+            var selectedSequence = _creationManager.Sequences.FirstOrDefault(s => s.Name == Action.SequenceName);
+
+            if (selectedSequence != null)
+            {
+                await NavigationService.NavigateToAsync<SequenceEditorPageViewModel>(new NavigationParameters(("sequence", selectedSequence)));
+            }
+            else
+            {
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    Translate("MissingSequence"),
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
+            }
         }
     }
 }

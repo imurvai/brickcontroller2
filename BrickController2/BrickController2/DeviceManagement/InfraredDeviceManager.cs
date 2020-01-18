@@ -21,8 +21,8 @@ namespace BrickController2.DeviceManagement
         private readonly IInfraredService _infraredService;
         private readonly AsyncLock _asyncLock = new AsyncLock();
 
-        private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4 * 2);
-        private readonly VolatileBuffer<int> _sendAttemptsLeft = new VolatileBuffer<int>(4);
+        private readonly int[] _outputValues = new int[4 * 2];
+        private readonly int[] _sendAttemptsLeft = new int[4];
         private readonly int[] _irData = new int[18 * 2];
 
         private int _connectedDevicesCount = 0;
@@ -121,17 +121,21 @@ namespace BrickController2.DeviceManagement
             ResetOutputs();
 
             _irTaskCancelationTokenSource = new CancellationTokenSource();
+            var token = _irTaskCancelationTokenSource.Token;
+
             _irTask = Task.Run(async () =>
             {
                 try
                 {
-                    while (!_irTaskCancelationTokenSource.Token.IsCancellationRequested)
+                    while (!token.IsCancellationRequested)
                     {
-                        await SendIrData(_irTaskCancelationTokenSource.Token);
-                        await Task.Delay(5);
+                        await SendIrData(_irTaskCancelationTokenSource.Token).ConfigureAwait(false);
+                        await Task.Delay(5).ConfigureAwait(false);
                     }
                 }
-                catch (OperationCanceledException) { }
+                catch
+                {
+                }
             });
         }
 

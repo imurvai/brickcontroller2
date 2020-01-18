@@ -120,14 +120,23 @@
   <data name="About" xml:space="preserve">
     <value>Über</value>
   </data>
+  <data name="AddControllerEvents" xml:space="preserve">
+    <value>Controller-event</value>
+  </data>
   <data name="AddControllerProfiles" xml:space="preserve">
     <value>Controllerprofile erstellen</value>
+  </data>
+  <data name="AddControlPoints" xml:space="preserve">
+    <value>Controll-punkt erstellen</value>
   </data>
   <data name="AddCreations" xml:space="preserve">
     <value>Kreationen erstellen</value>
   </data>
   <data name="Address" xml:space="preserve">
     <value>Adresse</value>
+  </data>
+  <data name="AddSequences" xml:space="preserve">
+    <value>Sequenzen estellen</value>
   </data>
   <data name="AdvancedSettings" xml:space="preserve">
     <value>Erweiterte Einstellungen</value>
@@ -138,6 +147,9 @@
   <data name="AreYouSureToDeleteControllerEvent" xml:space="preserve">
     <value>Wollen Sie dieses Steuerungsereignis löschen:</value>
   </data>
+  <data name="AreYouSureToDeleteControlPoint" xml:space="preserve">
+    <value>Wollen Sie diese controller punkt wirklich löschen?</value>
+  </data>
   <data name="AreYouSureToDeleteCreation" xml:space="preserve">
     <value>Sind Sie sicher, dass Sie diese Erstellung löschen wollen:</value>
   </data>
@@ -146,6 +158,9 @@
   </data>
   <data name="AreYouSureToDeleteProfile" xml:space="preserve">
     <value>Wollen Sie dieses Profil wirklich löschen:</value>
+  </data>
+  <data name="AreYouSureToDeleteSequence" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie diese Sequenze löschen wollen:</value>
   </data>
   <data name="AreYouSureToDeleteThisControllerAcrion" xml:space="preserve">
     <value>Wollen Sie diese Controllersaktion wirklich löschen?</value>
@@ -201,6 +216,9 @@
   <data name="ControllerTester" xml:space="preserve">
     <value>Controller-Test</value>
   </data>
+  <data name="ControlPoint" xml:space="preserve">
+    <value>ControllPunkt</value>
+  </data>
   <data name="Create" xml:space="preserve">
     <value>Erstellen</value>
   </data>
@@ -246,6 +264,12 @@
   <data name="Disconnecting" xml:space="preserve">
     <value>Verbindung trennen...</value>
   </data>
+  <data name="DurationMs" xml:space="preserve">
+    <value>Dauer (ms)</value>
+  </data>
+  <data name="EnterControlPointDuration" xml:space="preserve">
+    <value>Zeitraum des ControllPunktes eingeben (300 - 10000ms).</value>
+  </data>
   <data name="EnterCreationName" xml:space="preserve">
     <value>Einen Namen für die Kreation eingeben</value>
   </data>
@@ -254,6 +278,9 @@
   </data>
   <data name="EnterProfileName" xml:space="preserve">
     <value>Einen Profilnamen eingeben</value>
+  </data>
+  <data name="EnterSequenceName" xml:space="preserve">
+    <value>Einen Sequenze eingeben</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Fehler</value>
@@ -270,6 +297,9 @@
   <data name="IconSet" xml:space="preserve">
     <value>Icon-Set</value>
   </data>
+  <data name="Interpolate" xml:space="preserve">
+    <value>Interpolieren</value>
+  </data>
   <data name="Inv" xml:space="preserve">
     <value>Inv</value>
   </data>
@@ -282,6 +312,9 @@
   <data name="LocationPermissionIsNeeded" xml:space="preserve">
     <value>Für die Bluetooth-Verbindung ist eine Standortgenehmigung erforderlich</value>
   </data>
+  <data name="Loop" xml:space="preserve">
+    <value>Schleife</value>
+  </data>
   <data name="MaxOutput" xml:space="preserve">
     <value>Max Leistung</value>
   </data>
@@ -290,6 +323,9 @@
   </data>
   <data name="MissingDevices" xml:space="preserve">
     <value>Fehlende Geräte in der Einstellung der Kreation</value>
+  </data>
+  <data name="MissingSequence" xml:space="preserve">
+    <value>Fehlende sequenz</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>Nein</value>
@@ -351,6 +387,21 @@
   <data name="SelectDeviceBeforeSaving" xml:space="preserve">
     <value>Vor dem Speichern ein Gerät auswählen</value>
   </data>
+  <data name="SelectSequence" xml:space="preserve">
+    <value>Eine Sequenz auswählen</value>
+  </data>
+  <data name="Sequence" xml:space="preserve">
+    <value>Sequenz</value>
+  </data>
+  <data name="SequenceName" xml:space="preserve">
+    <value>Name der Sequenze</value>
+  </data>
+  <data name="SequenceNameCanNotBeEmpty" xml:space="preserve">
+    <value>Neme der Sequenze darf nicht leer bleiben</value>
+  </data>
+  <data name="Sequences" xml:space="preserve">
+    <value>Sequenzen</value>
+  </data>
   <data name="ServoAngle" xml:space="preserve">
     <value>Servo-Drehen</value>
   </data>
@@ -362,6 +413,18 @@
   </data>
   <data name="TurnOnBluetoothToConnectBluetoothDevices" xml:space="preserve">
     <value>Bluetooth einschalten, um eine Verbindung zu Bluetooth-Geräten herzustellen</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Wert</value>
+  </data>
+  <data name="ValueMustBeNumeric" xml:space="preserve">
+    <value>Wert numerisch sein soll</value>
+  </data>
+  <data name="ValueOutOfRange" xml:space="preserve">
+    <value>Wert außerhalb der Grenze</value>
+  </data>
+  <data name="ValuePercent" xml:space="preserve">
+    <value>Wert (%)</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>

@@ -9,6 +9,7 @@
     <Compile Remove="UI\Navigation\**" />
     <EmbeddedResource Remove="UI\Navigation\**" />
     <None Remove="UI\Navigation\**" />
+    <None Remove="UI\Images\ic_sequence.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,6 +71,7 @@
     <EmbeddedResource Include="UI\Images\poweredup_image_small.png" />
     <EmbeddedResource Include="UI\Images\sbrick_image.png" />
     <EmbeddedResource Include="UI\Images\sbrick_image_small.png" />
+    <EmbeddedResource Include="UI\Images\ic_sequence.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -111,11 +113,9 @@
   <ItemGroup>
     <EmbeddedResource Update="Resources\TranslationResources.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TranslationResources.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\TranslationResources.hu.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TranslationResources.hu.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\TranslationResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

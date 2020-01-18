@@ -120,14 +120,23 @@
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="AddControllerEvents" xml:space="preserve">
+    <value>Add controller events</value>
+  </data>
   <data name="AddControllerProfiles" xml:space="preserve">
     <value>Add controller profiles</value>
+  </data>
+  <data name="AddControlPoints" xml:space="preserve">
+    <value>Add control points</value>
   </data>
   <data name="AddCreations" xml:space="preserve">
     <value>Add creations</value>
   </data>
   <data name="Address" xml:space="preserve">
     <value>Address</value>
+  </data>
+  <data name="AddSequences" xml:space="preserve">
+    <value>Add sequences</value>
   </data>
   <data name="AdvancedSettings" xml:space="preserve">
     <value>Advanced settings</value>
@@ -138,6 +147,9 @@
   <data name="AreYouSureToDeleteControllerEvent" xml:space="preserve">
     <value>Are you sure to delete controller event</value>
   </data>
+  <data name="AreYouSureToDeleteControlPoint" xml:space="preserve">
+    <value>Are you sure to delete this control point?</value>
+  </data>
   <data name="AreYouSureToDeleteCreation" xml:space="preserve">
     <value>Are you sure to delete creation</value>
   </data>
@@ -146,6 +158,9 @@
   </data>
   <data name="AreYouSureToDeleteProfile" xml:space="preserve">
     <value>Are you sure to delete profile</value>
+  </data>
+  <data name="AreYouSureToDeleteSequence" xml:space="preserve">
+    <value>Are you sure to delete sequence</value>
   </data>
   <data name="AreYouSureToDeleteThisControllerAcrion" xml:space="preserve">
     <value>Are you sure to delete this controller action?</value>
@@ -213,6 +228,9 @@
   <data name="ControllerTester" xml:space="preserve">
     <value>Controller tester</value>
   </data>
+  <data name="ControlPoint" xml:space="preserve">
+    <value>Control point</value>
+  </data>
   <data name="Create" xml:space="preserve">
     <value>Create</value>
   </data>
@@ -258,6 +276,12 @@
   <data name="Disconnecting" xml:space="preserve">
     <value>Disconnecting</value>
   </data>
+  <data name="DurationMs" xml:space="preserve">
+    <value>Duration (ms)</value>
+  </data>
+  <data name="EnterControlPointDuration" xml:space="preserve">
+    <value>Enter the control point duration between 300 and 10000 ms.</value>
+  </data>
   <data name="EnterCreationName" xml:space="preserve">
     <value>Enter a creation name</value>
   </data>
@@ -266,6 +290,9 @@
   </data>
   <data name="EnterProfileName" xml:space="preserve">
     <value>Enter a new profile name</value>
+  </data>
+  <data name="EnterSequenceName" xml:space="preserve">
+    <value>Enter a sequence name</value>
   </data>
   <data name="Error" xml:space="preserve">
     <value>Error</value>
@@ -282,6 +309,9 @@
   <data name="IconSet" xml:space="preserve">
     <value>Icon set</value>
   </data>
+  <data name="Interpolate" xml:space="preserve">
+    <value>Interpolate</value>
+  </data>
   <data name="Inv" xml:space="preserve">
     <value>Inv</value>
   </data>
@@ -294,6 +324,9 @@
   <data name="LocationPermissionIsNeeded" xml:space="preserve">
     <value>Location permission is needed for accessing bluetooth</value>
   </data>
+  <data name="Loop" xml:space="preserve">
+    <value>Loop</value>
+  </data>
   <data name="MaxOutput" xml:space="preserve">
     <value>Max output</value>
   </data>
@@ -302,6 +335,9 @@
   </data>
   <data name="MissingDevices" xml:space="preserve">
     <value>There are missing devices in the creation setup.</value>
+  </data>
+  <data name="MissingSequence" xml:space="preserve">
+    <value>Missing sequence</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>No</value>
@@ -369,6 +405,24 @@
   <data name="SelectDeviceBeforeSaving" xml:space="preserve">
     <value>Select a device before saving.</value>
   </data>
+  <data name="SelectSequence" xml:space="preserve">
+    <value>Select a sequence</value>
+  </data>
+  <data name="Sequence" xml:space="preserve">
+    <value>Sequence</value>
+  </data>
+  <data name="SequenceName" xml:space="preserve">
+    <value>Sequence name</value>
+  </data>
+  <data name="SequenceNameCanNotBeEmpty" xml:space="preserve">
+    <value>Sequence name can not be empty</value>
+  </data>
+  <data name="SequenceNameIsUsed" xml:space="preserve">
+    <value>This sequence name is already used</value>
+  </data>
+  <data name="Sequences" xml:space="preserve">
+    <value>Sequences</value>
+  </data>
   <data name="ServoAngle" xml:space="preserve">
     <value>Servo range</value>
   </data>
@@ -383,6 +437,18 @@
   </data>
   <data name="TurnOnBluetoothToConnectBluetoothDevices" xml:space="preserve">
     <value>Turn bluetooth on to connect to bluetooth device(s).</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="ValueMustBeNumeric" xml:space="preserve">
+    <value>Value must be numeric.</value>
+  </data>
+  <data name="ValueOutOfRange" xml:space="preserve">
+    <value>Value out of range.</value>
+  </data>
+  <data name="ValuePercent" xml:space="preserve">
+    <value>Value (%)</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version</value>

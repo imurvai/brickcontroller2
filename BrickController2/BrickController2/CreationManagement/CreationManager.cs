@@ -3,6 +3,7 @@ using BrickController2.Helpers;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace BrickController2.CreationManagement
 {
@@ -17,8 +18,9 @@ namespace BrickController2.CreationManagement
         }
 
         public ObservableCollection<Creation> Creations { get; } = new ObservableCollection<Creation>();
+        public ObservableCollection<Sequence> Sequences { get; } = new ObservableCollection<Sequence>();
 
-        public async Task LoadCreationsAsync()
+        public async Task LoadCreationsAndSequencesAsync()
         {
             using (await _asyncLock.LockAsync())
             {
@@ -28,6 +30,14 @@ namespace BrickController2.CreationManagement
                 foreach (var creation in creations)
                 {
                     Creations.Add(creation);
+                }
+
+                Sequences.Clear();
+
+                var sequences = await _creationRepository.GetSequencesAsync();
+                foreach (var sequence in sequences)
+                {
+                    Sequences.Add(sequence);
                 }
             }
         }
@@ -144,7 +154,8 @@ namespace BrickController2.CreationManagement
             ChannelOutputType channelOutputType,
             int maxServoAngle,
             int servoBaseAngle,
-            int stepperAngle)
+            int stepperAngle,
+            string sequenceName)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -161,6 +172,7 @@ namespace BrickController2.CreationManagement
                     controllerAction.MaxServoAngle = maxServoAngle;
                     controllerAction.ServoBaseAngle = servoBaseAngle;
                     controllerAction.StepperAngle = stepperAngle;
+                    controllerAction.SequenceName = sequenceName;
                     await _creationRepository.UpdateControllerActionAsync(controllerAction);
                 }
                 else
@@ -178,7 +190,8 @@ namespace BrickController2.CreationManagement
                         ChannelOutputType = channelOutputType,
                         MaxServoAngle = maxServoAngle,
                         ServoBaseAngle = servoBaseAngle,
-                        StepperAngle = stepperAngle
+                        StepperAngle = stepperAngle,
+                        SequenceName = sequenceName
                     };
                     await _creationRepository.InsertControllerActionAsync(controllerEvent, controllerAction);
                 }
@@ -210,7 +223,8 @@ namespace BrickController2.CreationManagement
             ChannelOutputType channelOutputType,
             int maxServoAngle,
             int servoBaseAngle,
-            int stepperAngle)
+            int stepperAngle,
+            string sequenceName)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -234,7 +248,85 @@ namespace BrickController2.CreationManagement
                 controllerAction.MaxServoAngle = maxServoAngle;
                 controllerAction.ServoBaseAngle = servoBaseAngle;
                 controllerAction.StepperAngle = stepperAngle;
+                controllerAction.SequenceName = sequenceName;
                 await _creationRepository.UpdateControllerActionAsync(controllerAction);
+            }
+        }
+
+        public async Task<bool> IsSequenceNameAvailableAsync(string sequenceName)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                return Sequences.All(s => s.Name != sequenceName);
+            }
+        }
+
+        public async Task<Sequence> AddSequenceAsync(string sequenceName)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var sequence = new Sequence { Name = sequenceName };
+                await _creationRepository.InsertSequenceAsync(sequence);
+
+                Sequences.Add(sequence);
+                return sequence;
+            }
+        }
+
+        public async Task UpdateSequenceAsync(Sequence sequence, string sequenceName, bool loop, bool interpolate, IEnumerable<SequenceControlPoint> controlPoints)
+        {
+            var sequenceOriginalName = sequence.Name;
+
+            using (await _asyncLock.LockAsync())
+            {
+                sequence.Name = sequenceName;
+                sequence.Loop = loop;
+                sequence.Interpolate = interpolate;
+                sequence.ControlPoints = new ObservableCollection<SequenceControlPoint>(controlPoints);
+                await _creationRepository.UpdateSequenceAsync(sequence);
+            }
+
+            if (sequenceOriginalName != sequenceName)
+            {
+                foreach (var creation in Creations)
+                {
+                    foreach (var controllerProfile in creation.ControllerProfiles)
+                    {
+                        foreach (var controllerEvent in controllerProfile.ControllerEvents)
+                        {
+                            foreach (var controllerAction in controllerEvent.ControllerActions)
+                            {
+                                if (controllerAction.SequenceName == sequenceOriginalName)
+                                {
+                                    await UpdateControllerActionAsync(
+                                        controllerAction,
+                                        controllerAction.DeviceId,
+                                        controllerAction.Channel,
+                                        controllerAction.IsInvert,
+                                        controllerAction.ButtonType,
+                                        controllerAction.AxisType,
+                                        controllerAction.AxisCharacteristic,
+                                        controllerAction.MaxOutputPercent,
+                                        controllerAction.AxisDeadZonePercent,
+                                        controllerAction.ChannelOutputType,
+                                        controllerAction.MaxServoAngle,
+                                        controllerAction.ServoBaseAngle,
+                                        controllerAction.StepperAngle,
+                                        sequenceName);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public async Task DeleteSequenceAsync(Sequence sequence)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                await _creationRepository.DeleteSequenceAsync(sequence);
+                Sequences.Remove(sequence);
             }
         }
     }

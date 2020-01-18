@@ -10,7 +10,7 @@ namespace BrickController2.DeviceManagement
 {
     internal class SBrickDevice : BluetoothDevice
     {
-        private const int MAX_SEND_ATTEMPTS = 4;
+        private const int MAX_SEND_ATTEMPTS = 10;
 
         private readonly Guid SERVICE_UUID_DEVICE_INFORMATION = new Guid("0000180a-0000-1000-8000-00805f9b34fb");
         private readonly Guid CHARACTERISTIC_UUID_FIRMWARE_REVISION = new Guid("00002a26-0000-1000-8000-00805f9b34fb");
@@ -19,8 +19,8 @@ namespace BrickController2.DeviceManagement
         private readonly Guid CHARACTERISTIC_UUID_REMOTE_CONTROL = new Guid("02b8cbcc-0e25-4bda-8790-a15f53e6010f");
         private readonly Guid CHARACTERISTIC_UUID_QUICK_DRIVE = new Guid("489a6ae0-c1ab-4c9c-bdb2-11d373c1b7fb");
 
-        private readonly byte[] _sendBuffer = new byte[4];
-        private readonly VolatileBuffer<int> _outputValues = new VolatileBuffer<int>(4);
+        private readonly int[] _outputValues = new int[4];
+        private readonly object _outputLock = new object();
 
         private volatile int _sendAttemptsLeft;
 
@@ -45,13 +45,15 @@ namespace BrickController2.DeviceManagement
             value = CutOutputValue(value);
 
             var intValue = (int)(value * 255);
-            if (_outputValues[channel] == intValue)
+            
+            lock (_outputLock)
             {
-                return;
+                if (_outputValues[channel] != intValue)
+                {
+                    _outputValues[channel] = intValue;
+                    _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                }
             }
-
-            _outputValues[channel] = intValue;
-            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
         }
 
         protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
@@ -77,7 +79,7 @@ namespace BrickController2.DeviceManagement
             {
                 if (requestDeviceInformation)
                 {
-                    await ReadDeviceInfo(token);
+                    await ReadDeviceInfo(token).ConfigureAwait(false);
                 }
             }
             catch { }
@@ -89,40 +91,36 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                _outputValues[0] = 0;
-                _outputValues[1] = 0;
-                _outputValues[2] = 0;
-                _outputValues[3] = 0;
-                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                lock (_outputLock)
+                {
+                    _outputValues[0] = 0;
+                    _outputValues[1] = 0;
+                    _outputValues[2] = 0;
+                    _outputValues[3] = 0;
+                    _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                }
 
                 while (!token.IsCancellationRequested)
                 {
-                    if (_sendAttemptsLeft > 0)
-                    {
-                        int v0 = _outputValues[0];
-                        int v1 = _outputValues[1];
-                        int v2 = _outputValues[2];
-                        int v3 = _outputValues[3];
+                    int v0, v1, v2, v3, sendAttemptsLeft;
 
-                        if (await SendOutputValuesAsync(v0, v1, v2, v3, token))
-                        {
-                            if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0)
-                            {
-                                _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                            }
-                            else
-                            {
-                                _sendAttemptsLeft--;
-                            }
-                        }
-                        else
-                        {
-                            _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                        }
+                    lock (_outputLock)
+                    {
+                        v0 = _outputValues[0];
+                        v1 = _outputValues[1];
+                        v2 = _outputValues[2];
+                        v3 = _outputValues[3];
+                        sendAttemptsLeft = _sendAttemptsLeft;
+                        _sendAttemptsLeft = sendAttemptsLeft > 0 ? sendAttemptsLeft - 1 : 0;
+                    }
+
+                    if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0 || sendAttemptsLeft > 0)
+                    {
+                        await SendOutputValuesAsync(v0, v1, v2, v3, token).ConfigureAwait(false);
                     }
                     else
                     {
-                        await Task.Delay(2, token);
+                        await Task.Delay(10, token).ConfigureAwait(false);
                     }
                 }
             }
@@ -133,12 +131,15 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                _sendBuffer[0] = (byte)((Math.Abs(v0) & 0xfe) | 0x02 | (v0 < 0 ? 1 : 0));
-                _sendBuffer[1] = (byte)((Math.Abs(v1) & 0xfe) | 0x02 | (v1 < 0 ? 1 : 0));
-                _sendBuffer[2] = (byte)((Math.Abs(v2) & 0xfe) | 0x02 | (v2 < 0 ? 1 : 0));
-                _sendBuffer[3] = (byte)((Math.Abs(v3) & 0xfe) | 0x02 | (v3 < 0 ? 1 : 0));
+                var sendOutputBuffer = new byte[]
+                {
+                    (byte)((Math.Abs(v0) & 0xfe) | 0x02 | (v0 < 0 ? 1 : 0)),
+                    (byte)((Math.Abs(v1) & 0xfe) | 0x02 | (v1 < 0 ? 1 : 0)),
+                    (byte)((Math.Abs(v2) & 0xfe) | 0x02 | (v2 < 0 ? 1 : 0)),
+                    (byte)((Math.Abs(v3) & 0xfe) | 0x02 | (v3 < 0 ? 1 : 0))
+                };
 
-                return await _bleDevice?.WriteAsync(_quickDriveCharacteristic, _sendBuffer, token);
+                return await _bleDevice?.WriteAsync(_quickDriveCharacteristic, sendOutputBuffer, token);
             }
             catch
             {

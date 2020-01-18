@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:PageBase
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    x:Class="BrickController2.UI.Pages.SequenceListPage"
+    x:Name="Page"
+    Title="{extensions:Translate Sequences}">
+
+    <local:PageBase.Resources>
+        <ResourceDictionary>
+            <converters:TextToCapitalInitialConverter x:Key="TextToCapitalInitial"/>
+            <converters:IntToColorConverter x:Key="IntToColor"/>
+        </ResourceDictionary>
+    </local:PageBase.Resources>
+
+    <local:PageBase.ToolbarItems>
+        <ToolbarItem Icon="ic_add_white.png" Order="Primary" Command="{Binding AddSequenceCommand}"/>
+    </local:PageBase.ToolbarItems>
+
+    <local:PageBase.Content>
+        <Grid>
+
+            <!-- Sequence list -->
+            <ListView Grid.Row="0" ItemsSource="{Binding Sequences}" SelectionMode="None" HasUnevenRows="True">
+                <ListView.Triggers>
+                    <DataTrigger TargetType="ListView" Binding="{Binding Sequences.Count}" Value="0">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                </ListView.Triggers>
+                <ListView.Behaviors>
+                    <behaviors:ListViewItemTappedBehavior Command="{Binding SequenceTappedCommand}"/>
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Frame Grid.Column="0" WidthRequest="40" HeightRequest="40" BackgroundColor="{Binding Id, Converter={StaticResource IntToColor}}" CornerRadius="20" Padding="0" HasShadow="False" VerticalOptions="Center">
+                                    <Label Text="{Binding Name, Converter={StaticResource TextToCapitalInitial}}" TextColor="White" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Frame>
+                                <Label Grid.Column="1" Text="{Binding Name}" FontSize="Large" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
+                                <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteSequenceCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Creation list placeholder -->
+            <Label Grid.Row="0" Text="{extensions:Translate AddSequences}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" Binding="{Binding Sequences.Count}" Value="0">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
+        </Grid>
+    </local:PageBase.Content>
+</local:PageBase>
