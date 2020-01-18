@@ -160,7 +160,7 @@ namespace BrickController2.UI.ViewModels
 
                 if (int.TryParse(result.Result, out int intValue))
                 {
-                    if (intValue < 200 || 10000 < intValue)
+                    if (intValue < 300 || 10000 < intValue)
                     {
                         await _dialogService.ShowMessageBoxAsync(
                             Translate("Warining"),

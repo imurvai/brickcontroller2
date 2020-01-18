@@ -280,7 +280,7 @@
     <value>Duration (ms)</value>
   </data>
   <data name="EnterControlPointDuration" xml:space="preserve">
-    <value>Enter the control point duration between 200 and 10000 ms.</value>
+    <value>Enter the control point duration between 300 and 10000 ms.</value>
   </data>
   <data name="EnterCreationName" xml:space="preserve">
     <value>Enter a creation name</value>

@@ -547,7 +547,7 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the control point duration between 200 and 10000 ms..
+        ///   Looks up a localized string similar to Enter the control point duration between 300 and 10000 ms..
         /// </summary>
         internal static string EnterControlPointDuration {
             get {
