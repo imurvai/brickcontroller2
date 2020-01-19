@@ -111,5 +111,28 @@ namespace BrickController2.CreationManagement
         {
             return $"{DeviceId} - {Channel}";
         }
+
+        public ControllerAction Clone()
+        {
+            // create new instance and copy all property values
+            var copy = new ControllerAction
+            {
+                DeviceId = _deviceId,
+                Channel = _channel,
+                ChannelOutputType = _channelOutputType,
+                IsInvert = _isInvert,
+                ButtonType = _buttonType,
+                AxisType = _axisType,
+                AxisCharacteristic = _axisCharacteristic,
+                MaxOutputPercent = _maxOutputPercent,
+                AxisDeadZonePercent = _axisDeadZonePercent,
+                MaxServoAngle = _maxServoAngle,
+                ServoBaseAngle = _servoBaseAngle,
+                StepperAngle = _stepperAngle,
+                SequenceName = _sequenceName
+            };
+
+            return copy;
+        }
     }
 }

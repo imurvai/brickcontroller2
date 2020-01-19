@@ -19,6 +19,7 @@
     </local:PageBase.Resources>
 
     <local:PageBase.ToolbarItems>
+        <ToolbarItem Icon="ic_copy_white.png" Order="Primary" Command="{Binding CopyProfileCommand}"/>
         <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameProfileCommand}"/>
         <ToolbarItem Icon="ic_add_white.png" Order="Primary" Command="{Binding AddControllerEventCommand}"/>
     </local:PageBase.ToolbarItems>

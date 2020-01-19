@@ -116,6 +116,14 @@ namespace BrickController2.CreationManagement
             }
         }
 
+        public async Task<ControllerProfile> CopyControllerProfileAsync(ControllerProfile controllerProfile, string copiedProfileName)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                return await _creationRepository.CopyControllerProfileAsync(controllerProfile.Creation, controllerProfile, copiedProfileName);
+            }
+        }
+
         public async Task<ControllerEvent> AddOrGetControllerEventAsync(ControllerProfile controllerProfile, GameControllerEventType eventType, string eventCode)
         {
             using (await _asyncLock.LockAsync())

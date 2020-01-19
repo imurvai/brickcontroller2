@@ -275,6 +275,23 @@ namespace BrickController2.Resources {
             }
         }
         
+        internal static string Copy {
+            get {
+                return ResourceManager.GetString("Copy", resourceCulture);
+            }
+        }
+        
+        internal static string CopyControllerProfile {
+            get {
+                return ResourceManager.GetString("CopyControllerProfile", resourceCulture);
+            }
+        }
+        
+        internal static string Copying {
+            get {
+                return ResourceManager.GetString("Copying", resourceCulture);
+            }
+        }            
         internal static string Create {
             get {
                 return ResourceManager.GetString("Create", resourceCulture);
@@ -550,6 +567,12 @@ namespace BrickController2.Resources {
                 return ResourceManager.GetString("ProfileName", resourceCulture);
             }
         }
+        
+        internal static string ProfileNameAlreadyExists {
+            get {
+                return ResourceManager.GetString("ProfileNameAlreadyExists", resourceCulture);
+            }
+        }        
         
         internal static string ProfileNameCanNotBeEmpty {
             get {
