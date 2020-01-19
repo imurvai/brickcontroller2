@@ -4,8 +4,6 @@ using BrickController2.UI.Services.Navigation;
 using System.Windows.Input;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Commands;
-using System.Linq;
-using BrickController2.DeviceManagement;
 using System.Threading;
 using System;
 using BrickController2.UI.Services.Translation;
@@ -16,7 +14,6 @@ namespace BrickController2.UI.ViewModels
     public class CreationPageViewModel : PageViewModelBase
     {
         private readonly ICreationManager _creationManager;
-        private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
         private readonly IPlayLogic _playLogic;
 
@@ -26,14 +23,12 @@ namespace BrickController2.UI.ViewModels
             INavigationService navigationService,
             ITranslationService translationService,
             ICreationManager creationManager,
-            IDeviceManager deviceManager,
             IDialogService dialogService,
             IPlayLogic playLogic,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
             _creationManager = creationManager;
-            _deviceManager = deviceManager;
             _dialogService = dialogService;
             _playLogic = playLogic;
 
