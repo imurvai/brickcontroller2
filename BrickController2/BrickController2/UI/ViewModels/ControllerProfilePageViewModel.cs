@@ -43,6 +43,7 @@ namespace BrickController2.UI.ViewModels
             RenameProfileCommand = new SafeCommand(async () => await RenameControllerProfileAsync());
             AddControllerEventCommand = new SafeCommand(async () => await AddControllerEventAsync());
             PlayCommand = new SafeCommand(async () => await PlayAsync());
+            CopyProfileCommand = new SafeCommand(async () => await CopyControllerProfileAsync());
             ControllerActionTappedCommand = new SafeCommand<ControllerActionViewModel>(async controllerActionViewModel => await NavigationService.NavigateToAsync<ControllerActionPageViewModel>(new NavigationParameters(("controlleraction", controllerActionViewModel.ControllerAction))));
             DeleteControllerEventCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await DeleteControllerEventAsync(controllerEvent));
             DeleteControllerActionCommand = new SafeCommand<ControllerAction>(async controllerAction => await DeleteControllerActionAsync(controllerAction));
@@ -69,6 +70,7 @@ namespace BrickController2.UI.ViewModels
         public ObservableCollection<ControllerEventViewModel> ControllerEvents { get; } = new ObservableCollection<ControllerEventViewModel>();
 
         public ICommand RenameProfileCommand { get; }
+        public ICommand CopyProfileCommand { get; }
         public ICommand AddControllerEventCommand { get; }
         public ICommand PlayCommand { get; }
         public ICommand ControllerActionTappedCommand { get; }
@@ -177,6 +179,51 @@ namespace BrickController2.UI.ViewModels
                     warning,
                     Translate("Ok"),
                     _disappearingTokenSource.Token);
+            }
+        }
+
+        private async Task CopyControllerProfileAsync()
+        {
+            try
+            {
+                var result = await _dialogService.ShowInputDialogAsync(
+                    Translate("CopyControllerProfile"),
+                    Translate("EnterProfileName"),
+                    ControllerProfile.Name,
+                    Translate("ProfileName"),
+                    Translate("Copy"),
+                    Translate("Cancel"),
+                    KeyboardType.Text,
+                    _disappearingTokenSource.Token);
+                if (result.IsOk)
+                {
+                    if (string.IsNullOrWhiteSpace(result.Result))
+                    {
+                        await _dialogService.ShowMessageBoxAsync(
+                            Translate("Warning"),
+                            Translate("ProfileNameCanNotBeEmpty"),
+                            Translate("Ok"),
+                            _disappearingTokenSource.Token);
+                        return;
+                    }
+                    if (!await _creationManager.IsControllerProfileNameAvailableAsync(ControllerProfile.Creation, result.Result))
+                    {
+                        await _dialogService.ShowMessageBoxAsync(
+                            Translate("Warning"),
+                            Translate("ProfileNameAlreadyExists"),
+                            Translate("Ok"),
+                            _disappearingTokenSource.Token);
+                        return;
+                    }
+
+                    await _dialogService.ShowProgressDialogAsync(
+                        false,
+                        async (progressDialog, token) => await _creationManager.CopyControllerProfileAsync(ControllerProfile, result.Result),
+                        Translate("Copying"));
+                }
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 

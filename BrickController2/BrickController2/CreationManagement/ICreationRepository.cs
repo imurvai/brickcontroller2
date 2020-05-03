@@ -15,6 +15,7 @@ namespace BrickController2.CreationManagement
         Task InsertControllerProfileAsync(Creation creation, ControllerProfile controllerProfile);
         Task UpdateControllerProfileAsync(ControllerProfile controllerProfile);
         Task DeleteControllerProfileAsync(ControllerProfile controllerProfile);
+        Task<ControllerProfile> CopyControllerProfileAsync(Creation creation, ControllerProfile sourceProfile, string copiedProfileName);
 
         Task InsertControllerEventAsync(ControllerProfile controllerProfile, ControllerEvent controllerEvent);
         Task UpdateControllerEventAsync(ControllerEvent controllerEvent);

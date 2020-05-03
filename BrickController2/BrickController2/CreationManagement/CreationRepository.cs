@@ -102,6 +102,26 @@ namespace BrickController2.CreationManagement
             }
         }
 
+        public async Task<ControllerProfile> CopyControllerProfileAsync(Creation creation, ControllerProfile sourceProfile, string copiedProfileName)
+        {
+            using (await _lock.LockAsync())
+            {
+                var profileCopy = sourceProfile.Clone(copiedProfileName);
+
+                await _databaseConnection.InsertWithChildrenAsync(profileCopy, true);
+
+                if (creation.ControllerProfiles == null)
+                {
+                    creation.ControllerProfiles = new ObservableCollection<ControllerProfile>();
+                }
+
+                creation.ControllerProfiles.Add(profileCopy);
+                await _databaseConnection.UpdateWithChildrenAsync(creation);
+
+                return profileCopy;
+            }
+        }
+
         public async Task DeleteControllerProfileAsync(ControllerProfile controllerProfile)
         {
             using (await _lock.LockAsync())

@@ -44,5 +44,24 @@ namespace BrickController2.CreationManagement
         {
             return $"{EventType} - {EventCode}";
         }
+
+        public ControllerEvent Clone()
+        {
+            // create new instance as a copy including actions
+            var copy = new ControllerEvent
+            {
+                EventType = _eventType,
+                EventCode = _eventCode
+            };
+            if (_controllerActions != null)
+            {
+                foreach (var controllerAction in _controllerActions)
+                {
+                    copy.ControllerActions.Add(controllerAction.Clone());
+                }
+            }
+
+            return copy;
+        }
     }
 }

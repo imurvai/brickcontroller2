@@ -22,6 +22,7 @@
     <None Remove="UI\Images\ic_add.png" />
     <None Remove="UI\Images\ic_buttons.png" />
     <None Remove="UI\Images\ic_console.png" />
+    <None Remove="UI\Images\ic_copy_white.png" />
     <None Remove="UI\Images\ic_delete_black.png" />
     <None Remove="UI\Images\ic_edit_black.png" />
     <None Remove="UI\Images\ic_exclamation_mark_red.png" />
@@ -51,6 +52,7 @@
     <EmbeddedResource Include="UI\Images\buwizz_image_small.png" />
     <EmbeddedResource Include="UI\Images\duplotrainhub_image.png" />
     <EmbeddedResource Include="UI\Images\duplotrainhub_image_small.png" />
+    <EmbeddedResource Include="UI\Images\ic_copy_white.png" />
     <EmbeddedResource Include="UI\Images\ic_settings_white.png" />
     <EmbeddedResource Include="UI\Images\technichub_image.png" />
     <EmbeddedResource Include="UI\Images\technichub_image_small.png" />

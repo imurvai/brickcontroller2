@@ -216,6 +216,15 @@
   <data name="ControllerTester" xml:space="preserve">
     <value>Controller-Test</value>
   </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Kopieren</value>
+  </data>
+  <data name="CopyControllerProfile" xml:space="preserve">
+    <value>Controllerprofil kopieren</value>
+  </data>
+  <data name="Copying" xml:space="preserve">
+    <value>Kopieren...</value>
+  </data>
   <data name="ControlPoint" xml:space="preserve">
     <value>ControllPunkt</value>
   </data>
@@ -356,6 +365,9 @@
   </data>
   <data name="ProfileName" xml:space="preserve">
     <value>Profilname</value>
+  </data>
+  <data name="ProfileNameAlreadyExists" xml:space="preserve">
+    <value>Der Profilname wurde bereits verwendet</value>
   </data>
   <data name="ProfileNameCanNotBeEmpty" xml:space="preserve">
     <value>Der Profilname darf nicht leer bleiben</value>

@@ -231,6 +231,15 @@
   <data name="ControlPoint" xml:space="preserve">
     <value>Control point</value>
   </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="CopyControllerProfile" xml:space="preserve">
+    <value>Copy controller profile</value>
+  </data>
+  <data name="Copying" xml:space="preserve">
+    <value>Copying...</value>
+  </data>
   <data name="Create" xml:space="preserve">
     <value>Create</value>
   </data>
@@ -368,6 +377,9 @@
   </data>
   <data name="ProfileName" xml:space="preserve">
     <value>Profile name</value>
+  </data>
+  <data name="ProfileNameAlreadyExists" xml:space="preserve">
+    <value>Profile name was already used.</value>
   </data>
   <data name="ProfileNameCanNotBeEmpty" xml:space="preserve">
     <value>Profile name can not be empty.</value>
