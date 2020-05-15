@@ -7,7 +7,7 @@ namespace BrickController2.iOS.UI.Services.DI
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<DialogService>().As<IDialogService>().SingleInstance();
+            //builder.RegisterType<DialogService>().As<IDialogService>().SingleInstance();
         }
     }
 }

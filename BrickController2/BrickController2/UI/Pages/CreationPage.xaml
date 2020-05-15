@@ -16,53 +16,58 @@
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-            <!-- Header -->
-            <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="10">
-                <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
-                <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play_white.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
+                <!-- Header -->
+                <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="10">
+                    <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+                    <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play_white.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
+                </Grid>
+
+                <!-- Controller profile list -->
+                <ListView Grid.Row="1" ItemsSource="{Binding Creation.ControllerProfiles}" SelectionMode="None" HasUnevenRows="True">
+                    <ListView.Triggers>
+                        <DataTrigger TargetType="ListView" Binding="{Binding Creation.ControllerProfiles.Count}" Value="0">
+                            <Setter Property="IsVisible" Value="False"/>
+                        </DataTrigger>
+                    </ListView.Triggers>
+                    <ListView.Behaviors>
+                        <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerProfileTappedCommand}"/>
+                    </ListView.Behaviors>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Padding="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
+                                    <controls:ImageButton Grid.Column="1" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControllerProfileCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <!-- Controller profile list placeholder -->
+                <Label Grid.Row="1" Text="{extensions:Translate AddControllerProfiles}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Creation.ControllerProfiles.Count}" Value="0">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+
             </Grid>
 
-            <!-- Controller profile list -->
-            <ListView Grid.Row="1" ItemsSource="{Binding Creation.ControllerProfiles}" SelectionMode="None" HasUnevenRows="True">
-                <ListView.Triggers>
-                    <DataTrigger TargetType="ListView" Binding="{Binding Creation.ControllerProfiles.Count}" Value="0">
-                        <Setter Property="IsVisible" Value="False"/>
-                    </DataTrigger>
-                </ListView.Triggers>
-                <ListView.Behaviors>
-                    <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerProfileTappedCommand}"/>
-                </ListView.Behaviors>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Grid Padding="10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
-                                <controls:ImageButton Grid.Column="1" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControllerProfileCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10"/>
-                            </Grid>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
 
-            <!-- Controller profile list placeholder -->
-            <Label Grid.Row="1" Text="{extensions:Translate AddControllerProfiles}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                <Label.Triggers>
-                    <DataTrigger TargetType="Label" Binding="{Binding Creation.ControllerProfiles.Count}" Value="0">
-                        <Setter Property="IsVisible" Value="True"/>
-                    </DataTrigger>
-                </Label.Triggers>
-            </Label>
-
-        </Grid>
+        </AbsoluteLayout>
     </local:PageBase.Content>
 </local:PageBase>

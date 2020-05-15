@@ -23,251 +23,256 @@
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>
-        <ScrollView>
-            <StackLayout Orientation="Vertical" Padding="20">
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <ScrollView AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" Padding="20">
             
-                <!-- Device selector -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Label Grid.Column="0" Text="{extensions:Translate Device}" VerticalOptions="Center"/>
-                    <Picker Grid.Column="1" Title="{extensions:Translate SelectDevice}" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"/>
-                    <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link_white.png}" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
-                </Grid>
-
-                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
-
-                <!-- Device channel selector -->
-                <controls:DeviceChannelSelector DeviceType="{Binding SelectedDevice.DeviceType}" SelectedChannel="{Binding Action.Channel}"/>
-                
-                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
-
-                <!-- Invert switch -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="3*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Label Grid.Column="0" Text="{extensions:Translate Invert}" VerticalOptions="Center"/>
-                    <Switch Grid.Column="1" IsToggled="{Binding Action.IsInvert}" HorizontalOptions="Start"/>
-                </Grid>
-
-                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
-                <Label Text="{extensions:Translate AdvancedSettings}" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
-
-                <StackLayout Orientation="Vertical" IsVisible="{Binding SelectedDevice.DeviceType, Converter={StaticResource DeviceTypeToChannelOutputVisible}}">
-                    <!-- Channel output type selector -->
+                    <!-- Device selector -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Text="{extensions:Translate ChannelType}" VerticalOptions="Center"/>
-
-                        <Grid Grid.Column="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-
-                            <controls:EnumPicker Grid.Column="0" x:TypeArguments="creationManagement:ChannelOutputType" SelectedItem="{Binding Action.ChannelOutputType}"/>
-                            <controls:FloatingActionButton Grid.Column="1" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
-                                <controls:FloatingActionButton.Triggers>
-                                    <DataTrigger TargetType="controls:FloatingActionButton" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
-                                        <Setter Property="IsVisible" Value="True"/>
-                                    </DataTrigger>
-                                </controls:FloatingActionButton.Triggers>
-                            </controls:FloatingActionButton>
-                        </Grid>
+                        <Label Grid.Column="0" Text="{extensions:Translate Device}" VerticalOptions="Center"/>
+                        <Picker Grid.Column="1" Title="{extensions:Translate SelectDevice}" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"/>
+                        <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link_white.png}" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
                     </Grid>
-
-                    <!-- Max servo angle setting -->
-                    <StackLayout Orientation="Vertical" IsVisible="False">
-                        <StackLayout.Triggers>
-                            <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
-                                <Setter Property="IsVisible" Value="True"/>
-                            </DataTrigger>
-                        </StackLayout.Triggers>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Label Grid.Column="0" Text="{extensions:Translate ServoAngle}"/>
-                            <StackLayout Grid.Column="1" Orientation="Horizontal">
-                                <controls:ExtendedSlider Value="{Binding Action.MaxServoAngle}" Minimum="0" Maximum="180" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                                <Label Text="{Binding Action.MaxServoAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
-                                <Label Text="°"/>
-                            </StackLayout>
-                        </Grid>
-                    </StackLayout>
-                    
-                    <!-- Stepper angle setting -->
-                    <StackLayout Orientation="Vertical" IsVisible="False">
-                        <StackLayout.Triggers>
-                            <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.StepperMotor}">
-                                <Setter Property="IsVisible" Value="True"/>
-                            </DataTrigger>
-                        </StackLayout.Triggers>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="3*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Label Grid.Column="0" Text="{extensions:Translate StepperAngle}"/>
-                            <StackLayout Grid.Column="1" Orientation="Horizontal">
-                                <controls:ExtendedSlider Value="{Binding Action.StepperAngle}" Minimum="0" Maximum="180" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                                <Label Text="{Binding Action.StepperAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
-                                <Label Text="°"/>
-                            </StackLayout>
-                        </Grid>
-                    </StackLayout>
 
                     <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
-                </StackLayout>
 
-                <!-- Button type selector -->
-                <StackLayout Orientation="Vertical" IsVisible="False">
-                    <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Button}">
-                            <Setter Property="IsVisible" Value="True"/>
-                        </DataTrigger>
-                    </StackLayout.Triggers>
+                    <!-- Device channel selector -->
+                    <controls:DeviceChannelSelector DeviceType="{Binding SelectedDevice.DeviceType}" SelectedChannel="{Binding Action.Channel}"/>
+                
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+
+                    <!-- Invert switch -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Text="{extensions:Translate ButtonType}" VerticalOptions="Center"/>
-                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding Action.ButtonType}"/>
+                        <Label Grid.Column="0" Text="{extensions:Translate Invert}" VerticalOptions="Center"/>
+                        <Switch Grid.Column="1" IsToggled="{Binding Action.IsInvert}" HorizontalOptions="Start"/>
                     </Grid>
-                    
-                    <!-- Sequence selector -->
-                    <StackLayout Orientation="Vertical" IsVisible="False">
-                        <StackLayout.Triggers>
-                            <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ButtonType}" Value="{x:Static creationManagement:ControllerButtonType.Sequence}">
-                                <Setter Property="IsVisible" Value="True"/>
-                            </DataTrigger>
-                        </StackLayout.Triggers>
+
+                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                    <Label Text="{extensions:Translate AdvancedSettings}" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
+
+                    <StackLayout Orientation="Vertical" IsVisible="{Binding SelectedDevice.DeviceType, Converter={StaticResource DeviceTypeToChannelOutputVisible}}">
+                        <!-- Channel output type selector -->
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0" Text="{extensions:Translate Sequence}" VerticalOptions="Center"/>
+                            <Label Grid.Column="0" Text="{extensions:Translate ChannelType}" VerticalOptions="Center"/>
+
                             <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Picker Grid.Column="0" Title="{extensions:Translate SelectSequence}" ItemsSource="{Binding Sequences}" SelectedItem="{Binding Action.SequenceName}"/>
-                                <controls:FloatingActionButton Grid.Column="1" ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" Command="{Binding OpenSequenceEditorCommand}" VerticalOptions="Center"/>
+
+                                <controls:EnumPicker Grid.Column="0" x:TypeArguments="creationManagement:ChannelOutputType" SelectedItem="{Binding Action.ChannelOutputType}"/>
+                                <controls:FloatingActionButton Grid.Column="1" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
+                                    <controls:FloatingActionButton.Triggers>
+                                        <DataTrigger TargetType="controls:FloatingActionButton" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
+                                            <Setter Property="IsVisible" Value="True"/>
+                                        </DataTrigger>
+                                    </controls:FloatingActionButton.Triggers>
+                                </controls:FloatingActionButton>
                             </Grid>
                         </Grid>
+
+                        <!-- Max servo angle setting -->
+                        <StackLayout Orientation="Vertical" IsVisible="False">
+                            <StackLayout.Triggers>
+                                <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
+                                    <Setter Property="IsVisible" Value="True"/>
+                                </DataTrigger>
+                            </StackLayout.Triggers>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Column="0" Text="{extensions:Translate ServoAngle}"/>
+                                <StackLayout Grid.Column="1" Orientation="Horizontal">
+                                    <controls:ExtendedSlider Value="{Binding Action.MaxServoAngle}" Minimum="0" Maximum="180" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                    <Label Text="{Binding Action.MaxServoAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                                    <Label Text="°"/>
+                                </StackLayout>
+                            </Grid>
+                        </StackLayout>
+                    
+                        <!-- Stepper angle setting -->
+                        <StackLayout Orientation="Vertical" IsVisible="False">
+                            <StackLayout.Triggers>
+                                <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.StepperMotor}">
+                                    <Setter Property="IsVisible" Value="True"/>
+                                </DataTrigger>
+                            </StackLayout.Triggers>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Column="0" Text="{extensions:Translate StepperAngle}"/>
+                                <StackLayout Grid.Column="1" Orientation="Horizontal">
+                                    <controls:ExtendedSlider Value="{Binding Action.StepperAngle}" Minimum="0" Maximum="180" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                    <Label Text="{Binding Action.StepperAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                                    <Label Text="°"/>
+                                </StackLayout>
+                            </Grid>
+                        </StackLayout>
+
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
                     </StackLayout>
 
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
-                </StackLayout>
+                    <!-- Button type selector -->
+                    <StackLayout Orientation="Vertical" IsVisible="False">
+                        <StackLayout.Triggers>
+                            <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Button}">
+                                <Setter Property="IsVisible" Value="True"/>
+                            </DataTrigger>
+                        </StackLayout.Triggers>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
 
-                <!-- Axis type selector -->
-                <StackLayout Orientation="Vertical" IsVisible="False">
-                    <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
-                            <Setter Property="IsVisible" Value="True"/>
-                        </DataTrigger>
-                    </StackLayout.Triggers>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="3*"/>
-                        </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="{extensions:Translate ButtonType}" VerticalOptions="Center"/>
+                            <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding Action.ButtonType}"/>
+                        </Grid>
+                    
+                        <!-- Sequence selector -->
+                        <StackLayout Orientation="Vertical" IsVisible="False">
+                            <StackLayout.Triggers>
+                                <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ButtonType}" Value="{x:Static creationManagement:ControllerButtonType.Sequence}">
+                                    <Setter Property="IsVisible" Value="True"/>
+                                </DataTrigger>
+                            </StackLayout.Triggers>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Text="{extensions:Translate AxisType}" VerticalOptions="Center"/>
-                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisType" SelectedItem="{Binding Action.AxisType}"/>
-                    </Grid>
-
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
-                </StackLayout>
-
-                <!-- Axis characteristic selector -->
-                <StackLayout Orientation="Vertical" IsVisible="False">
-                    <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
-                            <Setter Property="IsVisible" Value="True"/>
-                        </DataTrigger>
-                    </StackLayout.Triggers>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="3*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Label Grid.Column="0" Text="{extensions:Translate AxisCharacteristic}" VerticalOptions="Center"/>
-                        <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding Action.AxisCharacteristic}"/>
-                    </Grid>
-
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
-                </StackLayout>
-
-                <!-- Max output percent -->
-                <StackLayout Orientation="Vertical" IsVisible="False">
-                    <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.NormalMotor}">
-                            <Setter Property="IsVisible" Value="True"/>
-                        </DataTrigger>
-                    </StackLayout.Triggers>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="3*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Label Grid.Column="0" Text="{extensions:Translate MaxOutput}"/>
-                        <StackLayout Grid.Column="1" Orientation="Horizontal">
-                            <Slider Value="{Binding Action.MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                            <Label Text="{Binding Action.MaxOutputPercent}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
-                            <Label Text="%"/>
+                                <Label Grid.Column="0" Text="{extensions:Translate Sequence}" VerticalOptions="Center"/>
+                                <Grid Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Picker Grid.Column="0" Title="{extensions:Translate SelectSequence}" ItemsSource="{Binding Sequences}" SelectedItem="{Binding Action.SequenceName}"/>
+                                    <controls:FloatingActionButton Grid.Column="1" ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" Command="{Binding OpenSequenceEditorCommand}" VerticalOptions="Center"/>
+                                </Grid>
+                            </Grid>
                         </StackLayout>
-                    </Grid>
 
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                    </StackLayout>
+
+                    <!-- Axis type selector -->
+                    <StackLayout Orientation="Vertical" IsVisible="False">
+                        <StackLayout.Triggers>
+                            <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
+                                <Setter Property="IsVisible" Value="True"/>
+                            </DataTrigger>
+                        </StackLayout.Triggers>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0" Text="{extensions:Translate AxisType}" VerticalOptions="Center"/>
+                            <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisType" SelectedItem="{Binding Action.AxisType}"/>
+                        </Grid>
+
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                    </StackLayout>
+
+                    <!-- Axis characteristic selector -->
+                    <StackLayout Orientation="Vertical" IsVisible="False">
+                        <StackLayout.Triggers>
+                            <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
+                                <Setter Property="IsVisible" Value="True"/>
+                            </DataTrigger>
+                        </StackLayout.Triggers>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0" Text="{extensions:Translate AxisCharacteristic}" VerticalOptions="Center"/>
+                            <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding Action.AxisCharacteristic}"/>
+                        </Grid>
+
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                    </StackLayout>
+
+                    <!-- Max output percent -->
+                    <StackLayout Orientation="Vertical" IsVisible="False">
+                        <StackLayout.Triggers>
+                            <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.NormalMotor}">
+                                <Setter Property="IsVisible" Value="True"/>
+                            </DataTrigger>
+                        </StackLayout.Triggers>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0" Text="{extensions:Translate MaxOutput}"/>
+                            <StackLayout Grid.Column="1" Orientation="Horizontal">
+                                <Slider Value="{Binding Action.MaxOutputPercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                <Label Text="{Binding Action.MaxOutputPercent}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                                <Label Text="%"/>
+                            </StackLayout>
+                        </Grid>
+
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                    </StackLayout>
+
+                    <!-- Axis dead zone percent -->
+                    <StackLayout Orientation="Vertical" IsVisible="False">
+                        <StackLayout.Triggers>
+                            <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
+                                <Setter Property="IsVisible" Value="True"/>
+                            </DataTrigger>
+                        </StackLayout.Triggers>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0" Text="{extensions:Translate AxisDeadZone}"/>
+                            <StackLayout Grid.Column="1" Orientation="Horizontal">
+                                <Slider Value="{Binding Action.AxisDeadZonePercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                <Label Text="{Binding Action.AxisDeadZonePercent}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                                <Label Text="%"/>
+                            </StackLayout>
+                        </Grid>
+
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                    </StackLayout>
+
                 </StackLayout>
+            </ScrollView>
 
-                <!-- Axis dead zone percent -->
-                <StackLayout Orientation="Vertical" IsVisible="False">
-                    <StackLayout.Triggers>
-                        <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
-                            <Setter Property="IsVisible" Value="True"/>
-                        </DataTrigger>
-                    </StackLayout.Triggers>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="3*"/>
-                        </Grid.ColumnDefinitions>
+            <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
 
-                        <Label Grid.Column="0" Text="{extensions:Translate AxisDeadZone}"/>
-                        <StackLayout Grid.Column="1" Orientation="Horizontal">
-                            <Slider Value="{Binding Action.AxisDeadZonePercent}" Minimum="0" Maximum="100" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                            <Label Text="{Binding Action.AxisDeadZonePercent}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
-                            <Label Text="%"/>
-                        </StackLayout>
-                    </Grid>
-
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
-                </StackLayout>
-
-            </StackLayout>
-        </ScrollView>
+        </AbsoluteLayout>
     </local:PageBase.Content>
 </local:PageBase>

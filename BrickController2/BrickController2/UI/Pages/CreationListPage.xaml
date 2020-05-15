@@ -23,98 +23,102 @@
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <!-- Creation list -->
-            <ListView Grid.Row="0" ItemsSource="{Binding Creations}" SelectionMode="None" HasUnevenRows="True">
-                <ListView.Triggers>
-                    <DataTrigger TargetType="ListView" Binding="{Binding Creations.Count}" Value="0">
-                        <Setter Property="IsVisible" Value="False"/>
-                    </DataTrigger>
-                </ListView.Triggers>
-                <ListView.Behaviors>
-                    <behaviors:ListViewItemTappedBehavior Command="{Binding CreationTappedCommand}"/>
-                </ListView.Behaviors>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Grid Padding="10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Frame Grid.Column="0" WidthRequest="40" HeightRequest="40" BackgroundColor="{Binding Id, Converter={StaticResource IntToColor}}" CornerRadius="20" Padding="0" HasShadow="False" VerticalOptions="Center">
-                                    <Label Text="{Binding Name, Converter={StaticResource TextToCapitalInitial}}" TextColor="White" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                </Frame>
-                                <Label Grid.Column="1" Text="{Binding Name}" FontSize="Large" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
-                                <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteCreationCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10"/>
-                            </Grid>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                <!-- Creation list -->
+                <ListView Grid.Row="0" ItemsSource="{Binding Creations}" SelectionMode="None" HasUnevenRows="True">
+                    <ListView.Triggers>
+                        <DataTrigger TargetType="ListView" Binding="{Binding Creations.Count}" Value="0">
+                            <Setter Property="IsVisible" Value="False"/>
+                        </DataTrigger>
+                    </ListView.Triggers>
+                    <ListView.Behaviors>
+                        <behaviors:ListViewItemTappedBehavior Command="{Binding CreationTappedCommand}"/>
+                    </ListView.Behaviors>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Padding="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Frame Grid.Column="0" WidthRequest="40" HeightRequest="40" BackgroundColor="{Binding Id, Converter={StaticResource IntToColor}}" CornerRadius="20" Padding="0" HasShadow="False" VerticalOptions="Center">
+                                        <Label Text="{Binding Name, Converter={StaticResource TextToCapitalInitial}}" TextColor="White" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Frame>
+                                    <Label Grid.Column="1" Text="{Binding Name}" FontSize="Large" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
+                                    <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteCreationCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-            <!-- Creation list placeholder -->
-            <Label Grid.Row="0" Text="{extensions:Translate AddCreations}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                <Label.Triggers>
-                    <DataTrigger TargetType="Label" Binding="{Binding Creations.Count}" Value="0">
-                        <Setter Property="IsVisible" Value="True"/>
-                    </DataTrigger>
-                </Label.Triggers>
-            </Label>
+                <!-- Creation list placeholder -->
+                <Label Grid.Row="0" Text="{extensions:Translate AddCreations}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Creations.Count}" Value="0">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
 
-            <!-- Bottom buttons -->
-            <Grid Grid.Row="1" BackgroundColor="#E0E0E0" Padding="4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                <!-- Bottom buttons -->
+                <Grid Grid.Row="1" BackgroundColor="#E0E0E0" Padding="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <Frame Grid.Column="0" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding NavigateToDevicesCommand}"/>
-                    </Frame.GestureRecognizers>
-                    <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-                        <Image Source="{extensions:ImageResource Source=ic_link.png}" WidthRequest="20" HeightRequest="20"/>
-                        <Label Text="{extensions:Translate Devices}" FontSize="Small"/>
-                    </StackLayout>
-                </Frame>
-                <Frame Grid.Column="1" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding NavigateToControllerTesterCommand}"/>
-                    </Frame.GestureRecognizers>
-                    <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-                        <Image Source="{extensions:ImageResource Source=ic_console.png}" WidthRequest="20" HeightRequest="20"/>
-                        <Label Text="{extensions:Translate Controller}" FontSize="Small"/>
-                    </StackLayout>
-                </Frame>
-                <Frame Grid.Column="2" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding NavigateToSequencesCommand}"/>
-                    </Frame.GestureRecognizers>
-                    <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-                        <Image Source="{extensions:ImageResource Source=ic_sequence.png}" WidthRequest="20" HeightRequest="20"/>
-                        <Label Text="{extensions:Translate Sequences}" FontSize="Small"/>
-                    </StackLayout>
-                </Frame>
-                <Frame Grid.Column="3" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding NavigateToAboutCommand}"/>
-                    </Frame.GestureRecognizers>
-                    <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-                        <Image Source="{extensions:ImageResource Source=ic_info.png}" WidthRequest="20" HeightRequest="20"/>
-                        <Label Text="{extensions:Translate About}" FontSize="Small"/>
-                    </StackLayout>
-                </Frame>
+                    <Frame Grid.Column="0" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NavigateToDevicesCommand}"/>
+                        </Frame.GestureRecognizers>
+                        <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                            <Image Source="{extensions:ImageResource Source=ic_link.png}" WidthRequest="20" HeightRequest="20"/>
+                            <Label Text="{extensions:Translate Devices}" FontSize="Small"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Grid.Column="1" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NavigateToControllerTesterCommand}"/>
+                        </Frame.GestureRecognizers>
+                        <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                            <Image Source="{extensions:ImageResource Source=ic_console.png}" WidthRequest="20" HeightRequest="20"/>
+                            <Label Text="{extensions:Translate Controller}" FontSize="Small"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Grid.Column="2" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NavigateToSequencesCommand}"/>
+                        </Frame.GestureRecognizers>
+                        <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                            <Image Source="{extensions:ImageResource Source=ic_sequence.png}" WidthRequest="20" HeightRequest="20"/>
+                            <Label Text="{extensions:Translate Sequences}" FontSize="Small"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Grid.Column="3" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NavigateToAboutCommand}"/>
+                        </Frame.GestureRecognizers>
+                        <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                            <Image Source="{extensions:ImageResource Source=ic_info.png}" WidthRequest="20" HeightRequest="20"/>
+                            <Label Text="{extensions:Translate About}" FontSize="Small"/>
+                        </StackLayout>
+                    </Frame>
+                </Grid>
             </Grid>
 
-        </Grid>
+            <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
+
+        </AbsoluteLayout>
     </local:PageBase.Content>
 </local:PageBase>

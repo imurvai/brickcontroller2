@@ -23,86 +23,91 @@
     </local:PageBase.ToolbarItems>
 
     <local:PageBase.Content>
-        <ScrollView>
-            <StackLayout Orientation="Vertical" Padding="10">
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <ScrollView AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <StackLayout Orientation="Vertical" Padding="10">
 
-                <!-- Device info -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Image Grid.Column="0" Source="{Binding Device.DeviceType, Converter={StaticResource DeviceTypeToSmallImage}}" WidthRequest="50" HeightRequest="50" VerticalOptions="Start"/>
-
-                    <Grid Grid.Column="1">
+                    <!-- Device info -->
+                    <Grid>
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
 
-                        <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate DeviceName}" FontSize="Small"/>
-                        <Label Grid.Column="1" Grid.Row="0" Text="{Binding Device.Name}" FontSize="Medium" FontAttributes="Bold"/>
+                        <Image Grid.Column="0" Source="{Binding Device.DeviceType, Converter={StaticResource DeviceTypeToSmallImage}}" WidthRequest="50" HeightRequest="50" VerticalOptions="Start"/>
 
-                        <Label Grid.Column="0" Grid.Row="1" Text="{extensions:Translate  DeviceType}" FontSize="Small"/>
-                        <Label Grid.Column="1" Grid.Row="1" Text="{Binding Device.DeviceType}" FontSize="Medium" FontAttributes="Bold"/>
-
-                        <Label Grid.Column="0" Grid.Row="2" Text="{extensions:Translate Address}" FontSize="Small"/>
-                        <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Text="{Binding Device.Address}" FontSize="Micro" FontAttributes="Bold"/>
-
-                        <Label Grid.Column="0" Grid.Row="4" Text="{extensions:Translate Battery}" FontSize="Small"/>
-                        <StackLayout Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
-                            <Label Text="{Binding Device.BatteryVoltage}" FontSize="Medium" FontAttributes="Bold"/>
-                            <Label Text="{Binding Device.BatteryVoltageSign}" FontSize="Medium"/>
-                        </StackLayout>
-
-                        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5">
+                        <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                            <StackLayout Grid.Column="0" Orientation="Horizontal">
-                                <Label Text="FW: " FontSize="Small"/>
-                                <Label Text="{Binding Device.FirmwareVersion}" FontSize="Small" FontAttributes="Bold"/>
+                            <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate DeviceName}" FontSize="Small"/>
+                            <Label Grid.Column="1" Grid.Row="0" Text="{Binding Device.Name}" FontSize="Medium" FontAttributes="Bold"/>
+
+                            <Label Grid.Column="0" Grid.Row="1" Text="{extensions:Translate  DeviceType}" FontSize="Small"/>
+                            <Label Grid.Column="1" Grid.Row="1" Text="{Binding Device.DeviceType}" FontSize="Medium" FontAttributes="Bold"/>
+
+                            <Label Grid.Column="0" Grid.Row="2" Text="{extensions:Translate Address}" FontSize="Small"/>
+                            <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Text="{Binding Device.Address}" FontSize="Micro" FontAttributes="Bold"/>
+
+                            <Label Grid.Column="0" Grid.Row="4" Text="{extensions:Translate Battery}" FontSize="Small"/>
+                            <StackLayout Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
+                                <Label Text="{Binding Device.BatteryVoltage}" FontSize="Medium" FontAttributes="Bold"/>
+                                <Label Text="{Binding Device.BatteryVoltageSign}" FontSize="Medium"/>
                             </StackLayout>
-                            <StackLayout Grid.Column="1" Orientation="Horizontal">
-                                <Label Text="HW: " FontSize="Small"/>
-                                <Label Text="{Binding Device.HardwareVersion}" FontSize="Small" FontAttributes="Bold"/>
-                            </StackLayout>
+
+                            <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackLayout Grid.Column="0" Orientation="Horizontal">
+                                    <Label Text="FW: " FontSize="Small"/>
+                                    <Label Text="{Binding Device.FirmwareVersion}" FontSize="Small" FontAttributes="Bold"/>
+                                </StackLayout>
+                                <StackLayout Grid.Column="1" Orientation="Horizontal">
+                                    <Label Text="HW: " FontSize="Small"/>
+                                    <Label Text="{Binding Device.HardwareVersion}" FontSize="Small" FontAttributes="Bold"/>
+                                </StackLayout>
+                            </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
 
-                <!-- BuWizz 1 output level -->
-                <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizzDevice}" Padding="10">
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
-                    <Label Text="{extensions:Translate OutputLevel}"/>
-                    <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
-                </StackLayout>
+                    <!-- BuWizz 1 output level -->
+                    <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizzDevice}" Padding="10">
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                        <Label Text="{extensions:Translate OutputLevel}"/>
+                        <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
+                    </StackLayout>
 
-                <!-- BuWizz 2 output level -->
-                <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizz2Device}" Padding="10">
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
-                    <Label Text="{extensions:Translate OutputLevel}"/>
-                    <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizz2OutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
-                </StackLayout>
+                    <!-- BuWizz 2 output level -->
+                    <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizz2Device}" Padding="10">
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                        <Label Text="{extensions:Translate OutputLevel}"/>
+                        <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizz2OutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
+                    </StackLayout>
 
-                <!-- Outputs -->
-                <StackLayout Orientation="Vertical">
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,4,10,8"/>
-                    <controls:DeviceOutputTesterControl Device="{Binding Device}"/>
-                </StackLayout> 
+                    <!-- Outputs -->
+                    <StackLayout Orientation="Vertical">
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,4,10,8"/>
+                        <controls:DeviceOutputTesterControl Device="{Binding Device}"/>
+                    </StackLayout> 
             
-            </StackLayout>
-        </ScrollView>
+                </StackLayout>
+            </ScrollView>
+
+            <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
+
+        </AbsoluteLayout>
     </local:PageBase.Content>
 </local:PageBase>

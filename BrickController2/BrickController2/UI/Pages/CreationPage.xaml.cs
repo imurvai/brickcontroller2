@@ -1,14 +1,16 @@
 ﻿using BrickController2.UI.Services.Background;
+using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.ViewModels;
 
 namespace BrickController2.UI.Pages
 {
 	public partial class CreationPage
 	{
-		public CreationPage(PageViewModelBase vm, IBackgroundService backgroundService) : base(backgroundService)
+		public CreationPage(PageViewModelBase vm, IBackgroundService backgroundService, IDialogServerHost dialogServerHost)
+			: base(backgroundService, dialogServerHost)
         {
 			InitializeComponent();
-            BindingContext = vm;
+			AfterInitialize(vm);
 		}
 	}
 }

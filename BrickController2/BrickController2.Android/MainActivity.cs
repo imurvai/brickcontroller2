@@ -12,9 +12,9 @@ using BrickController2.Droid.PlatformServices.GameController;
 using BrickController2.Droid.PlatformServices.DI;
 using BrickController2.Droid.UI.Services.DI;
 using BrickController2.UI.DI;
-using Plugin.CurrentActivity;
-using Plugin.Permissions;
 using BrickController2.BusinessLogic.DI;
+using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace BrickController2.Droid
 {
@@ -39,9 +39,8 @@ namespace BrickController2.Droid
 
             Window.AddFlags(WindowManagerFlags.KeepScreenOn);
 
-            CrossCurrentActivity.Current.Init(this, bundle);
-
-            Xamarin.Forms.Forms.Init(this, bundle);
+            Platform.Init(this, bundle);
+            Forms.Init(this, bundle);
 
             var container = InitDI();
             _gameControllerService = container.Resolve<GameControllerService>();
@@ -67,7 +66,7 @@ namespace BrickController2.Droid
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
-            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 

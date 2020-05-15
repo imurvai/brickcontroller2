@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Android.App;
 using Android.Widget;
 using BrickController2.UI.Services.Dialog;

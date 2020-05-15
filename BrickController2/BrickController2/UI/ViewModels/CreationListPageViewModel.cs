@@ -6,11 +6,10 @@ using BrickController2.DeviceManagement;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using System.Threading;
 using System;
 using BrickController2.UI.Services.Translation;
+using Xamarin.Essentials;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -70,23 +69,10 @@ namespace BrickController2.UI.ViewModels
 
         private async Task RequestPermissions()
         {
-            var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+            var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
             if (status != PermissionStatus.Granted)
             {
-                if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
-                {
-                    await _dialogService.ShowMessageBoxAsync(
-                        Translate("PermissionRequest"),
-                        Translate("LocationPermissionIsNeeded"),
-                        Translate("Ok"),
-                        _disappearingTokenSource.Token);
-                }
-
-                var result = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
-                if (result.ContainsKey(Permission.Location))
-                {
-                    status = result[Permission.Location];
-                }
+                status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
             }
 
             if (status != PermissionStatus.Granted)

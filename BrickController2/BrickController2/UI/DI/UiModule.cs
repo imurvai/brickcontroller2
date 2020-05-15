@@ -9,6 +9,8 @@ using Xamarin.Forms;
 using BrickController2.UI.Services.UIThread;
 using BrickController2.UI.Services.Background;
 using BrickController2.UI.Services.Translation;
+using BrickController2.UI.Controls;
+using BrickController2.UI.Services.Dialog;
 
 namespace BrickController2.UI.DI
 {
@@ -22,6 +24,9 @@ namespace BrickController2.UI.DI
             builder.RegisterType<UIThreadService>().As<IUIThreadService>().SingleInstance();
             builder.RegisterType<BackgroundService>().AsSelf().As<IBackgroundService>().SingleInstance();
             builder.RegisterType<TranslationService>().AsSelf().As<ITranslationService>().SingleInstance();
+
+            // Register Dialogs
+            builder.RegisterType<DialogService>().As<IDialogService>().As<IDialogServerHost>().SingleInstance();
 
             // Register viewmodels
             foreach (var vmType in GetSubClassesOf<PageViewModelBase>())

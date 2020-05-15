@@ -10,60 +10,65 @@
     Title="{extensions:Translate Play}">
 
     <local:PageBase.Content>
-        <ScrollView>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <ScrollView AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                <!-- Header -->
-                <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="20">
-                    <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold"/>
-                </Grid>
+                    <!-- Header -->
+                    <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="20">
+                        <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold"/>
+                    </Grid>
 
-                <!-- Buwizz output level controls -->
-                <StackLayout Grid.Row="1" Orientation="Vertical">
+                    <!-- Buwizz output level controls -->
+                    <StackLayout Grid.Row="1" Orientation="Vertical">
 
-                    <!-- BuWizz 1 output level -->
-                    <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizzDevice}" Padding="20">
-                        <Label Text="{extensions:Translate BuWizzOutputLevel}"/>
-                        <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                        <!-- BuWizz 1 output level -->
+                        <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizzDevice}" Padding="20">
+                            <Label Text="{extensions:Translate BuWizzOutputLevel}"/>
+                            <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
+                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                        </StackLayout>
+
+                        <!-- BuWizz 2 output level -->
+                        <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizz2Device}" Padding="20">
+                            <Label Text="{extensions:Translate BuWizz2OutputLevel}"/>
+                            <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
+                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                        </StackLayout>
                     </StackLayout>
-
-                    <!-- BuWizz 2 output level -->
-                    <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizz2Device}" Padding="20">
-                        <Label Text="{extensions:Translate BuWizz2OutputLevel}"/>
-                        <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
-                    </StackLayout>
-                </StackLayout>
                 
-                <!-- Servo calibration controls -->
-                <StackLayout Grid.Row="2">
+                    <!-- Servo calibration controls -->
+                    <StackLayout Grid.Row="2">
                     
-                </StackLayout>
+                    </StackLayout>
             
-                <!-- Controller profiles -->
-                <ListView Grid.Row="3" ItemsSource="{Binding Creation.ControllerProfiles}" SelectedItem="{Binding ActiveProfile, Mode=TwoWay}" SelectionMode="Single" HasUnevenRows="True">
-                    <ListView.Behaviors>
-                        <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerProfileTappedCommand}"/>
-                    </ListView.Behaviors>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout Orientation="Horizontal" Padding="10">
-                                    <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    <!-- Controller profiles -->
+                    <ListView Grid.Row="3" ItemsSource="{Binding Creation.ControllerProfiles}" SelectedItem="{Binding ActiveProfile, Mode=TwoWay}" SelectionMode="Single" HasUnevenRows="True">
+                        <ListView.Behaviors>
+                            <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerProfileTappedCommand}"/>
+                        </ListView.Behaviors>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal" Padding="10">
+                                        <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
-            </Grid>
-        </ScrollView>
+                </Grid>
+            </ScrollView>
+
+            <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
+
+        </AbsoluteLayout>
     </local:PageBase.Content>
 </local:PageBase>
