@@ -75,7 +75,7 @@
                         <Label x:Name="ProgressDialogTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
                         <Label x:Name="ProgressDialogMessage" HorizontalOptions="Center"/>
                         <ProgressBar x:Name="ProgressDialogProgressBar" HorizontalOptions="FillAndExpand"/>
-                        <ActivityIndicator x:Name="ProgressDialogActivityIndicator" HorizontalOptions="Center"/>
+                        <ActivityIndicator x:Name="ProgressDialogActivityIndicator" IsRunning="True" HeightRequest="40" HorizontalOptions="Center"/>
                         <StackLayout x:Name="ProgressBarButtonPart" Orientation="Vertical">
                             <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" HorizontalOptions="Fill" Margin="0,8,0,8"/>
                             <Button x:Name="ProgressDialogCancelButton"/>
