@@ -2,14 +2,13 @@
 <local:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerProfilePage"
     x:Name="Page"
-    Title="{extensions:Translate ControllerProfile}">
+    NavigationPage.HasNavigationBar="False">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -18,65 +17,73 @@
         </ResourceDictionary>
     </local:PageBase.Resources>
 
-    <local:PageBase.ToolbarItems>
-        <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameProfileCommand}"/>
-        <ToolbarItem Icon="ic_add_white.png" Order="Primary" Command="{Binding AddControllerEventCommand}"/>
-    </local:PageBase.ToolbarItems>
-
     <local:PageBase.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <!-- Header -->
-                <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="10">
+                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+                        <ImageButton Source="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                        <Label Text="{extensions:Translate ControllerProfile}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                        <ImageButton Source="{extensions:ImageResource Source=ic_edit_white.png}" Command="{Binding RenameProfileCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                        <ImageButton Source="{extensions:ImageResource Source=ic_add_white.png}" Command="{Binding AddControllerEventCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                    </StackLayout>
+                </Grid>
+                <Grid Grid.Row="1" BackgroundColor="LightGray" Padding="10">
                     <Label Text="{Binding ControllerProfile.Name}" FontSize="Large" FontAttributes="Bold" VerticalTextAlignment="Center"/>
                     <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play_white.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
                 </Grid>
 
                 <!-- Controller event list -->
-                <ListView Grid.Row="1" ItemsSource="{Binding ControllerEvents}" IsGroupingEnabled="true" SelectionMode="None" HasUnevenRows="True" SeparatorColor="#F0F0F0">
-                    <ListView.Triggers>
-                        <DataTrigger TargetType="ListView" Binding="{Binding ControllerEvents.Count}" Value="0">
-                            <Setter Property="IsVisible" Value="False"/>
-                        </DataTrigger>
-                    </ListView.Triggers>
-                    <ListView.Behaviors>
-                        <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerActionTappedCommand}"/>
-                    </ListView.Behaviors>
-
+                <CollectionView Grid.Row="2" ItemsSource="{Binding ControllerEvents}" IsGrouped="True" SelectionMode="None">
+                    
                     <!-- Controller event -->
-                    <ListView.GroupHeaderTemplate>
+                    <CollectionView.GroupHeaderTemplate>
                         <DataTemplate>
-                            <ViewCell>
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="LightPink" Command="{Binding BindingContext.DeleteControllerEventCommand, Source={x:Reference Page}}" CommandParameter="{Binding ControllerEvent}"/>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
                                 <Grid BackgroundColor="#F0F0F0" Padding="10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <Image Grid.Column="0" Source="{Binding ControllerEvent.EventType, Converter={StaticResource EventTypeToImage}}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center"/>
                                     <StackLayout Grid.Column="1" Orientation="Horizontal" VerticalOptions="Center">
                                         <Label Text="{Binding ControllerEvent.EventCode}" FontSize="Large" FontAttributes="Bold"/>
                                     </StackLayout>
-                                    <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControllerEventCommand, Source={x:Reference Page}}" CommandParameter="{Binding ControllerEvent}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center" Margin="10,0,10,0"/>
                                 </Grid>
-                            </ViewCell>
+                            </SwipeView>
                         </DataTemplate>
-                    </ListView.GroupHeaderTemplate>
-                
+                    </CollectionView.GroupHeaderTemplate>
+
                     <!-- Controller actions -->
-                    <ListView.ItemTemplate>
+                    <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <ViewCell>
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="LightPink" Command="{Binding BindingContext.DeleteControllerActionCommand, Source={x:Reference Page}}" CommandParameter="{Binding ControllerAction}"/>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
                                 <Grid Padding="10">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.ControllerActionTappedCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                    </Grid.GestureRecognizers>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <Image Grid.Column="0" Source="{extensions:ImageResource Source=ic_exclamation_mark_red.png}" IsVisible="{Binding ControllerActionValid, Converter={StaticResource InverseBool}}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center"/>
                                     <StackLayout Grid.Column="1" Orientation="Horizontal" VerticalOptions="Center">
@@ -89,21 +96,15 @@
                                         <Label Text=" - "/>
                                         <Label Text="{Binding InvertName}" FontAttributes="Bold"/>
                                     </StackLayout>
-                                    <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControllerActionCommand, Source={x:Reference Page}}" CommandParameter="{Binding ControllerAction}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center" Margin="10,0,10,0"/>
                                 </Grid>
-                            </ViewCell>
+                            </SwipeView>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </CollectionView.ItemTemplate>
 
-                <!-- Controller event list placeholder -->
-                <Label Grid.Row="1" Text="{extensions:Translate AddControllerEvents}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                    <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding ControllerEvents.Count}" Value="0">
-                            <Setter Property="IsVisible" Value="True"/>
-                        </DataTrigger>
-                    </Label.Triggers>
-                </Label>
+                    <CollectionView.EmptyView>
+                        <Label Text="{extensions:Translate AddControllerEvents}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    </CollectionView.EmptyView>
+                </CollectionView>
 
             </Grid>
 

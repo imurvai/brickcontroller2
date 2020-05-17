@@ -198,14 +198,26 @@ namespace BrickController2.UI.Controls
 
             async void gameControllerEventHandler(object sender, GameControllerEventArgs args)
             {
-                GameControllerEventDialogCancelButton.Clicked -= buttonHandler;
-                GameControllerService.GameControllerEvent -= gameControllerEventHandler;
-                await HideView(GameControllerEventDialog);
+                if (args.ControllerEvents.Count == 0)
+                {
+                    return;
+                }
 
-                var gameControllerEvent = args.ControllerEvents.First();
-                var gameControllerEventType = gameControllerEvent.Key.EventType;
-                var gameControllerEventCode = gameControllerEvent.Key.EventCode;
-                tcs.TrySetResult(new GameControllerEventDialogResult(true, gameControllerEventType, gameControllerEventCode));
+                foreach (var controllerEvent in args.ControllerEvents)
+                {
+                    if ((controllerEvent.Key.EventType == GameControllerEventType.Axis && Math.Abs(controllerEvent.Value) > 0.8) ||
+                        (controllerEvent.Key.EventType == GameControllerEventType.Button && Math.Abs(controllerEvent.Value) < 0.05))
+                    {
+                        GameControllerEventDialogCancelButton.Clicked -= buttonHandler;
+                        GameControllerService.GameControllerEvent -= gameControllerEventHandler;
+                        await HideView(GameControllerEventDialog);
+
+                        var gameControllerEventType = controllerEvent.Key.EventType;
+                        var gameControllerEventCode = controllerEvent.Key.EventCode;
+                        tcs.TrySetResult(new GameControllerEventDialogResult(true, gameControllerEventType, gameControllerEventCode));
+                        return;
+                    }
+                }
             }
         }
 

@@ -40,6 +40,8 @@ namespace BrickController2.Droid
             Window.AddFlags(WindowManagerFlags.KeepScreenOn);
 
             Platform.Init(this, bundle);
+
+            Forms.SetFlags("SwipeView_Experimental");
             Forms.Init(this, bundle);
 
             var container = InitDI();

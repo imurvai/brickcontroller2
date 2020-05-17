@@ -6,44 +6,60 @@
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.AboutPage"
-    Title="{extensions:Translate About}">
+    NavigationPage.HasNavigationBar="False">
 
     <local:PageBase.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <ScrollView AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-                <StackLayout Padding="20">
+            <Grid AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                    <Label Text="BrickController 2" FontSize="Medium" FontAttributes="Bold"/>
-
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="{extensions:Translate Version}  "/>
-                        <Label Text="{Binding Version}"/>
+                <!-- Header -->
+                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+                        <ImageButton Source="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                        <Label Text="{extensions:Translate About}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
                     </StackLayout>
+                </Grid>
 
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                <!-- Body -->
+                <ScrollView Grid.Row="1">
+                    <StackLayout Padding="20">
 
-                    <Label Text="Copyright © 2020, István Murvai (SCN)"/>
+                        <Label Text="BrickController 2" FontSize="Medium" FontAttributes="Bold"/>
 
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{extensions:Translate Version}  "/>
+                            <Label Text="{Binding Version}"/>
+                        </StackLayout>
 
-                    <Label Text="{extensions:Translate ExternalLibraries}" FontAttributes="Bold"/>
-                    <Label Text="Autofac"/>
-                    <Label Text="SQLiteNetExtensionsAsync"/>
-                    <Label Text="Xamarin.Forms"/>
-                    <Label Text="Xamarin.Essentials"/>
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
 
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                        <Label Text="Copyright © 2020, István Murvai (SCN)"/>
 
-                    <Label Text="{extensions:Translate IconSet}" FontAttributes="Bold"/>
-                    <Label Text="FlatIcon"/>
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
 
-                    <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                        <Label Text="{extensions:Translate ExternalLibraries}" FontAttributes="Bold"/>
+                        <Label Text="Autofac"/>
+                        <Label Text="SQLiteNetExtensionsAsync"/>
+                        <Label Text="Xamarin.Forms"/>
+                        <Label Text="Xamarin.Essentials"/>
 
-                    <Label Text="{extensions:Translate Disclaimer}" FontAttributes="Bold"/>
-                    <Label Text="LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this application" FontSize="Small"/>
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
 
-                </StackLayout>
-            </ScrollView>
+                        <Label Text="{extensions:Translate IconSet}" FontAttributes="Bold"/>
+                        <Label Text="FlatIcon"/>
+
+                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+
+                        <Label Text="{extensions:Translate Disclaimer}" FontAttributes="Bold"/>
+                        <Label Text="LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this application" FontSize="Small"/>
+
+                    </StackLayout>
+                </ScrollView>
+            </Grid>
 
             <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
 

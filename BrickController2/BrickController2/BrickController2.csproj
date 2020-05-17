@@ -9,6 +9,11 @@
     <Compile Remove="UI\Navigation\**" />
     <EmbeddedResource Remove="UI\Navigation\**" />
     <None Remove="UI\Navigation\**" />
+    <None Remove="UI\Images\ic_add_white.png" />
+    <None Remove="UI\Images\ic_back_white.png" />
+    <None Remove="UI\Images\ic_checkmark_white.png" />
+    <None Remove="UI\Images\ic_edit_white.png" />
+    <None Remove="UI\Images\ic_search_white.png" />
     <None Remove="UI\Images\ic_sequence.png" />
   </ItemGroup>
 
@@ -34,6 +39,7 @@
     <None Remove="UI\Images\ic_play_white.png" />
     <None Remove="UI\Images\ic_search.png" />
     <None Remove="UI\Images\ic_settings_white.png" />
+    <None Remove="UI\Images\ic_trashbin_white.png" />
     <None Remove="UI\Images\infra_image.png" />
     <None Remove="UI\Images\infra_image_small.png" />
     <None Remove="UI\Images\poweredup_image.png" />
@@ -51,7 +57,13 @@
     <EmbeddedResource Include="UI\Images\buwizz_image_small.png" />
     <EmbeddedResource Include="UI\Images\duplotrainhub_image.png" />
     <EmbeddedResource Include="UI\Images\duplotrainhub_image_small.png" />
+    <EmbeddedResource Include="UI\Images\ic_add_white.png" />
+    <EmbeddedResource Include="UI\Images\ic_back_white.png" />
+    <EmbeddedResource Include="UI\Images\ic_checkmark_white.png" />
+    <EmbeddedResource Include="UI\Images\ic_edit_white.png" />
+    <EmbeddedResource Include="UI\Images\ic_search_white.png" />
     <EmbeddedResource Include="UI\Images\ic_settings_white.png" />
+    <EmbeddedResource Include="UI\Images\ic_trashbin_white.png" />
     <EmbeddedResource Include="UI\Images\technichub_image.png" />
     <EmbeddedResource Include="UI\Images\technichub_image_small.png" />
     <EmbeddedResource Include="UI\Images\ic_add.png" />

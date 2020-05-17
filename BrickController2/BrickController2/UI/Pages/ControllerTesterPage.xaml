@@ -6,43 +6,44 @@
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerTesterPage"
-    Title="{extensions:Translate ControllerTester}">
+    NavigationPage.HasNavigationBar="False">
     
     <local:PageBase.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <StackLayout Padding="10" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-            
-                <ListView ItemsSource="{Binding ControllerEventList}" SelectionMode="None" HasUnevenRows="True">
-                    <ListView.Triggers>
-                        <DataTrigger TargetType="ListView" Binding="{Binding ControllerEventList.Count}" Value="0">
-                            <Setter Property="IsVisible" Value="False"/>
-                        </DataTrigger>
-                    </ListView.Triggers>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout Orientation="Vertical" Padding="10">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="{Binding EventCode}" FontSize="Large" FontAttributes="Bold"/>
-                                        <Label Text=" - " FontSize="Large"/>
-                                        <Label Text="{Binding Value}" FontSize="Large"/>
-                                    </StackLayout>
-                                    <Label Text="{Binding EventType}" FontSize="Medium"/>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+            <Grid AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                <Label Text="{extensions:Translate PressButtonsOrMoveJoys}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                    <Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding ControllerEventList.Count}" Value="0">
-                            <Setter Property="IsVisible" Value="True"/>
-                        </DataTrigger>
-                    </Label.Triggers>                
-                </Label>
-            
-            </StackLayout>
+                <!-- Header -->
+                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+                        <ImageButton Source="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                        <Label Text="{extensions:Translate ControllerTester}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
+                    </StackLayout>
+                </Grid>
+
+                <!-- Controller event list -->
+                <CollectionView Grid.Row="1" ItemsSource="{Binding ControllerEventList}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Orientation="Vertical" Padding="10">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding EventCode}" FontSize="Large" FontAttributes="Bold"/>
+                                    <Label Text=" - " FontSize="Large"/>
+                                    <Label Text="{Binding Value}" FontSize="Large"/>
+                                </StackLayout>
+                                <Label Text="{Binding EventType}" FontSize="Medium"/>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <Label Text="{extensions:Translate PressButtonsOrMoveJoys}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+
+            </Grid>
 
             <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
 

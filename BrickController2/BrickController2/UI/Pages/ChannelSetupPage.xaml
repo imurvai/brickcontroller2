@@ -7,7 +7,7 @@
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ChannelSetupPage"
-    Title="{extensions:Translate ChannelSetup}">
+    NavigationPage.HasNavigationBar="False">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -19,72 +19,87 @@
         </ResourceDictionary>
     </local:PageBase.Resources>
 
-    <local:PageBase.ToolbarItems>
-        <ToolbarItem Icon="ic_checkmark_white.png" Order="Primary" Command="{Binding SaveChannelSettingsCommand}"/>
-    </local:PageBase.ToolbarItems>
-
     <local:PageBase.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <ScrollView AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-                <StackLayout Orientation="Vertical" Padding="10">
+            <Grid AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                    <!-- Device info -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <!-- Header -->
+                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+                        <ImageButton Source="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                        <Label Text="{extensions:Translate ChannelSetup}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                        <ImageButton Source="{extensions:ImageResource Source=ic_checkmark_white.png}" Command="{Binding SaveChannelSettingsCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                    </StackLayout>
+                </Grid>
 
-                        <Image Grid.Column="0" Source="{Binding Device.DeviceType, Converter={StaticResource DeviceTypeToSmallImage}}" WidthRequest="50" HeightRequest="50" VerticalOptions="Start"/>
+                <!-- Channel setup -->
+                <ScrollView Grid.Row="1">
+                    <StackLayout Orientation="Vertical" Padding="10">
 
-                        <Grid Grid.Column="1">
+                        <!-- Device info -->
+                        <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
 
-                            <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate DeviceName}" FontSize="Small"/>
-                            <Label Grid.Column="1" Grid.Row="0" Text="{Binding Device.Name}" FontSize="Medium" FontAttributes="Bold"/>
+                            <Image Grid.Column="0" Source="{Binding Device.DeviceType, Converter={StaticResource DeviceTypeToSmallImage}}" WidthRequest="50" HeightRequest="50" VerticalOptions="Start"/>
 
-                            <Label Grid.Column="0" Grid.Row="1" Text="{extensions:Translate DeviceType}" FontSize="Small"/>
-                            <Label Grid.Column="1" Grid.Row="1" Text="{Binding Device.DeviceType}" FontSize="Medium" FontAttributes="Bold"/>
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                            <Label Grid.Column="0" Grid.Row="4" Text="{extensions:Translate Channel}" FontSize="Small"/>
-                            <controls:DeviceChannelLabel Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" DeviceType="{Binding Device.DeviceType}" Channel="{Binding Action.Channel}" FontSize="Medium" FontAttributes="Bold"/>
+                                <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate DeviceName}" FontSize="Small"/>
+                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Device.Name}" FontSize="Medium" FontAttributes="Bold"/>
+
+                                <Label Grid.Column="0" Grid.Row="1" Text="{extensions:Translate DeviceType}" FontSize="Small"/>
+                                <Label Grid.Column="1" Grid.Row="1" Text="{Binding Device.DeviceType}" FontSize="Medium" FontAttributes="Bold"/>
+
+                                <Label Grid.Column="0" Grid.Row="4" Text="{extensions:Translate Channel}" FontSize="Small"/>
+                                <controls:DeviceChannelLabel Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" DeviceType="{Binding Device.DeviceType}" Channel="{Binding Action.Channel}" FontSize="Medium" FontAttributes="Bold"/>
+                            </Grid>
                         </Grid>
-                    </Grid>
 
-                    <!-- Servo base angle setting -->
-                    <StackLayout Orientation="Vertical" Padding="10">
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                        <!-- Servo base angle setting -->
+                        <StackLayout Orientation="Vertical" Padding="10">
+                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
 
-                        <Button Text="{extensions:Translate AutoCalibrate}" Command="{Binding AutoCalibrateServoCommand}" Margin="0, 30, 0, 30"/>
+                            <Button Text="{extensions:Translate AutoCalibrate}" Command="{Binding AutoCalibrateServoCommand}" Margin="0, 30, 0, 30"/>
 
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
-                    </StackLayout>
-
-                    <!-- Servo base angle setting -->
-                    <StackLayout Orientation="Vertical" Padding="10">
-                        <Label Grid.Column="0" Text="{extensions:Translate BaseAngle}" Margin="0, 10, 0, 10"/>
-                        <StackLayout Grid.Column="1" Orientation="Horizontal">
-                            <controls:ExtendedSlider Value="{Binding ServoBaseAngle}" Minimum="-180" Maximum="179" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                            <Label Text="{Binding ServoBaseAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
-                            <Label Text="°"/>
+                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
                         </StackLayout>
-                        <Button Text="{extensions:Translate Reset}" Command="{Binding ResetServoBaseCommand}" Margin="0, 30, 0, 0"/>
 
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                        <!-- Servo base angle setting -->
+                        <StackLayout Orientation="Vertical" Padding="10">
+                            <Label Grid.Column="0" Text="{extensions:Translate BaseAngle}" Margin="0, 10, 0, 10"/>
+                            <StackLayout Grid.Column="1" Orientation="Horizontal">
+                                <controls:ExtendedSlider Value="{Binding ServoBaseAngle}" Minimum="-180" Maximum="179" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                <Label Text="{Binding ServoBaseAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                                <Label Text="°"/>
+                            </StackLayout>
+                            <Button Text="{extensions:Translate Reset}" Command="{Binding ResetServoBaseCommand}" Margin="0, 30, 0, 0"/>
+
+                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                        </StackLayout>
+
                     </StackLayout>
-
-                </StackLayout>
-            </ScrollView>
+                </ScrollView>
+            </Grid>
 
             <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
 
