@@ -26,7 +26,7 @@
                 </Grid>
 
                 <!-- Play -->
-                <ScrollView>
+                <ScrollView Grid.Row="1">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>

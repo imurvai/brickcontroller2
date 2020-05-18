@@ -1,7 +1,6 @@
 ﻿using BrickController2.PlatformServices.GameController;
 using BrickController2.UI.Services.Dialog;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -38,7 +37,7 @@ namespace BrickController2.UI.Controls
             {
                 MessageBoxButton.Clicked -= buttonHandler;
                 MessageBox.IsVisible = false;
-                IsVisible = false;
+                HideViewImmediately(MessageBox);
                 tcs.TrySetResult(true);
             }))
             {
@@ -70,7 +69,7 @@ namespace BrickController2.UI.Controls
                 QuestionDialogPositiveButton.Clicked -= buttonHandler;
                 QuestionDialogNegativeButton.Clicked -= buttonHandler;
                 QuestionDialog.IsVisible = false;
-                IsVisible = false;
+                HideViewImmediately(QuestionDialog);
                 tcs.TrySetResult(false);
             }))
             {
@@ -105,7 +104,7 @@ namespace BrickController2.UI.Controls
             {
                 InputDialogPositiveButton.Clicked -= buttonHandler;
                 InputDialogNegativeButton.Clicked -= buttonHandler;
-                InputDialog.IsVisible = false;
+                HideViewImmediately(InputDialog);
                 tcs.TrySetResult(new InputDialogResult(false, InputDialogEntry.Text));
             }))
             {
@@ -177,7 +176,7 @@ namespace BrickController2.UI.Controls
             {
                 GameControllerEventDialogCancelButton.Clicked -= buttonHandler;
                 GameControllerService.GameControllerEvent -= gameControllerEventHandler;
-                GameControllerEventDialog.IsVisible = false;
+                HideViewImmediately(GameControllerEventDialog);
                 tcs.TrySetResult(new GameControllerEventDialogResult(false, GameControllerEventType.Axis, string.Empty));
             }))
             {
@@ -247,6 +246,11 @@ namespace BrickController2.UI.Controls
                 view.FadeTo(0, 50)
             });
 
+            HideViewImmediately(view);
+        }
+
+        private void HideViewImmediately(View view)
+        {
             view.IsVisible = false;
             IsVisible = false;
         }
