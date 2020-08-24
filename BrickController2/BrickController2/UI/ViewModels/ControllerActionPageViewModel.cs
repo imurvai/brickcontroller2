@@ -1,9 +1,9 @@
 ﻿using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
-using BrickController2.PlatformServices.Preferences;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Services.Preferences;
 using BrickController2.UI.Services.Translation;
 using System;
 using System.Collections.ObjectModel;
@@ -19,7 +19,7 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
-        private readonly IPreferences _preferences;
+        private readonly IPreferencesService _preferences;
 
         private CancellationTokenSource _disappearingTokenSource;
 
@@ -31,7 +31,7 @@ namespace BrickController2.UI.ViewModels
             ICreationManager creationManager,
             IDeviceManager deviceManager,
             IDialogService dialogService,
-            IPreferences preferences,
+            IPreferencesService preferences,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {

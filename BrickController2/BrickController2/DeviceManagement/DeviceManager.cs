@@ -1,5 +1,5 @@
 ﻿using BrickController2.Helpers;
-using BrickController2.UI.Services.UIThread;
+using BrickController2.UI.Services.MainThread;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace BrickController2.DeviceManagement
         private readonly IInfraredDeviceManager _infraredDeviceManager;
         private readonly IDeviceRepository _deviceRepository;
         private readonly DeviceFactory _deviceFactory;
-        private readonly IUIThreadService _uiThreadService;
+        private readonly IMainThreadService _uiThreadService;
 
         private readonly AsyncLock _asyncLock = new AsyncLock();
         private readonly AsyncLock _foundDeviceLock = new AsyncLock();
@@ -26,7 +26,7 @@ namespace BrickController2.DeviceManagement
             IInfraredDeviceManager infraredDeviceManager,
             IDeviceRepository deviceRepository,
             DeviceFactory deviceFactory,
-            IUIThreadService uiThreadService)
+            IMainThreadService uiThreadService)
         {
             _bluetoothDeviceManager = bluetoothDeviceManager;
             _infraredDeviceManager = infraredDeviceManager;

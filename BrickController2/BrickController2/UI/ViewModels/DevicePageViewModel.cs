@@ -8,7 +8,7 @@ using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Translation;
-using BrickController2.UI.Services.UIThread;
+using BrickController2.UI.Services.MainThread;
 using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.ViewModels
@@ -17,7 +17,7 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
-        private readonly IUIThreadService _uIThreadService;
+        private readonly IMainThreadService _uIThreadService;
 
         private CancellationTokenSource _connectionTokenSource;
         private Task _connectionTask;
@@ -30,7 +30,7 @@ namespace BrickController2.UI.ViewModels
             ITranslationService translationService,
             IDeviceManager deviceManager,
             IDialogService dialogService,
-            IUIThreadService uIThreadService,
+            IMainThreadService uIThreadService,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace BrickController2.UI.Services.UIThread
+namespace BrickController2.UI.Services.MainThread
 {
-    public interface IUIThreadService
+    public interface IMainThreadService
     {
         bool IsOnMainThread { get; }
 

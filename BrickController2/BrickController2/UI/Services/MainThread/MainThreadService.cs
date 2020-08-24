@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
-namespace BrickController2.UI.Services.UIThread
+namespace BrickController2.UI.Services.MainThread
 {
-    public class UIThreadService : IUIThreadService
+    public class MainThreadService : IMainThreadService
     {
-        private int _mainThreadId;
-
-        public UIThreadService()
-        {
-            _mainThreadId = Environment.CurrentManagedThreadId;
-        }
-
-        public bool IsOnMainThread => Environment.CurrentManagedThreadId == _mainThreadId;
+        public bool IsOnMainThread => Xamarin.Essentials.MainThread.IsMainThread;
 
         public async Task RunOnMainThread(Action action)
         {
@@ -25,7 +17,7 @@ namespace BrickController2.UI.Services.UIThread
             {
                 var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-                Device.BeginInvokeOnMainThread(() =>
+                Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
                 {
                     try
                     {

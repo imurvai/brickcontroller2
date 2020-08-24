@@ -1,6 +1,6 @@
-﻿namespace BrickController2.PlatformServices.Preferences
+﻿namespace BrickController2.UI.Services.Preferences
 {
-    public interface IPreferences
+    public interface IPreferencesService
     {
         bool ContainsKey(string key, string section = null);
         T Get<T>(string key, string section = null);
