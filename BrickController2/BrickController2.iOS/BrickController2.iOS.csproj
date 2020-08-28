@@ -143,9 +143,7 @@
     <Compile Include="PlatformServices\Versioning\VersionService.cs" />
     <Compile Include="UI\CustomRenderers\ExtendedSliderRenderer.cs" />
     <Compile Include="UI\CustomRenderers\NoAnimListViewRenderer.cs" />
-    <Compile Include="UI\Services\DialogService.cs" />
     <Compile Include="UI\Services\DI\UIServicesModule.cs" />
-    <Compile Include="UI\Services\ProgressDialog.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />

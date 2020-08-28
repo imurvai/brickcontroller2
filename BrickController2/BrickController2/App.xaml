@@ -3,6 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BrickController2.App">
 	<Application.Resources>
-    
-	</Application.Resources>
+        <ResourceDictionary Source="UI/Themes/DarkTheme.xaml"/>
+    </Application.Resources>
 </Application>
