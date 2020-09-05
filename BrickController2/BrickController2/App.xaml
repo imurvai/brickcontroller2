@@ -1,8 +1,113 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Application xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BrickController2.App">
+<Application
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    x:Class="BrickController2.App">
+    
 	<Application.Resources>
         <ResourceDictionary Source="UI/Themes/DarkTheme.xaml"/>
+
+        <!-- Global targets -->
+        
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
+        </Style>
+
+        <Style TargetType="Entry">
+            <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
+            <Setter Property="PlaceholderColor" Value="{DynamicResource TertiaryTextColor}"/>
+        </Style>
+
+        <Style TargetType="Switch">
+            <Setter Property="BackgroundColor" Value="{DynamicResource TransparentColor}"/>
+            <Setter Property="OnColor" Value="{DynamicResource SwitchOnColor}"/>
+            <Setter Property="ThumbColor" Value="{DynamicResource SwitchThumbColor}"/>
+        </Style>
+
+        <!-- Navigation bar -->
+
+        <Style x:Key="NavigationBarGridStyle" TargetType="Grid">
+            <Setter Property="BackgroundColor" Value="{DynamicResource NavigationBarColor}"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+        
+        <Style x:Key="NavigationBarLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="{DynamicResource NavigationBarItemColor}"/>
+            <Setter Property="FontSize" Value="Large"/>
+        </Style>
+
+        <Style x:Key="NavigationBarImageButtonStyle" TargetType="controls:ImageButton">
+            <Setter Property="WidthRequest" Value="30"/>
+            <Setter Property="HeightRequest" Value="30"/>
+            <Setter Property="ImageColor" Value="{DynamicResource NavigationBarItemColor}"/>
+        </Style>
+        
+        <!-- Header bar -->
+
+        <Style x:Key="HeaderGridStyle" TargetType="Grid">
+            <Setter Property="BackgroundColor" Value="{DynamicResource HeaderBackgroundColor}"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+        
+        <!-- Footer bar -->
+
+        <Style x:Key="FooterGridStyle" TargetType="Grid">
+            <Setter Property="BackgroundColor" Value="{DynamicResource FooterBackgroudColor}"/>
+            <Setter Property="Padding" Value="4"/>
+        </Style>
+
+        <Style x:Key="FooterColorImageStyle" TargetType="controls:ColorImage">
+            <Setter Property="WidthRequest" Value="20"/>
+            <Setter Property="HeightRequest" Value="20"/>
+            <Setter Property="Color" Value="{DynamicResource PrimaryColor}"/>
+        </Style>
+        
+        <!-- CollectionView related -->
+
+        <Style x:Key="CollectionViewHeaderGridStyle" TargetType="Grid">
+            <Setter Property="BackgroundColor" Value="{DynamicResource CollectionViewHeaderBackgroundColor}"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+        
+        <Style x:Key="CollectionItemGridStyle" TargetType="Grid">
+            <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+        
+        <Style x:Key="CollectionViewEmptyLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="{DynamicResource TertiaryTextColor}"/>
+            <Setter Property="FontSize" Value="Medium"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+            <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="VerticalTextAlignment" Value="Center"/>
+        </Style>
+
+        <!-- SwipeView and SwipeItems -->
+
+        <Style TargetType="SwipeView">
+            <Setter Property="BackgroundColor" Value="{DynamicResource TransparentColor}"/>
+        </Style>
+
+        <!-- Dialog related -->
+
+        <Style x:Key="DialogFrameStyle" TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="{DynamicResource DialogBackgroundColor}"/>
+            <Setter Property="BorderColor" Value="{DynamicResource DialogBorderColor}"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="HasShadow" Value="True"/>
+        </Style>
+        
+        <!-- Misc -->
+
+        <Style x:Key="DividerBoxViewStyle" TargetType="BoxView">
+            <Setter Property="BackgroundColor" Value="{DynamicResource DividerColor}"/>
+            <Setter Property="HeightRequest" Value="1"/>
+            <Setter Property="HorizontalOptions" Value="Fill"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+        </Style>
+
     </Application.Resources>
 </Application>

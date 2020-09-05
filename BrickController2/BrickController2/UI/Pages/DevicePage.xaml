@@ -7,7 +7,8 @@
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.DevicePage"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -26,14 +27,14 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 
-                <!-- Header -->
-                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
+                <!-- Navigation bar -->
+                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <Label Text="{extensions:Translate Device}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <Label Text="{extensions:Translate Device}" Style="{StaticResource NavigationBarLabelStyle}" HorizontalOptions="Start"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_edit_white.png}" Command="{Binding RenameCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_edit_white.png}" Command="{Binding RenameCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
                 </Grid>
 
@@ -98,21 +99,21 @@
 
                         <!-- BuWizz 1 output level -->
                         <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizzDevice}" Padding="10">
-                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,4,0,4"/>
                             <Label Text="{extensions:Translate OutputLevel}"/>
                             <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                         </StackLayout>
 
                         <!-- BuWizz 2 output level -->
                         <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizz2Device}" Padding="10">
-                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,4,0,4"/>
                             <Label Text="{extensions:Translate OutputLevel}"/>
                             <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizz2OutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                         </StackLayout>
 
                         <!-- Outputs -->
                         <StackLayout Orientation="Vertical">
-                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="10,4,10,8"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="10,4,10,8"/>
                             <controls:DeviceOutputTesterControl Device="{Binding Device}"/>
                         </StackLayout>
 

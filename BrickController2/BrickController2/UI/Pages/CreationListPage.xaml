@@ -8,7 +8,8 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationListPage"
     x:Name="Page"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -26,10 +27,10 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 
-                <!-- Header -->
-                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
-                    <Label Text="{extensions:Translate Creations}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
-                    <ImageButton Source="{extensions:ImageResource Source=ic_add_white.png}" Command="{Binding AddCreationCommand}" HorizontalOptions="End" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                <!-- Navigation bar -->
+                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
+                    <Label Text="{extensions:Translate Creations}" Style="{StaticResource NavigationBarLabelStyle}" HorizontalOptions="Start"/>
+                    <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add_white.png}" Command="{Binding AddCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" HorizontalOptions="End"/>
                 </Grid>
 
                 <!-- Creation list -->
@@ -38,11 +39,11 @@
                         <DataTemplate>
                             <SwipeView>
                                 <SwipeView.LeftItems>
-                                    <SwipeItems>
-                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="LightPink" Command="{Binding BindingContext.DeleteCreationCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteCreationCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Grid Padding="10">
+                                <Grid Style="{StaticResource CollectionItemGridStyle}">
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding BindingContext.CreationTappedCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
                                     </Grid.GestureRecognizers>
@@ -59,12 +60,12 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     <CollectionView.EmptyView>
-                        <Label Text="{extensions:Translate AddCreations}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        <Label Text="{extensions:Translate AddCreations}" Style="{StaticResource CollectionViewEmptyLabelStyle}"/>
                     </CollectionView.EmptyView>
                 </CollectionView>
 
                 <!-- Footer -->
-                <Grid Grid.Row="2" BackgroundColor="#E0E0E0" Padding="4">
+                <Grid Grid.Row="2" Style="{StaticResource FooterGridStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -77,7 +78,7 @@
                             <TapGestureRecognizer Command="{Binding NavigateToDevicesCommand}"/>
                         </Frame.GestureRecognizers>
                         <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-                            <Image Source="{extensions:ImageResource Source=ic_link.png}" WidthRequest="20" HeightRequest="20"/>
+                            <controls:ColorImage Source="{extensions:ImageResource Source=ic_link.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Devices}" FontSize="Small"/>
                         </StackLayout>
                     </Frame>
@@ -86,7 +87,7 @@
                             <TapGestureRecognizer Command="{Binding NavigateToControllerTesterCommand}"/>
                         </Frame.GestureRecognizers>
                         <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-                            <Image Source="{extensions:ImageResource Source=ic_console.png}" WidthRequest="20" HeightRequest="20"/>
+                            <controls:ColorImage Source="{extensions:ImageResource Source=ic_console.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Controller}" FontSize="Small"/>
                         </StackLayout>
                     </Frame>
@@ -95,7 +96,7 @@
                             <TapGestureRecognizer Command="{Binding NavigateToSequencesCommand}"/>
                         </Frame.GestureRecognizers>
                         <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-                            <Image Source="{extensions:ImageResource Source=ic_sequence.png}" WidthRequest="20" HeightRequest="20"/>
+                            <controls:ColorImage Source="{extensions:ImageResource Source=ic_sequence.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Sequences}" FontSize="Small"/>
                         </StackLayout>
                     </Frame>
@@ -104,7 +105,7 @@
                             <TapGestureRecognizer Command="{Binding NavigateToAboutCommand}"/>
                         </Frame.GestureRecognizers>
                         <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
-                            <Image Source="{extensions:ImageResource Source=ic_info.png}" WidthRequest="20" HeightRequest="20"/>
+                            <controls:ColorImage Source="{extensions:ImageResource Source=ic_info.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate About}" FontSize="Small"/>
                         </StackLayout>
                     </Frame>

@@ -14,11 +14,11 @@
 
             <!-- Message box -->
             <ContentView x:Name="MessageBox" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-                <Frame x:Name="MessageBoxFrame" BackgroundColor="White" HasShadow="True" CornerRadius="10" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
+                <Frame x:Name="MessageBoxFrame" Style="{StaticResource DialogFrameStyle}" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
                     <StackLayout Orientation="Vertical">
                         <Label x:Name="MessageBoxTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
                         <Label x:Name="MessageBoxMessage" HorizontalOptions="Center"/>
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" HorizontalOptions="Fill" Margin="0,8,0,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
                         <Button x:Name="MessageBoxButton"/>
                     </StackLayout>
                 </Frame>
@@ -26,11 +26,11 @@
 
             <!-- Question dialog -->
             <ContentView x:Name="QuestionDialog" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-                <Frame x:Name="QuestionDialogFrame" BackgroundColor="White" HasShadow="True" CornerRadius="10" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
+                <Frame x:Name="QuestionDialogFrame" Style="{StaticResource DialogFrameStyle}" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
                     <StackLayout Orientation="Vertical">
                         <Label x:Name="QuestionDialogTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
                         <Label x:Name="QuestionDialogMessage" HorizontalOptions="Center"/>
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" HorizontalOptions="Fill" Margin="0,8,0,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
                         <Grid ColumnSpacing="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -45,12 +45,12 @@
 
             <!-- Input dialog -->
             <ContentView x:Name="InputDialog" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-                <Frame x:Name="InputDialogFrame" BackgroundColor="White" HasShadow="True" CornerRadius="10" HorizontalOptions="Center" VerticalOptions="Start" WidthRequest="280" Margin="0,50,0,0" Padding="20">
+                <Frame x:Name="InputDialogFrame" Style="{StaticResource DialogFrameStyle}" HorizontalOptions="Center" VerticalOptions="Start" WidthRequest="280" Margin="0,50,0,0" Padding="20">
                     <StackLayout Orientation="Vertical">
                         <Label x:Name="InputDialogTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
                         <Label x:Name="InputDialogMessage" HorizontalOptions="Center"/>
                         <Entry x:Name="InputDialogEntry" HorizontalOptions="FillAndExpand"/>
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" HorizontalOptions="Fill" Margin="0,8,0,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
                         <Grid ColumnSpacing="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -70,14 +70,14 @@
 
             <!-- Progress dialog -->
             <ContentView x:Name="ProgressDialog" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-                <Frame x:Name="ProgressDialogFrame" BackgroundColor="White" HasShadow="True" CornerRadius="10" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
+                <Frame x:Name="ProgressDialogFrame" Style="{StaticResource DialogFrameStyle}" HasShadow="True" CornerRadius="10" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
                     <StackLayout Orientation="Vertical">
                         <Label x:Name="ProgressDialogTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
                         <Label x:Name="ProgressDialogMessage" HorizontalOptions="Center"/>
                         <ProgressBar x:Name="ProgressDialogProgressBar" HorizontalOptions="FillAndExpand"/>
                         <ActivityIndicator x:Name="ProgressDialogActivityIndicator" IsRunning="True" HeightRequest="40" HorizontalOptions="Center"/>
                         <StackLayout x:Name="ProgressBarButtonPart" Orientation="Vertical">
-                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" HorizontalOptions="Fill" Margin="0,8,0,8"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
                             <Button x:Name="ProgressDialogCancelButton"/>
                         </StackLayout>
                     </StackLayout>
@@ -86,11 +86,11 @@
 
             <!-- Game controller event dialog -->
             <ContentView x:Name="GameControllerEventDialog" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-                <Frame x:Name="GameControllerEventDialogFrame" BackgroundColor="White" HasShadow="True" CornerRadius="10" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
+                <Frame x:Name="GameControllerEventDialogFrame" BackgroundColor="{DynamicResource DialogBackgroundColor}" HasShadow="True" CornerRadius="10" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
                     <StackLayout Orientation="Vertical">
                         <Label x:Name="GameControllerEventDialogTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
                         <Label x:Name="GameControllerEventDialogMessage" HorizontalOptions="Center"/>
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" HorizontalOptions="Fill" Margin="0,8,0,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
                         <Button x:Name="GameControllerEventDialogCancelButton"/>
                     </StackLayout>
                 </Frame>

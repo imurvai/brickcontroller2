@@ -13,6 +13,7 @@ namespace BrickController2.UI.Controls
 		}
 
         public static BindableProperty ImageSourceProperty = BindableProperty.Create(nameof(ImageSource), typeof(ImageSource), typeof(ImageButton), null, BindingMode.OneWay, null, ImageSourceChanged);
+        public static BindableProperty ImageColorProperty = BindableProperty.Create(nameof(ImageColor), typeof(Color), typeof(ImageButton), default(Color), BindingMode.OneWay, null, ImageColorChanged);
         public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ImageButton), null, BindingMode.OneWay, null, CommandChanged);
         public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(Command), typeof(object), typeof(ImageButton), null, BindingMode.OneWay, null, CommandParameterChanged);
 
@@ -20,6 +21,12 @@ namespace BrickController2.UI.Controls
         {
             get => (ImageSource)GetValue(ImageSourceProperty);
             set => SetValue(ImageSourceProperty, value);
+        }
+
+        public Color ImageColor
+        {
+            get => (Color)GetValue(ImageColorProperty);
+            set => SetValue(ImageColorProperty, value);
         }
 
         public ICommand Command
@@ -36,17 +43,25 @@ namespace BrickController2.UI.Controls
 
         private static void ImageSourceChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is ImageButton imageButton)
+            if (bindable is ImageButton imageButton && newValue is ImageSource imageSource)
             {
-                imageButton.Image.Source = (ImageSource)newValue;
+                imageButton.Image.Source = imageSource;
+            }
+        }
+
+        private static void ImageColorChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            if (bindable is ImageButton imageButton && newValue is Color color)
+            {
+                imageButton.Image.Color = color;
             }
         }
 
         private static void CommandChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is ImageButton imageButton)
+            if (bindable is ImageButton imageButton && newValue is ICommand command)
             {
-                imageButton.TapGuestureRecognizer.Command = (ICommand)newValue;
+                imageButton.TapGuestureRecognizer.Command = command;
             }
         }
 

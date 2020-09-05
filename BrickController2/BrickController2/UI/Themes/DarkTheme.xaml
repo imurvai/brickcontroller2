@@ -4,13 +4,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="BrickController2.UI.Themes.DarkTheme">
 
-    <Color x:Key="PageBackgroundColor">Black</Color>
-    <Color x:Key="NavigationBarColor">Teal</Color>
-    <Color x:Key="PrimaryColor">Teal</Color>
-    <Color x:Key="SecondaryColor">White</Color>
+    <Color x:Key="PrimaryColor">White</Color>
+    <Color x:Key="SecondaryColor">Gray</Color>
     <Color x:Key="PrimaryTextColor">White</Color>
-    <Color x:Key="SecondaryTextColor">White</Color>
-    <Color x:Key="TertiaryTextColor">WhiteSmoke</Color>
+    <Color x:Key="SecondaryTextColor">Gray</Color>
+    <Color x:Key="TertiaryTextColor">#404040</Color>
     <Color x:Key="TransparentColor">Transparent</Color>
-    
+
+    <Color x:Key="PageBackgroundColor">Black</Color>
+    <Color x:Key="NavigationBarColor">DarkRed</Color>
+    <Color x:Key="NavigationBarItemColor">White</Color>
+    <Color x:Key="HeaderBackgroundColor">#303030</Color>
+    <Color x:Key="DividerColor">#303030</Color>
+    <Color x:Key="FooterBackgroudColor">#303030</Color>
+    <Color x:Key="DialogBackgroundColor">#202020</Color>
+    <Color x:Key="DialogBorderColor">Gray</Color>
+    <Color x:Key="DeleteSwipeItemBackgroundColor">Red</Color>
+    <Color x:Key="CollectionViewHeaderBackgroundColor">#202020</Color>
+    <Color x:Key="SwitchOnColor">Green</Color>
+    <Color x:Key="SwitchThumbColor">LightGreen</Color>
+
 </ResourceDictionary>

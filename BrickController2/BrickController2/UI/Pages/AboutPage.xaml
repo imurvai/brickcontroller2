@@ -6,7 +6,8 @@
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.AboutPage"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <local:PageBase.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
@@ -16,11 +17,11 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header -->
-                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
+                <!-- Navigation bar -->
+                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <Label Text="{extensions:Translate About}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <Label Text="{extensions:Translate About}" Style="{StaticResource NavigationBarLabelStyle}" HorizontalOptions="Start"/>
                     </StackLayout>
                 </Grid>
 
@@ -35,11 +36,11 @@
                             <Label Text="{Binding Version}"/>
                         </StackLayout>
 
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
                         <Label Text="Copyright © 2020, István Murvai (SCN)"/>
 
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
                         <Label Text="{extensions:Translate ExternalLibraries}" FontAttributes="Bold"/>
                         <Label Text="Autofac"/>
@@ -47,12 +48,12 @@
                         <Label Text="Xamarin.Forms"/>
                         <Label Text="Xamarin.Essentials"/>
 
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
                         <Label Text="{extensions:Translate IconSet}" FontAttributes="Bold"/>
                         <Label Text="FlatIcon"/>
 
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
                         <Label Text="{extensions:Translate Disclaimer}" FontAttributes="Bold"/>
                         <Label Text="LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this application" FontSize="Small"/>

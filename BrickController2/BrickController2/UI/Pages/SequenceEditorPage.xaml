@@ -8,7 +8,8 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.SequenceEditorPage"
     x:Name="Page"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -27,19 +28,21 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header -->
-                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
+                <!-- Navigation bar -->
+                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <Label Text="{extensions:Translate Sequence}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <Label Text="{extensions:Translate Sequence}" Style="{StaticResource NavigationBarLabelStyle}"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_edit_white.png}" Command="{Binding RenameSequenceCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <ImageButton Source="{extensions:ImageResource Source=ic_add_white.png}" Command="{Binding AddControlPointCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <ImageButton Source="{extensions:ImageResource Source=ic_checkmark_white.png}" Command="{Binding SaveSequenceCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_edit_white.png}" Command="{Binding RenameSequenceCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add_white.png}" Command="{Binding AddControlPointCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark_white.png}" Command="{Binding SaveSequenceCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
                 </Grid>
-                <Grid Grid.Row="1" BackgroundColor="LightGray" Padding="10">
+
+                <!-- Header -->
+                <Grid Grid.Row="1" Style="{StaticResource HeaderGridStyle}">
                     <Label Text="{Binding Sequence.Name}" FontSize="Large" FontAttributes="Bold"/>
                 </Grid>
 
@@ -61,12 +64,12 @@
                     <Switch Grid.Column="1" Grid.Row="1" IsToggled="{Binding Sequence.Interpolate}" HorizontalOptions="Start"/>
                 </Grid>
 
-                <BoxView Grid.Row="3" BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,0,5,4"/>
+                <BoxView Grid.Row="3" Style="{StaticResource DividerBoxViewStyle}" Margin="5,0,5,4"/>
 
                 <!-- Control point list -->
                 <CollectionView Grid.Row="4" ItemsSource="{Binding Sequence.ControlPoints}" SelectionMode="None">
                     <CollectionView.Header>
-                        <Grid BackgroundColor="#F0F0F0" Padding="10">
+                        <Grid Style="{StaticResource CollectionViewHeaderGridStyle}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="80"/>
@@ -90,12 +93,12 @@
                                     <Label Text="{Binding Value, Converter={StaticResource FloatValueToPercent}}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
                                 </StackLayout>
                                 <Button Grid.Column="1" Text="{Binding DurationMs}" Command="{Binding BindingContext.ChangeControlPointDurationCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" FontSize="Small"/>
-                                <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControlPointCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center" Margin="4,0,4,0"/>
+                                <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" ImageColor="{DynamicResource PrimaryColor}" Command="{Binding BindingContext.DeleteControlPointCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center" Margin="4,0,4,0"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     <CollectionView.EmptyView>
-                        <Label Text="{extensions:Translate AddControlPoints}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        <Label Text="{extensions:Translate AddControlPoints}" Style="{StaticResource CollectionViewEmptyLabelStyle}"/>
                     </CollectionView.EmptyView>
                 </CollectionView>
                 

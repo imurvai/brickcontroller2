@@ -141,6 +141,7 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="PlatformServices\Localization\LocalizationService.cs" />
     <Compile Include="PlatformServices\Versioning\VersionService.cs" />
+    <Compile Include="UI\CustomRenderers\ColorImageRenderer.cs" />
     <Compile Include="UI\CustomRenderers\ExtendedSliderRenderer.cs" />
     <Compile Include="UI\CustomRenderers\NoAnimListViewRenderer.cs" />
     <Compile Include="UI\Services\DI\UIServicesModule.cs" />
@@ -210,7 +211,7 @@
     <PackageReference Include="Xamarin.Essentials">
       <Version>1.5.3.2</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1269" />
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
