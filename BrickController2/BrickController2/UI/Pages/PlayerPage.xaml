@@ -7,7 +7,8 @@
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.PlayerPage"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <local:PageBase.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
@@ -17,11 +18,11 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header -->
-                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
+                <!-- Navigation bar -->
+                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <Label Text="{extensions:Translate Play}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <Label Text="{extensions:Translate Play}" Style="{StaticResource NavigationBarLabelStyle}"/>
                     </StackLayout>
                 </Grid>
 
@@ -36,7 +37,7 @@
                         </Grid.RowDefinitions>
 
                         <!-- Header -->
-                        <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="10">
+                        <Grid Grid.Row="0" Style="{StaticResource HeaderGridStyle}">
                             <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold"/>
                         </Grid>
 
@@ -47,14 +48,14 @@
                             <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizzDevice}" Padding="20">
                                 <Label Text="{extensions:Translate BuWizzOutputLevel}"/>
                                 <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
-                                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                                <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,4,0,4"/>
                             </StackLayout>
 
                             <!-- BuWizz 2 output level -->
                             <StackLayout Orientation="Vertical" IsVisible="{Binding HasBuWizz2Device}" Padding="20">
                                 <Label Text="{extensions:Translate BuWizz2OutputLevel}"/>
                                 <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
-                                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="0,4,0,4"/>
+                                <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,4,0,4"/>
                             </StackLayout>
                         </StackLayout>
 
@@ -64,20 +65,15 @@
                         </StackLayout>
 
                         <!-- Controller profiles -->
-                        <ListView Grid.Row="3" ItemsSource="{Binding Creation.ControllerProfiles}" SelectedItem="{Binding ActiveProfile, Mode=TwoWay}" SelectionMode="Single" HasUnevenRows="True">
-                            <ListView.Behaviors>
-                                <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerProfileTappedCommand}"/>
-                            </ListView.Behaviors>
-                            <ListView.ItemTemplate>
+                        <CollectionView Grid.Row="3" ItemsSource="{Binding Creation.ControllerProfiles}" SelectedItem="{Binding ActiveProfile, Mode=TwoWay}" SelectionMode="Single">
+                            <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <ViewCell>
-                                        <StackLayout Orientation="Horizontal" Padding="10">
-                                            <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
-                                        </StackLayout>
-                                    </ViewCell>
+                                    <Grid Style="{StaticResource CollectionItemGridStyle}">
+                                        <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
+                                    </Grid>
                                 </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
 
                     </Grid>
                 </ScrollView>

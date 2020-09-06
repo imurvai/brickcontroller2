@@ -21,6 +21,7 @@
     <Color x:Key="DialogBorderColor">White</Color>
     <Color x:Key="DeleteSwipeItemBackgroundColor">LightPink</Color>
     <Color x:Key="CollectionViewHeaderBackgroundColor">#f0f0f0</Color>
+    <Color x:Key="CollectionViewSelectedItemBackgroundColor">Gray</Color>
     <Color x:Key="SwitchOnColor">Green</Color>
     <Color x:Key="SwitchThumbColor">DarkGreen</Color>
 
