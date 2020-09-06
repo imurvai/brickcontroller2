@@ -7,7 +7,8 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationPage"
     x:Name="Page"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <local:PageBase.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
@@ -18,18 +19,20 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header -->
-                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
+                <!-- Navigation bar -->
+                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <Label Text="{extensions:Translate Creation}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <Label Text="{extensions:Translate Creation}" Style="{StaticResource NavigationBarLabelStyle}"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_edit_white.png}" Command="{Binding RenameCreationCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <ImageButton Source="{extensions:ImageResource Source=ic_add_white.png}" Command="{Binding AddControllerProfileCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_edit_white.png}" Command="{Binding RenameCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add_white.png}" Command="{Binding AddControllerProfileCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
                 </Grid>
-                <Grid Grid.Row="1" Padding="10" BackgroundColor="LightGray">
+
+                <!-- Header -->
+                <Grid Grid.Row="1" Style="{StaticResource HeaderGridStyle}">
                     <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
                     <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play_white.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
                 </Grid>
@@ -40,11 +43,11 @@
                         <DataTemplate>
                             <SwipeView>
                                 <SwipeView.LeftItems>
-                                    <SwipeItems>
-                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="LightPink" Command="{Binding BindingContext.DeleteControllerProfileCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteControllerProfileCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Grid Padding="10">
+                                <Grid Style="{StaticResource CollectionItemGridStyle}">
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding BindingContext.ControllerProfileTappedCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
                                     </Grid.GestureRecognizers>
@@ -54,7 +57,7 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     <CollectionView.EmptyView>
-                        <Label Text="{extensions:Translate AddControllerProfiles}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        <Label Text="{extensions:Translate AddControllerProfiles}" Style="{StaticResource CollectionViewEmptyLabelStyle}"/>
                     </CollectionView.EmptyView>
                 </CollectionView>
 

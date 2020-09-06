@@ -8,7 +8,8 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerProfilePage"
     x:Name="Page"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -26,18 +27,20 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header -->
-                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
+                <!-- Navigation bar -->
+                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <Label Text="{extensions:Translate ControllerProfile}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <Label Text="{extensions:Translate ControllerProfile}" Style="{StaticResource NavigationBarLabelStyle}"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_edit_white.png}" Command="{Binding RenameProfileCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <ImageButton Source="{extensions:ImageResource Source=ic_add_white.png}" Command="{Binding AddControllerEventCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_edit_white.png}" Command="{Binding RenameProfileCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add_white.png}" Command="{Binding AddControllerEventCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
                 </Grid>
-                <Grid Grid.Row="1" BackgroundColor="LightGray" Padding="10">
+
+                <!-- Header -->
+                <Grid Grid.Row="1" Style="{StaticResource HeaderGridStyle}">
                     <Label Text="{Binding ControllerProfile.Name}" FontSize="Large" FontAttributes="Bold" VerticalTextAlignment="Center"/>
                     <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play_white.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
                 </Grid>
@@ -50,11 +53,11 @@
                         <DataTemplate>
                             <SwipeView>
                                 <SwipeView.LeftItems>
-                                    <SwipeItems>
-                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="LightPink" Command="{Binding BindingContext.DeleteControllerEventCommand, Source={x:Reference Page}}" CommandParameter="{Binding ControllerEvent}"/>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteControllerEventCommand, Source={x:Reference Page}}" CommandParameter="{Binding ControllerEvent}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Grid BackgroundColor="#F0F0F0" Padding="10">
+                                <Grid Style="{StaticResource CollectionViewHeaderGridStyle}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
@@ -73,8 +76,8 @@
                         <DataTemplate>
                             <SwipeView>
                                 <SwipeView.LeftItems>
-                                    <SwipeItems>
-                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="LightPink" Command="{Binding BindingContext.DeleteControllerActionCommand, Source={x:Reference Page}}" CommandParameter="{Binding ControllerAction}"/>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteControllerActionCommand, Source={x:Reference Page}}" CommandParameter="{Binding ControllerAction}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
                                 <Grid Padding="10">
@@ -102,7 +105,7 @@
                     </CollectionView.ItemTemplate>
 
                     <CollectionView.EmptyView>
-                        <Label Text="{extensions:Translate AddControllerEvents}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        <Label Text="{extensions:Translate AddControllerEvents}" Style="{StaticResource CollectionViewEmptyLabelStyle}"/>
                     </CollectionView.EmptyView>
                 </CollectionView>
 
