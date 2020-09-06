@@ -14,6 +14,10 @@
             <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
         </Style>
 
+        <Style TargetType="controls:DeviceChannelLabel">
+            <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
+        </Style>
+
         <Style TargetType="Entry">
             <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
             <Setter Property="PlaceholderColor" Value="{DynamicResource TertiaryTextColor}"/>
@@ -23,6 +27,28 @@
             <Setter Property="BackgroundColor" Value="{DynamicResource TransparentColor}"/>
             <Setter Property="OnColor" Value="{DynamicResource SwitchOnColor}"/>
             <Setter Property="ThumbColor" Value="{DynamicResource SwitchThumbColor}"/>
+        </Style>
+
+        <Style TargetType="Picker">
+            <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
+        </Style>
+
+        <Style TargetType="Slider">
+            <Setter Property="MinimumTrackColor" Value="{DynamicResource SliderMinimumTrackColor}"/>
+            <Setter Property="MaximumTrackColor" Value="{DynamicResource SliderMaximumTrackColor}"/>
+            <Setter Property="ThumbColor" Value="{DynamicResource SliderThumbColor}"/>
+        </Style>
+
+        <Style TargetType="controls:ExtendedSlider">
+            <Setter Property="MinimumTrackColor" Value="{DynamicResource SliderMinimumTrackColor}"/>
+            <Setter Property="MaximumTrackColor" Value="{DynamicResource SliderMaximumTrackColor}"/>
+            <Setter Property="ThumbColor" Value="{DynamicResource SliderThumbColor}"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="BackgroundColor" Value="{DynamicResource ButtonBackgroundColor}"/>
+            <Setter Property="TextColor" Value="{DynamicResource ButtonTextColor}"/>
         </Style>
 
         <!-- Navigation bar -->
@@ -122,6 +148,10 @@
             <Setter Property="HeightRequest" Value="1"/>
             <Setter Property="HorizontalOptions" Value="Fill"/>
             <Setter Property="VerticalOptions" Value="Center"/>
+        </Style>
+
+        <Style x:Key="PickerStyle" TargetType="Picker">
+            <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
         </Style>
 
     </Application.Resources>

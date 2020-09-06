@@ -11,6 +11,9 @@
     <Color x:Key="TertiaryTextColor">LightGray</Color>
     <Color x:Key="TransparentColor">Transparent</Color>
 
+    <Color x:Key="PositiveBackgroundColor">LightGreen</Color>
+    <Color x:Key="NegativeBackgroundColor">LightPink</Color>
+
     <Color x:Key="PageBackgroundColor">White</Color>
     <Color x:Key="NavigationBarColor">Red</Color>
     <Color x:Key="NavigationBarItemColor">White</Color>
@@ -22,7 +25,13 @@
     <Color x:Key="DeleteSwipeItemBackgroundColor">LightPink</Color>
     <Color x:Key="CollectionViewHeaderBackgroundColor">#f0f0f0</Color>
     <Color x:Key="CollectionViewSelectedItemBackgroundColor">Gray</Color>
-    <Color x:Key="SwitchOnColor">Green</Color>
+    <Color x:Key="SwitchOnColor">LightGreen</Color>
     <Color x:Key="SwitchThumbColor">DarkGreen</Color>
+    <Color x:Key="SliderMinimumTrackColor">#c0c0c0</Color>
+    <Color x:Key="SliderMaximumTrackColor">#c0c0c0</Color>
+    <Color x:Key="SliderThumbColor">#303030</Color>
+    <Color x:Key="ButtonBackgroundColor">LightGray</Color>
+    <Color x:Key="ButtonTextColor">Black</Color>
+    <Color x:Key="CheckBoxCheckedColor">Green</Color>
 
 </ResourceDictionary>

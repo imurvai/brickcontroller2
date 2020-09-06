@@ -33,7 +33,6 @@
                         <Label Text="{extensions:Translate ControllerAction}" Style="{StaticResource NavigationBarLabelStyle}"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_trashbin_white.png}" Command="{Binding DeleteControllerActionCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                         <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark_white.png}" Command="{Binding SaveControllerActionCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
                 </Grid>
@@ -52,7 +51,7 @@
 
                             <Label Grid.Column="0" Text="{extensions:Translate Device}" VerticalOptions="Center"/>
                             <Picker Grid.Column="1" Title="{extensions:Translate SelectDevice}" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"/>
-                            <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link_white.png}" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
+                            <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link_white.png}" ImageColor="White" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
                         </Grid>
 
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
@@ -70,7 +69,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Label Grid.Column="0" Text="{extensions:Translate Invert}" VerticalOptions="Center"/>
-                            <Switch Grid.Column="1" IsToggled="{Binding Action.IsInvert}" HorizontalOptions="Start"/>
+                            <controls:CheckBox Grid.Column="1" Checked="{Binding Action.IsInvert}" HorizontalOptions="Start"/>
                         </Grid>
 
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
@@ -92,8 +91,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <controls:EnumPicker Grid.Column="0" x:TypeArguments="creationManagement:ChannelOutputType" SelectedItem="{Binding Action.ChannelOutputType}"/>
-                                    <controls:FloatingActionButton Grid.Column="1" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
+                                    <controls:EnumPicker Grid.Column="0" x:TypeArguments="creationManagement:ChannelOutputType" SelectedItem="{Binding Action.ChannelOutputType}" TextColor="{DynamicResource PrimaryTextColor}"/>
+                                    <controls:FloatingActionButton Grid.Column="1" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" ImageColor="White" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
                                         <controls:FloatingActionButton.Triggers>
                                             <DataTrigger TargetType="controls:FloatingActionButton" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
                                                 <Setter Property="IsVisible" Value="True"/>
@@ -147,7 +146,7 @@
                                 </Grid>
                             </StackLayout>
 
-                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
                         </StackLayout>
 
                         <!-- Button type selector -->
@@ -164,7 +163,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0" Text="{extensions:Translate ButtonType}" VerticalOptions="Center"/>
-                                <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding Action.ButtonType}"/>
+                                <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding Action.ButtonType}" TextColor="{DynamicResource PrimaryTextColor}"/>
                             </Grid>
 
                             <!-- Sequence selector -->
@@ -187,7 +186,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <Picker Grid.Column="0" Title="{extensions:Translate SelectSequence}" ItemsSource="{Binding Sequences}" SelectedItem="{Binding Action.SequenceName}"/>
-                                        <controls:FloatingActionButton Grid.Column="1" ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" Command="{Binding OpenSequenceEditorCommand}" VerticalOptions="Center"/>
+                                        <controls:FloatingActionButton Grid.Column="1" ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" ImageColor="White" Command="{Binding OpenSequenceEditorCommand}" VerticalOptions="Center"/>
                                     </Grid>
                                 </Grid>
                             </StackLayout>
@@ -209,7 +208,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0" Text="{extensions:Translate AxisType}" VerticalOptions="Center"/>
-                                <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisType" SelectedItem="{Binding Action.AxisType}"/>
+                                <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisType" SelectedItem="{Binding Action.AxisType}" TextColor="{DynamicResource PrimaryTextColor}"/>
                             </Grid>
 
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
@@ -229,7 +228,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0" Text="{extensions:Translate AxisCharacteristic}" VerticalOptions="Center"/>
-                                <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding Action.AxisCharacteristic}"/>
+                                <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding Action.AxisCharacteristic}" TextColor="{DynamicResource PrimaryTextColor}"/>
                             </Grid>
 
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>

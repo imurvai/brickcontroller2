@@ -114,7 +114,21 @@
                         <!-- Outputs -->
                         <StackLayout Orientation="Vertical">
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="10,4,10,8"/>
-                            <controls:DeviceOutputTesterControl Device="{Binding Device}"/>
+                            <!--<controls:DeviceOutputTesterControl Device="{Binding Device}"/>-->
+                            <CollectionView ItemsSource="{Binding DeviceOutputs}" SelectionMode="None">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Style="{StaticResource CollectionItemGridStyle}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <controls:DeviceChannelLabel Grid.Column="0" DeviceType="{Binding Device.DeviceType}" Channel="{Binding Channel}"/>
+                                            <controls:ExtendedSlider Grid.Column="1" Minimum="-100" Maximum="100" IsEnabled="{Binding Device.DeviceState, Converter={StaticResource DeviceConnectedToBool}}" Value="{Binding Output}" TouchUpCommand="{Binding TouchUpCommand}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
                         </StackLayout>
 
                     </StackLayout>

@@ -5,7 +5,6 @@ using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Preferences;
 using BrickController2.UI.Services.Translation;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -79,7 +78,6 @@ namespace BrickController2.UI.ViewModels
             }
 
             SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null);
-            DeleteControllerActionCommand = new SafeCommand(async () => await DeleteControllerActionAsync());
             OpenDeviceDetailsCommand = new SafeCommand(async () => await OpenDeviceDetailsAsync(), () => SelectedDevice != null);
             OpenChannelSetupCommand = new SafeCommand(async () => await OpenChannelSetupAsync(), () => SelectedDevice != null);
             OpenSequenceEditorCommand = new SafeCommand(async () => await OpenSequenceEditorAsync());
@@ -111,7 +109,6 @@ namespace BrickController2.UI.ViewModels
         public ControllerAction Action { get; } = new ControllerAction();
 
         public ICommand SaveControllerActionCommand { get; }
-        public ICommand DeleteControllerActionCommand { get; }
         public ICommand OpenDeviceDetailsCommand { get; }
         public ICommand OpenChannelSetupCommand { get; }
         public ICommand OpenSequenceEditorCommand { get; }
@@ -185,33 +182,6 @@ namespace BrickController2.UI.ViewModels
                 Translate("Saving"));
 
             await NavigationService.NavigateBackAsync();
-        }
-
-        private async Task DeleteControllerActionAsync()
-        {
-            try
-            {
-                if (await _dialogService.ShowQuestionDialogAsync(
-                    Translate("Confirm"),
-                    Translate("AreYouSureToDeleteControllerAction"),
-                    Translate("Yes"),
-                    Translate("No"),
-                    _disappearingTokenSource.Token))
-                {
-                    if (ControllerAction != null)
-                    {
-                        await _dialogService.ShowProgressDialogAsync(
-                            false,
-                            async (progressDialog, token) => await _creationManager.DeleteControllerActionAsync(ControllerAction),
-                            Translate("Deleting"));
-                    }
-
-                    await NavigationService.NavigateBackAsync();
-                }
-            }
-            catch (OperationCanceledException)
-            {
-            }
         }
 
         private async Task OpenDeviceDetailsAsync()

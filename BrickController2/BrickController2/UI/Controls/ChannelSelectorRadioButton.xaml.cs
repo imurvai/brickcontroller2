@@ -44,17 +44,16 @@ namespace BrickController2.UI.Controls
 
         private static void OnDeviceTypeChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is ChannelSelectorRadioButton csrb)
+            if (bindable is ChannelSelectorRadioButton csrb && newValue is DeviceType deviceType)
             {
-                csrb.ChannelLabel.DeviceType = (DeviceType)newValue;
+                csrb.ChannelLabel.DeviceType = deviceType;
             }
         }
 
         private static void OnChannelChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is ChannelSelectorRadioButton csrb)
+            if (bindable is ChannelSelectorRadioButton csrb && newValue is int channel)
             {
-                int channel = (int)newValue;
                 csrb.CheckedIndicatorFrame.IsVisible = csrb.SelectedChannel == channel;
                 csrb.ChannelLabel.Channel = channel;
             }
@@ -62,17 +61,17 @@ namespace BrickController2.UI.Controls
 
         private static void OnSelectedChannelChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is ChannelSelectorRadioButton csrb)
+            if (bindable is ChannelSelectorRadioButton csrb && newValue is int channel)
             {
-                csrb.CheckedIndicatorFrame.IsVisible = csrb.Channel == (int)newValue;
+                csrb.CheckedIndicatorFrame.IsVisible = csrb.Channel == channel;
             }
         }
 
         private static void OnCommandChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is ChannelSelectorRadioButton csrb)
+            if (bindable is ChannelSelectorRadioButton csrb && newValue is ICommand command)
             {
-                csrb.TapRecognizer.Command = (ICommand)newValue;
+                csrb.TapRecognizer.Command = command;
             }
         }
     }

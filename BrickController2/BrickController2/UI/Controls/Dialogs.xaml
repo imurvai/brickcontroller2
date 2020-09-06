@@ -36,8 +36,8 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="QuestionDialogPositiveButton" Grid.Column="0"/>
-                            <Button x:Name="QuestionDialogNegativeButton" Grid.Column="1"/>
+                            <Button x:Name="QuestionDialogPositiveButton" Grid.Column="0" BackgroundColor="{DynamicResource PositiveBackgroundColor}"/>
+                            <Button x:Name="QuestionDialogNegativeButton" Grid.Column="1" BackgroundColor="{DynamicResource NegativeBackgroundColor}"/>
                         </Grid>
                     </StackLayout>
                 </Frame>
@@ -56,8 +56,8 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button x:Name="InputDialogPositiveButton" Grid.Column="0"/>
-                            <Button x:Name="InputDialogNegativeButton" Grid.Column="1"/>
+                            <Button x:Name="InputDialogPositiveButton" Grid.Column="0" BackgroundColor="{DynamicResource PositiveBackgroundColor}"/>
+                            <Button x:Name="InputDialogNegativeButton" Grid.Column="1" BackgroundColor="{DynamicResource NegativeBackgroundColor}"/>
                         </Grid>
                     </StackLayout>
                 </Frame>
@@ -70,7 +70,7 @@
 
             <!-- Progress dialog -->
             <ContentView x:Name="ProgressDialog" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-                <Frame x:Name="ProgressDialogFrame" Style="{StaticResource DialogFrameStyle}" HasShadow="True" CornerRadius="10" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
+                <Frame x:Name="ProgressDialogFrame" Style="{StaticResource DialogFrameStyle}" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
                     <StackLayout Orientation="Vertical">
                         <Label x:Name="ProgressDialogTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
                         <Label x:Name="ProgressDialogMessage" HorizontalOptions="Center"/>
@@ -78,7 +78,7 @@
                         <ActivityIndicator x:Name="ProgressDialogActivityIndicator" IsRunning="True" HeightRequest="40" HorizontalOptions="Center"/>
                         <StackLayout x:Name="ProgressBarButtonPart" Orientation="Vertical">
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
-                            <Button x:Name="ProgressDialogCancelButton"/>
+                            <Button x:Name="ProgressDialogCancelButton" BackgroundColor="{DynamicResource NegativeBackgroundColor}"/>
                         </StackLayout>
                     </StackLayout>
                 </Frame>
@@ -86,12 +86,12 @@
 
             <!-- Game controller event dialog -->
             <ContentView x:Name="GameControllerEventDialog" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-                <Frame x:Name="GameControllerEventDialogFrame" BackgroundColor="{DynamicResource DialogBackgroundColor}" HasShadow="True" CornerRadius="10" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
+                <Frame x:Name="GameControllerEventDialogFrame" Style="{StaticResource DialogFrameStyle}" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="280" Padding="20">
                     <StackLayout Orientation="Vertical">
                         <Label x:Name="GameControllerEventDialogTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
                         <Label x:Name="GameControllerEventDialogMessage" HorizontalOptions="Center"/>
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
-                        <Button x:Name="GameControllerEventDialogCancelButton"/>
+                        <Button x:Name="GameControllerEventDialogCancelButton" BackgroundColor="{DynamicResource NegativeBackgroundColor}"/>
                     </StackLayout>
                 </Frame>
             </ContentView>

@@ -49,18 +49,20 @@ namespace BrickController2.UI.Controls
 
         private static void ItemsCsvChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            var segmentedControl = (SegmentedControl)bindable;
-            var itemsCsv = (string)newValue;
+            if (bindable is SegmentedControl segmentedControl && newValue is string itemsCsv)
+            {
+                var items = itemsCsv?.Split(',').Select(i => i.Trim()).ToList() ?? new List<string>();
+                segmentedControl.Build(items);
+            }
 
-            var items = itemsCsv?.Split(',').Select(i => i.Trim()).ToList() ?? new List<string>();
-            segmentedControl.Build(items);
         }
 
         private static void SelectedIndexChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            var segmentedControl = (SegmentedControl)bindable;
-            var index = (int)newValue;
-            segmentedControl.SetSelection(index);
+            if (bindable is SegmentedControl segmentedControl && newValue is int index)
+            {
+                segmentedControl.SetSelection(index);
+            }
         }
 
         private void Build(IList<string> items)
@@ -81,12 +83,12 @@ namespace BrickController2.UI.Controls
                 {
                     var separator = new BoxView
                     {
-                        BackgroundColor = Color.FromHex("#E0E0E0"),
                         WidthRequest = 1,
                         HorizontalOptions = LayoutOptions.Center,
                         VerticalOptions = LayoutOptions.Center,
                         Margin = new Thickness(1)
                     };
+                    separator.SetDynamicResource(BoxView.BackgroundColorProperty, "DividerColor");
 
                     StackLayout.Children.Add(separator);
                 }
@@ -141,6 +143,7 @@ namespace BrickController2.UI.Controls
 
             for (int i = 0; i < _labels.Count; i++)
             {
+                _labels[i].SetDynamicResource(Label.TextColorProperty, i == selectedIndex ? "PrimaryTextColor" : "SecondaryTextColor");
                 _labels[i].FontAttributes = i == selectedIndex ? FontAttributes.Bold : FontAttributes.None;
             }
         }

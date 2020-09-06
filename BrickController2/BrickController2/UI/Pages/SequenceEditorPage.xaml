@@ -58,10 +58,10 @@
                     </Grid.RowDefinitions>
 
                     <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate Loop}" VerticalOptions="Center"/>
-                    <Switch Grid.Column="1" Grid.Row="0" IsToggled="{Binding Sequence.Loop}" HorizontalOptions="Start"/>
+                    <controls:CheckBox Grid.Column="1" Grid.Row="0" Checked="{Binding Sequence.Loop}" HorizontalOptions="End"/>
 
                     <Label Grid.Column="0" Grid.Row="1" Text="{extensions:Translate Interpolate}" VerticalOptions="Center"/>
-                    <Switch Grid.Column="1" Grid.Row="1" IsToggled="{Binding Sequence.Interpolate}" HorizontalOptions="Start"/>
+                    <controls:CheckBox Grid.Column="1" Grid.Row="1" Checked="{Binding Sequence.Interpolate}" HorizontalOptions="End"/>
                 </Grid>
 
                 <BoxView Grid.Row="3" Style="{StaticResource DividerBoxViewStyle}" Margin="5,0,5,4"/>
