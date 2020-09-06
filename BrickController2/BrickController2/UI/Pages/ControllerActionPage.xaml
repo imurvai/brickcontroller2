@@ -9,7 +9,8 @@
     xmlns:gameController="clr-namespace:BrickController2.PlatformServices.GameController"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerActionPage"
-    NavigationPage.HasNavigationBar="False">
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <local:PageBase.Resources>
         <ResourceDictionary>
@@ -25,15 +26,15 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Header -->
-                <Grid Grid.Row="0" Padding="10" BackgroundColor="Red">
+                <!-- Navigation bar -->
+                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <Label Text="{extensions:Translate ControllerAction}" HorizontalOptions="Start" TextColor="White" FontSize="Large"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <Label Text="{extensions:Translate ControllerAction}" Style="{StaticResource NavigationBarLabelStyle}"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <ImageButton Source="{extensions:ImageResource Source=ic_trashbin_white.png}" Command="{Binding DeleteControllerActionCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
-                        <ImageButton Source="{extensions:ImageResource Source=ic_checkmark_white.png}" Command="{Binding SaveControllerActionCommand}" WidthRequest="30" HeightRequest="30" Aspect="AspectFill" BackgroundColor="Transparent"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_trashbin_white.png}" Command="{Binding DeleteControllerActionCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark_white.png}" Command="{Binding SaveControllerActionCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
                 </Grid>
 
@@ -54,12 +55,12 @@
                             <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link_white.png}" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
                         </Grid>
 
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
 
                         <!-- Device channel selector -->
                         <controls:DeviceChannelSelector DeviceType="{Binding SelectedDevice.DeviceType}" SelectedChannel="{Binding Action.Channel}"/>
 
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
 
                         <!-- Invert switch -->
                         <Grid>
@@ -72,7 +73,7 @@
                             <Switch Grid.Column="1" IsToggled="{Binding Action.IsInvert}" HorizontalOptions="Start"/>
                         </Grid>
 
-                        <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
                         <Label Text="{extensions:Translate AdvancedSettings}" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
 
                         <StackLayout Orientation="Vertical" IsVisible="{Binding SelectedDevice.DeviceType, Converter={StaticResource DeviceTypeToChannelOutputVisible}}">
@@ -191,7 +192,7 @@
                                 </Grid>
                             </StackLayout>
 
-                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
                         </StackLayout>
 
                         <!-- Axis type selector -->
@@ -211,7 +212,7 @@
                                 <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisType" SelectedItem="{Binding Action.AxisType}"/>
                             </Grid>
 
-                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
                         </StackLayout>
 
                         <!-- Axis characteristic selector -->
@@ -231,7 +232,7 @@
                                 <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding Action.AxisCharacteristic}"/>
                             </Grid>
 
-                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
                         </StackLayout>
 
                         <!-- Max output percent -->
@@ -255,7 +256,7 @@
                                 </StackLayout>
                             </Grid>
 
-                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
                         </StackLayout>
 
                         <!-- Axis dead zone percent -->
@@ -279,7 +280,7 @@
                                 </StackLayout>
                             </Grid>
 
-                            <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,8,5,8"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
                         </StackLayout>
 
                     </StackLayout>
