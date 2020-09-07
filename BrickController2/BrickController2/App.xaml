@@ -51,6 +51,10 @@
             <Setter Property="TextColor" Value="{DynamicResource ButtonTextColor}"/>
         </Style>
 
+        <Style TargetType="ProgressBar">
+            <Setter Property="ProgressColor" Value="{DynamicResource ProgressColor}"/>
+        </Style>
+
         <!-- Navigation bar -->
 
         <Style x:Key="NavigationBarGridStyle" TargetType="Grid">

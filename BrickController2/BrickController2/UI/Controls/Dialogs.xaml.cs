@@ -1,6 +1,7 @@
 ﻿using BrickController2.PlatformServices.GameController;
 using BrickController2.UI.Services.Dialog;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -123,6 +124,47 @@ namespace BrickController2.UI.Controls
                 InputDialogNegativeButton.Clicked -= buttonHandler;
                 await HideView(InputDialog);
                 tcs.TrySetResult(new InputDialogResult(sender == InputDialogPositiveButton, InputDialogEntry.Text));
+            }
+        }
+
+        public async Task<SelectionDialogResult<T>> ShowSelectionDialogAsync<T>(IEnumerable<T> items, string title, string cancelButtonText, CancellationToken token)
+        {
+            SelectionDialogTitle.Text = title ?? string.Empty;
+            SelectionDialogItems.ItemsSource = items;
+            SelectionDialogItems.SelectedItem = null;
+            SelectionDialogCancelButton.Text = cancelButtonText ?? "Cancel";
+
+            var tcs = new TaskCompletionSource<SelectionDialogResult<T>>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            using (token.Register(() =>
+            {
+                SelectionDialogItems.SelectionChanged -= selectionChangedHandler;
+                SelectionDialogCancelButton.Clicked -= buttonHandler;
+                HideViewImmediately(SelectionDialog);
+                tcs.TrySetResult(new SelectionDialogResult<T>(false, default));
+            }))
+            {
+                await ShowView(SelectionDialog);
+                SelectionDialogItems.SelectionChanged += selectionChangedHandler;
+                SelectionDialogCancelButton.Clicked += buttonHandler;
+
+                return await tcs.Task;
+            }
+
+            async void selectionChangedHandler(object sender, EventArgs args)
+            {
+                SelectionDialogItems.SelectionChanged -= selectionChangedHandler;
+                SelectionDialogCancelButton.Clicked -= buttonHandler;
+                await HideView(SelectionDialog);
+                tcs.TrySetResult(new SelectionDialogResult<T>(true, (T)SelectionDialogItems.SelectedItem));
+            }
+
+            async void buttonHandler(object sender, EventArgs args)
+            {
+                SelectionDialogItems.SelectionChanged -= selectionChangedHandler;
+                SelectionDialogCancelButton.Clicked -= buttonHandler;
+                await HideView(SelectionDialog);
+                tcs.TrySetResult(new SelectionDialogResult<T>(false, default));
             }
         }
 

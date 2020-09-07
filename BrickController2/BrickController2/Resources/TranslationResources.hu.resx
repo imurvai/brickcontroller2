@@ -456,4 +456,7 @@
   <data name="MissingSequence" xml:space="preserve">
     <value>Hiányzó szekvencia</value>
   </data>
+  <data name="NoSequences" xml:space="preserve">
+    <value>Nincsenek szekvenciák.</value>
+  </data>
 </root>

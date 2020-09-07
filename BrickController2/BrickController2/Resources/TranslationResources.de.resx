@@ -333,6 +333,9 @@
   <data name="NoControllerActions" xml:space="preserve">
     <value>Keine Controller-Aktionen für diese Kreation</value>
   </data>
+  <data name="NoSequences" xml:space="preserve">
+    <value>Keine Sequenzen.</value>
+  </data>
   <data name="Ok" xml:space="preserve">
     <value>OK</value>
   </data>

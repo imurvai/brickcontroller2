@@ -1,5 +1,6 @@
 ﻿using BrickController2.PlatformServices.GameController;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,6 +30,11 @@ namespace BrickController2.UI.Services.Dialog
         public Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, KeyboardType keyboardType, CancellationToken token)
         {
             return _dialogServer?.ShowInputDialogAsync(title, message, initialValue, placeHolder, positiveButtonText, negativeButtonText, keyboardType, token) ?? Task.FromResult(new InputDialogResult(false, string.Empty));
+        }
+
+        public Task<SelectionDialogResult<T>> ShowSelectionDialogAsync<T>(IEnumerable<T> items, string title, string cancelButtonText, CancellationToken token)
+        {
+            return _dialogServer?.ShowSelectionDialogAsync(items, title, cancelButtonText, token) ?? Task.FromResult(new SelectionDialogResult<T>(false, default));
         }
 
         public Task ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title = null, string message = null, string cancelButtonText = null)

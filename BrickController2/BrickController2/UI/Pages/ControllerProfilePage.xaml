@@ -89,7 +89,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Image Grid.Column="0" Source="{extensions:ImageResource Source=ic_exclamation_mark_red.png}" IsVisible="{Binding ControllerActionValid, Converter={StaticResource InverseBool}}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center"/>
-                                    <StackLayout Grid.Column="1" Orientation="Horizontal" VerticalOptions="Center">
+                                    <StackLayout Grid.Column="1" Orientation="Horizontal" VerticalOptions="Center" Margin="0,4">
                                         <Label Text="{extensions:Translate Device}"/>
                                         <Label Text=": "/>
                                         <Label Text="{Binding DeviceName}" FontAttributes="Bold"/>

@@ -50,7 +50,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Label Grid.Column="0" Text="{extensions:Translate Device}" VerticalOptions="Center"/>
-                            <Picker Grid.Column="1" Title="{extensions:Translate SelectDevice}" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"/>
+                            <Button Grid.Column="1" Text="{Binding SelectedDevice.Name}" Command="{Binding SelectDeviceCommand}"/>
                             <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link_white.png}" ImageColor="White" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
                         </Grid>
 
@@ -91,7 +91,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <controls:EnumPicker Grid.Column="0" x:TypeArguments="creationManagement:ChannelOutputType" SelectedItem="{Binding Action.ChannelOutputType}" TextColor="{DynamicResource PrimaryTextColor}"/>
+                                    <Button Grid.Column="0" Text="{Binding Action.ChannelOutputType}" Command="{Binding SelectChannelOutputTypeCommand}"/>
                                     <controls:FloatingActionButton Grid.Column="1" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" ImageColor="White" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
                                         <controls:FloatingActionButton.Triggers>
                                             <DataTrigger TargetType="controls:FloatingActionButton" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
@@ -163,7 +163,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0" Text="{extensions:Translate ButtonType}" VerticalOptions="Center"/>
-                                <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerButtonType" SelectedItem="{Binding Action.ButtonType}" TextColor="{DynamicResource PrimaryTextColor}"/>
+                                <Button Grid.Column="1" Text="{Binding Action.ButtonType}" Command="{Binding SelectButtonTypeCommand}"/>
                             </Grid>
 
                             <!-- Sequence selector -->
@@ -185,7 +185,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <Picker Grid.Column="0" Title="{extensions:Translate SelectSequence}" ItemsSource="{Binding Sequences}" SelectedItem="{Binding Action.SequenceName}"/>
+                                        <Button Grid.Column="0" Text="{Binding Action.SequenceName}" Command="{Binding SelectSequenceCommand}"/>
                                         <controls:FloatingActionButton Grid.Column="1" ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" ImageColor="White" Command="{Binding OpenSequenceEditorCommand}" VerticalOptions="Center"/>
                                     </Grid>
                                 </Grid>
@@ -208,7 +208,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0" Text="{extensions:Translate AxisType}" VerticalOptions="Center"/>
-                                <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisType" SelectedItem="{Binding Action.AxisType}" TextColor="{DynamicResource PrimaryTextColor}"/>
+                                <Button Grid.Column="1" Text="{Binding Action.AxisType}" Command="{Binding SelectAxisTypeCommand}"/>
                             </Grid>
 
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
@@ -228,7 +228,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0" Text="{extensions:Translate AxisCharacteristic}" VerticalOptions="Center"/>
-                                <controls:EnumPicker Grid.Column="1" x:TypeArguments="creationManagement:ControllerAxisCharacteristic" SelectedItem="{Binding Action.AxisCharacteristic}" TextColor="{DynamicResource PrimaryTextColor}"/>
+                                <Button Grid.Column="1" Text="{Binding Action.AxisCharacteristic}" Command="{Binding SelectAxisCharacteristicCommand}"/>
                             </Grid>
 
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
