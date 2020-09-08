@@ -33,9 +33,6 @@
                         <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                         <Label Text="{extensions:Translate Device}" Style="{StaticResource NavigationBarLabelStyle}" HorizontalOptions="Start"/>
                     </StackLayout>
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_edit.png}" Command="{Binding RenameCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                    </StackLayout>
                 </Grid>
 
                 <!-- Device info -->
@@ -65,7 +62,11 @@
                                 </Grid.RowDefinitions>
 
                                 <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate DeviceName}" FontSize="Small"/>
-                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Device.Name}" FontSize="Medium" FontAttributes="Bold"/>
+                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Device.Name}" FontSize="Medium" FontAttributes="Bold">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding RenameCommand}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
 
                                 <Label Grid.Column="0" Grid.Row="1" Text="{extensions:Translate  DeviceType}" FontSize="Small"/>
                                 <Label Grid.Column="1" Grid.Row="1" Text="{Binding Device.DeviceType}" FontSize="Medium" FontAttributes="Bold"/>

@@ -96,6 +96,7 @@ namespace BrickController2.UI.Controls
             InputDialogMessage.Text = message ?? string.Empty;
             InputDialogEntry.Text = initialValue ?? string.Empty;
             InputDialogEntry.Placeholder = placeHolder ?? string.Empty;
+            InputDialogEntry.CursorPosition = InputDialogEntry.Text.Length;
             InputDialogPositiveButton.Text = positiveButtonText ?? "Ok";
             InputDialogNegativeButton.Text = negativeButtonText ?? "Cancel";
 

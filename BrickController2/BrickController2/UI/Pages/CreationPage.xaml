@@ -26,14 +26,17 @@
                         <Label Text="{extensions:Translate Creation}" Style="{StaticResource NavigationBarLabelStyle}"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_edit.png}" Command="{Binding RenameCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                         <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddControllerProfileCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
                 </Grid>
 
                 <!-- Header -->
                 <Grid Grid.Row="1" Style="{StaticResource HeaderGridStyle}">
-                    <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+                    <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RenameCreationCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
                     <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play.png}" ImageColor="White" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
                 </Grid>
 

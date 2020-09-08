@@ -35,7 +35,6 @@
                         <Label Text="{extensions:Translate Sequence}" Style="{StaticResource NavigationBarLabelStyle}"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_edit.png}" Command="{Binding RenameSequenceCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                         <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddControlPointCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                         <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark.png}" Command="{Binding SaveSequenceCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
@@ -43,7 +42,11 @@
 
                 <!-- Header -->
                 <Grid Grid.Row="1" Style="{StaticResource HeaderGridStyle}">
-                    <Label Text="{Binding Sequence.Name}" FontSize="Large" FontAttributes="Bold"/>
+                    <Label Text="{Binding Sequence.Name}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RenameSequenceCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
                 </Grid>
 
                 <!-- Sequence properties -->

@@ -6,7 +6,7 @@
     x:Class="BrickController2.App">
     
 	<Application.Resources>
-        <ResourceDictionary Source="UI/Themes/DarkTheme.xaml"/>
+        <ResourceDictionary Source="UI/Themes/LightTheme.xaml"/>
 
         <!-- Global targets -->
         

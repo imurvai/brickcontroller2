@@ -34,7 +34,8 @@ namespace BrickController2.UI.ViewModels
             _deviceManager = deviceManager;
             _dialogService = dialogService;
 
-            AddCreationCommand = new SafeCommand(async () => await AddCreation());
+            OpenSettingsPageCommand = new SafeCommand(async () => await OpenSettingsPageAsync());
+            AddCreationCommand = new SafeCommand(async () => await AddCreationAsync());
             CreationTappedCommand = new SafeCommand<Creation>(async creation => await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation))));
             DeleteCreationCommand = new SafeCommand<Creation>(async creation => await DeleteCreationAsync(creation));
             NavigateToDevicesCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<DeviceListPageViewModel>());
@@ -45,6 +46,7 @@ namespace BrickController2.UI.ViewModels
 
         public ObservableCollection<Creation> Creations => _creationManager.Creations;
 
+        public ICommand OpenSettingsPageCommand { get; }
         public ICommand AddCreationCommand { get; }
         public ICommand CreationTappedCommand { get; }
         public ICommand DeleteCreationCommand { get; }
@@ -58,8 +60,8 @@ namespace BrickController2.UI.ViewModels
             _disappearingTokenSource?.Cancel();
             _disappearingTokenSource = new CancellationTokenSource();
 
-            await RequestPermissions();
-            await LoadCreationsAndDevices();
+            await RequestPermissionsAsync();
+            await LoadCreationsAndDevicesAsync();
         }
 
         public override void OnDisappearing()
@@ -67,7 +69,7 @@ namespace BrickController2.UI.ViewModels
             _disappearingTokenSource.Cancel();
         }
 
-        private async Task RequestPermissions()
+        private async Task RequestPermissionsAsync()
         {
             var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
             if (status != PermissionStatus.Granted)
@@ -85,7 +87,7 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private async Task LoadCreationsAndDevices()
+        private async Task LoadCreationsAndDevicesAsync()
         {
             if (!_isLoaded)
             {
@@ -101,7 +103,12 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private async Task AddCreation()
+        private async Task OpenSettingsPageAsync()
+        {
+            await _dialogService.ShowMessageBoxAsync("Pukk", "Here comes settings", "Ok", _disappearingTokenSource.Token);
+        }
+
+        private async Task AddCreationAsync()
         {
             try
             {

@@ -30,10 +30,10 @@
                 <!-- Navigation bar -->
                 <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_menu.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                         <Label Text="{extensions:Translate Creations}" Style="{StaticResource NavigationBarLabelStyle}"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_settings.png}" Command="{Binding OpenSettingsPageCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                         <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
                 </Grid>
