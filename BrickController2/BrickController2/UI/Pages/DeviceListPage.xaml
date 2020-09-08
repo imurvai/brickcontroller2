@@ -28,11 +28,11 @@
                 <!-- Navigation bar -->
                 <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                         <Label Text="{extensions:Translate Devices}" Style="{StaticResource NavigationBarLabelStyle}" HorizontalOptions="Start"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_search_white.png}" Command="{Binding ScanCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_search.png}" Command="{Binding ScanCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
                 </Grid>
 
@@ -43,7 +43,7 @@
                             <SwipeView>
                                 <SwipeView.LeftItems>
                                     <SwipeItems Mode="Execute">
-                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteDeviceCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteDeviceCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
                                 <Grid Style="{StaticResource CollectionItemGridStyle}">

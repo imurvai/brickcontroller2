@@ -22,19 +22,19 @@
                 <!-- Navigation bar -->
                 <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                         <Label Text="{extensions:Translate Creation}" Style="{StaticResource NavigationBarLabelStyle}"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_edit_white.png}" Command="{Binding RenameCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add_white.png}" Command="{Binding AddControllerProfileCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_edit.png}" Command="{Binding RenameCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddControllerProfileCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
                 </Grid>
 
                 <!-- Header -->
                 <Grid Grid.Row="1" Style="{StaticResource HeaderGridStyle}">
                     <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
-                    <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play_white.png}" ImageColor="White" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
+                    <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play.png}" ImageColor="White" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
                 </Grid>
 
                 <!-- Controller profile list -->
@@ -44,7 +44,7 @@
                             <SwipeView>
                                 <SwipeView.LeftItems>
                                     <SwipeItems Mode="Execute">
-                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete_black.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteControllerProfileCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteControllerProfileCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
                                 <Grid Style="{StaticResource CollectionItemGridStyle}">

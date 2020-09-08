@@ -29,11 +29,11 @@
                 <!-- Navigation bar -->
                 <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back_white.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                         <Label Text="{extensions:Translate ControllerAction}" Style="{StaticResource NavigationBarLabelStyle}"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark_white.png}" Command="{Binding SaveControllerActionCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark.png}" Command="{Binding SaveControllerActionCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
                     </StackLayout>
                 </Grid>
 
@@ -51,7 +51,7 @@
 
                             <Label Grid.Column="0" Text="{extensions:Translate Device}" VerticalOptions="Center"/>
                             <Button Grid.Column="1" Text="{Binding SelectedDevice.Name}" Command="{Binding SelectDeviceCommand}"/>
-                            <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link_white.png}" ImageColor="White" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
+                            <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link.png}" ImageColor="White" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
                         </Grid>
 
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
@@ -92,7 +92,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Button Grid.Column="0" Text="{Binding Action.ChannelOutputType}" Command="{Binding SelectChannelOutputTypeCommand}"/>
-                                    <controls:FloatingActionButton Grid.Column="1" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" ImageColor="White" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
+                                    <controls:FloatingActionButton Grid.Column="1" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_settings.png}" ImageColor="White" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
                                         <controls:FloatingActionButton.Triggers>
                                             <DataTrigger TargetType="controls:FloatingActionButton" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
                                                 <Setter Property="IsVisible" Value="True"/>
@@ -186,7 +186,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <Button Grid.Column="0" Text="{Binding Action.SequenceName}" Command="{Binding SelectSequenceCommand}"/>
-                                        <controls:FloatingActionButton Grid.Column="1" ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings_white.png}" ImageColor="White" Command="{Binding OpenSequenceEditorCommand}" VerticalOptions="Center"/>
+                                        <controls:FloatingActionButton Grid.Column="1" ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings.png}" ImageColor="White" Command="{Binding OpenSequenceEditorCommand}" VerticalOptions="Center"/>
                                     </Grid>
                                 </Grid>
                             </StackLayout>

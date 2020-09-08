@@ -11,8 +11,8 @@
     <Color x:Key="TertiaryTextColor">#404040</Color>
     <Color x:Key="TransparentColor">Transparent</Color>
 
-    <Color x:Key="PositiveBackgroundColor">DarkGreen</Color>
-    <Color x:Key="NegativeBackgroundColor">DarkRed</Color>
+    <Color x:Key="PositiveColor">DarkGreen</Color>
+    <Color x:Key="NegativeColor">DarkRed</Color>
     
     <Color x:Key="PageBackgroundColor">Black</Color>
     <Color x:Key="NavigationBarColor">DarkRed</Color>

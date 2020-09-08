@@ -11,8 +11,8 @@
     <Color x:Key="TertiaryTextColor">LightGray</Color>
     <Color x:Key="TransparentColor">Transparent</Color>
 
-    <Color x:Key="PositiveBackgroundColor">LightGreen</Color>
-    <Color x:Key="NegativeBackgroundColor">LightPink</Color>
+    <Color x:Key="PositiveColor">LightGreen</Color>
+    <Color x:Key="NegativeColor">LightPink</Color>
 
     <Color x:Key="PageBackgroundColor">White</Color>
     <Color x:Key="NavigationBarColor">Red</Color>
