@@ -50,7 +50,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Label Grid.Column="0" Text="{extensions:Translate Device}" VerticalOptions="Center"/>
-                            <Button Grid.Column="1" Text="{Binding SelectedDevice.Name}" Command="{Binding SelectDeviceCommand}"/>
+                            <Button Grid.Column="1" Text="{Binding SelectedDevice.Name}" Command="{Binding SelectDeviceCommand}" Style="{StaticResource PickerButtonStyle}"/>
                             <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link.png}" ImageColor="White" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
                         </Grid>
 
@@ -91,7 +91,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Button Grid.Column="0" Text="{Binding Action.ChannelOutputType}" Command="{Binding SelectChannelOutputTypeCommand}"/>
+                                    <Button Grid.Column="0" Text="{Binding Action.ChannelOutputType}" Command="{Binding SelectChannelOutputTypeCommand}" Style="{StaticResource PickerButtonStyle}"/>
                                     <controls:FloatingActionButton Grid.Column="1" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_settings.png}" ImageColor="White" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
                                         <controls:FloatingActionButton.Triggers>
                                             <DataTrigger TargetType="controls:FloatingActionButton" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
@@ -163,7 +163,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0" Text="{extensions:Translate ButtonType}" VerticalOptions="Center"/>
-                                <Button Grid.Column="1" Text="{Binding Action.ButtonType}" Command="{Binding SelectButtonTypeCommand}"/>
+                                <Button Grid.Column="1" Text="{Binding Action.ButtonType}" Command="{Binding SelectButtonTypeCommand}" Style="{StaticResource PickerButtonStyle}"/>
                             </Grid>
 
                             <!-- Sequence selector -->
@@ -185,7 +185,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <Button Grid.Column="0" Text="{Binding Action.SequenceName}" Command="{Binding SelectSequenceCommand}"/>
+                                        <Button Grid.Column="0" Text="{Binding Action.SequenceName}" Command="{Binding SelectSequenceCommand}" Style="{StaticResource PickerButtonStyle}"/>
                                         <controls:FloatingActionButton Grid.Column="1" ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings.png}" ImageColor="White" Command="{Binding OpenSequenceEditorCommand}" VerticalOptions="Center"/>
                                     </Grid>
                                 </Grid>
@@ -208,7 +208,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0" Text="{extensions:Translate AxisType}" VerticalOptions="Center"/>
-                                <Button Grid.Column="1" Text="{Binding Action.AxisType}" Command="{Binding SelectAxisTypeCommand}"/>
+                                <Button Grid.Column="1" Text="{Binding Action.AxisType}" Command="{Binding SelectAxisTypeCommand}" Style="{StaticResource PickerButtonStyle}"/>
                             </Grid>
 
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
@@ -228,7 +228,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Column="0" Text="{extensions:Translate AxisCharacteristic}" VerticalOptions="Center"/>
-                                <Button Grid.Column="1" Text="{Binding Action.AxisCharacteristic}" Command="{Binding SelectAxisCharacteristicCommand}"/>
+                                <Button Grid.Column="1" Text="{Binding Action.AxisCharacteristic}" Command="{Binding SelectAxisCharacteristicCommand}" Style="{StaticResource PickerButtonStyle}"/>
                             </Grid>
 
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>

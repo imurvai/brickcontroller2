@@ -35,5 +35,6 @@
     <Color x:Key="CheckBoxCheckedColor">Green</Color>
     <Color x:Key="RadioButtonSelectedColor">Red</Color>
     <Color x:Key="ProgressColor">DarkGreen</Color>
+    <Color x:Key="PickerTextColor">DarkBlue</Color>
 
 </ResourceDictionary>

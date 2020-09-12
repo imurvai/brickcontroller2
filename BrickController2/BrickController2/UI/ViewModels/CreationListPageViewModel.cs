@@ -34,7 +34,7 @@ namespace BrickController2.UI.ViewModels
             _deviceManager = deviceManager;
             _dialogService = dialogService;
 
-            OpenSettingsPageCommand = new SafeCommand(async () => await OpenSettingsPageAsync());
+            OpenSettingsPageCommand = new SafeCommand(async () => await navigationService.NavigateToAsync<SettingsPageViewModel>());
             AddCreationCommand = new SafeCommand(async () => await AddCreationAsync());
             CreationTappedCommand = new SafeCommand<Creation>(async creation => await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation))));
             DeleteCreationCommand = new SafeCommand<Creation>(async creation => await DeleteCreationAsync(creation));
@@ -101,11 +101,6 @@ namespace BrickController2.UI.ViewModels
                     },
                     Translate("Loading"));
             }
-        }
-
-        private async Task OpenSettingsPageAsync()
-        {
-            await _dialogService.ShowMessageBoxAsync("Pukk", "Here comes settings", "Ok", _disappearingTokenSource.Token);
         }
 
         private async Task AddCreationAsync()

@@ -145,6 +145,18 @@
             <Setter Property="HasShadow" Value="True"/>
         </Style>
         
+        <!-- Picker button -->
+
+        <Style x:Key="PickerButtonStyle" TargetType="Button">
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}"/>
+            <Setter Property="BorderColor" Value="{DynamicResource TertiaryTextColor}"/>
+            <Setter Property="BorderWidth" Value="1"/>
+            <Setter Property="TextColor" Value="{DynamicResource PickerTextColor}"/>
+            <Setter Property="HeightRequest" Value="40"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+        </Style>
+        
         <!-- Misc -->
 
         <Style x:Key="DividerBoxViewStyle" TargetType="BoxView">
