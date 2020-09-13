@@ -34,6 +34,8 @@ namespace BrickController2.UI.Pages
 
         protected override void OnAppearing()
         {
+            base.OnAppearing();
+
             _dialogServerHost.RegisterDialogServer(_dialogServer);
 
             _backgroundService.ApplicationSleepEvent += OnApplicationSleep;
@@ -41,19 +43,18 @@ namespace BrickController2.UI.Pages
 
             OnAppearingInternal();
 
-            base.OnAppearing();
         }
 
         protected override void OnDisappearing()
         {
+            base.OnDisappearing();
+
             OnDisappearingInternal();
 
             _dialogServerHost.UnregisterDialogServer(_dialogServer);
 
             _backgroundService.ApplicationSleepEvent -= OnApplicationSleep;
             _backgroundService.ApplicationResumeEvent -= OnApplicationResume;
-
-            base.OnDisappearing();
         }
 
         protected override bool OnBackButtonPressed()

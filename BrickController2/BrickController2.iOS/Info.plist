@@ -58,5 +58,7 @@
 	<string>Allow the application to access siri (actually not used by the app)</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
+	<key>XSLaunchImageAssets</key>
+	<string>Assets.xcassets/LaunchImages.launchimage</string>
 </dict>
 </plist>

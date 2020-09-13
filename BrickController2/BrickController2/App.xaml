@@ -19,6 +19,7 @@
         </Style>
 
         <Style TargetType="Entry">
+            <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}"/>
             <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
             <Setter Property="PlaceholderColor" Value="{DynamicResource TertiaryTextColor}"/>
         </Style>

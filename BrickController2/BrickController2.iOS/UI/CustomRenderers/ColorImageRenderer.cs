@@ -20,7 +20,7 @@ namespace BrickController2.iOS.UI.CustomRenderers
         {
             base.OnElementPropertyChanged(sender, e);
 
-            if (e.PropertyName == ColorImage.ColorProperty.PropertyName || e.PropertyName == ColorImage.SourceProperty.PropertyName)
+            if (e.PropertyName == ColorImage.ColorProperty.PropertyName || e.PropertyName == ColorImage.SourceProperty.PropertyName || e.PropertyName == ColorImage.IsLoadingProperty.PropertyName)
             {
                 SetColor();
             }
@@ -28,7 +28,7 @@ namespace BrickController2.iOS.UI.CustomRenderers
 
         private void SetColor()
         {
-            if (Control == null || !(Element is ColorImage colorImage))
+            if (Control == null || Control.Image == null || !(Element is ColorImage colorImage))
             {
                 return;
             }

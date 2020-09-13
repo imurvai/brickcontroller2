@@ -13,7 +13,6 @@ namespace BrickController2.UI.ViewModels
 {
     public class SettingsPageViewModel : PageViewModelBase
     {
-        private readonly IPreferencesService _preferencesService;
         private readonly IThemeService _themeService;
         private readonly IDialogService _dialogService;
 
@@ -22,12 +21,10 @@ namespace BrickController2.UI.ViewModels
         public SettingsPageViewModel(
             INavigationService navigationService,
             ITranslationService translationService,
-            IPreferencesService preferencesService,
             IDialogService dialogService,
             IThemeService themeService) : 
             base(navigationService, translationService)
         {
-            _preferencesService = preferencesService;
             _themeService = themeService;
             _dialogService = dialogService;
 
@@ -36,13 +33,12 @@ namespace BrickController2.UI.ViewModels
 
         public ThemeType CurrentTheme
         {
-            get => _preferencesService.Get("Theme", ThemeType.System);
+            get => _themeService.CurrentTheme;
             set
             {
                 if (CurrentTheme != value)
                 {
-                    _preferencesService.Set("Theme", value);
-                    _themeService.ApplyTheme(value);
+                    _themeService.CurrentTheme = value;
                     RaisePropertyChanged();
                 }
             }

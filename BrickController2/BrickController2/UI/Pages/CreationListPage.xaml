@@ -5,12 +5,21 @@
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationListPage"
     x:Name="Page"
-    NavigationPage.HasNavigationBar="False"
+    Title="{extensions:Translate Creations}"
+    ios:Page.UseSafeArea="True"
     BackgroundColor="{DynamicResource PageBackgroundColor}">
 
+    <local:PageBase.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="0, 20, 0, 0" />
+            <On Platform="Android" Value="0, 0, 0, 0" />
+        </OnPlatform>
+    </local:PageBase.Padding>
+    
     <local:PageBase.Resources>
         <ResourceDictionary>
             <converters:TextToCapitalInitialConverter x:Key="TextToCapitalInitial"/>
@@ -22,24 +31,12 @@
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 
-                <!-- Navigation bar -->
-                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <Label Text="{extensions:Translate Creations}" Style="{StaticResource NavigationBarLabelStyle}"/>
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_settings.png}" Command="{Binding OpenSettingsPageCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                    </StackLayout>
-                </Grid>
-
                 <!-- Creation list -->
-                <CollectionView Grid.Row="1" ItemsSource="{Binding Creations}" SelectionMode="None">
+                <CollectionView Grid.Row="0" ItemsSource="{Binding Creations}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView>
@@ -70,7 +67,7 @@
                 </CollectionView>
 
                 <!-- Footer -->
-                <Grid Grid.Row="2" Style="{StaticResource FooterGridStyle}">
+                <Grid Grid.Row="1" Style="{StaticResource FooterGridStyle}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -115,6 +112,11 @@
                         </StackLayout>
                     </Frame>
                 </Grid>
+
+                <StackLayout Grid.Row="0" Orientation="Vertical" HorizontalOptions="End" VerticalOptions="End">
+                    <controls:FloatingActionButton ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings.png}" ImageColor="White" Command="{Binding OpenSettingsPageCommand}" Margin="10"/>
+                    <controls:FloatingActionButton ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddCreationCommand}" Margin="10"/>
+                </StackLayout>
             </Grid>
 
             <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
