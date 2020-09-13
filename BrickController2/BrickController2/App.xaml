@@ -80,7 +80,13 @@
             <Setter Property="BackgroundColor" Value="{DynamicResource HeaderBackgroundColor}"/>
             <Setter Property="Padding" Value="10"/>
         </Style>
-        
+
+        <Style x:Key="HeaderBarImageButtonStyle" TargetType="controls:ImageButton">
+            <Setter Property="WidthRequest" Value="30"/>
+            <Setter Property="HeightRequest" Value="30"/>
+            <Setter Property="ImageColor" Value="{DynamicResource HeaderItemColor}"/>
+        </Style>
+
         <!-- Footer bar -->
 
         <Style x:Key="FooterGridStyle" TargetType="Grid">

@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             x:Class="BrickController2.UI.Controls.Dialogs"
-             BackgroundColor="#80000000"
-             IsVisible="false">
+<ContentView
+    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    x:Class="BrickController2.UI.Controls.Dialogs"
+    BackgroundColor="#80000000"
+    IsVisible="false">
 
   <ContentView.Content>
 
@@ -106,6 +105,42 @@
                         <Label x:Name="GameControllerEventDialogMessage" HorizontalOptions="Center"/>
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
                         <Button x:Name="GameControllerEventDialogCancelButton" BackgroundColor="{DynamicResource NegativeColor}"/>
+                    </StackLayout>
+                </Frame>
+            </ContentView>
+            
+            <!-- Sequence input dialog -->
+            <ContentView x:Name="SequenceInputDialog" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <Frame x:Name="SequenceInputDialogFrame" Style="{StaticResource DialogFrameStyle}" HorizontalOptions="Center" VerticalOptions="Start" WidthRequest="280" Margin="0,50,0,0" Padding="20">
+                    <StackLayout Orientation="Vertical">
+                        <Label x:Name="SequenceInputDialogTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
+                        <Label x:Name="SequenceInputDialogMessage" HorizontalOptions="Center"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label x:Name="SequenceInputDialogValueTextLabel" Grid.Column="0" Grid.Row="0" VerticalOptions="Center"/>
+                            <StackLayout Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
+                                <controls:ExtendedSlider x:Name="SequenceInputDialogValueSlider" Minimum="-100" Maximum="100" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                <Label x:Name="SequenceInputDialogValueLabel" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                            </StackLayout>
+                            <Label x:Name="SequenceInputDialogDurationMsText" Grid.Column="0" Grid.Row="1" VerticalOptions="Center"/>
+                            <Entry x:Name="SequenceInputDialogDurationMsEntry" Grid.Column="1" Grid.Row="1" HorizontalOptions="FillAndExpand"/>
+                        </Grid>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="SequenceInputDialogPositiveButton" Grid.Column="0" BackgroundColor="{DynamicResource PositiveColor}"/>
+                            <Button x:Name="SequenceInputDialogNegativeButton" Grid.Column="1" BackgroundColor="{DynamicResource NegativeColor}"/>
+                        </Grid>
                     </StackLayout>
                 </Frame>
             </ContentView>

@@ -9,6 +9,7 @@
     <Color x:Key="PrimaryTextColor">White</Color>
     <Color x:Key="SecondaryTextColor">Gray</Color>
     <Color x:Key="TertiaryTextColor">#404040</Color>
+    <Color x:Key="EditableTextColor">LightBlue</Color>
     <Color x:Key="TransparentColor">Transparent</Color>
 
     <Color x:Key="PositiveColor">DarkGreen</Color>
@@ -18,6 +19,7 @@
     <Color x:Key="NavigationBarColor">DarkRed</Color>
     <Color x:Key="NavigationBarItemColor">White</Color>
     <Color x:Key="HeaderBackgroundColor">#303030</Color>
+    <Color x:Key="HeaderItemColor">White</Color>
     <Color x:Key="DividerColor">#303030</Color>
     <Color x:Key="FooterBackgroudColor">#303030</Color>
     <Color x:Key="DialogBackgroundColor">#202020</Color>

@@ -41,10 +41,11 @@ namespace BrickController2.UI.ViewModels
             };
 
             RenameSequenceCommand = new SafeCommand(async () => await RenameSequenceAsync());
-            AddControlPointCommand = new SafeCommand(() => AddControlPoint());
+            AddControlPointCommand = new SafeCommand(async () => await AddControlPointAsync());
             DeleteControlPointCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await DeleteControlPointAsync(controlPoint));
             SaveSequenceCommand = new SafeCommand(async () => await SaveSequenceAsync());
             ChangeControlPointDurationCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await ChangeControlPointDurationAsync(controlPoint));
+            EditControlPointCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await EditControlPointAsync(controlPoint));
         }
 
         public Sequence OriginalSequence { get; }
@@ -55,6 +56,7 @@ namespace BrickController2.UI.ViewModels
         public ICommand DeleteControlPointCommand { get; }
         public ICommand SaveSequenceCommand { get; }
         public ICommand ChangeControlPointDurationCommand { get; }
+        public ICommand EditControlPointCommand { get; }
 
         public override void OnAppearing()
         {
@@ -79,6 +81,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("Rename"),
                     Translate("Cancel"),
                     KeyboardType.Text,
+                    (value) => !string.IsNullOrEmpty(value),
                     _disappearingTokenSource.Token);
 
                 if (result.IsOk)
@@ -112,9 +115,13 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private void AddControlPoint()
+        private async Task AddControlPointAsync()
         {
-            Sequence.ControlPoints.Add(new SequenceControlPoint { Value = 0, DurationMs = 1000 });
+            var controlPoint = new SequenceControlPoint { Value = 0, DurationMs = 1000 };
+            if (await EditControlPointAsync(controlPoint))
+            {
+                Sequence.ControlPoints.Add(controlPoint);
+            }
         }
 
         private async Task DeleteControlPointAsync(SequenceControlPoint controlPoint)
@@ -151,6 +158,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("Ok"),
                     Translate("Cancel"),
                     KeyboardType.Numeric,
+                    (durationText) => !string.IsNullOrEmpty(durationText) && int.TryParse(durationText, out int durationMs) && durationMs >= 300 && durationMs <= 10000,
                     _disappearingTokenSource.Token);
 
                 if (!result.IsOk)
@@ -187,6 +195,36 @@ namespace BrickController2.UI.ViewModels
             catch (OperationCanceledException)
             {
             }
+        }
+
+        private async Task<bool> EditControlPointAsync(SequenceControlPoint controlPoint)
+        {
+            try
+            {
+                var result = await _dialogService.ShowSequenceInputDialogAsync(
+                    Translate("ControlPoint"),
+                    Translate("EnterControlPointDuration"),
+                    Translate("Value"),
+                    controlPoint.Value,
+                    Translate("Duration"),
+                    controlPoint.DurationMs,
+                    Translate("Ok"),
+                    Translate("Cancel"),
+                    (durationText) => !string.IsNullOrEmpty(durationText) && int.TryParse(durationText, out int durationMs) && durationMs >= 300 && durationMs <= 10000,
+                    _disappearingTokenSource.Token);
+
+                if (result.IsOk)
+                {
+                    controlPoint.Value = result.Value;
+                    controlPoint.DurationMs = result.DurationMs;
+                    return true;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+
+            return false;
         }
 
         private async Task SaveSequenceAsync()

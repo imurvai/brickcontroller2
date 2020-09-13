@@ -8,7 +8,7 @@
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.DevicePage"
-    NavigationPage.HasNavigationBar="False"
+    Title="{extensions:Translate Device}"
     ios:Page.UseSafeArea="True"
     BackgroundColor="{DynamicResource PageBackgroundColor}">
 
@@ -31,21 +31,9 @@
     <local:PageBase.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                
-                <!-- Navigation bar -->
-                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                        <Label Text="{extensions:Translate Device}" Style="{StaticResource NavigationBarLabelStyle}" HorizontalOptions="Start"/>
-                    </StackLayout>
-                </Grid>
 
                 <!-- Device info -->
-                <ScrollView Grid.Row="1">
+                <ScrollView>
                     <StackLayout Orientation="Vertical" Padding="10">
 
                         <Grid>
@@ -71,7 +59,7 @@
                                 </Grid.RowDefinitions>
 
                                 <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate DeviceName}" FontSize="Small"/>
-                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Device.Name}" FontSize="Medium" FontAttributes="Bold">
+                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Device.Name}" TextColor="{DynamicResource EditableTextColor}" FontSize="Medium" FontAttributes="Bold">
                                     <Label.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding RenameCommand}"/>
                                     </Label.GestureRecognizers>

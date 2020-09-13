@@ -8,7 +8,7 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationPage"
     x:Name="Page"
-    NavigationPage.HasNavigationBar="False"
+    Title="{extensions:Translate Devices}"
     ios:Page.UseSafeArea="True"
     BackgroundColor="{DynamicResource PageBackgroundColor}">
 
@@ -24,24 +24,12 @@
             <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Navigation bar -->
-                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                        <Label Text="{extensions:Translate Creation}" Style="{StaticResource NavigationBarLabelStyle}"/>
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddControllerProfileCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                    </StackLayout>
-                </Grid>
-
                 <!-- Header -->
-                <Grid Grid.Row="1" Style="{StaticResource HeaderGridStyle}">
-                    <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center">
+                <Grid Grid.Row="0" Style="{StaticResource HeaderGridStyle}">
+                    <Label Text="{Binding Creation.Name}" TextColor="{DynamicResource EditableTextColor}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding RenameCreationCommand}"/>
                         </Label.GestureRecognizers>
@@ -50,7 +38,7 @@
                 </Grid>
 
                 <!-- Controller profile list -->
-                <CollectionView Grid.Row="2" ItemsSource="{Binding Creation.ControllerProfiles}" SelectionMode="None">
+                <CollectionView Grid.Row="1" ItemsSource="{Binding Creation.ControllerProfiles}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView>
@@ -72,6 +60,8 @@
                         <Label Text="{extensions:Translate AddControllerProfiles}" Style="{StaticResource CollectionViewEmptyLabelStyle}"/>
                     </CollectionView.EmptyView>
                 </CollectionView>
+
+                <controls:FloatingActionButton Grid.Row="0" Grid.RowSpan="2" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddControllerProfileCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
             </Grid>
 

@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.SequenceListPage"
     x:Name="Page"
-    NavigationPage.HasNavigationBar="False"
+    Title="{extensions:Translate Sequences}"
     ios:Page.UseSafeArea="True"
     BackgroundColor="{DynamicResource PageBackgroundColor}">
 
@@ -30,24 +30,9 @@
     <local:PageBase.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <!-- Navigation bar -->
-                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                        <Label Text="{extensions:Translate Sequences}" Style="{StaticResource NavigationBarLabelStyle}"/>
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddSequenceCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                    </StackLayout>
-                </Grid>
 
                 <!-- Sequence list -->
-                <CollectionView Grid.Row="1" ItemsSource="{Binding Sequences}" SelectionMode="None">
+                <CollectionView ItemsSource="{Binding Sequences}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView>
@@ -76,6 +61,8 @@
                         <Label Text="{extensions:Translate AddSequences}" Style="{StaticResource CollectionViewEmptyLabelStyle}"/>
                     </CollectionView.EmptyView>
                 </CollectionView>
+
+                <controls:FloatingActionButton ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddSequenceCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
             </Grid>
 

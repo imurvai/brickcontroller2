@@ -113,9 +113,9 @@
                     </Frame>
                 </Grid>
 
-                <StackLayout Grid.Row="0" Orientation="Vertical" HorizontalOptions="End" VerticalOptions="End">
-                    <controls:FloatingActionButton ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings.png}" ImageColor="White" Command="{Binding OpenSettingsPageCommand}" Margin="10"/>
-                    <controls:FloatingActionButton ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddCreationCommand}" Margin="10"/>
+                <StackLayout Grid.Row="0" Orientation="Vertical" HorizontalOptions="End" VerticalOptions="End" Margin="10" Spacing="10">
+                    <controls:FloatingActionButton ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings.png}" ImageColor="White" Command="{Binding OpenSettingsPageCommand}"/>
+                    <controls:FloatingActionButton ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddCreationCommand}"/>
                 </StackLayout>
             </Grid>
 

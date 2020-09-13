@@ -90,7 +90,7 @@ namespace BrickController2.UI.Controls
             }
         }
 
-        public async Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, KeyboardType keyboardType, CancellationToken token)
+        public async Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, KeyboardType keyboardType, Predicate<string> valuePredicate, CancellationToken token)
         {
             InputDialogTitle.Text = title ?? string.Empty;
             InputDialogMessage.Text = message ?? string.Empty;
@@ -98,12 +98,14 @@ namespace BrickController2.UI.Controls
             InputDialogEntry.Placeholder = placeHolder ?? string.Empty;
             InputDialogEntry.CursorPosition = InputDialogEntry.Text.Length;
             InputDialogPositiveButton.Text = positiveButtonText ?? "Ok";
+            InputDialogPositiveButton.IsEnabled = valuePredicate == null || valuePredicate(InputDialogEntry.Text);
             InputDialogNegativeButton.Text = negativeButtonText ?? "Cancel";
 
             var tcs = new TaskCompletionSource<InputDialogResult>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             using (token.Register(() =>
             {
+                InputDialogEntry.TextChanged -= entryTextChanged;
                 InputDialogPositiveButton.Clicked -= buttonHandler;
                 InputDialogNegativeButton.Clicked -= buttonHandler;
                 HideViewImmediately(InputDialog);
@@ -111,6 +113,7 @@ namespace BrickController2.UI.Controls
             }))
             {
                 await ShowView(InputDialog);
+                InputDialogEntry.TextChanged += entryTextChanged;
                 InputDialogPositiveButton.Clicked += buttonHandler;
                 InputDialogNegativeButton.Clicked += buttonHandler;
                 InputDialogEntry.Keyboard = GetKeyboard(keyboardType);
@@ -121,10 +124,16 @@ namespace BrickController2.UI.Controls
 
             async void buttonHandler(object sender, EventArgs args)
             {
+                InputDialogEntry.TextChanged -= entryTextChanged;
                 InputDialogPositiveButton.Clicked -= buttonHandler;
                 InputDialogNegativeButton.Clicked -= buttonHandler;
                 await HideView(InputDialog);
                 tcs.TrySetResult(new InputDialogResult(sender == InputDialogPositiveButton, InputDialogEntry.Text));
+            }
+
+            void entryTextChanged(object sender, EventArgs args)
+            {
+                InputDialogPositiveButton.IsEnabled = valuePredicate == null || valuePredicate(InputDialogEntry.Text);
             }
         }
 
@@ -260,6 +269,67 @@ namespace BrickController2.UI.Controls
                         return;
                     }
                 }
+            }
+        }
+
+        public async Task<SequenceInputDialogResult> ShowSequenceInputDialogAsync(string title, string message, string valueText, float value, string durationText, int durationMs, string positiveButtonText, string negativeButtonText, Predicate<string> durationPredicate, CancellationToken token)
+        {
+            SequenceInputDialogTitle.Text = title ?? string.Empty;
+            SequenceInputDialogMessage.Text = message ?? string.Empty;
+            SequenceInputDialogValueTextLabel.Text = valueText ?? string.Empty;
+            SequenceInputDialogValueSlider.Value = value * 100;
+            SequenceInputDialogValueLabel.Text = (value * 100).ToString();
+            SequenceInputDialogDurationMsText.Text = durationText ?? string.Empty;
+            SequenceInputDialogDurationMsEntry.Text = durationMs.ToString();
+            SequenceInputDialogDurationMsEntry.CursorPosition = SequenceInputDialogDurationMsEntry.Text.Length;
+            SequenceInputDialogPositiveButton.IsEnabled = durationPredicate == null || durationPredicate(SequenceInputDialogDurationMsEntry.Text);
+            SequenceInputDialogPositiveButton.Text = positiveButtonText ?? "Ok";
+            SequenceInputDialogNegativeButton.Text = negativeButtonText ?? "Cancel";
+
+            var tcs = new TaskCompletionSource<SequenceInputDialogResult>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            using (token.Register(() =>
+            {
+                SequenceInputDialogValueSlider.ValueChanged -= sliderValueChanged;
+                SequenceInputDialogPositiveButton.Clicked -= buttonHandler;
+                SequenceInputDialogNegativeButton.Clicked -= buttonHandler;
+                SequenceInputDialogDurationMsEntry.TextChanged -= entryTextChanged;
+                SequenceInputDialogDurationMsEntry.Completed -= buttonHandler;
+                HideViewImmediately(SequenceInputDialog);
+                tcs.TrySetResult(new SequenceInputDialogResult(false, 0, 0));
+            }))
+            {
+                await ShowView(SequenceInputDialog);
+                SequenceInputDialogValueSlider.ValueChanged += sliderValueChanged;
+                SequenceInputDialogPositiveButton.Clicked += buttonHandler;
+                SequenceInputDialogNegativeButton.Clicked += buttonHandler;
+                SequenceInputDialogDurationMsEntry.TextChanged += entryTextChanged;
+                SequenceInputDialogDurationMsEntry.Completed += buttonHandler;
+                SequenceInputDialogDurationMsEntry.Keyboard = Keyboard.Numeric;
+                SequenceInputDialogDurationMsEntry.Focus();
+
+                return await tcs.Task;
+            }
+
+            async void buttonHandler(object sender, EventArgs args)
+            {
+                SequenceInputDialogValueSlider.ValueChanged -= sliderValueChanged;
+                SequenceInputDialogPositiveButton.Clicked -= buttonHandler;
+                SequenceInputDialogNegativeButton.Clicked -= buttonHandler;
+                SequenceInputDialogDurationMsEntry.TextChanged -= entryTextChanged;
+                SequenceInputDialogDurationMsEntry.Completed -= buttonHandler;
+                await HideView(SequenceInputDialog);
+                tcs.TrySetResult(new SequenceInputDialogResult(sender == SequenceInputDialogPositiveButton || sender == SequenceInputDialogDurationMsEntry, (float)(SequenceInputDialogValueSlider.Value / 100), int.Parse(SequenceInputDialogDurationMsEntry.Text)));
+            }
+
+            void sliderValueChanged(object sender, EventArgs args)
+            {
+                SequenceInputDialogValueLabel.Text = SequenceInputDialogValueSlider.Value.ToString();
+            }
+
+            void entryTextChanged(object sender, EventArgs args)
+            {
+                SequenceInputDialogPositiveButton.IsEnabled = durationPredicate == null || durationPredicate(SequenceInputDialogDurationMsEntry.Text);
             }
         }
 

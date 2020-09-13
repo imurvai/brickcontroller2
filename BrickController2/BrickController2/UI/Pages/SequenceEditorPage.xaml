@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.SequenceEditorPage"
     x:Name="Page"
-    NavigationPage.HasNavigationBar="False"
+    Title="{extensions:Translate Sequence}"
     ios:Page.UseSafeArea="True"
     BackgroundColor="{DynamicResource PageBackgroundColor}">
 
@@ -33,33 +33,21 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Navigation bar -->
-                <Grid Grid.Row="0" Style="{StaticResource NavigationBarGridStyle}">
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_back.png}" Command="{Binding BackCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                        <Label Text="{extensions:Translate Sequence}" Style="{StaticResource NavigationBarLabelStyle}"/>
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddControlPointCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                        <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark.png}" Command="{Binding SaveSequenceCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
-                    </StackLayout>
-                </Grid>
-
                 <!-- Header -->
-                <Grid Grid.Row="1" Style="{StaticResource HeaderGridStyle}">
-                    <Label Text="{Binding Sequence.Name}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center">
+                <Grid Grid.Row="0" Style="{StaticResource HeaderGridStyle}">
+                    <Label Text="{Binding Sequence.Name}" TextColor="{DynamicResource EditableTextColor}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding RenameSequenceCommand}"/>
                         </Label.GestureRecognizers>
                     </Label>
+                    <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark.png}" Command="{Binding SaveSequenceCommand}" Style="{StaticResource HeaderBarImageButtonStyle}" HorizontalOptions="End"/>
                 </Grid>
 
                 <!-- Sequence properties -->
-                <Grid Grid.Row="2" Padding="20,10,20,10">
+                <Grid Grid.Row="1" Padding="20,10,20,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="3*"/>
@@ -69,17 +57,17 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate Loop}" VerticalOptions="Center"/>
-                    <controls:CheckBox Grid.Column="1" Grid.Row="0" Checked="{Binding Sequence.Loop}" HorizontalOptions="End"/>
+                    <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate Loop}" FontSize="Small" VerticalOptions="Center"/>
+                    <controls:CheckBox Grid.Column="1" Grid.Row="0" Checked="{Binding Sequence.Loop}" HorizontalOptions="End" VerticalOptions="Center"/>
 
-                    <Label Grid.Column="0" Grid.Row="1" Text="{extensions:Translate Interpolate}" VerticalOptions="Center"/>
-                    <controls:CheckBox Grid.Column="1" Grid.Row="1" Checked="{Binding Sequence.Interpolate}" HorizontalOptions="End"/>
+                    <Label Grid.Column="0" Grid.Row="1" Text="{extensions:Translate Interpolate}" FontSize="Small" VerticalOptions="Center"/>
+                    <controls:CheckBox Grid.Column="1" Grid.Row="1" Checked="{Binding Sequence.Interpolate}" HorizontalOptions="End" VerticalOptions="Center"/>
                 </Grid>
 
-                <BoxView Grid.Row="3" Style="{StaticResource DividerBoxViewStyle}" Margin="5,0,5,4"/>
+                <BoxView Grid.Row="2" Style="{StaticResource DividerBoxViewStyle}" Margin="5,0,5,4"/>
 
                 <!-- Control point list -->
-                <CollectionView Grid.Row="4" ItemsSource="{Binding Sequence.ControlPoints}" SelectionMode="None">
+                <CollectionView Grid.Row="3" ItemsSource="{Binding Sequence.ControlPoints}" SelectionMode="None">
                     <CollectionView.Header>
                         <Grid Style="{StaticResource CollectionViewHeaderGridStyle}">
                             <Grid.ColumnDefinitions>
@@ -94,26 +82,36 @@
                     </CollectionView.Header>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Padding="10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="30"/>
-                                </Grid.ColumnDefinitions>
-                                <StackLayout Grid.Column="0" Orientation="Horizontal">
-                                    <controls:ExtendedSlider Value="{Binding Value, Converter={StaticResource FloatValueToPercent}}" Minimum="-100" Maximum="100" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                                    <Label Text="{Binding Value, Converter={StaticResource FloatValueToPercent}}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
-                                </StackLayout>
-                                <Button Grid.Column="1" Text="{Binding DurationMs}" Command="{Binding BindingContext.ChangeControlPointDurationCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" Style="{StaticResource PickerButtonStyle}" FontSize="Small"/>
-                                <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete.png}" ImageColor="{DynamicResource NegativeColor}" Command="{Binding BindingContext.DeleteControlPointCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center" Margin="4,0,4,0"/>
-                            </Grid>
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteControlPointCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <Grid Style="{StaticResource CollectionItemGridStyle}" Padding="10,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.EditControlPointCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                    </Grid.GestureRecognizers>
+                                    <StackLayout Grid.Column="0" Orientation="Horizontal">
+                                        <Label Text="{Binding Value, Converter={StaticResource FloatValueToPercent}}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                                        <controls:ExtendedSlider IsEnabled="False" Value="{Binding Value, Converter={StaticResource FloatValueToPercent}}" Minimum="-100" Maximum="100" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                    </StackLayout>
+                                    <Label Grid.Column="1" Text="{Binding DurationMs}" FontSize="Small" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,40,0"/>
+                                </Grid>
+                            </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     <CollectionView.EmptyView>
                         <Label Text="{extensions:Translate AddControlPoints}" Style="{StaticResource CollectionViewEmptyLabelStyle}"/>
                     </CollectionView.EmptyView>
                 </CollectionView>
-                
+
+                <controls:FloatingActionButton Grid.Row="0" Grid.RowSpan="4" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddControlPointCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
+
             </Grid>
 
             <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>

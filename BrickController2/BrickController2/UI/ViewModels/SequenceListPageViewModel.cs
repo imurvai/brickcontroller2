@@ -62,6 +62,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("Create"),
                     Translate("Cancel"),
                     KeyboardType.Text,
+                    (sequenceName) => !string.IsNullOrEmpty(sequenceName),
                     _disappearingTokenSource.Token);
 
                 if (result.IsOk)

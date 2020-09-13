@@ -78,7 +78,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Label Grid.Column="0" Text="{extensions:Translate Invert}" VerticalOptions="Center"/>
-                            <controls:CheckBox Grid.Column="1" Checked="{Binding Action.IsInvert}" HorizontalOptions="Start"/>
+                            <controls:CheckBox Grid.Column="1" Checked="{Binding Action.IsInvert}" HorizontalOptions="End"/>
                         </Grid>
 
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
