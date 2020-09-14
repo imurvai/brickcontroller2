@@ -12,13 +12,6 @@
     ios:Page.UseSafeArea="True"
     BackgroundColor="{DynamicResource PageBackgroundColor}">
 
-    <local:PageBase.Padding>
-        <OnPlatform x:TypeArguments="Thickness">
-            <On Platform="iOS" Value="0, 20, 0, 0" />
-            <On Platform="Android" Value="0, 0, 0, 0" />
-        </OnPlatform>
-    </local:PageBase.Padding>
-
     <local:PageBase.Resources>
         <ResourceDictionary>
             <!-- Converters -->
