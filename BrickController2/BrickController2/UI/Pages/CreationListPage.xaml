@@ -27,6 +27,13 @@
         </ResourceDictionary>
     </local:PageBase.Resources>
 
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand">
+            <Label Text="{extensions:Translate Creations}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+            <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_settings.png}" Command="{Binding OpenSettingsPageCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" HorizontalOptions="End" Margin="12,0"/>
+        </Grid>
+    </NavigationPage.TitleView>
+
     <local:PageBase.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
@@ -113,10 +120,7 @@
                     </Frame>
                 </Grid>
 
-                <StackLayout Grid.Row="0" Orientation="Vertical" HorizontalOptions="End" VerticalOptions="End" Margin="10" Spacing="10">
-                    <controls:FloatingActionButton ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings.png}" ImageColor="White" Command="{Binding OpenSettingsPageCommand}"/>
-                    <controls:FloatingActionButton ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddCreationCommand}"/>
-                </StackLayout>
+                <controls:FloatingActionButton Grid.Row="0" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddCreationCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
             </Grid>
 
             <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>

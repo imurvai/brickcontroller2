@@ -12,6 +12,8 @@ namespace BrickController2.UI.Services.Dialog
 
         private IDialogServer _dialogServer;
 
+        public bool IsDialogOpen => _dialogServer?.IsDialogOpen ?? false;
+
         public DialogService(IGameControllerService gameControllerService)
         {
             _gameControllerService = gameControllerService;

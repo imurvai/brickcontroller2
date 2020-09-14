@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +7,7 @@ namespace BrickController2.UI.Services.Dialog
 {
     public interface IDialogService
     {
+        bool IsDialogOpen { get; }
         Task ShowMessageBoxAsync(string title, string message, string buttonText, CancellationToken token);
         Task<bool> ShowQuestionDialogAsync(string title, string message, string positiveButtonText, string negativeButtonText, CancellationToken token);
         Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, KeyboardType keyboardType, Predicate<string> valuePredicate, CancellationToken token);

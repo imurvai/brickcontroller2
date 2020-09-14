@@ -43,7 +43,7 @@ namespace BrickController2.UI.ViewModels
             Action = parameters.Get<ControllerAction>("controlleraction");
             ServoBaseAngle = Action.ServoBaseAngle;
 
-            SaveChannelSettingsCommand = new SafeCommand(async () => await SaveChannelSettingsAsync());
+            SaveChannelSettingsCommand = new SafeCommand(async () => await SaveChannelSettingsAsync(), () => !_dialogService.IsDialogOpen);
             AutoCalibrateServoCommand = new SafeCommand(async () => await AutoCalibrateServoAsync());
             ResetServoBaseCommand = new SafeCommand(async () => await ResetServoBaseAngleAsync());
         }

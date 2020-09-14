@@ -25,6 +25,13 @@
             <converters:FloatValueToPercentConverter x:Key="FloatValueToPercent"/>
         </ResourceDictionary>    
     </local:PageBase.Resources>
+
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand">
+            <Label Text="{extensions:Translate Sequence}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+            <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark.png}" Command="{Binding SaveSequenceCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" HorizontalOptions="End" Margin="12,0"/>
+        </Grid>
+    </NavigationPage.TitleView>
     
     <local:PageBase.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
@@ -43,7 +50,6 @@
                             <TapGestureRecognizer Command="{Binding RenameSequenceCommand}"/>
                         </Label.GestureRecognizers>
                     </Label>
-                    <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark.png}" Command="{Binding SaveSequenceCommand}" Style="{StaticResource HeaderBarImageButtonStyle}" HorizontalOptions="End"/>
                 </Grid>
 
                 <!-- Sequence properties -->

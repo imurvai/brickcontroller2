@@ -19,6 +19,9 @@ namespace BrickController2.UI.Pages
         {
             _backgroundService = backgroundService;
             _dialogServerHost = dialogServerHost;
+
+            // On iOS hide the back button title
+            NavigationPage.SetBackButtonTitle(this, string.Empty);
         }
 
         protected void AfterInitialize(IPageViewModel vm)

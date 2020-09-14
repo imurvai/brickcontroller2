@@ -43,7 +43,7 @@ namespace BrickController2.UI.ViewModels
             RenameSequenceCommand = new SafeCommand(async () => await RenameSequenceAsync());
             AddControlPointCommand = new SafeCommand(async () => await AddControlPointAsync());
             DeleteControlPointCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await DeleteControlPointAsync(controlPoint));
-            SaveSequenceCommand = new SafeCommand(async () => await SaveSequenceAsync());
+            SaveSequenceCommand = new SafeCommand(async () => await SaveSequenceAsync(), () => !_dialogService.IsDialogOpen);
             ChangeControlPointDurationCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await ChangeControlPointDurationAsync(controlPoint));
             EditControlPointCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await EditControlPointAsync(controlPoint));
         }

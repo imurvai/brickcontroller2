@@ -2,6 +2,7 @@
 using BrickController2.UI.Services.Dialog;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -25,6 +26,15 @@ namespace BrickController2.UI.Controls
             ProgressDialog.IsVisible = false;
             GameControllerEventDialog.IsVisible = false;
         }
+
+        public bool IsDialogOpen =>
+            MessageBox.IsVisible ||
+            QuestionDialog.IsVisible ||
+            InputDialog.IsVisible ||
+            SelectionDialog.IsVisible ||
+            ProgressDialog.IsVisible ||
+            GameControllerEventDialog.IsVisible ||
+            SequenceInputDialog.IsVisible;
 
         public async Task ShowMessageBoxAsync(string title, string message, string buttonText, CancellationToken token)
         {

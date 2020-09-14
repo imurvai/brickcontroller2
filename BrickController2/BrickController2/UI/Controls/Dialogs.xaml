@@ -125,10 +125,14 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Label x:Name="SequenceInputDialogValueTextLabel" Grid.Column="0" Grid.Row="0" VerticalOptions="Center"/>
-                            <StackLayout Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
-                                <controls:ExtendedSlider x:Name="SequenceInputDialogValueSlider" Minimum="-100" Maximum="100" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                                <Label x:Name="SequenceInputDialogValueLabel" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
-                            </StackLayout>
+                            <Grid Grid.Column="1" Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="30"/>
+                                </Grid.ColumnDefinitions>
+                                <controls:ExtendedSlider Grid.Column="0" x:Name="SequenceInputDialogValueSlider" Minimum="-100" Maximum="100" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                <Label Grid.Column="1" x:Name="SequenceInputDialogValueLabel" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                            </Grid>
                             <Label x:Name="SequenceInputDialogDurationMsText" Grid.Column="0" Grid.Row="1" VerticalOptions="Center"/>
                             <Entry x:Name="SequenceInputDialogDurationMsEntry" Grid.Column="1" Grid.Row="1" HorizontalOptions="FillAndExpand"/>
                         </Grid>
