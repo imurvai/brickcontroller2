@@ -2,7 +2,6 @@
 <ContentView
     xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     x:Class="BrickController2.UI.Controls.Dialogs"
     BackgroundColor="#80000000"
     IsVisible="false">
@@ -46,8 +45,6 @@
             <ContentView x:Name="InputDialog" IsVisible="false" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
                 <Frame x:Name="InputDialogFrame" Style="{StaticResource DialogFrameStyle}" HorizontalOptions="Center" VerticalOptions="Start" WidthRequest="280" Margin="0,10,0,0" Padding="20">
                     <StackLayout Orientation="Vertical">
-                        <!--<Label x:Name="InputDialogTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>-->
-                        <!--<Label x:Name="InputDialogMessage" HorizontalOptions="Center"/>-->
                         <Entry x:Name="InputDialogEntry" HorizontalOptions="FillAndExpand"/>
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,4,0,4"/>
                         <Grid ColumnSpacing="6">
