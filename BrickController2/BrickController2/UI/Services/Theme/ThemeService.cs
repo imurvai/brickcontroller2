@@ -1,35 +1,27 @@
-﻿using BrickController2.UI.Themes;
-using System;
+﻿using BrickController2.UI.Services.Preferences;
+using BrickController2.UI.Themes;
 using Xamarin.Forms;
 
 namespace BrickController2.UI.Services.Theme
 {
     public class ThemeService : IThemeService
     {
+        private readonly IPreferencesService _preferencesService;
+
+        public ThemeService(IPreferencesService preferencesService)
+        {
+            _preferencesService = preferencesService;
+        }
+
         public ThemeType CurrentTheme
         {
-            get
-            {
-                return Application.Current.UserAppTheme switch
-                {
-                    OSAppTheme.Dark => ThemeType.Dark,
-                    OSAppTheme.Light => ThemeType.Light,
-                    _ => ThemeType.System
-                };
-            }
+            get => _preferencesService.Get("Theme", ThemeType.System);
 
             set
             {
-                var osTheme = value switch
+                if (CurrentTheme != value)
                 {
-                    ThemeType.Light => OSAppTheme.Light,
-                    ThemeType.Dark => OSAppTheme.Dark,
-                    _ => OSAppTheme.Unspecified
-                };
-
-                if (osTheme != Application.Current.UserAppTheme)
-                {
-                    Application.Current.UserAppTheme = osTheme;
+                    _preferencesService.Set("Theme", value);
                     ApplyCurrentTheme();
                 }
             }
@@ -42,10 +34,10 @@ namespace BrickController2.UI.Services.Theme
             {
                 mergedDictionaries.Clear();
 
-                ResourceDictionary selectedTheme = Application.Current.UserAppTheme switch
+                ResourceDictionary selectedTheme = CurrentTheme switch
                 {
-                    OSAppTheme.Dark => new DarkTheme(),
-                    OSAppTheme.Light => new LightTheme(),
+                    ThemeType.Dark => new DarkTheme(),
+                    ThemeType.Light => new LightTheme(),
                     _ => Application.Current.RequestedTheme switch
                     {
                         OSAppTheme.Dark => new DarkTheme(),

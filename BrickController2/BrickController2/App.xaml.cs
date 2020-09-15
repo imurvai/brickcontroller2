@@ -6,6 +6,7 @@ using BrickController2.UI.ViewModels;
 using BrickController2.UI.Pages;
 using BrickController2.UI.Services.Background;
 using BrickController2.UI.Services.Theme;
+using SQLitePCL;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Skip)]
 namespace BrickController2
@@ -27,7 +28,12 @@ namespace BrickController2
 
 			RequestedThemeChanged += (s, e) =>
 			{
-				UserAppTheme = e.RequestedTheme;
+				themeService.CurrentTheme = e.RequestedTheme switch
+				{
+					OSAppTheme.Dark => ThemeType.Dark,
+					OSAppTheme.Light => ThemeType.Light,
+					_ => ThemeType.System
+				};
 				themeService.ApplyCurrentTheme();
 			};
 			themeService.ApplyCurrentTheme();

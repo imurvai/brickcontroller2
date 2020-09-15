@@ -60,7 +60,8 @@ namespace BrickController2.UI.Services.Preferences
             {
                 if (typeof(T).IsEnum)
                 {
-                    Xamarin.Essentials.Preferences.Set(key, value.ToString());
+                    var stringValue = value.ToString();
+                    Xamarin.Essentials.Preferences.Set(key, stringValue, section);
                 }
                 else
                 {
