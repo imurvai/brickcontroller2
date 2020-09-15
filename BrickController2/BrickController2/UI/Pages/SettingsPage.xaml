@@ -29,7 +29,7 @@
             <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
 
                 <!-- Settings items -->
-                <Grid Margin="10">
+                <Grid Margin="20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="*"/>
@@ -43,7 +43,7 @@
                     <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate Theme}" FontSize="Large" VerticalOptions="Center"/>
                     <Button Grid.Column="1" Grid.Row="0" Text="{Binding CurrentTheme}" Command="{Binding SelectThemeCommand}" Style="{StaticResource PickerButtonStyle}" HorizontalOptions="FillAndExpand"/>
 
-                    <BoxView Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
+                    <BoxView Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource DividerBoxViewStyle}" Margin="5,10,5,10"/>
                 </Grid>
 
             </Grid>

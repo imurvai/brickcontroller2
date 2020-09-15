@@ -41,11 +41,10 @@ namespace BrickController2.UI.ViewModels
             };
 
             RenameSequenceCommand = new SafeCommand(async () => await RenameSequenceAsync());
-            AddControlPointCommand = new SafeCommand(async () => await AddControlPointAsync());
+            AddControlPointCommand = new SafeCommand(() => AddControlPoint());
             DeleteControlPointCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await DeleteControlPointAsync(controlPoint));
             SaveSequenceCommand = new SafeCommand(async () => await SaveSequenceAsync(), () => !_dialogService.IsDialogOpen);
             ChangeControlPointDurationCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await ChangeControlPointDurationAsync(controlPoint));
-            EditControlPointCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await EditControlPointAsync(controlPoint));
         }
 
         public Sequence OriginalSequence { get; }
@@ -56,7 +55,6 @@ namespace BrickController2.UI.ViewModels
         public ICommand DeleteControlPointCommand { get; }
         public ICommand SaveSequenceCommand { get; }
         public ICommand ChangeControlPointDurationCommand { get; }
-        public ICommand EditControlPointCommand { get; }
 
         public override void OnAppearing()
         {
@@ -74,8 +72,6 @@ namespace BrickController2.UI.ViewModels
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("Sequence"),
-                    Translate("EnterSequenceName"),
                     Sequence.Name,
                     Translate("SequenceName"),
                     Translate("Rename"),
@@ -115,13 +111,10 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private async Task AddControlPointAsync()
+        private void AddControlPoint()
         {
             var controlPoint = new SequenceControlPoint { Value = 0, DurationMs = 1000 };
-            if (await EditControlPointAsync(controlPoint))
-            {
-                Sequence.ControlPoints.Add(controlPoint);
-            }
+            Sequence.ControlPoints.Add(controlPoint);
         }
 
         private async Task DeleteControlPointAsync(SequenceControlPoint controlPoint)
@@ -151,8 +144,6 @@ namespace BrickController2.UI.ViewModels
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("ControlPoint"),
-                    Translate("EnterControlPointDuration"),
                     controlPoint.DurationMs.ToString(),
                     Translate("Value"),
                     Translate("Ok"),
@@ -195,36 +186,6 @@ namespace BrickController2.UI.ViewModels
             catch (OperationCanceledException)
             {
             }
-        }
-
-        private async Task<bool> EditControlPointAsync(SequenceControlPoint controlPoint)
-        {
-            try
-            {
-                var result = await _dialogService.ShowSequenceInputDialogAsync(
-                    Translate("ControlPoint"),
-                    Translate("EnterControlPointDuration"),
-                    Translate("Value"),
-                    controlPoint.Value,
-                    Translate("Duration"),
-                    controlPoint.DurationMs,
-                    Translate("Ok"),
-                    Translate("Cancel"),
-                    (durationText) => !string.IsNullOrEmpty(durationText) && int.TryParse(durationText, out int durationMs) && durationMs >= 300 && durationMs <= 10000,
-                    _disappearingTokenSource.Token);
-
-                if (result.IsOk)
-                {
-                    controlPoint.Value = result.Value;
-                    controlPoint.DurationMs = result.DurationMs;
-                    return true;
-                }
-            }
-            catch (OperationCanceledException)
-            {
-            }
-
-            return false;
         }
 
         private async Task SaveSequenceAsync()

@@ -81,27 +81,19 @@
                     </CollectionView.Header>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <SwipeView>
-                                <SwipeView.LeftItems>
-                                    <SwipeItems Mode="Execute">
-                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteControlPointCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
-                                    </SwipeItems>
-                                </SwipeView.LeftItems>
-                                <Grid Style="{StaticResource CollectionItemGridStyle}" Padding="10,12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding BindingContext.EditControlPointCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
-                                    </Grid.GestureRecognizers>
-                                    <StackLayout Grid.Column="0" Orientation="Horizontal">
-                                        <Label Text="{Binding Value, Converter={StaticResource FloatValueToPercent}}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
-                                        <controls:ExtendedSlider IsEnabled="False" Value="{Binding Value, Converter={StaticResource FloatValueToPercent}}" Minimum="-100" Maximum="100" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                                    </StackLayout>
-                                    <Label Grid.Column="1" Text="{Binding DurationMs}" FontSize="Small" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,40,0"/>
-                                </Grid>
-                            </SwipeView>
+                            <Grid Style="{StaticResource CollectionItemGridStyle}" Padding="10,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="30"/>
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Grid.Column="0" Orientation="Horizontal">
+                                    <controls:ExtendedSlider Value="{Binding Value, Converter={StaticResource FloatValueToPercent}}" Minimum="-100" Maximum="100" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                    <Label Text="{Binding Value, Converter={StaticResource FloatValueToPercent}}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End" VerticalTextAlignment="Center"/>
+                                </StackLayout>
+                                <Button Grid.Column="1" Text="{Binding DurationMs}" Command="{Binding BindingContext.ChangeControlPointDurationCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" Style="{StaticResource PickerButtonStyle}" FontSize="Small"/>
+                                <controls:ImageButton Grid.Column="2" ImageSource="{extensions:ImageResource Source=ic_delete.png}" ImageColor="{DynamicResource NegativeColor}" Command="{Binding BindingContext.DeleteControlPointCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center" Margin="4,0,4,0"/>
+                            </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     <CollectionView.EmptyView>

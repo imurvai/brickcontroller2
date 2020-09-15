@@ -80,8 +80,6 @@ namespace BrickController2.UI.ViewModels
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("Rename"),
-                    Translate("EnterProfileName"),
                     ControllerProfile.Name,
                     Translate("ProfileName"),
                     Translate("Rename"),

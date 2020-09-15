@@ -29,9 +29,9 @@ namespace BrickController2.UI.Services.Dialog
             return _dialogServer?.ShowQuestionDialogAsync(title, message, positiveButtonText, negativeButtonText, token) ?? Task.FromResult(false);
         }
 
-        public Task<InputDialogResult> ShowInputDialogAsync(string title, string message, string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, KeyboardType keyboardType, Predicate<string> valuePredicate, CancellationToken token)
+        public Task<InputDialogResult> ShowInputDialogAsync(string initialValue, string placeHolder, string positiveButtonText, string negativeButtonText, KeyboardType keyboardType, Predicate<string> valuePredicate, CancellationToken token)
         {
-            return _dialogServer?.ShowInputDialogAsync(title, message, initialValue, placeHolder, positiveButtonText, negativeButtonText, keyboardType, valuePredicate, token) ?? Task.FromResult(new InputDialogResult(false, string.Empty));
+            return _dialogServer?.ShowInputDialogAsync(initialValue, placeHolder, positiveButtonText, negativeButtonText, keyboardType, valuePredicate, token) ?? Task.FromResult(new InputDialogResult(false, string.Empty));
         }
 
         public Task<SelectionDialogResult<T>> ShowSelectionDialogAsync<T>(IEnumerable<T> items, string title, string cancelButtonText, CancellationToken token)
@@ -48,11 +48,6 @@ namespace BrickController2.UI.Services.Dialog
         {
             _dialogServer.GameControllerService = _gameControllerService;
             return _dialogServer?.ShowGameControllerEventDialogAsync(title, message, cancelButtonText, token) ?? Task.FromResult(new GameControllerEventDialogResult(false, GameControllerEventType.Axis, string.Empty));
-        }
-
-        public Task<SequenceInputDialogResult> ShowSequenceInputDialogAsync(string title, string message, string valueText, float value, string durationText, int durationMs, string positiveButtonText, string negativeButtonText, Predicate<string> durationPredicate, CancellationToken token)
-        {
-            return _dialogServer?.ShowSequenceInputDialogAsync(title, message, valueText, value, durationText, durationMs, positiveButtonText, negativeButtonText, durationPredicate, token);
         }
 
         public void RegisterDialogServer(IDialogServer dialogServer)

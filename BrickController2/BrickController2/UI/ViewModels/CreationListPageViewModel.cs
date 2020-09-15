@@ -108,8 +108,6 @@ namespace BrickController2.UI.ViewModels
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("Creation"),
-                    Translate("EnterCreationName"),
                     null,
                     Translate("CreationName"),
                     Translate("Create"),
