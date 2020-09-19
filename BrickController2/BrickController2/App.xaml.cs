@@ -6,7 +6,6 @@ using BrickController2.UI.ViewModels;
 using BrickController2.UI.Pages;
 using BrickController2.UI.Services.Background;
 using BrickController2.UI.Services.Theme;
-using SQLitePCL;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Skip)]
 namespace BrickController2
