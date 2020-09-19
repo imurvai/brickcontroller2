@@ -8,6 +8,7 @@ using BrickController2.iOS.UI.Services.DI;
 using BrickController2.UI.DI;
 using Foundation;
 using UIKit;
+using Xamarin.Forms;
 
 namespace BrickController2.iOS
 {
@@ -16,7 +17,8 @@ namespace BrickController2.iOS
     {
         public override bool FinishedLaunching(UIApplication uiApp, NSDictionary options)
         {
-            Xamarin.Forms.Forms.Init();
+            Forms.SetFlags("SwipeView_Experimental");
+            Forms.Init();
 
             // Preventing screen turning off
             UIApplication.SharedApplication.IdleTimerDisabled = true;

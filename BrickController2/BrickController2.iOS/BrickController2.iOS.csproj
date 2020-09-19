@@ -14,6 +14,7 @@
     <AssemblyName>BrickController2.iOS</AssemblyName>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <ProvisioningType>manual</ProvisioningType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -140,13 +141,11 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="PlatformServices\Localization\LocalizationService.cs" />
-    <Compile Include="PlatformServices\Preferences\Preferences.cs" />
     <Compile Include="PlatformServices\Versioning\VersionService.cs" />
+    <Compile Include="UI\CustomRenderers\ColorImageRenderer.cs" />
     <Compile Include="UI\CustomRenderers\ExtendedSliderRenderer.cs" />
     <Compile Include="UI\CustomRenderers\NoAnimListViewRenderer.cs" />
-    <Compile Include="UI\Services\DialogService.cs" />
     <Compile Include="UI\Services\DI\UIServicesModule.cs" />
-    <Compile Include="UI\Services\ProgressDialog.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -199,6 +198,24 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon20.png">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\LaunchImages.launchimage\LaunchImage_1024x7681.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\LaunchImages.launchimage\LaunchImage_1536x20481.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\LaunchImages.launchimage\LaunchImage_2048x15361.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\LaunchImages.launchimage\LaunchImage_640x11361.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\LaunchImages.launchimage\LaunchImage_640x9601.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\LaunchImages.launchimage\LaunchImage_768x10241.png">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -208,12 +225,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac">
-      <Version>5.1.2</Version>
+      <Version>5.2.0</Version>
     </PackageReference>
-    <PackageReference Include="Plugin.Permissions">
-      <Version>3.0.0.12</Version>
+    <PackageReference Include="Xamarin.Essentials">
+      <Version>1.5.3.2</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.5.0.356" />
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -223,63 +240,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\ic_edit_white.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_edit_white%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_edit_white%403x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_trashbin_white.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_trashbin_white%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_trashbin_white%403x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_checkmark_white.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_checkmark_white%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_checkmark_white%403x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_add_white.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_add_white%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_add_white%403x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_search_white.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_search_white%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_search_white%403x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_launchscreen%403x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_launchscreen.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\ic_launchscreen%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
     <BundleResource Include="Resources\Icon180.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\ic_launcher.png" />
   </ItemGroup>
 </Project>

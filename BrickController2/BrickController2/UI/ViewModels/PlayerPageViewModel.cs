@@ -6,7 +6,7 @@ using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Translation;
-using BrickController2.UI.Services.UIThread;
+using BrickController2.UI.Services.MainThread;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -20,7 +20,7 @@ namespace BrickController2.UI.ViewModels
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
         private readonly IGameControllerService _gameControllerService;
-        private readonly IUIThreadService _uIThreadService;
+        private readonly IMainThreadService _uIThreadService;
         private readonly IPlayLogic _playLogic;
 
         private readonly IList<Device> _devices = new List<Device>();
@@ -41,7 +41,7 @@ namespace BrickController2.UI.ViewModels
             IDeviceManager deviceManager,
             IDialogService dialogService,
             IGameControllerService gameControllerService,
-            IUIThreadService uIThreadService,
+            IMainThreadService uIThreadService,
             IPlayLogic playLogic,
             NavigationParameters parameters)
             : base(navigationService, translationService)

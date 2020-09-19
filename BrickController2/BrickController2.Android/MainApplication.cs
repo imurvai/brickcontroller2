@@ -1,6 +1,5 @@
 ﻿using Android.App;
 using Android.Runtime;
-using Plugin.CurrentActivity;
 using System;
 
 namespace BrickController2.Droid
@@ -20,7 +19,6 @@ namespace BrickController2.Droid
         public override void OnCreate()
         {
             base.OnCreate();
-            CrossCurrentActivity.Current.Init(this);
         }
     }
 }

@@ -237,6 +237,9 @@
   <data name="Creations" xml:space="preserve">
     <value>Kreationen</value>
   </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
   <data name="DefaultProfile" xml:space="preserve">
     <value>Grundprofil</value>
   </data>
@@ -306,6 +309,9 @@
   <data name="Invert" xml:space="preserve">
     <value>Umkehren</value>
   </data>
+  <data name="Light" xml:space="preserve">
+    <value>Licht</value>
+  </data>
   <data name="Loading" xml:space="preserve">
     <value>Wird geladen...</value>
   </data>
@@ -332,6 +338,9 @@
   </data>
   <data name="NoControllerActions" xml:space="preserve">
     <value>Keine Controller-Aktionen für diese Kreation</value>
+  </data>
+  <data name="NoSequences" xml:space="preserve">
+    <value>Keine Sequenzen.</value>
   </data>
   <data name="Ok" xml:space="preserve">
     <value>OK</value>
@@ -405,8 +414,17 @@
   <data name="ServoAngle" xml:space="preserve">
     <value>Servo-Drehen</value>
   </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
   <data name="ShortChannel" xml:space="preserve">
     <value>Ka</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Thema</value>
   </data>
   <data name="TurnOnBluetoothToConnect" xml:space="preserve">
     <value>Bluetooth einschalten, um eine Verbindung zu einem Bluetooth-Gerät herzustellen</value>

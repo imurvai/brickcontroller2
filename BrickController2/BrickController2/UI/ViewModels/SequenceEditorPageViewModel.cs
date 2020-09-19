@@ -43,7 +43,7 @@ namespace BrickController2.UI.ViewModels
             RenameSequenceCommand = new SafeCommand(async () => await RenameSequenceAsync());
             AddControlPointCommand = new SafeCommand(() => AddControlPoint());
             DeleteControlPointCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await DeleteControlPointAsync(controlPoint));
-            SaveSequenceCommand = new SafeCommand(async () => await SaveSequenceAsync());
+            SaveSequenceCommand = new SafeCommand(async () => await SaveSequenceAsync(), () => !_dialogService.IsDialogOpen);
             ChangeControlPointDurationCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await ChangeControlPointDurationAsync(controlPoint));
         }
 
@@ -72,13 +72,12 @@ namespace BrickController2.UI.ViewModels
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("Sequence"),
-                    Translate("EnterSequenceName"),
                     Sequence.Name,
                     Translate("SequenceName"),
                     Translate("Rename"),
                     Translate("Cancel"),
                     KeyboardType.Text,
+                    (value) => !string.IsNullOrEmpty(value),
                     _disappearingTokenSource.Token);
 
                 if (result.IsOk)
@@ -114,7 +113,8 @@ namespace BrickController2.UI.ViewModels
 
         private void AddControlPoint()
         {
-            Sequence.ControlPoints.Add(new SequenceControlPoint { Value = 0, DurationMs = 1000 });
+            var controlPoint = new SequenceControlPoint { Value = 0, DurationMs = 1000 };
+            Sequence.ControlPoints.Add(controlPoint);
         }
 
         private async Task DeleteControlPointAsync(SequenceControlPoint controlPoint)
@@ -144,13 +144,12 @@ namespace BrickController2.UI.ViewModels
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("ControlPoint"),
-                    Translate("EnterControlPointDuration"),
                     controlPoint.DurationMs.ToString(),
                     Translate("Value"),
                     Translate("Ok"),
                     Translate("Cancel"),
                     KeyboardType.Numeric,
+                    (durationText) => !string.IsNullOrEmpty(durationText) && int.TryParse(durationText, out int durationMs) && durationMs >= 300 && durationMs <= 10000,
                     _disappearingTokenSource.Token);
 
                 if (!result.IsOk)

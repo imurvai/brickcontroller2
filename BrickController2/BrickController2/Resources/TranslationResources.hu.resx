@@ -456,4 +456,22 @@
   <data name="MissingSequence" xml:space="preserve">
     <value>Hiányzó szekvencia</value>
   </data>
+  <data name="NoSequences" xml:space="preserve">
+    <value>Nincsenek szekvenciák.</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Sötét</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Világos</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>Rendszer</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Téma</value>
+  </data>
 </root>

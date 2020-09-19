@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:PageBase
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    x:Class="BrickController2.UI.Pages.SettingsPage"
+    Title="{extensions:Translate Settings}"
+    ios:Page.UseSafeArea="True"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+    <local:PageBase.Resources>
+        <ResourceDictionary>
+            <converters:ThemeStyleToBoolConverter x:Key="ThemeTypeToBool"/>
+        </ResourceDictionary>
+    </local:PageBase.Resources>
+
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand">
+            <Label Text="{extensions:Translate Settings}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+        </Grid>
+    </NavigationPage.TitleView>
+
+    <local:PageBase.Content>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+
+                <!-- Settings items -->
+                <Grid Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Theme -->
+                    <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate Theme}" FontSize="Large" VerticalOptions="Center"/>
+                    <Button Grid.Column="1" Grid.Row="0" Text="{Binding CurrentTheme}" Command="{Binding SelectThemeCommand}" Style="{StaticResource PickerButtonStyle}" HorizontalOptions="FillAndExpand"/>
+
+                    <BoxView Grid.ColumnSpan="2" Grid.Row="1" Style="{StaticResource DividerBoxViewStyle}" Margin="5,10,5,10"/>
+                </Grid>
+
+            </Grid>
+
+            <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
+
+        </AbsoluteLayout>
+    </local:PageBase.Content>
+    
+</local:PageBase>

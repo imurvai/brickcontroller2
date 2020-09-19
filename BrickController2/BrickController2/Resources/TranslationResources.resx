@@ -249,6 +249,9 @@
   <data name="Creations" xml:space="preserve">
     <value>Creations</value>
   </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
   <data name="DefaultProfile" xml:space="preserve">
     <value>Default profile</value>
   </data>
@@ -318,6 +321,9 @@
   <data name="Invert" xml:space="preserve">
     <value>Invert</value>
   </data>
+  <data name="Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
   <data name="Loading" xml:space="preserve">
     <value>Loading...</value>
   </data>
@@ -344,6 +350,9 @@
   </data>
   <data name="NoControllerActions" xml:space="preserve">
     <value>There are no controller actions added to the creation.</value>
+  </data>
+  <data name="NoSequences" xml:space="preserve">
+    <value>There are no sequences.</value>
   </data>
   <data name="Ok" xml:space="preserve">
     <value>Ok</value>
@@ -426,11 +435,20 @@
   <data name="ServoAngle" xml:space="preserve">
     <value>Servo range</value>
   </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="ShortChannel" xml:space="preserve">
     <value>Ch</value>
   </data>
   <data name="StepperAngle" xml:space="preserve">
     <value>Stepper angle</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Theme</value>
   </data>
   <data name="TurnOnBluetoothToConnect" xml:space="preserve">
     <value>Turn bluetooth on to connect to a bluetooth device.</value>

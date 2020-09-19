@@ -2,23 +2,36 @@
 <local:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.ControllerTesterPage"
-    Title="{extensions:Translate ControllerTester}">
-    
+    Title="{extensions:Translate ControllerTester}"
+    ios:Page.UseSafeArea="True"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+    <local:PageBase.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="0, 20, 0, 0" />
+            <On Platform="Android" Value="0, 0, 0, 0" />
+        </OnPlatform>
+    </local:PageBase.Padding>
+
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand">
+            <Label Text="{extensions:Translate ControllerTester}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+        </Grid>
+    </NavigationPage.TitleView>
+
     <local:PageBase.Content>
-        <StackLayout Padding="10">
-            
-            <ListView ItemsSource="{Binding ControllerEventList}" SelectionMode="None" HasUnevenRows="True">
-                <ListView.Triggers>
-                    <DataTrigger TargetType="ListView" Binding="{Binding ControllerEventList.Count}" Value="0">
-                        <Setter Property="IsVisible" Value="False"/>
-                    </DataTrigger>
-                </ListView.Triggers>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+
+                <!-- Controller event list -->
+                <CollectionView ItemsSource="{Binding ControllerEventList}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
                             <StackLayout Orientation="Vertical" Padding="10">
                                 <StackLayout Orientation="Horizontal">
                                     <Label Text="{Binding EventCode}" FontSize="Large" FontAttributes="Bold"/>
@@ -27,19 +40,17 @@
                                 </StackLayout>
                                 <Label Text="{Binding EventType}" FontSize="Medium"/>
                             </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <Label Text="{extensions:Translate PressButtonsOrMoveJoys}" Style="{StaticResource CollectionViewEmptyLabelStyle}"/>
+                    </CollectionView.EmptyView>
+                </CollectionView>
 
-            <Label Text="{extensions:Translate PressButtonsOrMoveJoys}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                <Label.Triggers>
-                    <DataTrigger TargetType="Label" Binding="{Binding ControllerEventList.Count}" Value="0">
-                        <Setter Property="IsVisible" Value="True"/>
-                    </DataTrigger>
-                </Label.Triggers>                
-            </Label>
-            
-        </StackLayout>
+            </Grid>
+
+            <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
+
+        </AbsoluteLayout>
     </local:PageBase.Content>
 </local:PageBase>

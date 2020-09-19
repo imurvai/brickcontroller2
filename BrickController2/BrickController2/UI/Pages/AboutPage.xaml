@@ -2,45 +2,64 @@
 <local:PageBase
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.AboutPage"
-    Title="{extensions:Translate About}">
+    Title="{extensions:Translate About}"
+    ios:Page.UseSafeArea="True"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand">
+            <Label Text="{extensions:Translate About}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+        </Grid>
+    </NavigationPage.TitleView>
 
     <local:PageBase.Content>
-        <ScrollView>
-            <StackLayout Padding="20">
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
 
-                <Label Text="BrickController 2" FontSize="Medium" FontAttributes="Bold"/>
+                <!-- Body -->
+                <ScrollView>
+                    <StackLayout Padding="20">
 
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="{extensions:Translate Version}  "/>
-                    <Label Text="{Binding Version}"/>
-                </StackLayout>
+                        <Label Text="BrickController 2" FontSize="Medium" FontAttributes="Bold"/>
 
-                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{extensions:Translate Version}  "/>
+                            <Label Text="{Binding Version}"/>
+                        </StackLayout>
 
-                <Label Text="Copyright © 2020, István Murvai (SCN)"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
-                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                        <Label Text="Copyright © 2020, István Murvai (SCN)"/>
 
-                <Label Text="{extensions:Translate ExternalLibraries}" FontAttributes="Bold"/>
-                <Label Text="Autofac"/>
-                <Label Text="Plugin.Permissions"/>
-                <Label Text="SQLiteNetExtensionsAsync"/>
-                <Label Text="Xamarin.Forms"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
-                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                        <Label Text="{extensions:Translate ExternalLibraries}" FontAttributes="Bold"/>
+                        <Label Text="Autofac"/>
+                        <Label Text="SQLiteNetExtensionsAsync"/>
+                        <Label Text="Xamarin.Forms"/>
+                        <Label Text="Xamarin.Essentials"/>
 
-                <Label Text="{extensions:Translate IconSet}" FontAttributes="Bold"/>
-                <Label Text="FlatIcon"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
-                <BoxView BackgroundColor="#E0E0E0" HeightRequest="1" VerticalOptions="Center" HorizontalOptions="Fill" Margin="5,16,5,16"/>
+                        <Label Text="{extensions:Translate IconSet}" FontAttributes="Bold"/>
+                        <Label Text="FlatIcon"/>
 
-                <Label Text="{extensions:Translate Disclaimer}" FontAttributes="Bold"/>
-                <Label Text="LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this application" FontSize="Small"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
-            </StackLayout>
-        </ScrollView>
+                        <Label Text="{extensions:Translate Disclaimer}" FontAttributes="Bold"/>
+                        <Label Text="LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this application" FontSize="Small"/>
+
+                    </StackLayout>
+                </ScrollView>
+            </Grid>
+
+            <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
+
+        </AbsoluteLayout>
     </local:PageBase.Content>
 </local:PageBase>

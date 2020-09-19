@@ -8,8 +8,11 @@ using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Translation;
-using BrickController2.UI.Services.UIThread;
+using BrickController2.UI.Services.MainThread;
 using Device = BrickController2.DeviceManagement.Device;
+using BrickController2.Helpers;
+using Xamarin.Forms;
+using System.Collections.Generic;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -17,7 +20,7 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
-        private readonly IUIThreadService _uIThreadService;
+        private readonly IMainThreadService _uIThreadService;
 
         private CancellationTokenSource _connectionTokenSource;
         private Task _connectionTask;
@@ -30,7 +33,7 @@ namespace BrickController2.UI.ViewModels
             ITranslationService translationService,
             IDeviceManager deviceManager,
             IDialogService dialogService,
-            IUIThreadService uIThreadService,
+            IMainThreadService uIThreadService,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
@@ -39,6 +42,10 @@ namespace BrickController2.UI.ViewModels
             _uIThreadService = uIThreadService;
 
             Device = parameters.Get<Device>("device");
+            DeviceOutputs =  Enumerable
+                .Range(0, Device.NumberOfChannels)
+                .Select(channel => new DeviceOutputViewModel(Device, channel))
+                .ToArray();
 
             RenameCommand = new SafeCommand(async () => await RenameDeviceAsync());
             BuWizzOutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
@@ -55,6 +62,8 @@ namespace BrickController2.UI.ViewModels
 
         public int BuWizzOutputLevel { get; set; } = 1;
         public int BuWizz2OutputLevel { get; set; } = 1;
+
+        public IEnumerable<DeviceOutputViewModel> DeviceOutputs { get; }
 
         public override async void OnAppearing()
         {
@@ -99,13 +108,12 @@ namespace BrickController2.UI.ViewModels
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("Rename"),
-                    Translate("EnterDeviceName"),
                     Device.Name,
                     Translate("DeviceName"),
                     Translate("Rename"),
                     Translate("Cancel"),
                     KeyboardType.Text,
+                    (deviceName) => !string.IsNullOrEmpty(deviceName),
                     _disappearingTokenSource.Token);
 
                 if (result.IsOk)
@@ -204,6 +212,39 @@ namespace BrickController2.UI.ViewModels
         private void SetBuWizzOutputLevel(int level)
         {
             Device.SetOutputLevel(level);
+        }
+
+        public class DeviceOutputViewModel : NotifyPropertyChangedSource
+        {
+            private int _output;
+
+            public DeviceOutputViewModel(Device device, int channel)
+            {
+                Device = device;
+                Channel = channel;
+                Output = 0;
+
+                TouchUpCommand = new Command(() => Output = 0);
+            }
+
+            public Device Device { get; }
+            public int Channel { get; }
+
+            public int MinValue => -100;
+            public int MaxValue => 100;
+
+            public int Output
+            {
+                get { return _output; }
+                set
+                {
+                    _output = value;
+                    Device.SetOutput(Channel, (float)value / MaxValue);
+                    RaisePropertyChanged();
+                }
+            }
+
+            public ICommand TouchUpCommand { get; }
         }
     }
 }

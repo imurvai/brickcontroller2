@@ -65,13 +65,12 @@ namespace BrickController2.UI.ViewModels
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("Rename"),
-                    Translate("EnterCreationName"),
                     Creation.Name,
                     Translate("CreationName"),
                     Translate("Rename"),
                     Translate("Cancel"),
                     KeyboardType.Text,
+                    (creationName) => !string.IsNullOrEmpty(creationName),
                     _disappearingTokenSource.Token);
                 if (result.IsOk)
                 {
@@ -135,13 +134,12 @@ namespace BrickController2.UI.ViewModels
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("ControllerProfile"),
-                    Translate("EnterProfileName"),
                     null,
                     Translate("ProfileName"),
                     Translate("Create"),
                     Translate("Cancel"),
                     KeyboardType.Text,
+                    (profileName) => !string.IsNullOrEmpty(profileName),
                     _disappearingTokenSource.Token);
 
                 if (result.IsOk)

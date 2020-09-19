@@ -1,8 +1,181 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Application xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BrickController2.App">
-	<Application.Resources>
+<Application
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    x:Class="BrickController2.App">
     
-	</Application.Resources>
+	<Application.Resources>
+        <ResourceDictionary Source="UI/Themes/LightTheme.xaml"/>
+
+        <!-- Global targets -->
+        
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
+        </Style>
+
+        <Style TargetType="controls:DeviceChannelLabel">
+            <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
+        </Style>
+
+        <Style TargetType="Entry">
+            <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}"/>
+            <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
+            <Setter Property="PlaceholderColor" Value="{DynamicResource SecondaryColor}"/>
+        </Style>
+
+        <Style TargetType="Switch">
+            <Setter Property="BackgroundColor" Value="{DynamicResource TransparentColor}"/>
+            <Setter Property="OnColor" Value="{DynamicResource SwitchOnColor}"/>
+            <Setter Property="ThumbColor" Value="{DynamicResource SwitchThumbColor}"/>
+        </Style>
+
+        <Style TargetType="Picker">
+            <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
+        </Style>
+
+        <Style TargetType="Slider">
+            <Setter Property="MinimumTrackColor" Value="{DynamicResource SliderMinimumTrackColor}"/>
+            <Setter Property="MaximumTrackColor" Value="{DynamicResource SliderMaximumTrackColor}"/>
+            <Setter Property="ThumbColor" Value="{DynamicResource SliderThumbColor}"/>
+        </Style>
+
+        <Style TargetType="controls:ExtendedSlider">
+            <Setter Property="MinimumTrackColor" Value="{DynamicResource SliderMinimumTrackColor}"/>
+            <Setter Property="MaximumTrackColor" Value="{DynamicResource SliderMaximumTrackColor}"/>
+            <Setter Property="ThumbColor" Value="{DynamicResource SliderThumbColor}"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="BackgroundColor" Value="{DynamicResource ButtonBackgroundColor}"/>
+            <Setter Property="TextColor" Value="{DynamicResource ButtonTextColor}"/>
+        </Style>
+
+        <Style TargetType="ProgressBar">
+            <Setter Property="ProgressColor" Value="{DynamicResource ProgressColor}"/>
+        </Style>
+
+        <!-- Navigation bar -->
+
+        <Style x:Key="NavigationBarGridStyle" TargetType="Grid">
+            <Setter Property="BackgroundColor" Value="{DynamicResource NavigationBarColor}"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+        
+        <Style x:Key="NavigationBarLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="{DynamicResource NavigationBarItemColor}"/>
+            <Setter Property="FontSize" Value="Large"/>
+        </Style>
+
+        <Style x:Key="NavigationBarImageButtonStyle" TargetType="controls:ImageButton">
+            <Setter Property="WidthRequest" Value="30"/>
+            <Setter Property="HeightRequest" Value="30"/>
+            <Setter Property="ImageColor" Value="{DynamicResource NavigationBarItemColor}"/>
+        </Style>
+        
+        <!-- Header bar -->
+
+        <Style x:Key="HeaderGridStyle" TargetType="Grid">
+            <Setter Property="BackgroundColor" Value="{DynamicResource HeaderBackgroundColor}"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+
+        <Style x:Key="HeaderBarImageButtonStyle" TargetType="controls:ImageButton">
+            <Setter Property="WidthRequest" Value="30"/>
+            <Setter Property="HeightRequest" Value="30"/>
+            <Setter Property="ImageColor" Value="{DynamicResource HeaderItemColor}"/>
+        </Style>
+
+        <!-- Footer bar -->
+
+        <Style x:Key="FooterGridStyle" TargetType="Grid">
+            <Setter Property="BackgroundColor" Value="{DynamicResource FooterBackgroudColor}"/>
+            <Setter Property="Padding" Value="4"/>
+        </Style>
+
+        <Style x:Key="FooterColorImageStyle" TargetType="controls:ColorImage">
+            <Setter Property="WidthRequest" Value="20"/>
+            <Setter Property="HeightRequest" Value="20"/>
+            <Setter Property="Color" Value="{DynamicResource PrimaryColor}"/>
+        </Style>
+        
+        <!-- CollectionView related -->
+
+        <Style x:Key="CollectionViewHeaderGridStyle" TargetType="Grid">
+            <Setter Property="BackgroundColor" Value="{DynamicResource CollectionViewHeaderBackgroundColor}"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+        
+        <Style x:Key="CollectionItemGridStyle" TargetType="Grid">
+            <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+        
+        <Style x:Key="CollectionViewEmptyLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="{DynamicResource TertiaryTextColor}"/>
+            <Setter Property="FontSize" Value="Medium"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+            <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="VerticalTextAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="Grid">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="{DynamicResource CollectionViewSelectedItemBackgroundColor}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+
+        <!-- SwipeView and SwipeItems -->
+
+        <Style TargetType="SwipeView">
+            <Setter Property="BackgroundColor" Value="{DynamicResource TransparentColor}"/>
+        </Style>
+
+        <!-- Dialog related -->
+
+        <Style x:Key="DialogFrameStyle" TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="{DynamicResource DialogBackgroundColor}"/>
+            <Setter Property="BorderColor" Value="{DynamicResource DialogBorderColor}"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="HasShadow" Value="True"/>
+        </Style>
+        
+        <!-- Picker button -->
+
+        <Style x:Key="PickerButtonStyle" TargetType="Button">
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}"/>
+            <Setter Property="BorderColor" Value="{DynamicResource TertiaryTextColor}"/>
+            <Setter Property="BorderWidth" Value="1"/>
+            <Setter Property="TextColor" Value="{DynamicResource PickerTextColor}"/>
+            <Setter Property="HeightRequest" Value="40"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+        </Style>
+        
+        <!-- Misc -->
+
+        <Style x:Key="DividerBoxViewStyle" TargetType="BoxView">
+            <Setter Property="BackgroundColor" Value="{DynamicResource DividerColor}"/>
+            <Setter Property="HeightRequest" Value="1"/>
+            <Setter Property="HorizontalOptions" Value="Fill"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+        </Style>
+
+        <Style x:Key="PickerStyle" TargetType="Picker">
+            <Setter Property="TextColor" Value="{DynamicResource PrimaryTextColor}"/>
+        </Style>
+
+    </Application.Resources>
 </Application>

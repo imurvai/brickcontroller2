@@ -55,13 +55,12 @@ namespace BrickController2.UI.ViewModels
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("Sequence"),
-                    Translate("EnterSequenceName"),
                     null,
                     Translate("SequenceName"),
                     Translate("Create"),
                     Translate("Cancel"),
                     KeyboardType.Text,
+                    (sequenceName) => !string.IsNullOrEmpty(sequenceName),
                     _disappearingTokenSource.Token);
 
                 if (result.IsOk)

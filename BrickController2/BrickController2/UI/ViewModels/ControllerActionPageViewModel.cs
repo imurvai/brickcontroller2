@@ -1,9 +1,9 @@
 ﻿using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
-using BrickController2.PlatformServices.Preferences;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Services.Preferences;
 using BrickController2.UI.Services.Translation;
 using System;
 using System.Collections.ObjectModel;
@@ -19,7 +19,7 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
-        private readonly IPreferences _preferences;
+        private readonly IPreferencesService _preferences;
 
         private CancellationTokenSource _disappearingTokenSource;
 
@@ -31,7 +31,7 @@ namespace BrickController2.UI.ViewModels
             ICreationManager creationManager,
             IDeviceManager deviceManager,
             IDialogService dialogService,
-            IPreferences preferences,
+            IPreferencesService preferences,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
@@ -78,15 +78,20 @@ namespace BrickController2.UI.ViewModels
                 Action.SequenceName = string.Empty;
             }
 
-            SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null);
-            DeleteControllerActionCommand = new SafeCommand(async () => await DeleteControllerActionAsync());
+            SaveControllerActionCommand = new SafeCommand(async () => await SaveControllerActionAsync(), () => SelectedDevice != null && !_dialogService.IsDialogOpen);
+            SelectDeviceCommand = new SafeCommand(async () => await SelectDeviceAsync());
             OpenDeviceDetailsCommand = new SafeCommand(async () => await OpenDeviceDetailsAsync(), () => SelectedDevice != null);
+            SelectChannelOutputTypeCommand = new SafeCommand(async () => await SelectChannelOutputTypeAsync(), () => SelectedDevice != null);
             OpenChannelSetupCommand = new SafeCommand(async () => await OpenChannelSetupAsync(), () => SelectedDevice != null);
+            SelectButtonTypeCommand = new SafeCommand(async () => await SelectButtonTypeAsync());
+            SelectSequenceCommand = new SafeCommand(async () => await SelectSequenceAsync());
             OpenSequenceEditorCommand = new SafeCommand(async () => await OpenSequenceEditorAsync());
+            SelectAxisTypeCommand = new SafeCommand(async () => await SelectAxisTypeAsync());
+            SelectAxisCharacteristicCommand = new SafeCommand(async () => await SelectAxisCharacteristicAsync());
         }
 
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
-        public ObservableCollection<string> Sequences => new ObservableCollection<string>(_creationManager.Sequences.Select(s => s.Name));
+        public ObservableCollection<string> Sequences => new ObservableCollection<string>(_creationManager.Sequences.Select(s => s.Name).ToArray());
 
         public ControllerEvent ControllerEvent { get; }
         public ControllerAction ControllerAction { get; }
@@ -111,10 +116,15 @@ namespace BrickController2.UI.ViewModels
         public ControllerAction Action { get; } = new ControllerAction();
 
         public ICommand SaveControllerActionCommand { get; }
-        public ICommand DeleteControllerActionCommand { get; }
+        public ICommand SelectDeviceCommand { get; }
+        public ICommand SelectChannelOutputTypeCommand { get; }
         public ICommand OpenDeviceDetailsCommand { get; }
         public ICommand OpenChannelSetupCommand { get; }
+        public ICommand SelectButtonTypeCommand { get; }
+        public ICommand SelectSequenceCommand { get; }
         public ICommand OpenSequenceEditorCommand { get; }
+        public ICommand SelectAxisTypeCommand { get; }
+        public ICommand SelectAxisCharacteristicCommand { get; }
 
         public override void OnAppearing()
         {
@@ -187,30 +197,17 @@ namespace BrickController2.UI.ViewModels
             await NavigationService.NavigateBackAsync();
         }
 
-        private async Task DeleteControllerActionAsync()
+        private async Task SelectDeviceAsync()
         {
-            try
-            {
-                if (await _dialogService.ShowQuestionDialogAsync(
-                    Translate("Confirm"),
-                    Translate("AreYouSureToDeleteControllerAction"),
-                    Translate("Yes"),
-                    Translate("No"),
-                    _disappearingTokenSource.Token))
-                {
-                    if (ControllerAction != null)
-                    {
-                        await _dialogService.ShowProgressDialogAsync(
-                            false,
-                            async (progressDialog, token) => await _creationManager.DeleteControllerActionAsync(ControllerAction),
-                            Translate("Deleting"));
-                    }
+            var result = await _dialogService.ShowSelectionDialogAsync(
+                Devices,
+                Translate("SelectDevice"),
+                Translate("Cancel"),
+                _disappearingTokenSource.Token);
 
-                    await NavigationService.NavigateBackAsync();
-                }
-            }
-            catch (OperationCanceledException)
+            if (result.IsOk)
             {
+                SelectedDevice = result.SelectedItem;
             }
         }
 
@@ -224,6 +221,20 @@ namespace BrickController2.UI.ViewModels
             await NavigationService.NavigateToAsync<DevicePageViewModel>(new NavigationParameters(("device", SelectedDevice)));
         }
 
+        private async Task SelectChannelOutputTypeAsync()
+        {
+            var result = await _dialogService.ShowSelectionDialogAsync(
+                Enum.GetNames(typeof(ChannelOutputType)),
+                Translate("ChannelType"),
+                Translate("Cancel"),
+                _disappearingTokenSource.Token);
+
+            if (result.IsOk)
+            {
+                Action.ChannelOutputType = (ChannelOutputType)Enum.Parse(typeof(ChannelOutputType), result.SelectedItem);
+            }
+        }
+
         private async Task OpenChannelSetupAsync()
         {
             if (SelectedDevice == null)
@@ -232,6 +243,45 @@ namespace BrickController2.UI.ViewModels
             }
 
             await NavigationService.NavigateToAsync<ChannelSetupPageViewModel>(new NavigationParameters(("device", SelectedDevice), ("controlleraction", Action)));
+        }
+
+        private async Task SelectButtonTypeAsync()
+        {
+            var result = await _dialogService.ShowSelectionDialogAsync(
+                Enum.GetNames(typeof(ControllerButtonType)),
+                Translate("ButtonType"),
+                Translate("Cancel"),
+                _disappearingTokenSource.Token);
+
+            if (result.IsOk)
+            {
+                Action.ButtonType = (ControllerButtonType)Enum.Parse(typeof(ControllerButtonType), result.SelectedItem);
+            }
+        }
+
+        private async Task SelectSequenceAsync()
+        {
+            if (Sequences.Any())
+            {
+                var result = await _dialogService.ShowSelectionDialogAsync(
+                    Sequences,
+                    Translate("SelectSequence"),
+                    Translate("Cancel"),
+                    _disappearingTokenSource.Token);
+
+                if (result.IsOk)
+                {
+                    Action.SequenceName = result.SelectedItem;
+                }
+            }
+            else
+            {
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    Translate("NoSequences"),
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
+            }
         }
 
         private async Task OpenSequenceEditorAsync()
@@ -249,6 +299,34 @@ namespace BrickController2.UI.ViewModels
                     Translate("MissingSequence"),
                     Translate("Ok"),
                     _disappearingTokenSource.Token);
+            }
+        }
+
+        private async Task SelectAxisTypeAsync()
+        {
+            var result = await _dialogService.ShowSelectionDialogAsync(
+                Enum.GetNames(typeof(ControllerAxisType)),
+                Translate("AxisType"),
+                Translate("Cancel"),
+                _disappearingTokenSource.Token);
+
+            if (result.IsOk)
+            {
+                Action.AxisType = (ControllerAxisType)Enum.Parse(typeof(ControllerAxisType), result.SelectedItem);
+            }
+        }
+
+        private async Task SelectAxisCharacteristicAsync()
+        {
+            var result = await _dialogService.ShowSelectionDialogAsync(
+                Enum.GetNames(typeof(ControllerAxisCharacteristic)),
+                Translate("AxisCharacteristic"),
+                Translate("Cancel"),
+                _disappearingTokenSource.Token);
+
+            if (result.IsOk)
+            {
+                Action.AxisCharacteristic = (ControllerAxisCharacteristic)Enum.Parse(typeof(ControllerAxisCharacteristic), result.SelectedItem);
             }
         }
     }

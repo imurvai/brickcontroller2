@@ -2,67 +2,70 @@
 <local:PageBase 
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:behaviors="clr-namespace:BrickController2.UI.Behaviors"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationPage"
     x:Name="Page"
-    Title="{extensions:Translate Creation}">
+    Title="{extensions:Translate Creation}"
+    ios:Page.UseSafeArea="True"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
 
-    <local:PageBase.ToolbarItems>
-        <ToolbarItem Icon="ic_edit_white.png" Order="Primary" Command="{Binding RenameCreationCommand}"/>
-        <ToolbarItem Icon="ic_add_white.png" Order="Primary" Command="{Binding AddControllerProfileCommand}"/>
-    </local:PageBase.ToolbarItems>
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand">
+            <Label Text="{extensions:Translate Creation}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+        </Grid>
+    </NavigationPage.TitleView>
 
     <local:PageBase.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-            <!-- Header -->
-            <Grid Grid.Row="0" BackgroundColor="LightGray" Padding="10">
-                <Label Text="{Binding Creation.Name}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
-                <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play_white.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
+                <!-- Header -->
+                <Grid Grid.Row="0" Style="{StaticResource HeaderGridStyle}">
+                    <Label Text="{Binding Creation.Name}" TextColor="{DynamicResource EditableTextColor}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RenameCreationCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play.png}" ImageColor="White" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
+                </Grid>
+
+                <!-- Controller profile list -->
+                <CollectionView Grid.Row="1" ItemsSource="{Binding Creation.ControllerProfiles}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
+                                <SwipeView.LeftItems>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteControllerProfileCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <Grid Style="{StaticResource CollectionItemGridStyle}">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.ControllerProfileTappedCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
+                                </Grid>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.EmptyView>
+                        <Label Text="{extensions:Translate AddControllerProfiles}" Style="{StaticResource CollectionViewEmptyLabelStyle}"/>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+
+                <controls:FloatingActionButton Grid.Row="0" Grid.RowSpan="2" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddControllerProfileCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
+
             </Grid>
 
-            <!-- Controller profile list -->
-            <ListView Grid.Row="1" ItemsSource="{Binding Creation.ControllerProfiles}" SelectionMode="None" HasUnevenRows="True">
-                <ListView.Triggers>
-                    <DataTrigger TargetType="ListView" Binding="{Binding Creation.ControllerProfiles.Count}" Value="0">
-                        <Setter Property="IsVisible" Value="False"/>
-                    </DataTrigger>
-                </ListView.Triggers>
-                <ListView.Behaviors>
-                    <behaviors:ListViewItemTappedBehavior Command="{Binding ControllerProfileTappedCommand}"/>
-                </ListView.Behaviors>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Grid Padding="10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
-                                <controls:ImageButton Grid.Column="1" ImageSource="{extensions:ImageResource Source=ic_delete_black.png}" Command="{Binding BindingContext.DeleteControllerProfileCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" WidthRequest="30" HeightRequest="30" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10"/>
-                            </Grid>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
 
-            <!-- Controller profile list placeholder -->
-            <Label Grid.Row="1" Text="{extensions:Translate AddControllerProfiles}" FontSize="Medium" FontAttributes="Bold" TextColor="LightGray" IsVisible="False" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                <Label.Triggers>
-                    <DataTrigger TargetType="Label" Binding="{Binding Creation.ControllerProfiles.Count}" Value="0">
-                        <Setter Property="IsVisible" Value="True"/>
-                    </DataTrigger>
-                </Label.Triggers>
-            </Label>
-
-        </Grid>
+        </AbsoluteLayout>
     </local:PageBase.Content>
 </local:PageBase>

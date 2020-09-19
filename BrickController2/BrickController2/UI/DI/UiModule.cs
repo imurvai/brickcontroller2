@@ -6,9 +6,12 @@ using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Pages;
 using BrickController2.UI.ViewModels;
 using Xamarin.Forms;
-using BrickController2.UI.Services.UIThread;
+using BrickController2.UI.Services.MainThread;
 using BrickController2.UI.Services.Background;
 using BrickController2.UI.Services.Translation;
+using BrickController2.UI.Services.Dialog;
+using BrickController2.UI.Services.Preferences;
+using BrickController2.UI.Services.Theme;
 
 namespace BrickController2.UI.DI
 {
@@ -19,9 +22,14 @@ namespace BrickController2.UI.DI
             // Register services
 
             builder.RegisterType<NavigationService>().As<INavigationService>().SingleInstance();
-            builder.RegisterType<UIThreadService>().As<IUIThreadService>().SingleInstance();
+            builder.RegisterType<MainThreadService>().As<IMainThreadService>().SingleInstance();
             builder.RegisterType<BackgroundService>().AsSelf().As<IBackgroundService>().SingleInstance();
             builder.RegisterType<TranslationService>().AsSelf().As<ITranslationService>().SingleInstance();
+            builder.RegisterType<PreferencesService>().AsSelf().As<IPreferencesService>().SingleInstance();
+            builder.RegisterType<ThemeService>().AsSelf().As<IThemeService>().SingleInstance();
+
+            // Register Dialogs
+            builder.RegisterType<DialogService>().As<IDialogService>().As<IDialogServerHost>().SingleInstance();
 
             // Register viewmodels
             foreach (var vmType in GetSubClassesOf<PageViewModelBase>())
@@ -49,7 +57,7 @@ namespace BrickController2.UI.DI
                 return (type, vm) => componentContext.ResolveKeyed<PageBase>(type, new TypedParameter(typeof(PageViewModelBase), vm));
             });
 
-            // 
+            // Xamarin forms related
             builder.RegisterType<NavigationPage>();
             builder.RegisterType<App>();
         }

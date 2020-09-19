@@ -6,11 +6,10 @@ using BrickController2.DeviceManagement;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
 using System.Threading;
 using System;
 using BrickController2.UI.Services.Translation;
+using Xamarin.Essentials;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -35,7 +34,8 @@ namespace BrickController2.UI.ViewModels
             _deviceManager = deviceManager;
             _dialogService = dialogService;
 
-            AddCreationCommand = new SafeCommand(async () => await AddCreation());
+            OpenSettingsPageCommand = new SafeCommand(async () => await navigationService.NavigateToAsync<SettingsPageViewModel>(), () => !_dialogService.IsDialogOpen);
+            AddCreationCommand = new SafeCommand(async () => await AddCreationAsync());
             CreationTappedCommand = new SafeCommand<Creation>(async creation => await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation))));
             DeleteCreationCommand = new SafeCommand<Creation>(async creation => await DeleteCreationAsync(creation));
             NavigateToDevicesCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<DeviceListPageViewModel>());
@@ -46,6 +46,7 @@ namespace BrickController2.UI.ViewModels
 
         public ObservableCollection<Creation> Creations => _creationManager.Creations;
 
+        public ICommand OpenSettingsPageCommand { get; }
         public ICommand AddCreationCommand { get; }
         public ICommand CreationTappedCommand { get; }
         public ICommand DeleteCreationCommand { get; }
@@ -59,8 +60,8 @@ namespace BrickController2.UI.ViewModels
             _disappearingTokenSource?.Cancel();
             _disappearingTokenSource = new CancellationTokenSource();
 
-            await RequestPermissions();
-            await LoadCreationsAndDevices();
+            await RequestPermissionsAsync();
+            await LoadCreationsAndDevicesAsync();
         }
 
         public override void OnDisappearing()
@@ -68,25 +69,12 @@ namespace BrickController2.UI.ViewModels
             _disappearingTokenSource.Cancel();
         }
 
-        private async Task RequestPermissions()
+        private async Task RequestPermissionsAsync()
         {
-            var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+            var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
             if (status != PermissionStatus.Granted)
             {
-                if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
-                {
-                    await _dialogService.ShowMessageBoxAsync(
-                        Translate("PermissionRequest"),
-                        Translate("LocationPermissionIsNeeded"),
-                        Translate("Ok"),
-                        _disappearingTokenSource.Token);
-                }
-
-                var result = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
-                if (result.ContainsKey(Permission.Location))
-                {
-                    status = result[Permission.Location];
-                }
+                status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
             }
 
             if (status != PermissionStatus.Granted)
@@ -99,7 +87,7 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private async Task LoadCreationsAndDevices()
+        private async Task LoadCreationsAndDevicesAsync()
         {
             if (!_isLoaded)
             {
@@ -115,18 +103,17 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private async Task AddCreation()
+        private async Task AddCreationAsync()
         {
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    Translate("Creation"),
-                    Translate("EnterCreationName"),
                     null,
                     Translate("CreationName"),
                     Translate("Create"),
                     Translate("Cancel"),
                     KeyboardType.Text,
+                    (creationName) => !string.IsNullOrEmpty(creationName),
                     _disappearingTokenSource.Token);
 
                 if (result.IsOk)

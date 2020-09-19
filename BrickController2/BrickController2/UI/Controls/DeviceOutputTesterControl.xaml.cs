@@ -42,9 +42,7 @@ namespace BrickController2.UI.Controls
                 var slider = new ExtendedSlider
                 {
                     BindingContext = deviceOutputViewModel,
-                    HeightRequest = 50,
-                    MinimumTrackColor = Color.LightGray,
-                    MaximumTrackColor = Color.LightGray
+                    HeightRequest = 50
                 };
 
                 slider.SetBinding(ExtendedSlider.ValueProperty, nameof(DeviceOutputViewModel.Output), BindingMode.TwoWay);
