@@ -222,7 +222,7 @@ namespace BrickController2.BusinessLogic
             {
                 if (Math.Abs(axisValue) <= axisDeadZone)
                 {
-                    return (false, 0);
+                    return (true, 0);
                 }
 
                 if (axisValue < 0)
