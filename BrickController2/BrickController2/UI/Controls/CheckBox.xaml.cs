@@ -9,7 +9,7 @@ namespace BrickController2.UI.Controls
         public CheckBox()
         {
             InitializeComponent();
-
+            UpdateView();
             TapRecognizer.Command = new Command(() => Checked = !Checked);
         }
 
@@ -26,9 +26,14 @@ namespace BrickController2.UI.Controls
             if (bindable is CheckBox checkBox && newValue is bool isChecked)
             {
                 checkBox.Checked = isChecked;
-                checkBox.UncheckedShape.IsVisible = !isChecked;
-                checkBox.CheckedShape.IsVisible = isChecked;
+                checkBox.UpdateView();
             }
+        }
+
+        private void UpdateView()
+        {
+            UncheckedShape.IsVisible = !Checked;
+            CheckedShape.IsVisible = Checked;
         }
     }
 }
