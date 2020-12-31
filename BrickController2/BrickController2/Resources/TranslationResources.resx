@@ -351,6 +351,9 @@
   <data name="NoControllerActions" xml:space="preserve">
     <value>There are no controller actions added to the creation.</value>
   </data>
+  <data name="NofMDevicesConnected" xml:space="preserve">
+    <value>{0} of {1} device(s) connected</value>
+  </data>
   <data name="NoSequences" xml:space="preserve">
     <value>There are no sequences.</value>
   </data>
