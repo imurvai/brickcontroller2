@@ -333,6 +333,9 @@
   <data name="Loop" xml:space="preserve">
     <value>Loop</value>
   </data>
+  <data name="MaxInput" xml:space="preserve">
+    <value>Max input</value>
+  </data>
   <data name="MaxOutput" xml:space="preserve">
     <value>Max output</value>
   </data>

@@ -709,6 +709,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Max input.
+        /// </summary>
+        internal static string MaxInput {
+            get {
+                return ResourceManager.GetString("MaxInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max output.
         /// </summary>
         internal static string MaxOutput {
