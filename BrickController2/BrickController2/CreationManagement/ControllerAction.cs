@@ -78,10 +78,10 @@ namespace BrickController2.CreationManagement
             set { _maxOutputPercent = value; RaisePropertyChanged(); }
         }
         
-        public int MaxInputPercent
+        public int? MaxInputPercent
         {
             get { return _maxInputPercent; }
-            set { _maxInputPercent = value; RaisePropertyChanged(); }
+            set { _maxInputPercent = value != null ? (int)value : 100 ; RaisePropertyChanged(); }
         }
 
         public int AxisDeadZonePercent
