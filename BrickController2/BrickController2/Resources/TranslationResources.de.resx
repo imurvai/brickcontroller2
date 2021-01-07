@@ -169,7 +169,10 @@
     <value>Achseneigenschaften</value>
   </data>
   <data name="AxisDeadZone" xml:space="preserve">
-    <value>Achse inaktive Zone</value>
+    <value>Joy inaktive Zone</value>
+  </data>
+  <data name="AxisType" xml:space="preserve">
+    <value>Joy Typ</value>
   </data>
   <data name="Battery" xml:space="preserve">
     <value>Batterie</value>
@@ -419,6 +422,9 @@
   </data>
   <data name="ShortChannel" xml:space="preserve">
     <value>Ka</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value>Joy Aktive Zone</value>
   </data>
   <data name="System" xml:space="preserve">
     <value>System</value>

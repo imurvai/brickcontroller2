@@ -235,7 +235,7 @@ namespace BrickController2.BusinessLogic
                 }
             }
 
-            axisValue = controllerAction.MaxInputPercent > 0 ? axisValue * 100F / (float)controllerAction.MaxInputPercent : 0;
+            axisValue = controllerAction.AxisActiveZonePercent > 0 ? axisValue * 100F / controllerAction.AxisActiveZonePercent : axisValue;
             
             if (controllerAction.AxisCharacteristic == ControllerAxisCharacteristic.Exponential)
             {
