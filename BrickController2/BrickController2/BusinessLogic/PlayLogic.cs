@@ -235,6 +235,8 @@ namespace BrickController2.BusinessLogic
                 }
             }
 
+            axisValue = controllerAction.MaxInputPercent > 0 ? axisValue * 100F / (float)controllerAction.MaxInputPercent : 0;
+            
             if (controllerAction.AxisCharacteristic == ControllerAxisCharacteristic.Exponential)
             {
                 // Cheat :)
