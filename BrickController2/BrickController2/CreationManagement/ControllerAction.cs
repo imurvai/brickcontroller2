@@ -14,7 +14,7 @@ namespace BrickController2.CreationManagement
         private ControllerAxisType _axisType;
         private ControllerAxisCharacteristic _axisCharacteristic;
         private int _maxOutputPercent;
-        private int _maxInputPercent;
+        private int _axisActiveZonePercent = 100;
         private int _axisDeadZonePercent;
         private int _maxServoAngle;
         private int _servoBaseAngle;
@@ -77,11 +77,11 @@ namespace BrickController2.CreationManagement
             get { return _maxOutputPercent; }
             set { _maxOutputPercent = value; RaisePropertyChanged(); }
         }
-        
-        public int? MaxInputPercent
+
+        public int AxisActiveZonePercent
         {
-            get { return _maxInputPercent; }
-            set { _maxInputPercent = value != null ? (int)value : 100 ; RaisePropertyChanged(); }
+            get { return _axisActiveZonePercent; }
+            set { _axisActiveZonePercent = value != 0 ? value : 100; RaisePropertyChanged(); }
         }
 
         public int AxisDeadZonePercent

@@ -168,11 +168,17 @@
   <data name="AutoCalibrate" xml:space="preserve">
     <value>Auto calibrate</value>
   </data>
+  <data name="AxisActiveZone" xml:space="preserve">
+    <value>Joy active zone</value>
+  </data>
   <data name="AxisCharacteristic" xml:space="preserve">
-    <value>Axis characteristic</value>
+    <value>Joy characteristic</value>
   </data>
   <data name="AxisDeadZone" xml:space="preserve">
-    <value>Axis dead zone</value>
+    <value>Joy dead zone</value>
+  </data>
+  <data name="AxisType" xml:space="preserve">
+    <value>Joy type</value>
   </data>
   <data name="BaseAngle" xml:space="preserve">
     <value>Base angle</value>
@@ -332,9 +338,6 @@
   </data>
   <data name="Loop" xml:space="preserve">
     <value>Loop</value>
-  </data>
-  <data name="MaxInput" xml:space="preserve">
-    <value>Max input</value>
   </data>
   <data name="MaxOutput" xml:space="preserve">
     <value>Max output</value>

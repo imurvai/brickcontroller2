@@ -55,7 +55,7 @@ namespace BrickController2.UI.ViewModels
                 Action.AxisType = ControllerAction.AxisType;
                 Action.AxisCharacteristic = ControllerAction.AxisCharacteristic;
                 Action.MaxOutputPercent = ControllerAction.MaxOutputPercent;
-                Action.MaxInputPercent = ControllerAction.MaxInputPercent;
+                Action.AxisActiveZonePercent = ControllerAction.AxisActiveZonePercent;
                 Action.AxisDeadZonePercent = ControllerAction.AxisDeadZonePercent;
                 Action.ServoBaseAngle = ControllerAction.ServoBaseAngle;
                 Action.StepperAngle = ControllerAction.StepperAngle;
@@ -73,7 +73,7 @@ namespace BrickController2.UI.ViewModels
                 Action.AxisType = ControllerAxisType.Normal;
                 Action.AxisCharacteristic = ControllerAxisCharacteristic.Linear;
                 Action.MaxOutputPercent = 100;
-                Action.MaxInputPercent = 100;
+                Action.AxisActiveZonePercent = 100;
                 Action.AxisDeadZonePercent = 0;
                 Action.ServoBaseAngle = 0;
                 Action.StepperAngle = 90;
@@ -168,7 +168,7 @@ namespace BrickController2.UI.ViewModels
                             Action.AxisType,
                             Action.AxisCharacteristic,
                             Action.MaxOutputPercent,
-                            Action.MaxInputPercent,
+                            Action.AxisActiveZonePercent,
                             Action.AxisDeadZonePercent,
                             Action.ChannelOutputType,
                             Action.MaxServoAngle,
@@ -187,7 +187,7 @@ namespace BrickController2.UI.ViewModels
                             Action.AxisType,
                             Action.AxisCharacteristic,
                             Action.MaxOutputPercent,
-                            Action.MaxInputPercent,
+                            Action.AxisActiveZonePercent,
                             Action.AxisDeadZonePercent,
                             Action.ChannelOutputType,
                             Action.MaxServoAngle,

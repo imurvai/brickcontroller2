@@ -151,10 +151,10 @@
     <value>Biztos törölni szeretnéd ezt a vezérlő akciót?</value>
   </data>
   <data name="AxisCharacteristic" xml:space="preserve">
-    <value>Tengely karakterisztika</value>
+    <value>Joy karakterisztika</value>
   </data>
   <data name="AxisDeadZone" xml:space="preserve">
-    <value>Tengely inaktív zóna</value>
+    <value>Joy inaktív zóna</value>
   </data>
   <data name="Blue" xml:space="preserve">
     <value>Kék</value>
@@ -473,5 +473,11 @@
   </data>
   <data name="Theme" xml:space="preserve">
     <value>Téma</value>
+  </data>
+  <data name="AxisActiveZone" xml:space="preserve">
+    <value>Joy aktív zóna</value>
+  </data>
+  <data name="AxisType" xml:space="preserve">
+    <value>Joy típusa</value>
   </data>
 </root>
