@@ -222,7 +222,7 @@ namespace BrickController2.CreationManagement
             ControllerAxisType axisType,
             ControllerAxisCharacteristic axisCharacteristic,
             int maxOutputPercent,
-            int maxInputPercent,
+            int axisActiveZonePercent,
             int axisDeadZonePercent,
             ChannelOutputType channelOutputType,
             int maxServoAngle,
@@ -247,7 +247,7 @@ namespace BrickController2.CreationManagement
                 controllerAction.AxisType = axisType;
                 controllerAction.AxisCharacteristic = axisCharacteristic;
                 controllerAction.MaxOutputPercent = maxOutputPercent;
-                controllerAction.AxisActiveZonePercent = maxInputPercent;
+                controllerAction.AxisActiveZonePercent = axisActiveZonePercent;
                 controllerAction.AxisDeadZonePercent = axisDeadZonePercent;
                 controllerAction.ChannelOutputType = channelOutputType;
                 controllerAction.MaxServoAngle = maxServoAngle;
