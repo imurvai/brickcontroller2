@@ -181,7 +181,7 @@ namespace BrickController2.BusinessLogic
                     var sequence = _creationManager.Sequences.FirstOrDefault(s => s.Name == controllerAction.SequenceName);
                     if (sequence != null)
                     {
-                        _sequencePlayer.ToggleSequence(controllerAction.DeviceId, controllerAction.Channel, sequence);
+                        _sequencePlayer.ToggleSequence(controllerAction.DeviceId, controllerAction.Channel, controllerAction.IsInvert, sequence);
                     }
                     break;
             }

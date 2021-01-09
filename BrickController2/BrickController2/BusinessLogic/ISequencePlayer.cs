@@ -7,6 +7,6 @@ namespace BrickController2.BusinessLogic
         void StartPlayer();
         void StopPlayer();
 
-        void ToggleSequence(string deviceId, int channel, Sequence sequence);
+        void ToggleSequence(string deviceId, int channel, bool invert, Sequence sequence);
     }
 }
