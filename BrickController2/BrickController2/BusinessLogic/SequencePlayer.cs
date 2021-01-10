@@ -11,7 +11,7 @@ namespace BrickController2.BusinessLogic
 
         private readonly IDeviceManager _deviceManager;
 
-        private readonly IDictionary<(string DeviceId, int Channel), (Sequence Sequence, int? StartTimeMs)> _sequences = new Dictionary<(string, int), (Sequence, int?)>();
+        private readonly IDictionary<(string DeviceId, int Channel), (Sequence Sequence, bool Invert, int? StartTimeMs)> _sequences = new Dictionary<(string, int), (Sequence, bool, int?)>();
         private readonly object _lock = new object();
 
         private Timer _playerTimer;
@@ -62,7 +62,7 @@ namespace BrickController2.BusinessLogic
             }
         }
 
-        public void ToggleSequence(string deviceId, int channel, Sequence sequence)
+        public void ToggleSequence(string deviceId, int channel, bool invert, Sequence sequence)
         {
             lock (_sequences)
             {
@@ -75,7 +75,7 @@ namespace BrickController2.BusinessLogic
                 }
                 else
                 {
-                    _sequences[(deviceId, channel)] = (sequence, null);
+                    _sequences[(deviceId, channel)] = (sequence, invert, null);
                 }
             }
         }
@@ -93,10 +93,10 @@ namespace BrickController2.BusinessLogic
                         // Start the sequence "now" if it hasn't been started yet
                         if (!kvp.Value.StartTimeMs.HasValue)
                         {
-                            _sequences[kvp.Key] = (kvp.Value.Sequence, _timeSinceStartMs);
+                            _sequences[kvp.Key] = (kvp.Value.Sequence, kvp.Value.Invert, _timeSinceStartMs);
                         }
 
-                        if (!ProcessSequence(kvp.Key.DeviceId, kvp.Key.Channel, kvp.Value.Sequence, kvp.Value.StartTimeMs.Value, _timeSinceStartMs))
+                        if (!ProcessSequence(kvp.Key.DeviceId, kvp.Key.Channel, kvp.Value.Sequence, kvp.Value.Invert, kvp.Value.StartTimeMs.Value, _timeSinceStartMs))
                         {
                             sequencesToRemove.Add((kvp.Key.DeviceId, kvp.Key.Channel));
                         }
@@ -113,7 +113,7 @@ namespace BrickController2.BusinessLogic
             }
         }
 
-        private bool ProcessSequence(string deviceId, int channel, Sequence sequence, int startTimeMs, int nowMs)
+        private bool ProcessSequence(string deviceId, int channel, Sequence sequence, bool invert, int startTimeMs, int nowMs)
         {
             if (sequence.ControlPoints.Count == 0)
             {
@@ -176,6 +176,7 @@ namespace BrickController2.BusinessLogic
             }
 
             var device = _deviceManager.GetDeviceById(deviceId);
+            value = invert ? -1 * value : value;
             device?.SetOutput(channel, value);
 
             return true;
