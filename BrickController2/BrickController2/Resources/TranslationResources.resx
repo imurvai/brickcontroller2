@@ -222,6 +222,9 @@
   <data name="Connecting" xml:space="preserve">
     <value>Connecting</value>
   </data>
+  <data name="ConnectingTo" xml:space="preserve">
+    <value>Connecting to: </value>
+  </data>
   <data name="Controller" xml:space="preserve">
     <value>Controller</value>
   </data>

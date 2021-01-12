@@ -207,6 +207,9 @@
   <data name="Connecting" xml:space="preserve">
     <value>Verbinden ...</value>
   </data>
+  <data name="ConnectingTo" xml:space="preserve">
+    <value>Verbinden: </value>
+  </data>
   <data name="Controller" xml:space="preserve">
     <value>Controller</value>
   </data>

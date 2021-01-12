@@ -58,6 +58,8 @@ namespace BrickController2.DeviceManagement
             _outputLevelValue = Math.Max(0, Math.Min(NumberOfOutputLevels - 1, value));
         }
 
+        public override bool CanBePowerSource => true;
+
         protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);

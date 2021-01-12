@@ -97,6 +97,8 @@ namespace BrickController2.DeviceManagement
             return Task.FromResult((true, 0F));
         }
 
+        public virtual bool CanBePowerSource => false;
+
         public async Task RenameDeviceAsync(Device device, string newName)
         {
             using (await _asyncLock.LockAsync())

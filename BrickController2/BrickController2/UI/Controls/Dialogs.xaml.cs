@@ -2,7 +2,6 @@
 using BrickController2.UI.Services.Dialog;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -188,7 +187,7 @@ namespace BrickController2.UI.Controls
             }
         }
 
-        public async Task ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title = null, string message = null, string cancelButtonText = null)
+        public async Task<ProgressDialogResult> ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title = null, string message = null, string cancelButtonText = null)
         {
             ProgressDialogTitle.Text = title ?? string.Empty;
             ProgressDialogTitle.IsVisible = !string.IsNullOrEmpty(title);
@@ -218,6 +217,8 @@ namespace BrickController2.UI.Controls
                     ProgressDialogCancelButton.Clicked -= buttonHandler;
                     await HideView(ProgressDialog);
                 }
+
+                return new ProgressDialogResult(tokenSource.Token.IsCancellationRequested);
 
                 void buttonHandler(object sender, EventArgs args)
                 {
