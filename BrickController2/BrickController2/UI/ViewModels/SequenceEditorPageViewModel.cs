@@ -203,7 +203,8 @@ namespace BrickController2.UI.ViewModels
                             Sequence.Interpolate,
                             Sequence.ControlPoints);
                     },
-                    Translate("Saving"));
+                    Translate("Saving"),
+                    token: _disappearingTokenSource.Token);
 
                 await NavigationService.NavigateBackAsync();
             }

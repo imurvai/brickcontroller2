@@ -187,7 +187,7 @@ namespace BrickController2.UI.Controls
             }
         }
 
-        public async Task<ProgressDialogResult> ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title = null, string message = null, string cancelButtonText = null)
+        public async Task<ProgressDialogResult> ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText, CancellationToken token)
         {
             ProgressDialogTitle.Text = title ?? string.Empty;
             ProgressDialogTitle.IsVisible = !string.IsNullOrEmpty(title);
@@ -200,6 +200,7 @@ namespace BrickController2.UI.Controls
             ProgressDialogActivityIndicator.IsVisible = !isDeterministic;
 
             using (var tokenSource = new CancellationTokenSource())
+            using (token.Register(tokenSource.Cancel))
             {
                 await ShowView(ProgressDialog);
                 ProgressDialogCancelButton.Clicked += buttonHandler;

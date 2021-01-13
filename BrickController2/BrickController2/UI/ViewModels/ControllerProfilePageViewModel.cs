@@ -103,7 +103,8 @@ namespace BrickController2.UI.ViewModels
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.RenameControllerProfileAsync(ControllerProfile, result.Result),
-                        Translate("Renaming"));
+                        Translate("Renaming"),
+                        token: _disappearingTokenSource.Token);
                 }
             }
             catch (OperationCanceledException)
@@ -136,7 +137,8 @@ namespace BrickController2.UI.ViewModels
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => controllerEvent = await _creationManager.AddOrGetControllerEventAsync(ControllerProfile, result.EventType, result.EventCode),
-                        Translate("Creating"));
+                        Translate("Creating"),
+                        token: _disappearingTokenSource.Token);
 
                     await NavigationService.NavigateToAsync<ControllerActionPageViewModel>(new NavigationParameters(("controllerevent", controllerEvent)));
                 }
@@ -194,7 +196,8 @@ namespace BrickController2.UI.ViewModels
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.DeleteControllerEventAsync(controllerEvent),
-                        Translate("Deleting"));
+                        Translate("Deleting"),
+                        token: _disappearingTokenSource.Token);
                 }
             }
             catch (OperationCanceledException)
@@ -224,7 +227,8 @@ namespace BrickController2.UI.ViewModels
                                 await _creationManager.DeleteControllerEventAsync(controllerEvent);
                             }
                         },
-                        Translate("Deleting"));
+                        Translate("Deleting"),
+                        token: _disappearingTokenSource.Token);
                 }
             }
             catch (OperationCanceledException)

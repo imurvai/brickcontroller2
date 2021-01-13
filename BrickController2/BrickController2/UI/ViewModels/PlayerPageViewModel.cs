@@ -143,6 +143,8 @@ namespace BrickController2.UI.ViewModels
                 {
                     _playLogic.StopPlay();
 
+                    var connectionResult = DeviceConnectionResult.Ok;
+
                     var dialogResult = await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) =>
@@ -182,7 +184,8 @@ namespace BrickController2.UI.ViewModels
                         },
                         Translate("ConnectingTo"),
                         deviceToConnectTo.Name,
-                        Translate("Cancel"));
+                        Translate("Cancel"),
+                        _connectionTokenSource.Token);
 
                     if (dialogResult.IsCancelled)
                     {
@@ -191,14 +194,33 @@ namespace BrickController2.UI.ViewModels
                         if (!_isDisappearing)
                         {
                             await NavigationService.NavigateBackAsync();
+                            return;
                         }
                     }
                     else
                     {
-                        ChangeOutputLevel(BuWizzOutputLevel, _buwizzDevices);
-                        ChangeOutputLevel(BuWizz2OutputLevel, _buwizz2Devices);
+                        if (connectionResult == DeviceConnectionResult.Error)
+                        {
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("Warning"),
+                                Translate("FailedToConnect"),
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
 
-                        _playLogic.StartPlay();
+                            if (!_isDisappearing)
+                            {
+                                await NavigationService.NavigateBackAsync();
+                            }
+
+                            return;
+                        }
+                        else
+                        {
+                            ChangeOutputLevel(BuWizzOutputLevel, _buwizzDevices);
+                            ChangeOutputLevel(BuWizz2OutputLevel, _buwizz2Devices);
+
+                            _playLogic.StartPlay();
+                        }
                     }
                 }
                 else
@@ -214,7 +236,7 @@ namespace BrickController2.UI.ViewModels
 
             foreach (var device in _devices)
             {
-                if (device.DeviceState == DeviceState.Disconnected)
+                if (device.DeviceState != DeviceState.Connected)
                 {
                     if (device.CanBePowerSource)
                     {
@@ -232,22 +254,14 @@ namespace BrickController2.UI.ViewModels
 
         private async Task DisconnectDevicesAsync()
         {
-            await _dialogService.ShowProgressDialogAsync(
-                false,
-                async (progressDialog, token) =>
-                {
-                    var tasks = new List<Task>();
+            var tasks = new List<Task>();
 
-                    foreach (var device in _devices)
-                    {
-                        tasks.Add(device.DisconnectAsync());
-                    }
+            foreach (var device in _devices)
+            {
+                tasks.Add(device.DisconnectAsync());
+            }
 
-                    await Task.WhenAll(tasks);
-                },
-                Translate("Disconnecting"),
-                null,
-                null);
+            await Task.WhenAll(tasks);
         }
 
         private void OnDeviceDisconnected(Device device)

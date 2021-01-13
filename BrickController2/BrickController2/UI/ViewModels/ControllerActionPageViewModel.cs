@@ -196,7 +196,8 @@ namespace BrickController2.UI.ViewModels
                             Action.SequenceName);
                     }
                 },
-                Translate("Saving"));
+                Translate("Saving"),
+                token: _disappearingTokenSource.Token);
 
             await NavigationService.NavigateBackAsync();
         }
