@@ -100,7 +100,7 @@ namespace BrickController2.UI.ViewModels
                 await _connectionTask;
             }
 
-            await Device.DisconnectAsync();
+            //await Device.DisconnectAsync();
         }
 
         private async Task RenameDeviceAsync()
@@ -142,30 +142,32 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectAsync()
         {
-            _connectionTokenSource = new CancellationTokenSource();
             DeviceConnectionResult connectionResult = DeviceConnectionResult.Ok;
 
-            await _dialogService.ShowProgressDialogAsync(
+            if (Device.DeviceState != DeviceState.Connected) {
+                _connectionTokenSource = new CancellationTokenSource();
+                await _dialogService.ShowProgressDialogAsync(
                 false,
                 async (progressDialog, token) =>
                 {
                     using (token.Register(() => _connectionTokenSource?.Cancel()))
                     {
                         connectionResult = await Device.ConnectAsync(
-                            _reconnect,
-                            OnDeviceDisconnected,
-                            Enumerable.Empty<ChannelConfiguration>(),
-                            true,
-                            true,
-                            _connectionTokenSource.Token);
+                        _reconnect,
+                        OnDeviceDisconnected,
+                        Enumerable.Empty<ChannelConfiguration>(),
+                        true,
+                        true,
+                        _connectionTokenSource.Token);
                     }
                 },
                 Translate("Connecting"),
                 null,
                 Translate("Cancel"));
 
-            _connectionTokenSource.Dispose();
-            _connectionTokenSource = null;
+                _connectionTokenSource.Dispose();
+                _connectionTokenSource = null;
+            }
 
             if (Device.DeviceState == DeviceState.Connected)
             {

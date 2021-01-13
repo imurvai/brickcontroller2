@@ -781,6 +781,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} of {1} device(s) connected.
+        /// </summary>
+        internal static string NofMDevicesConnected {
+            get {
+                return ResourceManager.GetString("NofMDevicesConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There are no sequences..
         /// </summary>
         internal static string NoSequences {

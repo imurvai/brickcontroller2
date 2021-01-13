@@ -134,18 +134,9 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private async Task ConnectDevicesAsync()
+        private void StartDeviceConnectTasks(IList<Device> devices)
         {
-            bool showProgress = false;
-
-            if (_connectionTokenSource == null)
-            {
-                _connectionTokenSource = new CancellationTokenSource();
-                _connectionCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-                showProgress = true;
-            }
-
-            foreach (var device in _devices)
+            foreach (var device in devices)
             {
                 if (device.DeviceState == DeviceState.Disconnected && !_deviceConnectionTasks.ContainsKey(device))
                 {
@@ -170,6 +161,17 @@ namespace BrickController2.UI.ViewModels
                         _connectionTokenSource.Token);
                 }
             }
+        }
+        private async Task ConnectDevicesAsync()
+        {
+            bool showProgress = true;
+
+            if (_connectionTokenSource == null)
+            {
+                _connectionTokenSource = new CancellationTokenSource();
+                _connectionCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+                showProgress = true;
+            }
 
             if (!showProgress)
             {
@@ -177,19 +179,31 @@ namespace BrickController2.UI.ViewModels
             }
 
             await _dialogService.ShowProgressDialogAsync(
-                false,
+                true,
                 async (progressDialog, token) =>
                 {
                     using (token.Register(() => _connectionTokenSource?.Cancel()))
                     {
-                        while (_deviceConnectionTasks.Values.Any(t => !t.IsCompleted))
+                        // Connect devices that might be powering other devices first
+                        StartDeviceConnectTasks(_buwizzDevices.Concat(_buwizz2Devices).ToList());
+                        do
                         {
-                            await Task.WhenAll(_deviceConnectionTasks.Values);
+                            while (_deviceConnectionTasks.Values.Any(t => !t.IsCompleted))
+                            {
+                                int connected = _devices.Where(d => d.DeviceState == DeviceState.Connected).Count();
+                                progressDialog.Message = string.Format(Translate("NofMDevicesConnected"), connected, _devices.Count());
+                                progressDialog.Percent = (int)(100F * connected / _devices.Count());
+                                await Task.WhenAny(_deviceConnectionTasks.Values.Where(t => !t.IsCompleted));
+                            }
+                            // Now attempt connection of any remaining devices
+                            StartDeviceConnectTasks(_devices);
                         }
+                        while (_deviceConnectionTasks.Values.Any(t => !t.IsCompleted));
+
                     }
                 },
                 Translate("Connecting"),
-                null,
+                string.Format(Translate("NofMDevicesConnected"), 0, _devices.Count()),
                 Translate("Cancel"));
 
             _connectionTokenSource.Dispose();
