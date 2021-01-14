@@ -480,4 +480,7 @@
   <data name="AxisType" xml:space="preserve">
     <value>Joy típusa</value>
   </data>
+  <data name="ConnectingTo" xml:space="preserve">
+    <value>Kapcsolódás: </value>
+  </data>
 </root>

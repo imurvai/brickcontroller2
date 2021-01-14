@@ -39,9 +39,9 @@ namespace BrickController2.UI.Services.Dialog
             return _dialogServer?.ShowSelectionDialogAsync(items, title, cancelButtonText, token) ?? Task.FromResult(new SelectionDialogResult<T>(false, default));
         }
 
-        public Task ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title = null, string message = null, string cancelButtonText = null)
+        public Task<ProgressDialogResult> ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText, CancellationToken token)
         {
-            return _dialogServer?.ShowProgressDialogAsync(isDeterministic, action, title, message, cancelButtonText) ?? Task.CompletedTask;
+            return _dialogServer?.ShowProgressDialogAsync(isDeterministic, action, title, message, cancelButtonText, token) ?? Task.FromResult(new ProgressDialogResult(false));
         }
 
         public Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText, CancellationToken token)

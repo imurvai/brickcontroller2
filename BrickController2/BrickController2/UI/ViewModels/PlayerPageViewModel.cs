@@ -6,7 +6,6 @@ using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Translation;
-using BrickController2.UI.Services.MainThread;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -20,18 +19,14 @@ namespace BrickController2.UI.ViewModels
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
         private readonly IGameControllerService _gameControllerService;
-        private readonly IMainThreadService _uIThreadService;
         private readonly IPlayLogic _playLogic;
 
         private readonly IList<Device> _devices = new List<Device>();
         private readonly IList<Device> _buwizzDevices = new List<Device>();
         private readonly IList<Device> _buwizz2Devices = new List<Device>();
 
-        private readonly IDictionary<Device, Task<DeviceConnectionResult>> _deviceConnectionTasks = new Dictionary<Device, Task<DeviceConnectionResult>>();
         private Task _connectionTask;
         private CancellationTokenSource _connectionTokenSource;
-        private TaskCompletionSource<bool> _connectionCompletionSource;
-        private bool _reconnect = false;
         private bool _isDisappearing = false;
         private CancellationTokenSource _disappearingTokenSource;
 
@@ -41,7 +36,6 @@ namespace BrickController2.UI.ViewModels
             IDeviceManager deviceManager,
             IDialogService dialogService,
             IGameControllerService gameControllerService,
-            IMainThreadService uIThreadService,
             IPlayLogic playLogic,
             NavigationParameters parameters)
             : base(navigationService, translationService)
@@ -49,7 +43,6 @@ namespace BrickController2.UI.ViewModels
             _deviceManager = deviceManager;
             _dialogService = dialogService;
             _gameControllerService = gameControllerService;
-            _uIThreadService = uIThreadService;
             _playLogic = playLogic;
 
             Creation = parameters.Get<Creation>("creation");
@@ -97,7 +90,7 @@ namespace BrickController2.UI.ViewModels
 
             _gameControllerService.GameControllerEvent += GameControllerEventHandler;
 
-            _playLogic.StartPlay();
+            _connectionTokenSource = new CancellationTokenSource();
             _connectionTask = ConnectDevicesAsync();
         }
 
@@ -108,6 +101,13 @@ namespace BrickController2.UI.ViewModels
             _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
 
             _playLogic.StopPlay();
+
+            if (_connectionTokenSource != null && _connectionTask != null)
+            {
+                _connectionTokenSource.Cancel();
+                await _connectionTask;
+            }
+
             await DisconnectDevicesAsync();
         }
 
@@ -136,116 +136,136 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectDevicesAsync()
         {
-            bool showProgress = false;
-
-            if (_connectionTokenSource == null)
+            while (!_connectionTokenSource.IsCancellationRequested)
             {
-                _connectionTokenSource = new CancellationTokenSource();
-                _connectionCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-                showProgress = true;
+                var deviceToConnectTo = GetNextDeviceToConnectTo();
+                if (deviceToConnectTo != null)
+                {
+                    _playLogic.StopPlay();
+
+                    var connectionResult = DeviceConnectionResult.Ok;
+
+                    var dialogResult = await _dialogService.ShowProgressDialogAsync(
+                        false,
+                        async (progressDialog, token) =>
+                        {
+                            do
+                            {
+                                progressDialog.Message = deviceToConnectTo.Name;
+
+                                var channelConfigs = Creation.ControllerProfiles
+                                    .SelectMany(cp => cp.ControllerEvents.SelectMany(ce => ce.ControllerActions))
+                                    .Where(ca => ca.DeviceId == deviceToConnectTo.Id)
+                                    .Select(ca => new ChannelConfiguration
+                                    {
+                                        Channel = ca.Channel,
+                                        ChannelOutputType = ca.ChannelOutputType,
+                                        MaxServoAngle = ca.MaxServoAngle,
+                                        ServoBaseAngle = ca.ServoBaseAngle,
+                                        StepperAngle = ca.StepperAngle
+                                    });
+
+                                await deviceToConnectTo.ConnectAsync(
+                                    false,
+                                    OnDeviceDisconnected,
+                                    channelConfigs,
+                                    true,
+                                    false,
+                                    token);
+
+                                if (token.IsCancellationRequested)
+                                {
+                                    return;
+                                }
+
+                                deviceToConnectTo = GetNextDeviceToConnectTo();
+                            }
+                            while (deviceToConnectTo != null);
+                        },
+                        Translate("ConnectingTo"),
+                        deviceToConnectTo.Name,
+                        Translate("Cancel"),
+                        _connectionTokenSource.Token);
+
+                    if (dialogResult.IsCancelled)
+                    {
+                        await DisconnectDevicesAsync();
+
+                        if (!_isDisappearing)
+                        {
+                            await NavigationService.NavigateBackAsync();
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (connectionResult == DeviceConnectionResult.Error)
+                        {
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("Warning"),
+                                Translate("FailedToConnect"),
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+
+                            if (!_isDisappearing)
+                            {
+                                await NavigationService.NavigateBackAsync();
+                            }
+
+                            return;
+                        }
+                        else
+                        {
+                            ChangeOutputLevel(BuWizzOutputLevel, _buwizzDevices);
+                            ChangeOutputLevel(BuWizz2OutputLevel, _buwizz2Devices);
+
+                            _playLogic.StartPlay();
+                        }
+                    }
+                }
+                else
+                {
+                    await Task.Delay(50);
+                }
             }
+        }
+
+        private Device GetNextDeviceToConnectTo()
+        {
+            Device deviceToConnectTo = null;
 
             foreach (var device in _devices)
             {
-                if (device.DeviceState == DeviceState.Disconnected && !_deviceConnectionTasks.ContainsKey(device))
+                if (device.DeviceState != DeviceState.Connected)
                 {
-                    var channelConfigs = Creation.ControllerProfiles
-                        .SelectMany(cp => cp.ControllerEvents.SelectMany(ce => ce.ControllerActions))
-                        .Where(ca => ca.DeviceId == device.Id)
-                        .Select(ca => new ChannelConfiguration
-                        {
-                            Channel = ca.Channel,
-                            ChannelOutputType = ca.ChannelOutputType,
-                            MaxServoAngle = ca.MaxServoAngle,
-                            ServoBaseAngle = ca.ServoBaseAngle,
-                            StepperAngle = ca.StepperAngle
-                        });
-
-                    _deviceConnectionTasks[device] = device.ConnectAsync(
-                        _reconnect,
-                        OnDeviceDisconnected,
-                        channelConfigs,
-                        true,
-                        false,
-                        _connectionTokenSource.Token);
-                }
-            }
-
-            if (!showProgress)
-            {
-                return;
-            }
-
-            await _dialogService.ShowProgressDialogAsync(
-                false,
-                async (progressDialog, token) =>
-                {
-                    using (token.Register(() => _connectionTokenSource?.Cancel()))
+                    if (device.CanBePowerSource)
                     {
-                        while (_deviceConnectionTasks.Values.Any(t => !t.IsCompleted))
-                        {
-                            await Task.WhenAll(_deviceConnectionTasks.Values);
-                        }
+                        return device;
                     }
-                },
-                Translate("Connecting"),
-                null,
-                Translate("Cancel"));
-
-            _connectionTokenSource.Dispose();
-            _connectionTokenSource = null;
-            _connectionCompletionSource.TrySetResult(true);
-            _deviceConnectionTasks.Clear();
-
-            if (_devices.All(d => d.DeviceState == DeviceState.Connected))
-            {
-                _reconnect = true;
-                ChangeOutputLevel(BuWizzOutputLevel, _buwizzDevices);
-                ChangeOutputLevel(BuWizz2OutputLevel, _buwizz2Devices);
-            }
-            else
-            {
-                await DisconnectDevicesAsync();
-
-                if (!_isDisappearing)
-                {
-                    await NavigationService.NavigateBackAsync();
+                    else
+                    {
+                        deviceToConnectTo = device;
+                    }
                 }
             }
+
+            return deviceToConnectTo;
         }
 
         private async Task DisconnectDevicesAsync()
         {
-            if (_connectionTokenSource != null)
+            var tasks = new List<Task>();
+
+            foreach (var device in _devices)
             {
-                _connectionTokenSource.Cancel();
-                await _connectionCompletionSource.Task;
+                tasks.Add(device.DisconnectAsync());
             }
 
-            await _dialogService.ShowProgressDialogAsync(
-                false,
-                async (progressDialog, token) =>
-                {
-                    var tasks = new List<Task>();
-
-                    foreach (var device in _devices)
-                    {
-                        tasks.Add(device.DisconnectAsync());
-                    }
-
-                    await Task.WhenAll(tasks);
-                },
-                Translate("Disconnecting"),
-                null,
-                null);
+            await Task.WhenAll(tasks);
         }
 
         private void OnDeviceDisconnected(Device device)
         {
-            _uIThreadService.RunOnMainThread(() =>
-            {
-                _connectionTask = ConnectDevicesAsync();
-            });
         }
 
         private void ChangeOutputLevel(int level, IList<Device> devices)

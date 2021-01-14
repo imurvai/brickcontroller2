@@ -8,7 +8,6 @@ using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Translation;
-using BrickController2.UI.Services.MainThread;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -16,11 +15,9 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
-        private readonly IMainThreadService _uIThreadService;
 
-        private CancellationTokenSource _tokenSource;
+        private CancellationTokenSource _connectionTokenSource;
         private Task _connectionTask;
-        private bool _reconnect = false;
         private CancellationTokenSource _disappearingTokenSource;
         private bool _isDisappearing = false;
 
@@ -31,13 +28,11 @@ namespace BrickController2.UI.ViewModels
             ITranslationService translationService,
             IDeviceManager deviceManager,
             IDialogService dialogService,
-            IMainThreadService uIThreadService,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
             _deviceManager = deviceManager;
             _dialogService = dialogService;
-            _uIThreadService = uIThreadService;
 
             Device = parameters.Get<Device>("device");
             Action = parameters.Get<ControllerAction>("controlleraction");
@@ -77,11 +72,15 @@ namespace BrickController2.UI.ViewModels
                         Translate("Ok"),
                         _disappearingTokenSource.Token);
 
-                    await NavigationService.NavigateBackAsync();
+                    if (!_isDisappearing)
+                    {
+                        await NavigationService.NavigateBackAsync();
+                    }
                     return;
                 }
             }
 
+            _connectionTokenSource = new CancellationTokenSource();
             _connectionTask = ConnectAsync();
         }
 
@@ -90,9 +89,9 @@ namespace BrickController2.UI.ViewModels
             _isDisappearing = true;
             _disappearingTokenSource.Cancel();
 
-            if (_tokenSource != null)
+            if (_connectionTokenSource != null && _connectionTask != null)
             {
-                _tokenSource.Cancel();
+                _connectionTokenSource.Cancel();
                 await _connectionTask;
             }
 
@@ -101,62 +100,71 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectAsync()
         {
-            _tokenSource = new CancellationTokenSource();
-            DeviceConnectionResult connectionResult = DeviceConnectionResult.Ok;
-
-            await _dialogService.ShowProgressDialogAsync(
-                false,
-                async (progressDialog, token) =>
-                {
-                    using (token.Register(() => _tokenSource.Cancel()))
-                    {
-                        connectionResult = await Device.ConnectAsync(
-                            _reconnect,
-                            OnDeviceDisconnected,
-                            Enumerable.Empty<ChannelConfiguration>(),
-                            false,
-                            false,
-                            _tokenSource.Token);
-                    }
-                },
-                Translate("Connecting"),
-                null,
-                Translate("Cancel"));
-
-            _tokenSource.Dispose();
-            _tokenSource = null;
-
-            if (Device.DeviceState == DeviceState.Connected)
+            while (!_connectionTokenSource.IsCancellationRequested)
             {
-                _reconnect = true;
-            }
-            else
-            {
-                if (!_isDisappearing)
+                if (Device.DeviceState != DeviceState.Connected)
                 {
-                    if (connectionResult == DeviceConnectionResult.Error)
-                    {
-                        await _dialogService.ShowMessageBoxAsync(
-                            Translate("Warning"),
-                            Translate("FailedToConnect"),
-                            Translate("Ok"),
-                            _disappearingTokenSource.Token);
-                    }
+                    var connectionResult = DeviceConnectionResult.Ok;
 
-                    await NavigationService.NavigateBackAsync();
+                    var dialogResult = await _dialogService.ShowProgressDialogAsync(
+                        false,
+                        async (progressDialog, token) =>
+                        {
+                            using (token.Register(() => _connectionTokenSource.Cancel()))
+                            {
+                                await Device.ConnectAsync(
+                                    false,
+                                    OnDeviceDisconnected,
+                                    Enumerable.Empty<ChannelConfiguration>(),
+                                    false,
+                                    false,
+                                    token);
+                            }
+                        },
+                        Translate("ConnectingTo"),
+                        Device.Name,
+                        Translate("Cancel"),
+                        _connectionTokenSource.Token);
+
+                    if (dialogResult.IsCancelled)
+                    {
+                        await Device.DisconnectAsync();
+
+                        if (!_isDisappearing)
+                        {
+                            await NavigationService.NavigateBackAsync();
+                        }
+
+                        return;
+                    }
+                    else
+                    {
+                        if (connectionResult == DeviceConnectionResult.Error)
+                        {
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("Warning"),
+                                Translate("FailedToConnect"),
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+
+                            if (!_isDisappearing)
+                            {
+                                await NavigationService.NavigateBackAsync();
+                            }
+
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    await Task.Delay(50);
                 }
             }
         }
 
         private void OnDeviceDisconnected(Device device)
         {
-            _uIThreadService.RunOnMainThread(() =>
-            {
-                if (!_isDisappearing)
-                {
-                    _connectionTask = ConnectAsync();
-                }
-            });
         }
 
         private async Task SaveChannelSettingsAsync()
@@ -167,42 +175,34 @@ namespace BrickController2.UI.ViewModels
 
         private async Task AutoCalibrateServoAsync()
         {
-            _tokenSource = new CancellationTokenSource();
-
             await _dialogService.ShowProgressDialogAsync(
                 false,
                 async (progressDialog, token) =>
                 {
-                    using (token.Register(() => _tokenSource.Cancel()))
+                    var result = await Device.AutoCalibrateOutputAsync(Action.Channel, token);
+                    if (result.Success)
                     {
-                        var result = await Device.AutoCalibrateOutputAsync(Action.Channel, _tokenSource.Token);
-                        if (result.Success)
-                        {
-                            ServoBaseAngle = (int)(result.BaseServoAngle * 180);
-                        }
+                        ServoBaseAngle = (int)(result.BaseServoAngle * 180);
                     }
                 },
                 Translate("Calibrating"),
                 null,
-                null);
+                null,
+                _disappearingTokenSource.Token);
         }
 
         private async Task ResetServoBaseAngleAsync()
         {
-            _tokenSource = new CancellationTokenSource();
-
             await _dialogService.ShowProgressDialogAsync(
                 false,
                 async (progressDialog, token) =>
                 {
-                    using (token.Register(() => _tokenSource.Cancel()))
-                    {
-                        await Device.ResetOutputAsync(Action.Channel, ServoBaseAngle / 180F, _tokenSource.Token);
-                    }
+                    await Device.ResetOutputAsync(Action.Channel, ServoBaseAngle / 180F, token);
                 },
                 Translate("Reseting"),
                 null,
-                null);
+                null,
+                _disappearingTokenSource.Token);
         }
     }
 }

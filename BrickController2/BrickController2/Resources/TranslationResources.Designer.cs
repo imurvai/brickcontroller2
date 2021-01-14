@@ -376,6 +376,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connecting to: .
+        /// </summary>
+        internal static string ConnectingTo {
+            get {
+                return ResourceManager.GetString("ConnectingTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Controller.
         /// </summary>
         internal static string Controller {

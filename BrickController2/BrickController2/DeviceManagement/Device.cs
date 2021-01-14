@@ -16,7 +16,7 @@ namespace BrickController2.DeviceManagement
         private string _hardwareVersion = "-";
         private string _batteryVoltage = "-";
 
-        private DeviceState _deviceState;
+        private volatile DeviceState _deviceState;
         protected int _outputLevel;
 
         internal Device(string name, string address, IDeviceRepository deviceRepository)
@@ -96,6 +96,8 @@ namespace BrickController2.DeviceManagement
         {
             return Task.FromResult((true, 0F));
         }
+
+        public virtual bool CanBePowerSource => false;
 
         public async Task RenameDeviceAsync(Device device, string newName)
         {

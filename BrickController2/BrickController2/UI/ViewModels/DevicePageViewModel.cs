@@ -8,7 +8,6 @@ using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Translation;
-using BrickController2.UI.Services.MainThread;
 using Device = BrickController2.DeviceManagement.Device;
 using BrickController2.Helpers;
 using Xamarin.Forms;
@@ -20,7 +19,6 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
-        private readonly IMainThreadService _uIThreadService;
 
         private CancellationTokenSource _connectionTokenSource;
         private Task _connectionTask;
@@ -33,13 +31,11 @@ namespace BrickController2.UI.ViewModels
             ITranslationService translationService,
             IDeviceManager deviceManager,
             IDialogService dialogService,
-            IMainThreadService uIThreadService,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
             _deviceManager = deviceManager;
             _dialogService = dialogService;
-            _uIThreadService = uIThreadService;
 
             Device = parameters.Get<Device>("device");
             DeviceOutputs =  Enumerable
@@ -86,6 +82,7 @@ namespace BrickController2.UI.ViewModels
                 }
             }
 
+            _connectionTokenSource = new CancellationTokenSource();
             _connectionTask = ConnectAsync();
         }
 
@@ -94,7 +91,7 @@ namespace BrickController2.UI.ViewModels
             _isDisappearing = true;
             _disappearingTokenSource.Cancel();
 
-            if (_connectionTokenSource != null)
+            if (_connectionTokenSource != null && _connectionTask != null)
             {
                 _connectionTokenSource.Cancel();
                 await _connectionTask;
@@ -132,7 +129,8 @@ namespace BrickController2.UI.ViewModels
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await Device.RenameDeviceAsync(Device, result.Result),
-                        Translate("Renaming"));
+                        Translate("Renaming"),
+                        token: _disappearingTokenSource.Token);
                 }
             }
             catch (OperationCanceledException)
@@ -142,71 +140,82 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectAsync()
         {
-            _connectionTokenSource = new CancellationTokenSource();
-            DeviceConnectionResult connectionResult = DeviceConnectionResult.Ok;
-
-            await _dialogService.ShowProgressDialogAsync(
-                false,
-                async (progressDialog, token) =>
-                {
-                    using (token.Register(() => _connectionTokenSource?.Cancel()))
-                    {
-                        connectionResult = await Device.ConnectAsync(
-                            _reconnect,
-                            OnDeviceDisconnected,
-                            Enumerable.Empty<ChannelConfiguration>(),
-                            true,
-                            true,
-                            _connectionTokenSource.Token);
-                    }
-                },
-                Translate("Connecting"),
-                null,
-                Translate("Cancel"));
-
-            _connectionTokenSource.Dispose();
-            _connectionTokenSource = null;
-
-            if (Device.DeviceState == DeviceState.Connected)
+            while (!_connectionTokenSource.IsCancellationRequested)
             {
-                _reconnect = true;
+                if (Device.DeviceState != DeviceState.Connected)
+                {
+                    var connectionResult = DeviceConnectionResult.Ok;
 
-                if (Device.DeviceType == DeviceType.BuWizz)
-                {
-                    SetBuWizzOutputLevel(BuWizzOutputLevel);
-                }
-                else if (Device.DeviceType == DeviceType.BuWizz2)
-                {
-                    SetBuWizzOutputLevel(BuWizz2OutputLevel);
-                }
-            }
-            else
-            {
-                if (!_isDisappearing)
-                {
-                    if (connectionResult == DeviceConnectionResult.Error)
+                    var dialogResult = await _dialogService.ShowProgressDialogAsync(
+                        false,
+                        async (progressDialog, token) =>
+                        {
+                            using (token.Register(() => _connectionTokenSource?.Cancel()))
+                            {
+                                connectionResult = await Device.ConnectAsync(
+                                    _reconnect,
+                                    OnDeviceDisconnected,
+                                    Enumerable.Empty<ChannelConfiguration>(),
+                                    true,
+                                    true,
+                                    _connectionTokenSource.Token);
+                            }
+                        },
+                        Translate("ConnectingTo"),
+                        Device.Name,
+                        Translate("Cancel"),
+                        _connectionTokenSource.Token);
+
+                    if (dialogResult.IsCancelled)
                     {
-                        await _dialogService.ShowMessageBoxAsync(
-                            Translate("Warning"),
-                            Translate("FailedToConnect"),
-                            Translate("Ok"),
-                            _disappearingTokenSource.Token);
-                    }
+                        await Device.DisconnectAsync();
 
-                    await NavigationService.NavigateBackAsync();
+                        if (!_isDisappearing)
+                        {
+                            await NavigationService.NavigateBackAsync();
+                        }
+
+                        return;
+                    }
+                    else
+                    {
+                        if (connectionResult == DeviceConnectionResult.Error)
+                        {
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("Warning"),
+                                Translate("FailedToConnect"),
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+
+                            if (!_isDisappearing)
+                            {
+                                await NavigationService.NavigateBackAsync();
+                            }
+
+                            return;
+                        }
+                        else
+                        {
+                            if (Device.DeviceType == DeviceType.BuWizz)
+                            {
+                                SetBuWizzOutputLevel(BuWizzOutputLevel);
+                            }
+                            else if (Device.DeviceType == DeviceType.BuWizz2)
+                            {
+                                SetBuWizzOutputLevel(BuWizz2OutputLevel);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    await Task.Delay(50);
                 }
             }
         }
 
         private void OnDeviceDisconnected(Device device)
         {
-            _uIThreadService.RunOnMainThread(() =>
-            {
-                if (!_isDisappearing)
-                {
-                    _connectionTask = ConnectAsync();
-                }
-            });
         }
 
         private void SetBuWizzOutputLevel(int level)

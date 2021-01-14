@@ -87,7 +87,8 @@ namespace BrickController2.UI.ViewModels
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.RenameCreationAsync(Creation, result.Result),
-                        Translate("Renaming"));
+                        Translate("Renaming"),
+                        token: _disappearingTokenSource.Token);
                 }
             }
             catch (OperationCanceledException)
@@ -159,7 +160,8 @@ namespace BrickController2.UI.ViewModels
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => controllerProfile = await _creationManager.AddControllerProfileAsync(Creation, result.Result),
-                        Translate("Creating"));
+                        Translate("Creating"),
+                        token: _disappearingTokenSource.Token);
 
                     await NavigationService.NavigateToAsync<ControllerProfilePageViewModel>(new NavigationParameters(("controllerprofile", controllerProfile)));
                 }
@@ -183,7 +185,8 @@ namespace BrickController2.UI.ViewModels
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.DeleteControllerProfileAsync(controllerProfile),
-                        Translate("Deleting"));
+                        Translate("Deleting"),
+                        token: _disappearingTokenSource.Token);
                 }
             }
             catch (OperationCanceledException)

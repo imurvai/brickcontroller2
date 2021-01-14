@@ -93,7 +93,8 @@ namespace BrickController2.UI.ViewModels
                         {
                             sequence = await _creationManager.AddSequenceAsync(result.Result);
                         },
-                        Translate("Creating"));
+                        Translate("Creating"),
+                        token: _disappearingTokenSource.Token);
 
                     await NavigationService.NavigateToAsync<SequenceEditorPageViewModel>(new NavigationParameters(("sequence", sequence)));
                 }
@@ -117,7 +118,8 @@ namespace BrickController2.UI.ViewModels
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.DeleteSequenceAsync(sequence),
-                        Translate("Deleting"));
+                        Translate("Deleting"),
+                        token: _disappearingTokenSource.Token);
                 }
             }
             catch (OperationCanceledException)

@@ -99,7 +99,8 @@ namespace BrickController2.UI.ViewModels
                         await _deviceManager.LoadDevicesAsync();
                         _isLoaded = true;
                     },
-                    Translate("Loading"));
+                    Translate("Loading"),
+                    token: _disappearingTokenSource.Token);
             }
         }
 
@@ -137,7 +138,8 @@ namespace BrickController2.UI.ViewModels
                             creation = await _creationManager.AddCreationAsync(result.Result);
                             await _creationManager.AddControllerProfileAsync(creation, Translate("DefaultProfile"));
                         },
-                        Translate("Creating"));
+                        Translate("Creating"),
+                        token: _disappearingTokenSource.Token);
 
                     await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation)));
                 }
@@ -161,7 +163,8 @@ namespace BrickController2.UI.ViewModels
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.DeleteCreationAsync(creation),
-                        Translate("Deleting"));
+                        Translate("Deleting"),
+                        token: _disappearingTokenSource.Token);
                 }
             }
             catch (OperationCanceledException)
