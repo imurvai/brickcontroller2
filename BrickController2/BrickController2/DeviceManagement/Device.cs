@@ -16,7 +16,7 @@ namespace BrickController2.DeviceManagement
         private string _hardwareVersion = "-";
         private string _batteryVoltage = "-";
 
-        private DeviceState _deviceState;
+        private volatile DeviceState _deviceState;
         protected int _outputLevel;
 
         internal Device(string name, string address, IDeviceRepository deviceRepository)
