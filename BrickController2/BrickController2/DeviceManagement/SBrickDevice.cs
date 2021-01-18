@@ -20,7 +20,7 @@ namespace BrickController2.DeviceManagement
         private readonly Guid CHARACTERISTIC_UUID_QUICK_DRIVE = new Guid("489a6ae0-c1ab-4c9c-bdb2-11d373c1b7fb");
 
         private readonly int[] _outputValues = new int[4];
-        private int[] _lastDir = new int[4] { 0, 0, 0, 0 };
+        private readonly int[] _directions = new int[4];
 
         private readonly object _outputLock = new object();
 
@@ -53,6 +53,11 @@ namespace BrickController2.DeviceManagement
                 if (_outputValues[channel] != intValue)
                 {
                     _outputValues[channel] = intValue;
+                    if (intValue != 0)
+                    {
+                        _directions[channel] = intValue < 0 ? 1 : 0;
+                    }
+
                     _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                 }
             }
@@ -95,31 +100,37 @@ namespace BrickController2.DeviceManagement
             {
                 lock (_outputLock)
                 {
-                    _outputValues[0] = 0;
-                    _outputValues[1] = 0;
-                    _outputValues[2] = 0;
-                    _outputValues[3] = 0;
+                    for (var i = 0; i < NumberOfChannels; i++)
+                    {
+                        _outputValues[i] = 0;
+                        _directions[i] = 0;
+                    }
+
                     _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                 }
 
                 while (!token.IsCancellationRequested)
                 {
                     int sendAttemptsLeft;
-                    int[] v = new int[NumberOfChannels];
+                    int[] v = new int[4];
+                    int[] dir = new int[4];
                     bool nonZeroOutput = false;
+
                     lock (_outputLock)
                     {
                         for (int i = 0; i < NumberOfChannels; i++)
                         {
                             v[i] = _outputValues[i];
+                            dir[i] = _directions[i];
                             nonZeroOutput = nonZeroOutput || v[i] != 0;
                         }
+
                         sendAttemptsLeft = _sendAttemptsLeft;
                         _sendAttemptsLeft = sendAttemptsLeft > 0 ? sendAttemptsLeft - 1 : 0;
                     }
                     if (nonZeroOutput || sendAttemptsLeft > 0)
                     {
-                        await SendOutputValuesAsync(v, token).ConfigureAwait(false);
+                        await SendOutputValuesAsync(v, dir, token).ConfigureAwait(false);
                     }
                     else
                     {
@@ -130,18 +141,17 @@ namespace BrickController2.DeviceManagement
             catch { }
         }
 
-        private async Task<bool> SendOutputValuesAsync(int[] v, CancellationToken token)
+        private async Task<bool> SendOutputValuesAsync(int[] v, int[] dir, CancellationToken token)
         {
             try
             {
-                byte[] sendOutputBuffer = new byte[NumberOfChannels];
-                for (int i = 0; i < NumberOfChannels; i++) {
-                    int dir = v[i] == 0 ? _lastDir[i] : v[i] < 0 ? 1 : 0;
-                    sendOutputBuffer[i] = (byte)((Math.Abs(v[i]) & 0xfe) | 0x02 | dir);
-                    _lastDir[i] = dir;
-
-                }
-                
+                var sendOutputBuffer = new byte[]
+                {
+                    (byte)((Math.Abs(v[0]) & 0xfe) | 0x02 | dir[0]),
+                    (byte)((Math.Abs(v[1]) & 0xfe) | 0x02 | dir[1]),
+                    (byte)((Math.Abs(v[2]) & 0xfe) | 0x02 | dir[2]),
+                    (byte)((Math.Abs(v[3]) & 0xfe) | 0x02 | dir[3])
+                };
 
                 return await _bleDevice?.WriteAsync(_quickDriveCharacteristic, sendOutputBuffer, token);
             }
