@@ -20,6 +20,8 @@ namespace BrickController2.DeviceManagement
         private readonly Guid CHARACTERISTIC_UUID_QUICK_DRIVE = new Guid("489a6ae0-c1ab-4c9c-bdb2-11d373c1b7fb");
 
         private readonly int[] _outputValues = new int[4];
+        private int[] _lastDir = new int[4] { 0, 0, 0, 0 };
+
         private readonly object _outputLock = new object();
 
         private volatile int _sendAttemptsLeft;
@@ -102,21 +104,22 @@ namespace BrickController2.DeviceManagement
 
                 while (!token.IsCancellationRequested)
                 {
-                    int v0, v1, v2, v3, sendAttemptsLeft;
-
+                    int sendAttemptsLeft;
+                    int[] v = new int[NumberOfChannels];
+                    bool nonZeroOutput = false;
                     lock (_outputLock)
                     {
-                        v0 = _outputValues[0];
-                        v1 = _outputValues[1];
-                        v2 = _outputValues[2];
-                        v3 = _outputValues[3];
+                        for (int i = 0; i < NumberOfChannels; i++)
+                        {
+                            v[i] = _outputValues[i];
+                            nonZeroOutput = nonZeroOutput || v[i] != 0;
+                        }
                         sendAttemptsLeft = _sendAttemptsLeft;
                         _sendAttemptsLeft = sendAttemptsLeft > 0 ? sendAttemptsLeft - 1 : 0;
                     }
-
-                    if (v0 != 0 || v1 != 0 || v2 != 0 || v3 != 0 || sendAttemptsLeft > 0)
+                    if (nonZeroOutput || sendAttemptsLeft > 0)
                     {
-                        await SendOutputValuesAsync(v0, v1, v2, v3, token).ConfigureAwait(false);
+                        await SendOutputValuesAsync(v, token).ConfigureAwait(false);
                     }
                     else
                     {
@@ -127,17 +130,18 @@ namespace BrickController2.DeviceManagement
             catch { }
         }
 
-        private async Task<bool> SendOutputValuesAsync(int v0, int v1, int v2, int v3, CancellationToken token)
+        private async Task<bool> SendOutputValuesAsync(int[] v, CancellationToken token)
         {
             try
             {
-                var sendOutputBuffer = new byte[]
-                {
-                    (byte)((Math.Abs(v0) & 0xfe) | 0x02 | (v0 < 0 ? 1 : 0)),
-                    (byte)((Math.Abs(v1) & 0xfe) | 0x02 | (v1 < 0 ? 1 : 0)),
-                    (byte)((Math.Abs(v2) & 0xfe) | 0x02 | (v2 < 0 ? 1 : 0)),
-                    (byte)((Math.Abs(v3) & 0xfe) | 0x02 | (v3 < 0 ? 1 : 0))
-                };
+                byte[] sendOutputBuffer = new byte[NumberOfChannels];
+                for (int i = 0; i < NumberOfChannels; i++) {
+                    int dir = v[i] == 0 ? _lastDir[i] : v[i] < 0 ? 1 : 0;
+                    sendOutputBuffer[i] = (byte)((Math.Abs(v[i]) & 0xfe) | 0x02 | dir);
+                    _lastDir[i] = dir;
+
+                }
+                
 
                 return await _bleDevice?.WriteAsync(_quickDriveCharacteristic, sendOutputBuffer, token);
             }
