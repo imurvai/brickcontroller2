@@ -125,8 +125,8 @@
     <IpaPackageName>com.scn.brickcontroller2</IpaPackageName>
     <IpaIncludeArtwork>true</IpaIncludeArtwork>
     <LangVersion>latest</LangVersion>
-    <CodesignProvision>BrickController2_dist_profile</CodesignProvision>
 <MtouchLink>SdkOnly</MtouchLink>
+<CodesignProvision>bc2_dist</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <AppExtensionDebugBundleId />
