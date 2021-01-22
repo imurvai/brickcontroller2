@@ -57,7 +57,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <MtouchArch>ARMv7s, ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
     <CodesignKey>Apple Development: Istvan Murvai (V4B6W68637)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>
