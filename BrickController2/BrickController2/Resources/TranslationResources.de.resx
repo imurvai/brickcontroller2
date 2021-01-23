@@ -369,6 +369,9 @@
   <data name="PressScanToDiscoverDevices" xml:space="preserve">
     <value>Auf Scannen drücken, um Geräte zu finden</value>
   </data>
+  <data name="ProfileLoadSaveWillNotBeAvailable" xml:space="preserve">
+    <value>Laden und Speichern von Profilen ist nicht erreichbar.</value>
+  </data>
   <data name="ProfileName" xml:space="preserve">
     <value>Profilname</value>
   </data>

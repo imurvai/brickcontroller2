@@ -384,6 +384,9 @@
   <data name="PressScanToDiscoverDevices" xml:space="preserve">
     <value>Press scan to discover devices</value>
   </data>
+  <data name="ProfileLoadSaveWillNotBeAvailable" xml:space="preserve">
+    <value>Loading and saving profiles will not be available.</value>
+  </data>
   <data name="ProfileName" xml:space="preserve">
     <value>Profile name</value>
   </data>

@@ -483,4 +483,7 @@
   <data name="ConnectingTo" xml:space="preserve">
     <value>Kapcsolódás: </value>
   </data>
+  <data name="ProfileLoadSaveWillNotBeAvailable" xml:space="preserve">
+    <value>Profilok kimentése és betöltése nem lesz elérhető.</value>
+  </data>
 </root>

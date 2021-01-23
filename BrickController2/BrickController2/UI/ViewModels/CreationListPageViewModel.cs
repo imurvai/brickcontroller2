@@ -10,6 +10,9 @@ using System.Threading;
 using System;
 using BrickController2.UI.Services.Translation;
 using Xamarin.Essentials;
+using BrickController2.UI.Services.Preferences;
+using BrickController2.PlatformServices.SharedFileStorage;
+using System.IO;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -18,6 +21,8 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
+        private readonly IPreferencesService _preferencesService;
+        private readonly ISharedFileStorageService _sharedFileStorageService;
 
         private CancellationTokenSource _disappearingTokenSource;
         private bool _isLoaded;
@@ -27,12 +32,16 @@ namespace BrickController2.UI.ViewModels
             ITranslationService translationService,
             ICreationManager creationManager,
             IDeviceManager deviceManager,
-            IDialogService dialogService)
+            IDialogService dialogService,
+            IPreferencesService preferencesService,
+            ISharedFileStorageService sharedFileStorageService)
             : base(navigationService, translationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;
             _dialogService = dialogService;
+            _preferencesService = preferencesService;
+            _sharedFileStorageService = sharedFileStorageService;
 
             OpenSettingsPageCommand = new SafeCommand(async () => await navigationService.NavigateToAsync<SettingsPageViewModel>(), () => !_dialogService.IsDialogOpen);
             AddCreationCommand = new SafeCommand(async () => await AddCreationAsync());
@@ -71,13 +80,13 @@ namespace BrickController2.UI.ViewModels
 
         private async Task RequestPermissionsAsync()
         {
-            var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-            if (status != PermissionStatus.Granted)
+            var locationPermissionStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+            if (locationPermissionStatus != PermissionStatus.Granted)
             {
-                status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                locationPermissionStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
             }
 
-            if (status != PermissionStatus.Granted)
+            if (locationPermissionStatus != PermissionStatus.Granted)
             {
                 await _dialogService.ShowMessageBoxAsync(
                     Translate("Warning"),
@@ -85,6 +94,39 @@ namespace BrickController2.UI.ViewModels
                     Translate("Ok"),
                     _disappearingTokenSource.Token);
             }
+
+            var storageReadPermissionStatus = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
+            if (storageReadPermissionStatus != PermissionStatus.Granted)
+            {
+                storageReadPermissionStatus = await Permissions.RequestAsync<Permissions.StorageRead>();
+            }
+
+            var storageWritePermissionStatus = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
+            if (storageWritePermissionStatus != PermissionStatus.Granted)
+            {
+                storageWritePermissionStatus = await Permissions.RequestAsync<Permissions.StorageWrite>();
+            }
+
+            var profileLoadSaveAvailable = true;
+            if (storageReadPermissionStatus != PermissionStatus.Granted || storageWritePermissionStatus != PermissionStatus.Granted)
+            {
+                profileLoadSaveAvailable = false;
+
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Warning"),
+                    Translate("ProfileLoadSaveWillNotBeAvailable"),
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
+            }
+
+            _preferencesService.Set("ProfileLoadSave", profileLoadSaveAvailable);
+
+            // temp
+            var sharedDir = _sharedFileStorageService.GetSharedStorageDirectory();
+            var exist = Directory.Exists(sharedDir);
+
+            var filename = "temp.txt";
+            File.WriteAllText(Path.Combine(sharedDir, filename), "hello lego");
         }
 
         private async Task LoadCreationsAndDevicesAsync()

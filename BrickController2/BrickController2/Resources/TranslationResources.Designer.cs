@@ -862,6 +862,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading and saving profiles will not be available..
+        /// </summary>
+        internal static string ProfileLoadSaveWillNotBeAvailable {
+            get {
+                return ResourceManager.GetString("ProfileLoadSaveWillNotBeAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Profile name.
         /// </summary>
         internal static string ProfileName {
