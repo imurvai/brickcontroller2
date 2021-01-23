@@ -98,35 +98,41 @@ namespace BrickController2.UI.ViewModels
 
         private async Task PlayAsync()
         {
-            var validationResult = _playLogic.ValidateCreation(Creation);
-
-            string warning = null;
-            switch (validationResult)
+            try
             {
-                case CreationValidationResult.MissingControllerAction:
-                    warning = Translate("NoControllerActions");
-                    break;
+                var validationResult = _playLogic.ValidateCreation(Creation);
 
-                case CreationValidationResult.MissingDevice:
-                    warning = Translate("MissingDevices");
-                    break;
+                string warning = null;
+                switch (validationResult)
+                {
+                    case CreationValidationResult.MissingControllerAction:
+                        warning = Translate("NoControllerActions");
+                        break;
 
-                case CreationValidationResult.MissingSequence:
-                    warning = Translate("MissingSequence");
-                    break;
+                    case CreationValidationResult.MissingDevice:
+                        warning = Translate("MissingDevices");
+                        break;
+
+                    case CreationValidationResult.MissingSequence:
+                        warning = Translate("MissingSequence");
+                        break;
+                }
+
+                if (validationResult == CreationValidationResult.Ok)
+                {
+                    await NavigationService.NavigateToAsync<PlayerPageViewModel>(new NavigationParameters(("creation", Creation)));
+                }
+                else
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Warning"),
+                        warning,
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
+                }
             }
-
-            if (validationResult == CreationValidationResult.Ok)
+            catch (OperationCanceledException)
             {
-                await NavigationService.NavigateToAsync<PlayerPageViewModel>(new NavigationParameters(("creation", Creation)));
-            }
-            else
-            {
-                await _dialogService.ShowMessageBoxAsync(
-                    Translate("Warning"),
-                    warning,
-                    Translate("Ok"),
-                    _disappearingTokenSource.Token);
             }
         }
 
@@ -188,6 +194,16 @@ namespace BrickController2.UI.ViewModels
                         Translate("Deleting"),
                         token: _disappearingTokenSource.Token);
                 }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        private async Task ExportCreationAsync()
+        {
+            try
+            {
             }
             catch (OperationCanceledException)
             {

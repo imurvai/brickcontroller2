@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace BrickController2.CreationManagement
 {
@@ -42,12 +44,51 @@ namespace BrickController2.CreationManagement
             }
         }
 
+        public async Task ImportCreationAsync(string creationFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var creationJson = await File.ReadAllTextAsync(creationFilename);
+                var creation = JsonConvert.DeserializeObject<Creation>(creationJson);
+
+                var creationName = creation.Name;
+                if (!IsCreationNameAvailable(creationName))
+                {
+                    for (var suffix = 1; ;suffix++)
+                    {
+                        var newCreationName = $"{creationName} {suffix}";
+                        if (IsCreationNameAvailable(newCreationName))
+                        {
+                            creation.Name = newCreationName;
+                            await _creationRepository.InsertCreationAsync(creation);
+                            Creations.Add(creation);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        public async Task ExportCreationAsync(Creation creation, string creationFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var creationJson = JsonConvert.SerializeObject(creation);
+                await File.WriteAllTextAsync(creationFilename, creationJson);
+            }
+        }
+
         public async Task<bool> IsCreationNameAvailableAsync(string creationName)
         {
             using (await _asyncLock.LockAsync())
             {
-                return Creations.All(c => c.Name != creationName);
+                return IsCreationNameAvailable(creationName);
             }
+        }
+
+        private bool IsCreationNameAvailable(string creationName)
+        {
+            return Creations.All(c => c.Name != creationName);
         }
 
         public async Task<Creation> AddCreationAsync(string creationName)
@@ -83,7 +124,36 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                return creation.ControllerProfiles.All(cp => cp.Name != controllerProfileName);
+                return IsControllerProfileNameAvailable(creation, controllerProfileName);
+            }
+        }
+
+        private bool IsControllerProfileNameAvailable(Creation creation, string controllerProfileName)
+        {
+            return creation.ControllerProfiles.All(cp => cp.Name != controllerProfileName);
+        }
+
+        public async Task ImportProfileAsync(Creation creation, string controllerProfileFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var controllerProfileJson = await File.ReadAllTextAsync(controllerProfileFilename);
+                var controllerProfile = JsonConvert.DeserializeObject<ControllerProfile>(controllerProfileJson);
+
+                var controllerProfileName = controllerProfile.Name;
+                if (!IsControllerProfileNameAvailable(creation, controllerProfileName))
+                {
+                    for (var suffix = 1; ; suffix++)
+                    {
+                        var newControllerProfileName = $"{controllerProfileName} {suffix}";
+                        if (IsControllerProfileNameAvailable(creation, controllerProfileName))
+                        {
+                            controllerProfile.Name = newControllerProfileName;
+                            await _creationRepository.InsertControllerProfileAsync(creation, controllerProfile);
+                            return;
+                        }
+                    }
+                }
             }
         }
 

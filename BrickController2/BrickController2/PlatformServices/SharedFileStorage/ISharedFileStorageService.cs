@@ -2,6 +2,10 @@
 {
     public interface ISharedFileStorageService
     {
-        string GetSharedStorageDirectory();
+        bool IsSharedStorageAvailable { get; }
+
+        bool IsPermissionGranted { get; set; }
+
+        string SharedStorageDirectory { get; }
     }
 }

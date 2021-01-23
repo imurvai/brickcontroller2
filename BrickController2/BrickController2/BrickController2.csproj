@@ -17,6 +17,8 @@
     <None Remove="UI\Images\ic_delete.png" />
     <None Remove="UI\Images\ic_edit.png" />
     <None Remove="UI\Images\ic_exclamation_mark.png" />
+    <None Remove="UI\Images\ic_export.png" />
+    <None Remove="UI\Images\ic_import.png" />
     <None Remove="UI\Images\ic_menu.png" />
     <None Remove="UI\Images\ic_play.png" />
     <None Remove="UI\Images\ic_search.png" />
@@ -63,6 +65,8 @@
     <EmbeddedResource Include="UI\Images\ic_circle.png" />
     <EmbeddedResource Include="UI\Images\ic_edit.png" />
     <EmbeddedResource Include="UI\Images\ic_exclamation_mark.png" />
+    <EmbeddedResource Include="UI\Images\ic_export.png" />
+    <EmbeddedResource Include="UI\Images\ic_import.png" />
     <EmbeddedResource Include="UI\Images\ic_menu.png" />
     <EmbeddedResource Include="UI\Images\ic_play.png" />
     <EmbeddedResource Include="UI\Images\ic_search.png" />

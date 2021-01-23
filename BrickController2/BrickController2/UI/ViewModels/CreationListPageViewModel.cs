@@ -13,6 +13,7 @@ using Xamarin.Essentials;
 using BrickController2.UI.Services.Preferences;
 using BrickController2.PlatformServices.SharedFileStorage;
 using System.IO;
+using System.Linq;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -43,6 +44,7 @@ namespace BrickController2.UI.ViewModels
             _preferencesService = preferencesService;
             _sharedFileStorageService = sharedFileStorageService;
 
+            ImportCreationCommand = new SafeCommand(async () => await ImportCreationAsync(), () => _sharedFileStorageService.IsSharedStorageAvailable);
             OpenSettingsPageCommand = new SafeCommand(async () => await navigationService.NavigateToAsync<SettingsPageViewModel>(), () => !_dialogService.IsDialogOpen);
             AddCreationCommand = new SafeCommand(async () => await AddCreationAsync());
             CreationTappedCommand = new SafeCommand<Creation>(async creation => await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation))));
@@ -59,6 +61,7 @@ namespace BrickController2.UI.ViewModels
         public ICommand AddCreationCommand { get; }
         public ICommand CreationTappedCommand { get; }
         public ICommand DeleteCreationCommand { get; }
+        public ICommand ImportCreationCommand { get; }
         public ICommand NavigateToDevicesCommand { get; }
         public ICommand NavigateToControllerTesterCommand { get; }
         public ICommand NavigateToSequencesCommand { get; }
@@ -80,69 +83,100 @@ namespace BrickController2.UI.ViewModels
 
         private async Task RequestPermissionsAsync()
         {
-            var locationPermissionStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-            if (locationPermissionStatus != PermissionStatus.Granted)
+            try
             {
-                locationPermissionStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
-            }
+                var locationPermissionStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                if (locationPermissionStatus != PermissionStatus.Granted)
+                {
+                    locationPermissionStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                }
 
-            if (locationPermissionStatus != PermissionStatus.Granted)
+                _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+
+                if (locationPermissionStatus != PermissionStatus.Granted)
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Warning"),
+                        Translate("BluetoothDevicesWillNOTBeAvailable"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
+                }
+
+                _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+
+                var storageReadPermissionStatus = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
+                if (storageReadPermissionStatus != PermissionStatus.Granted)
+                {
+                    storageReadPermissionStatus = await Permissions.RequestAsync<Permissions.StorageRead>();
+                }
+
+                _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+
+                var storageWritePermissionStatus = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
+                if (storageWritePermissionStatus != PermissionStatus.Granted)
+                {
+                    storageWritePermissionStatus = await Permissions.RequestAsync<Permissions.StorageWrite>();
+                }
+
+                _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+
+                _sharedFileStorageService.IsPermissionGranted = storageReadPermissionStatus == PermissionStatus.Granted && storageWritePermissionStatus == PermissionStatus.Granted;
+
+                if (!_sharedFileStorageService.IsSharedStorageAvailable)
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Warning"),
+                        Translate("ProfileLoadSaveWillNotBeAvailable"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
+                }
+            }
+            catch (OperationCanceledException)
             {
-                await _dialogService.ShowMessageBoxAsync(
-                    Translate("Warning"),
-                    Translate("BluetoothDevicesWillNOTBeAvailable"),
-                    Translate("Ok"),
-                    _disappearingTokenSource.Token);
             }
+        }
 
-            var storageReadPermissionStatus = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
-            if (storageReadPermissionStatus != PermissionStatus.Granted)
+        private async Task ImportCreationAsync()
+        {
+            try
             {
-                storageReadPermissionStatus = await Permissions.RequestAsync<Permissions.StorageRead>();
-            }
+                var creationFiles = Directory.EnumerateFiles(_sharedFileStorageService.SharedStorageDirectory, "*.bc2c", SearchOption.TopDirectoryOnly);
+                if (creationFiles?.Any() ?? false)
+                {
+                    var selectedCreationFile = await _dialogService.ShowSelectionDialogAsync(
+                        creationFiles,
+                        Translate("Creations"),
+                        Translate("Cancel"),
+                        _disappearingTokenSource.Token);
 
-            var storageWritePermissionStatus = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
-            if (storageWritePermissionStatus != PermissionStatus.Granted)
+
+                }
+            }
+            catch (OperationCanceledException)
             {
-                storageWritePermissionStatus = await Permissions.RequestAsync<Permissions.StorageWrite>();
             }
-
-            var profileLoadSaveAvailable = true;
-            if (storageReadPermissionStatus != PermissionStatus.Granted || storageWritePermissionStatus != PermissionStatus.Granted)
-            {
-                profileLoadSaveAvailable = false;
-
-                await _dialogService.ShowMessageBoxAsync(
-                    Translate("Warning"),
-                    Translate("ProfileLoadSaveWillNotBeAvailable"),
-                    Translate("Ok"),
-                    _disappearingTokenSource.Token);
-            }
-
-            _preferencesService.Set("ProfileLoadSave", profileLoadSaveAvailable);
-
-            // temp
-            var sharedDir = _sharedFileStorageService.GetSharedStorageDirectory();
-            var exist = Directory.Exists(sharedDir);
-
-            var filename = "temp.txt";
-            File.WriteAllText(Path.Combine(sharedDir, filename), "hello lego");
         }
 
         private async Task LoadCreationsAndDevicesAsync()
         {
-            if (!_isLoaded)
+            try
             {
-                await _dialogService.ShowProgressDialogAsync(
-                    false,
-                    async (progressDialog, token) =>
-                    {
-                        await _creationManager.LoadCreationsAndSequencesAsync();
-                        await _deviceManager.LoadDevicesAsync();
-                        _isLoaded = true;
-                    },
-                    Translate("Loading"),
-                    token: _disappearingTokenSource.Token);
+                if (!_isLoaded)
+                {
+                    await _dialogService.ShowProgressDialogAsync(
+                        false,
+                        async (progressDialog, token) =>
+                        {
+                            await _creationManager.LoadCreationsAndSequencesAsync();
+                            await _deviceManager.LoadDevicesAsync();
+                            _isLoaded = true;
+                        },
+                        Translate("Loading"),
+                        token: _disappearingTokenSource.Token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 
