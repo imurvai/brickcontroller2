@@ -151,7 +151,18 @@ namespace BrickController2.UI.ViewModels
 
                     if (result.IsOk)
                     {
-                        var creation = _creationManager.ImportCreationAsync(result.SelectedItem);
+                        try
+                        {
+                            await _creationManager.ImportCreationAsync(result.SelectedItem);
+                        }
+                        catch (Exception)
+                        {
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("Error"),
+                                Translate("FailedToImportCreation"),
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+                        }
                     }
                 }
                 else

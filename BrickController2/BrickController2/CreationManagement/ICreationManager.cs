@@ -62,6 +62,8 @@ namespace BrickController2.CreationManagement
             int stepperAngle,
             string sequenceName);
 
+        Task ImportSequenceAsync(string sequenceFilename);
+        Task ExportSequenceAsync(Sequence sequence, string sequenceFilename);
         Task<bool> IsSequenceNameAvailableAsync(string sequenceName);
         Task<Sequence> AddSequenceAsync(string sequenceName);
         Task UpdateSequenceAsync(Sequence sequence, string sequenceName, bool loop, bool interpolate, IEnumerable<SequenceControlPoint> controlPoints);

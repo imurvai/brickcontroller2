@@ -673,6 +673,60 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to export the controller profile..
+        /// </summary>
+        internal static string FailedToExportControllerProfile {
+            get {
+                return ResourceManager.GetString("FailedToExportControllerProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to export the creation..
+        /// </summary>
+        internal static string FailedToExportCreation {
+            get {
+                return ResourceManager.GetString("FailedToExportCreation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to export the sequence..
+        /// </summary>
+        internal static string FailedToExportSequence {
+            get {
+                return ResourceManager.GetString("FailedToExportSequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to import the controller profile..
+        /// </summary>
+        internal static string FailedToImportControllerProfile {
+            get {
+                return ResourceManager.GetString("FailedToImportControllerProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to import the creation..
+        /// </summary>
+        internal static string FailedToImportCreation {
+            get {
+                return ResourceManager.GetString("FailedToImportCreation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to import the sequence..
+        /// </summary>
+        internal static string FailedToImportSequence {
+            get {
+                return ResourceManager.GetString("FailedToImportSequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File already exits.
         /// </summary>
         internal static string FileAlreadyExists {
@@ -840,6 +894,15 @@ namespace BrickController2.Resources {
         internal static string NoSequences {
             get {
                 return ResourceManager.GetString("NoSequences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No sequences to import..
+        /// </summary>
+        internal static string NoSequencesToImport {
+            get {
+                return ResourceManager.GetString("NoSequencesToImport", resourceCulture);
             }
         }
         

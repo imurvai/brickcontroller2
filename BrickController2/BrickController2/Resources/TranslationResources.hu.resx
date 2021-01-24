@@ -489,6 +489,24 @@
   <data name="DoYouWantToOverWrite" xml:space="preserve">
     <value>Felül akarod írni?</value>
   </data>
+  <data name="FailedToExportControllerProfile" xml:space="preserve">
+    <value>Nem sikerült exportálni a kontroller profilt.</value>
+  </data>
+  <data name="FailedToExportCreation" xml:space="preserve">
+    <value>Nem sikerült exportálni az alkotást.</value>
+  </data>
+  <data name="FailedToExportSequence" xml:space="preserve">
+    <value>Nem sikerült exportálni a szekvenciát.</value>
+  </data>
+  <data name="FailedToImportControllerProfile" xml:space="preserve">
+    <value>Nem sikerült importálni a kontroller profilt.</value>
+  </data>
+  <data name="FailedToImportCreation" xml:space="preserve">
+    <value>Nem sikerült importálni az alkotást.</value>
+  </data>
+  <data name="FailedToImportSequence" xml:space="preserve">
+    <value>Nem sikerült importálni a szekvenciát.</value>
+  </data>
   <data name="FileAlreadyExists" xml:space="preserve">
     <value>A file már létezik</value>
   </data>
@@ -500,5 +518,8 @@
   </data>
   <data name="NoProfilesToImport" xml:space="preserve">
     <value>Nincsenek beimportálható kontroller profilok.</value>
+  </data>
+  <data name="NoSequencesToImport" xml:space="preserve">
+    <value>Nincsenek beimportálható szekvenciák.</value>
   </data>
 </root>

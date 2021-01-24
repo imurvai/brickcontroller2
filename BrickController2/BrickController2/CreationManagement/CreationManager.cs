@@ -343,12 +343,54 @@ namespace BrickController2.CreationManagement
             }
         }
 
+        public async Task ImportSequenceAsync(string sequenceFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var sequenceJson = await File.ReadAllTextAsync(sequenceFilename);
+                var sequence = JsonConvert.DeserializeObject<Sequence>(sequenceJson);
+
+                sequence.Id = 0;
+
+                var sequenceName = sequence.Name;
+                if (!IsSequenceNameAvailable(sequenceName))
+                {
+                    for (var suffix = 1; suffix < 1000; suffix++)
+                    {
+                        var newSequenceName = $"{sequenceName} {suffix}";
+                        if (IsSequenceNameAvailable(sequenceName))
+                        {
+                            sequenceName = newSequenceName;
+                            break;
+                        }
+                    }
+                }
+
+                sequence.Name = sequenceName;
+                await _creationRepository.InsertSequenceAsync(sequence);
+            }
+        }
+
+        public async Task ExportSequenceAsync(Sequence sequence, string sequenceFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var sequenceJson = JsonConvert.SerializeObject(sequence);
+                await File.WriteAllTextAsync(sequenceFilename, sequenceJson);
+            }
+        }
+
         public async Task<bool> IsSequenceNameAvailableAsync(string sequenceName)
         {
             using (await _asyncLock.LockAsync())
             {
-                return Sequences.All(s => s.Name != sequenceName);
+                return IsSequenceNameAvailable(sequenceName);
             }
+        }
+
+        private bool IsSequenceNameAvailable(string sequenceName)
+        {
+            return Sequences.All(s => s.Name != sequenceName);
         }
 
         public async Task<Sequence> AddSequenceAsync(string sequenceName)

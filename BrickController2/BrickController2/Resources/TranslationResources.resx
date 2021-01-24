@@ -321,6 +321,24 @@
   <data name="FailedToConnect" xml:space="preserve">
     <value>Failed to connect.</value>
   </data>
+  <data name="FailedToExportControllerProfile" xml:space="preserve">
+    <value>Failed to export the controller profile.</value>
+  </data>
+  <data name="FailedToExportCreation" xml:space="preserve">
+    <value>Failed to export the creation.</value>
+  </data>
+  <data name="FailedToExportSequence" xml:space="preserve">
+    <value>Failed to export the sequence.</value>
+  </data>
+  <data name="FailedToImportControllerProfile" xml:space="preserve">
+    <value>Failed to import the controller profile.</value>
+  </data>
+  <data name="FailedToImportCreation" xml:space="preserve">
+    <value>Failed to import the creation.</value>
+  </data>
+  <data name="FailedToImportSequence" xml:space="preserve">
+    <value>Failed to import the sequence.</value>
+  </data>
   <data name="FileAlreadyExists" xml:space="preserve">
     <value>File already exits</value>
   </data>
@@ -377,6 +395,9 @@
   </data>
   <data name="NoSequences" xml:space="preserve">
     <value>There are no sequences.</value>
+  </data>
+  <data name="NoSequencesToImport" xml:space="preserve">
+    <value>No sequences to import.</value>
   </data>
   <data name="Ok" xml:space="preserve">
     <value>Ok</value>
