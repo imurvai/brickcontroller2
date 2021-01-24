@@ -8,6 +8,9 @@ using System.Threading;
 using System;
 using BrickController2.UI.Services.Translation;
 using BrickController2.BusinessLogic;
+using BrickController2.Helpers;
+using System.IO;
+using BrickController2.PlatformServices.SharedFileStorage;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -15,6 +18,7 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly ICreationManager _creationManager;
         private readonly IDialogService _dialogService;
+        private readonly ISharedFileStorageService _sharedFileStorageService;
         private readonly IPlayLogic _playLogic;
 
         private CancellationTokenSource _disappearingTokenSource;
@@ -24,16 +28,20 @@ namespace BrickController2.UI.ViewModels
             ITranslationService translationService,
             ICreationManager creationManager,
             IDialogService dialogService,
+            ISharedFileStorageService sharedFileStorageService,
             IPlayLogic playLogic,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
             _creationManager = creationManager;
             _dialogService = dialogService;
+            _sharedFileStorageService = sharedFileStorageService;
             _playLogic = playLogic;
 
             Creation = parameters.Get<Creation>("creation");
 
+            ImportControllerProfileCommand = new SafeCommand(async () => await ImportControllerProfileAsync(), () => _sharedFileStorageService.IsSharedStorageAvailable);
+            ExportCreationCommand = new SafeCommand(async () => await ExportCreationAsync(), () => _sharedFileStorageService.IsSharedStorageAvailable);
             RenameCreationCommand = new SafeCommand(async () => await RenameCreationAsync());
             PlayCommand = new SafeCommand(async () => await PlayAsync());
             AddControllerProfileCommand = new SafeCommand(async () => await AddControllerProfileAsync());
@@ -43,6 +51,8 @@ namespace BrickController2.UI.ViewModels
 
         public Creation Creation { get; }
 
+        public ICommand ImportControllerProfileCommand { get; }
+        public ICommand ExportCreationCommand { get; }
         public ICommand RenameCreationCommand { get; }
         public ICommand PlayCommand { get; }
         public ICommand AddControllerProfileCommand { get; }
@@ -200,10 +210,54 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
+        private async Task ImportControllerProfileAsync()
+        {
+            await _dialogService.ShowMessageBoxAsync(
+                "Pukk",
+                "Majd",
+                "Ok",
+                _disappearingTokenSource.Token);
+        }
+
         private async Task ExportCreationAsync()
         {
             try
             {
+                var filename = Creation.Name;
+                var done = false;
+
+                do
+                {
+                    var result = await _dialogService.ShowInputDialogAsync(
+                        filename,
+                        Translate("CreationName"),
+                        Translate("Ok"),
+                        Translate("Cancel"),
+                        KeyboardType.Text,
+                        fn => FileHelper.FilenameValidator(fn),
+                        _disappearingTokenSource.Token);
+
+                    if (!result.IsOk)
+                    {
+                        return;
+                    }
+
+                    filename = result.Result;
+                    var filePath = Path.Combine(_sharedFileStorageService.SharedStorageDirectory, $"{filename}.{FileHelper.CreationFileExtension}");
+
+                    if (!File.Exists(filePath) || 
+                        await _dialogService.ShowQuestionDialogAsync(
+                            Translate("FileAlreadyExists"),
+                            Translate("DoYouWantToOverWrite"),
+                            Translate("Yes"),
+                            Translate("No"),
+                            _disappearingTokenSource.Token))
+                    {
+                        await _creationManager.ExportCreationAsync(Creation, filePath);
+                        done = true;
+                    }
+                }
+                while (!done);
             }
             catch (OperationCanceledException)
             {

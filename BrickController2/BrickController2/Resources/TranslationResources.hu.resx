@@ -486,4 +486,19 @@
   <data name="ProfileLoadSaveWillNotBeAvailable" xml:space="preserve">
     <value>Profilok kimentése és betöltése nem lesz elérhető.</value>
   </data>
+  <data name="DoYouWantToOverWrite" xml:space="preserve">
+    <value>Felül akarod írni?</value>
+  </data>
+  <data name="FileAlreadyExists" xml:space="preserve">
+    <value>A file már létezik</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Információ</value>
+  </data>
+  <data name="NoCreationsToImport" xml:space="preserve">
+    <value>Nincsenek beimportálható alkotások.</value>
+  </data>
+  <data name="NoProfilesToImport" xml:space="preserve">
+    <value>Nincsenek beimportálható kontroller profilok.</value>
+  </data>
 </root>

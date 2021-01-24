@@ -54,18 +54,20 @@ namespace BrickController2.CreationManagement
                 var creationName = creation.Name;
                 if (!IsCreationNameAvailable(creationName))
                 {
-                    for (var suffix = 1; ;suffix++)
+                    for (var suffix = 1; suffix < 1000; suffix++)
                     {
                         var newCreationName = $"{creationName} {suffix}";
                         if (IsCreationNameAvailable(newCreationName))
                         {
-                            creation.Name = newCreationName;
-                            await _creationRepository.InsertCreationAsync(creation);
-                            Creations.Add(creation);
-                            return;
+                            creationName = newCreationName;
+                            break;
                         }
                     }
                 }
+
+                creation.Name = creationName;
+                await _creationRepository.InsertCreationAsync(creation);
+                Creations.Add(creation);
             }
         }
 
@@ -133,30 +135,43 @@ namespace BrickController2.CreationManagement
             return creation.ControllerProfiles.All(cp => cp.Name != controllerProfileName);
         }
 
-        public async Task ImportProfileAsync(Creation creation, string controllerProfileFilename)
+        public async Task ImportControllerProfileAsync(Creation creation, string controllerProfileFilename)
         {
             using (await _asyncLock.LockAsync())
             {
                 var controllerProfileJson = await File.ReadAllTextAsync(controllerProfileFilename);
                 var controllerProfile = JsonConvert.DeserializeObject<ControllerProfile>(controllerProfileJson);
 
+                controllerProfile.Creation = null;
+                controllerProfile.CreationId = 0;
+
                 var controllerProfileName = controllerProfile.Name;
                 if (!IsControllerProfileNameAvailable(creation, controllerProfileName))
                 {
-                    for (var suffix = 1; ; suffix++)
+                    for (var suffix = 1; suffix < 1000; suffix++)
                     {
                         var newControllerProfileName = $"{controllerProfileName} {suffix}";
                         if (IsControllerProfileNameAvailable(creation, controllerProfileName))
                         {
-                            controllerProfile.Name = newControllerProfileName;
-                            await _creationRepository.InsertControllerProfileAsync(creation, controllerProfile);
-                            return;
+                            controllerProfileName = newControllerProfileName;
+                            break;
                         }
                     }
                 }
+
+                controllerProfile.Name = controllerProfileName;
+                await _creationRepository.InsertControllerProfileAsync(creation, controllerProfile);
             }
         }
 
+        public async Task ExportControllerProfileAsync(ControllerProfile controllerProfile, string controllerProfileFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var controllerProfileJson = JsonConvert.SerializeObject(controllerProfile);
+                await File.WriteAllTextAsync(controllerProfileFilename, controllerProfileJson);
+            }
+        }
         public async Task<ControllerProfile> AddControllerProfileAsync(Creation creation, string controllerProfileName)
         {
             using (await _asyncLock.LockAsync())

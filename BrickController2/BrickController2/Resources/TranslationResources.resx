@@ -288,6 +288,9 @@
   <data name="Disconnecting" xml:space="preserve">
     <value>Disconnecting</value>
   </data>
+  <data name="DoYouWantToOverWrite" xml:space="preserve">
+    <value>Do you want to overwrite it?</value>
+  </data>
   <data name="DurationMs" xml:space="preserve">
     <value>Duration (ms)</value>
   </data>
@@ -318,8 +321,14 @@
   <data name="FailedToConnect" xml:space="preserve">
     <value>Failed to connect.</value>
   </data>
+  <data name="FileAlreadyExists" xml:space="preserve">
+    <value>File already exits</value>
+  </data>
   <data name="IconSet" xml:space="preserve">
     <value>Icon set</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Information</value>
   </data>
   <data name="Interpolate" xml:space="preserve">
     <value>Interpolate</value>
@@ -359,6 +368,12 @@
   </data>
   <data name="NoControllerActions" xml:space="preserve">
     <value>There are no controller actions added to the creation.</value>
+  </data>
+  <data name="NoCreationsToImport" xml:space="preserve">
+    <value>No creations to import.</value>
+  </data>
+  <data name="NoProfilesToImport" xml:space="preserve">
+    <value>No controller profiles to import.</value>
   </data>
   <data name="NoSequences" xml:space="preserve">
     <value>There are no sequences.</value>

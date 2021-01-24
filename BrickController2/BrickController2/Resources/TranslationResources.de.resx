@@ -273,6 +273,9 @@
   <data name="Disconnecting" xml:space="preserve">
     <value>Verbindung trennen...</value>
   </data>
+  <data name="DoYouWantToOverWrite" xml:space="preserve">
+    <value>Willst du es überschreiben?</value>
+  </data>
   <data name="DurationMs" xml:space="preserve">
     <value>Dauer (ms)</value>
   </data>
@@ -303,8 +306,14 @@
   <data name="FailedToConnect" xml:space="preserve">
     <value>Verbindung nicht möglich</value>
   </data>
+  <data name="FileAlreadyExists" xml:space="preserve">
+    <value>Die Datei existiert bereits</value>
+  </data>
   <data name="IconSet" xml:space="preserve">
     <value>Icon-Set</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Information</value>
   </data>
   <data name="Interpolate" xml:space="preserve">
     <value>Interpolieren</value>
@@ -344,6 +353,12 @@
   </data>
   <data name="NoControllerActions" xml:space="preserve">
     <value>Keine Controller-Aktionen für diese Kreation</value>
+  </data>
+  <data name="NoCreationsToImport" xml:space="preserve">
+    <value>Keine zu importierenden Kreationen.</value>
+  </data>
+  <data name="NoProfilesToImport" xml:space="preserve">
+    <value>Keine zu importierenden Controller-Profile.</value>
   </data>
   <data name="NoSequences" xml:space="preserve">
     <value>Keine Sequenzen.</value>

@@ -1,4 +1,5 @@
 ﻿using BrickController2.Helpers;
+using Newtonsoft.Json;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace BrickController2.CreationManagement
         private ObservableCollection<ControllerProfile> _controllerProfiles = new ObservableCollection<ControllerProfile>();
 
         [PrimaryKey, AutoIncrement]
+        [JsonIgnore]
         public int Id { get; set; }
 
         public string Name

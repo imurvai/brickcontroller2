@@ -1,13 +1,18 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.Text.RegularExpressions;
 
 namespace BrickController2.Helpers
 {
     public static class FileHelper
     {
-        public static IEnumerable<string> GetFilesFromDirectory(string directoryPath, string filter)
+        private static Regex _filenameWithoutExtensionPattern = new Regex(@"^\w+(\w\s)*");
+
+        public static string CreationFileExtension => "bc2c";
+        public static string ControllerProfileFileExtension => "bc2p";
+        public static string SequenceFileExtension => "bc2s";
+
+        public static bool FilenameValidator(string filename)
         {
-            return Directory.EnumerateFiles(directoryPath, filter, SearchOption.TopDirectoryOnly);
+            return _filenameWithoutExtensionPattern.IsMatch(filename);
         }
     }
 }

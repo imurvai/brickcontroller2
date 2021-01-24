@@ -143,13 +143,24 @@ namespace BrickController2.UI.ViewModels
                 var creationFiles = Directory.EnumerateFiles(_sharedFileStorageService.SharedStorageDirectory, "*.bc2c", SearchOption.TopDirectoryOnly);
                 if (creationFiles?.Any() ?? false)
                 {
-                    var selectedCreationFile = await _dialogService.ShowSelectionDialogAsync(
+                    var result = await _dialogService.ShowSelectionDialogAsync(
                         creationFiles,
                         Translate("Creations"),
                         Translate("Cancel"),
                         _disappearingTokenSource.Token);
 
-
+                    if (result.IsOk)
+                    {
+                        var creation = _creationManager.ImportCreationAsync(result.SelectedItem);
+                    }
+                }
+                else
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Information"),
+                        Translate("NoCreationsToImport"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
                 }
             }
             catch (OperationCanceledException)

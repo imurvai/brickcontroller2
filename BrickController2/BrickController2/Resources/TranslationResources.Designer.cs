@@ -574,6 +574,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you want to overwrite it?.
+        /// </summary>
+        internal static string DoYouWantToOverWrite {
+            get {
+                return ResourceManager.GetString("DoYouWantToOverWrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duration (ms).
         /// </summary>
         internal static string DurationMs {
@@ -664,11 +673,29 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File already exits.
+        /// </summary>
+        internal static string FileAlreadyExists {
+            get {
+                return ResourceManager.GetString("FileAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Icon set.
         /// </summary>
         internal static string IconSet {
             get {
                 return ResourceManager.GetString("IconSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information.
+        /// </summary>
+        internal static string Information {
+            get {
+                return ResourceManager.GetString("Information", resourceCulture);
             }
         }
         
@@ -786,6 +813,24 @@ namespace BrickController2.Resources {
         internal static string NoControllerActions {
             get {
                 return ResourceManager.GetString("NoControllerActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No creations to import..
+        /// </summary>
+        internal static string NoCreationsToImport {
+            get {
+                return ResourceManager.GetString("NoCreationsToImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No controller profiles to import..
+        /// </summary>
+        internal static string NoProfilesToImport {
+            get {
+                return ResourceManager.GetString("NoProfilesToImport", resourceCulture);
             }
         }
         

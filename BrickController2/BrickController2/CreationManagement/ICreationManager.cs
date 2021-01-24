@@ -11,12 +11,15 @@ namespace BrickController2.CreationManagement
         ObservableCollection<Sequence> Sequences { get; }
 
         Task LoadCreationsAndSequencesAsync();
-
+        Task ImportCreationAsync(string creationFilename);
+        Task ExportCreationAsync(Creation creation, string creationFilename);
         Task<bool> IsCreationNameAvailableAsync(string creationName);
         Task<Creation> AddCreationAsync(string creationName);
         Task DeleteCreationAsync(Creation creation);
         Task RenameCreationAsync(Creation creation, string newName);
 
+        Task ImportControllerProfileAsync(Creation creation, string controllerProfileFilename);
+        Task ExportControllerProfileAsync(ControllerProfile controllerProfile, string ControllerProfileFilename);
         Task<bool> IsControllerProfileNameAvailableAsync(Creation creation, string controllerProfileName);
         Task<ControllerProfile> AddControllerProfileAsync(Creation creation, string controllerProfileName);
         Task DeleteControllerProfileAsync(ControllerProfile controllerProfile);
