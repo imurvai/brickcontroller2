@@ -655,7 +655,7 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Export succsessful:.
+        ///   Looks up a localized string similar to Export successful:.
         /// </summary>
         internal static string ExportSuccessful {
             get {

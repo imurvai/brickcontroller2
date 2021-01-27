@@ -11,6 +11,7 @@ using BrickController2.BusinessLogic;
 using BrickController2.Helpers;
 using System.IO;
 using BrickController2.PlatformServices.SharedFileStorage;
+using System.Linq;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -18,7 +19,6 @@ namespace BrickController2.UI.ViewModels
     {
         private readonly ICreationManager _creationManager;
         private readonly IDialogService _dialogService;
-        private readonly ISharedFileStorageService _sharedFileStorageService;
         private readonly IPlayLogic _playLogic;
 
         private CancellationTokenSource _disappearingTokenSource;
@@ -35,13 +35,13 @@ namespace BrickController2.UI.ViewModels
         {
             _creationManager = creationManager;
             _dialogService = dialogService;
-            _sharedFileStorageService = sharedFileStorageService;
+            SharedFileStorageService = sharedFileStorageService;
             _playLogic = playLogic;
 
             Creation = parameters.Get<Creation>("creation");
 
-            ImportControllerProfileCommand = new SafeCommand(async () => await ImportControllerProfileAsync(), () => _sharedFileStorageService.IsSharedStorageAvailable);
-            ExportCreationCommand = new SafeCommand(async () => await ExportCreationAsync(), () => _sharedFileStorageService.IsSharedStorageAvailable);
+            ImportControllerProfileCommand = new SafeCommand(async () => await ImportControllerProfileAsync(), () => SharedFileStorageService.IsSharedStorageAvailable);
+            ExportCreationCommand = new SafeCommand(async () => await ExportCreationAsync(), () => SharedFileStorageService.IsSharedStorageAvailable);
             RenameCreationCommand = new SafeCommand(async () => await RenameCreationAsync());
             PlayCommand = new SafeCommand(async () => await PlayAsync());
             AddControllerProfileCommand = new SafeCommand(async () => await AddControllerProfileAsync());
@@ -50,6 +50,8 @@ namespace BrickController2.UI.ViewModels
         }
 
         public Creation Creation { get; }
+
+        public ISharedFileStorageService SharedFileStorageService { get; }
 
         public ICommand ImportControllerProfileCommand { get; }
         public ICommand ExportCreationCommand { get; }
@@ -212,11 +214,45 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ImportControllerProfileAsync()
         {
-            await _dialogService.ShowMessageBoxAsync(
-                "Pukk",
-                "Majd",
-                "Ok",
-                _disappearingTokenSource.Token);
+            try
+            {
+                var controllerProfileFilesMap = FileHelper.EnumerateDirectoryFilesToFilenameMap(SharedFileStorageService.SharedStorageDirectory, $"*.{FileHelper.ControllerProfileFileExtension}");
+                if (controllerProfileFilesMap?.Any() ?? false)
+                {
+                    var result = await _dialogService.ShowSelectionDialogAsync(
+                        controllerProfileFilesMap.Keys,
+                        Translate("ControllerProfile"),
+                        Translate("Cancel"),
+                        _disappearingTokenSource.Token);
+
+                    if (result.IsOk)
+                    {
+                        try
+                        {
+                            await _creationManager.ImportControllerProfileAsync(Creation, controllerProfileFilesMap[result.SelectedItem]);
+                        }
+                        catch (Exception)
+                        {
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("Error"),
+                                Translate("FailedToImportControllerProfile"),
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+                        }
+                    }
+                }
+                else
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Information"),
+                        Translate("NoProfilesToImport"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
         }
 
         private async Task ExportCreationAsync()
@@ -243,7 +279,7 @@ namespace BrickController2.UI.ViewModels
                     }
 
                     filename = result.Result;
-                    var filePath = Path.Combine(_sharedFileStorageService.SharedStorageDirectory, $"{filename}.{FileHelper.CreationFileExtension}");
+                    var filePath = Path.Combine(SharedFileStorageService.SharedStorageDirectory, $"{filename}.{FileHelper.CreationFileExtension}");
 
                     if (!File.Exists(filePath) || 
                         await _dialogService.ShowQuestionDialogAsync(
