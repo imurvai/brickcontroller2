@@ -143,6 +143,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="PlatformServices\Localization\LocalizationService.cs" />
+    <Compile Include="PlatformServices\Permission\ReadWriteExternalStoragePermission.cs" />
     <Compile Include="PlatformServices\SharedFileStorage\SharedFileStorageService.cs" />
     <Compile Include="PlatformServices\Versioning\VersionService.cs" />
     <Compile Include="UI\CustomRenderers\ColorImageRenderer.cs" />

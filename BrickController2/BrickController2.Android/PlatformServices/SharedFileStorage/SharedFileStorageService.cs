@@ -1,16 +1,28 @@
 ﻿using Android.OS;
+using BrickController2.Helpers;
 using BrickController2.PlatformServices.SharedFileStorage;
 using System.IO;
 
 namespace BrickController2.Droid.PlatformServices.SharedFileStorage
 {
-    public class SharedFileStorageService : ISharedFileStorageService
+    public class SharedFileStorageService : NotifyPropertyChangedSource, ISharedFileStorageService
     {
         private static string _brickController2SharedDirectory = "BrickController2";
 
+        public bool _isPermissionGranted = false;
+
         public bool IsSharedStorageAvailable => IsPermissionGranted && SharedStorageDirectory != null;
 
-        public bool IsPermissionGranted { get; set; }
+        public bool IsPermissionGranted
+        {
+            get { return _isPermissionGranted; }
+            set
+            {
+                _isPermissionGranted = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(IsSharedStorageAvailable));
+            }
+        }
 
         public string SharedStorageDirectory
         {

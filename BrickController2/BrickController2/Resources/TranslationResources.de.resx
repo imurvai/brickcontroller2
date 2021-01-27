@@ -300,6 +300,9 @@
   <data name="ErrorDuringScanning" xml:space="preserve">
     <value>Fehler beim Scannen</value>
   </data>
+  <data name="ExportSuccessful" xml:space="preserve">
+    <value>Export erfolgreich:</value>
+  </data>
   <data name="ExternalLibraries" xml:space="preserve">
     <value>Externe Komponenten</value>
   </data>

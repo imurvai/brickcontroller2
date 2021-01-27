@@ -315,6 +315,9 @@
   <data name="ErrorDuringScanning" xml:space="preserve">
     <value>Error during scanning</value>
   </data>
+  <data name="ExportSuccessful" xml:space="preserve">
+    <value>Export succsessful:</value>
+  </data>
   <data name="ExternalLibraries" xml:space="preserve">
     <value>3rd party components</value>
   </data>

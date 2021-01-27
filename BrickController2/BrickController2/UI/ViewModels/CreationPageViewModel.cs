@@ -257,6 +257,12 @@ namespace BrickController2.UI.ViewModels
                         {
                             await _creationManager.ExportCreationAsync(Creation, filePath);
                             done = true;
+
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("ExportSuccessful"),
+                                filePath,
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
                         }
                         catch (Exception)
                         {

@@ -24,7 +24,7 @@
         <Grid HorizontalOptions="FillAndExpand">
             <Label Text="{extensions:Translate Creations}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
             <StackLayout Orientation="Horizontal" HorizontalOptions="End" Margin="12,0" Spacing="12">
-                <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_import.png}" Command="{Binding ImportCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_import.png}" Command="{Binding ImportCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" IsVisible="{Binding SharedFileStorageService.IsSharedStorageAvailable}"/>
                 <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_settings.png}" Command="{Binding OpenSettingsPageCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
             </StackLayout>
         </Grid>

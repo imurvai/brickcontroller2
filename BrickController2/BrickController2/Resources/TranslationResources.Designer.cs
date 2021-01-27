@@ -655,6 +655,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export succsessful:.
+        /// </summary>
+        internal static string ExportSuccessful {
+            get {
+                return ResourceManager.GetString("ExportSuccessful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 3rd party components.
         /// </summary>
         internal static string ExternalLibraries {

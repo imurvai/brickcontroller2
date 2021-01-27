@@ -489,6 +489,9 @@
   <data name="DoYouWantToOverWrite" xml:space="preserve">
     <value>Felül akarod írni?</value>
   </data>
+  <data name="ExportSuccessful" xml:space="preserve">
+    <value>Sikeres exportálás:</value>
+  </data>
   <data name="FailedToExportControllerProfile" xml:space="preserve">
     <value>Nem sikerült exportálni a kontroller profilt.</value>
   </data>
