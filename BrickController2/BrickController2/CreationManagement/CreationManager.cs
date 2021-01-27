@@ -151,7 +151,7 @@ namespace BrickController2.CreationManagement
                     for (var suffix = 1; suffix < 1000; suffix++)
                     {
                         var newControllerProfileName = $"{controllerProfileName} {suffix}";
-                        if (IsControllerProfileNameAvailable(creation, controllerProfileName))
+                        if (IsControllerProfileNameAvailable(creation, newControllerProfileName))
                         {
                             controllerProfileName = newControllerProfileName;
                             break;
