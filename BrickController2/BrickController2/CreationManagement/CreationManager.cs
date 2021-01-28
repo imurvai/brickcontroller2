@@ -359,7 +359,7 @@ namespace BrickController2.CreationManagement
                     for (var suffix = 1; suffix < 1000; suffix++)
                     {
                         var newSequenceName = $"{sequenceName} {suffix}";
-                        if (IsSequenceNameAvailable(sequenceName))
+                        if (IsSequenceNameAvailable(newSequenceName))
                         {
                             sequenceName = newSequenceName;
                             break;
@@ -369,6 +369,7 @@ namespace BrickController2.CreationManagement
 
                 sequence.Name = sequenceName;
                 await _creationRepository.InsertSequenceAsync(sequence);
+                Sequences.Add(sequence);
             }
         }
 
