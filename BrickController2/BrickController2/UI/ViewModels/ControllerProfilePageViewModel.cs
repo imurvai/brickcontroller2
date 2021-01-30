@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BrickController2.CreationManagement;
@@ -6,13 +9,10 @@ using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.DeviceManagement;
-using System;
-using System.Threading;
 using BrickController2.UI.Services.Translation;
 using BrickController2.BusinessLogic;
 using BrickController2.PlatformServices.SharedFileStorage;
 using BrickController2.Helpers;
-using System.IO;
 
 namespace BrickController2.UI.ViewModels
 {
