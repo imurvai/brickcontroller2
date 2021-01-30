@@ -112,12 +112,6 @@
     <Compile Update="UI\Pages\DevicePage.xaml.cs">
       <DependentUpon>DevicePage.xaml</DependentUpon>
     </Compile>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Resources\TranslationResources.de.Designer.cs">
-      <DependentUpon>TranslationResources.de.resx</DependentUpon>
-    </Compile>
-    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="Resources\TranslationResources.hu.Designer.cs">
-      <DependentUpon>TranslationResources.hu.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
