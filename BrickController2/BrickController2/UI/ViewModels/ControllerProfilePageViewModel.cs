@@ -5,12 +5,12 @@ using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.DeviceManagement;
-using System.Collections.ObjectModel;
 using System;
 using System.Threading;
 using BrickController2.UI.Services.Translation;
 using System.Linq;
 using BrickController2.BusinessLogic;
+using System.Collections.Generic;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -22,6 +22,8 @@ namespace BrickController2.UI.ViewModels
         private readonly IPlayLogic _playLogic;
 
         private CancellationTokenSource _disappearingTokenSource;
+
+        private List<ControllerEventViewModel> _controllerEvents = new List<ControllerEventViewModel>();
 
         public ControllerProfilePageViewModel(
             INavigationService navigationService,
@@ -46,6 +48,8 @@ namespace BrickController2.UI.ViewModels
             ControllerActionTappedCommand = new SafeCommand<ControllerActionViewModel>(async controllerActionViewModel => await NavigationService.NavigateToAsync<ControllerActionPageViewModel>(new NavigationParameters(("controlleraction", controllerActionViewModel.ControllerAction))));
             DeleteControllerEventCommand = new SafeCommand<ControllerEvent>(async controllerEvent => await DeleteControllerEventAsync(controllerEvent));
             DeleteControllerActionCommand = new SafeCommand<ControllerAction>(async controllerAction => await DeleteControllerActionAsync(controllerAction));
+
+            PopulateControllerEvents();
         }
 
         public override void OnAppearing()
@@ -53,20 +57,21 @@ namespace BrickController2.UI.ViewModels
             _disappearingTokenSource?.Cancel();
             _disappearingTokenSource = new CancellationTokenSource();
 
-            OnControllerEventsChanged(null, null);
-            ControllerProfile.ControllerEvents.CollectionChanged += OnControllerEventsChanged;
+            PopulateControllerEvents();
         }
 
         public override void OnDisappearing()
         {
             _disappearingTokenSource.Cancel();
-
-            ControllerProfile.ControllerEvents.CollectionChanged -= OnControllerEventsChanged;
-            CleanupControllerEvents();
         }
 
         public ControllerProfile ControllerProfile { get; }
-        public ObservableCollection<ControllerEventViewModel> ControllerEvents { get; } = new ObservableCollection<ControllerEventViewModel>();
+
+        public List<ControllerEventViewModel> ControllerEvents
+        {
+            get { return _controllerEvents; }
+            set { _controllerEvents = value; RaisePropertyChanged(); }
+        }
 
         public ICommand RenameProfileCommand { get; }
         public ICommand AddControllerEventCommand { get; }
@@ -74,6 +79,11 @@ namespace BrickController2.UI.ViewModels
         public ICommand ControllerActionTappedCommand { get; }
         public ICommand DeleteControllerEventCommand { get; }
         public ICommand DeleteControllerActionCommand { get; }
+
+        private void PopulateControllerEvents()
+        {
+            ControllerEvents = new List<ControllerEventViewModel>(ControllerProfile.ControllerEvents.Select(ce => new ControllerEventViewModel(ce, _deviceManager, _playLogic, TranslationService)));
+        }
 
         private async Task RenameControllerProfileAsync()
         {
@@ -195,7 +205,11 @@ namespace BrickController2.UI.ViewModels
                 {
                     await _dialogService.ShowProgressDialogAsync(
                         false,
-                        async (progressDialog, token) => await _creationManager.DeleteControllerEventAsync(controllerEvent),
+                        async (progressDialog, token) =>
+                        {
+                            await _creationManager.DeleteControllerEventAsync(controllerEvent);
+                            PopulateControllerEvents();
+                        },
                         Translate("Deleting"),
                         token: _disappearingTokenSource.Token);
                 }
@@ -226,6 +240,8 @@ namespace BrickController2.UI.ViewModels
                             {
                                 await _creationManager.DeleteControllerEventAsync(controllerEvent);
                             }
+
+                            PopulateControllerEvents();
                         },
                         Translate("Deleting"),
                         token: _disappearingTokenSource.Token);
@@ -236,45 +252,22 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private void OnControllerEventsChanged(object sender, EventArgs args)
-        {
-            CleanupControllerEvents();
-            foreach (var controllerEvent in ControllerProfile.ControllerEvents)
-            {
-                ControllerEvents.Add(new ControllerEventViewModel(controllerEvent, _deviceManager, _playLogic, TranslationService));
-            }
-        }
-
-        private void CleanupControllerEvents()
-        {
-            foreach (var controllerEventViewModel in ControllerEvents)
-            {
-                controllerEventViewModel.Dispose();
-            }
-
-            ControllerEvents.Clear();
-        }
-
         public class ControllerActionViewModel
         {
-            private readonly ITranslationService _translationService;
-
             public ControllerActionViewModel(
                 ControllerAction controllerAction,
                 IDeviceManager deviceManager,
                 IPlayLogic playLogic,
                 ITranslationService translationService)
             {
-                _translationService = translationService;
-
                 ControllerAction = controllerAction;
                 var device = deviceManager.GetDeviceById(controllerAction.DeviceId);
 
                 ControllerActionValid = playLogic.ValidateControllerAction(controllerAction);
-                DeviceName = device != null ? device.Name : Translate("Missing");
+                DeviceName = device != null ? device.Name : translationService.Translate("Missing");
                 DeviceType = device != null ? device.DeviceType : DeviceType.Unknown;
                 Channel = controllerAction.Channel;
-                InvertName = controllerAction.IsInvert ? Translate("Inv") : string.Empty;
+                InvertName = controllerAction.IsInvert ? translationService.Translate("Inv") : string.Empty;
             }
 
             public ControllerAction ControllerAction { get; }
@@ -283,16 +276,10 @@ namespace BrickController2.UI.ViewModels
             public DeviceType DeviceType { get; }
             public int Channel { get; }
             public string InvertName { get; }
-
-            private string Translate(string key) => _translationService.Translate(key);
         }
 
-        public class ControllerEventViewModel : ObservableCollection<ControllerActionViewModel>, IDisposable
+        public class ControllerEventViewModel : List<ControllerActionViewModel>
         {
-            private readonly IDeviceManager _deviceManager;
-            private readonly IPlayLogic _playLogic;
-            private readonly ITranslationService _translationService;
-
             public ControllerEventViewModel(
                 ControllerEvent controllerEvent,
                 IDeviceManager deviceManager,
@@ -300,39 +287,11 @@ namespace BrickController2.UI.ViewModels
                 ITranslationService translationService)
             {
                 ControllerEvent = controllerEvent;
-                _deviceManager = deviceManager;
-                _playLogic = playLogic;
-                _translationService = translationService;
 
-                PopulateGroup(controllerEvent, deviceManager, playLogic, translationService);
-                controllerEvent.ControllerActions.CollectionChanged += OnCollectionChanged;
+                AddRange(controllerEvent.ControllerActions.Select(ca => new ControllerActionViewModel(ca, deviceManager, playLogic, translationService)));
             }
 
             public ControllerEvent ControllerEvent { get; }
-
-            public void Dispose()
-            {
-                ControllerEvent.ControllerActions.CollectionChanged -= OnCollectionChanged;
-                Clear();
-            }
-
-            private void OnCollectionChanged(object sender, EventArgs args)
-            {
-                PopulateGroup(ControllerEvent, _deviceManager, _playLogic, _translationService);
-            }
-
-            private void PopulateGroup(
-                ControllerEvent controllerEvent,
-                IDeviceManager deviceManager,
-                IPlayLogic playLogic,
-                ITranslationService translationService)
-            {
-                Clear();
-                foreach (var controllerAction in controllerEvent.ControllerActions)
-                {
-                    Add(new ControllerActionViewModel(controllerAction, deviceManager, playLogic, translationService));
-                }
-            }
         }
     }
 }
