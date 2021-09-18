@@ -574,6 +574,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you want to overwrite it?.
+        /// </summary>
+        internal static string DoYouWantToOverWrite {
+            get {
+                return ResourceManager.GetString("DoYouWantToOverWrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duration (ms).
         /// </summary>
         internal static string DurationMs {
@@ -646,6 +655,15 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export successful:.
+        /// </summary>
+        internal static string ExportSuccessful {
+            get {
+                return ResourceManager.GetString("ExportSuccessful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 3rd party components.
         /// </summary>
         internal static string ExternalLibraries {
@@ -664,11 +682,83 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to export the controller profile..
+        /// </summary>
+        internal static string FailedToExportControllerProfile {
+            get {
+                return ResourceManager.GetString("FailedToExportControllerProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to export the creation..
+        /// </summary>
+        internal static string FailedToExportCreation {
+            get {
+                return ResourceManager.GetString("FailedToExportCreation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to export the sequence..
+        /// </summary>
+        internal static string FailedToExportSequence {
+            get {
+                return ResourceManager.GetString("FailedToExportSequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to import the controller profile..
+        /// </summary>
+        internal static string FailedToImportControllerProfile {
+            get {
+                return ResourceManager.GetString("FailedToImportControllerProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to import the creation..
+        /// </summary>
+        internal static string FailedToImportCreation {
+            get {
+                return ResourceManager.GetString("FailedToImportCreation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to import the sequence..
+        /// </summary>
+        internal static string FailedToImportSequence {
+            get {
+                return ResourceManager.GetString("FailedToImportSequence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File already exits.
+        /// </summary>
+        internal static string FileAlreadyExists {
+            get {
+                return ResourceManager.GetString("FileAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Icon set.
         /// </summary>
         internal static string IconSet {
             get {
                 return ResourceManager.GetString("IconSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information.
+        /// </summary>
+        internal static string Information {
+            get {
+                return ResourceManager.GetString("Information", resourceCulture);
             }
         }
         
@@ -790,11 +880,38 @@ namespace BrickController2.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No creations to import..
+        /// </summary>
+        internal static string NoCreationsToImport {
+            get {
+                return ResourceManager.GetString("NoCreationsToImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No controller profiles to import..
+        /// </summary>
+        internal static string NoProfilesToImport {
+            get {
+                return ResourceManager.GetString("NoProfilesToImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There are no sequences..
         /// </summary>
         internal static string NoSequences {
             get {
                 return ResourceManager.GetString("NoSequences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No sequences to import..
+        /// </summary>
+        internal static string NoSequencesToImport {
+            get {
+                return ResourceManager.GetString("NoSequencesToImport", resourceCulture);
             }
         }
         
@@ -858,6 +975,15 @@ namespace BrickController2.Resources {
         internal static string PressScanToDiscoverDevices {
             get {
                 return ResourceManager.GetString("PressScanToDiscoverDevices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading and saving profiles will not be available..
+        /// </summary>
+        internal static string ProfileLoadSaveWillNotBeAvailable {
+            get {
+                return ResourceManager.GetString("ProfileLoadSaveWillNotBeAvailable", resourceCulture);
             }
         }
         

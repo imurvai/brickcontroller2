@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace BrickController2.CreationManagement
 {
@@ -42,12 +44,53 @@ namespace BrickController2.CreationManagement
             }
         }
 
+        public async Task ImportCreationAsync(string creationFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var creationJson = await File.ReadAllTextAsync(creationFilename);
+                var creation = JsonConvert.DeserializeObject<Creation>(creationJson);
+
+                var creationName = creation.Name;
+                if (!IsCreationNameAvailable(creationName))
+                {
+                    for (var suffix = 1; suffix < 1000; suffix++)
+                    {
+                        var newCreationName = $"{creationName} {suffix}";
+                        if (IsCreationNameAvailable(newCreationName))
+                        {
+                            creationName = newCreationName;
+                            break;
+                        }
+                    }
+                }
+
+                creation.Name = creationName;
+                await _creationRepository.InsertCreationAsync(creation);
+                Creations.Add(creation);
+            }
+        }
+
+        public async Task ExportCreationAsync(Creation creation, string creationFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var creationJson = JsonConvert.SerializeObject(creation);
+                await File.WriteAllTextAsync(creationFilename, creationJson);
+            }
+        }
+
         public async Task<bool> IsCreationNameAvailableAsync(string creationName)
         {
             using (await _asyncLock.LockAsync())
             {
-                return Creations.All(c => c.Name != creationName);
+                return IsCreationNameAvailable(creationName);
             }
+        }
+
+        private bool IsCreationNameAvailable(string creationName)
+        {
+            return Creations.All(c => c.Name != creationName);
         }
 
         public async Task<Creation> AddCreationAsync(string creationName)
@@ -83,7 +126,50 @@ namespace BrickController2.CreationManagement
         {
             using (await _asyncLock.LockAsync())
             {
-                return creation.ControllerProfiles.All(cp => cp.Name != controllerProfileName);
+                return IsControllerProfileNameAvailable(creation, controllerProfileName);
+            }
+        }
+
+        private bool IsControllerProfileNameAvailable(Creation creation, string controllerProfileName)
+        {
+            return creation.ControllerProfiles.All(cp => cp.Name != controllerProfileName);
+        }
+
+        public async Task ImportControllerProfileAsync(Creation creation, string controllerProfileFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var controllerProfileJson = await File.ReadAllTextAsync(controllerProfileFilename);
+                var controllerProfile = JsonConvert.DeserializeObject<ControllerProfile>(controllerProfileJson);
+
+                controllerProfile.Creation = null;
+                controllerProfile.CreationId = 0;
+
+                var controllerProfileName = controllerProfile.Name;
+                if (!IsControllerProfileNameAvailable(creation, controllerProfileName))
+                {
+                    for (var suffix = 1; suffix < 1000; suffix++)
+                    {
+                        var newControllerProfileName = $"{controllerProfileName} {suffix}";
+                        if (IsControllerProfileNameAvailable(creation, newControllerProfileName))
+                        {
+                            controllerProfileName = newControllerProfileName;
+                            break;
+                        }
+                    }
+                }
+
+                controllerProfile.Name = controllerProfileName;
+                await _creationRepository.InsertControllerProfileAsync(creation, controllerProfile);
+            }
+        }
+
+        public async Task ExportControllerProfileAsync(ControllerProfile controllerProfile, string controllerProfileFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var controllerProfileJson = JsonConvert.SerializeObject(controllerProfile);
+                await File.WriteAllTextAsync(controllerProfileFilename, controllerProfileJson);
             }
         }
 
@@ -258,12 +344,55 @@ namespace BrickController2.CreationManagement
             }
         }
 
+        public async Task ImportSequenceAsync(string sequenceFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var sequenceJson = await File.ReadAllTextAsync(sequenceFilename);
+                var sequence = JsonConvert.DeserializeObject<Sequence>(sequenceJson);
+
+                sequence.Id = 0;
+
+                var sequenceName = sequence.Name;
+                if (!IsSequenceNameAvailable(sequenceName))
+                {
+                    for (var suffix = 1; suffix < 1000; suffix++)
+                    {
+                        var newSequenceName = $"{sequenceName} {suffix}";
+                        if (IsSequenceNameAvailable(newSequenceName))
+                        {
+                            sequenceName = newSequenceName;
+                            break;
+                        }
+                    }
+                }
+
+                sequence.Name = sequenceName;
+                await _creationRepository.InsertSequenceAsync(sequence);
+                Sequences.Add(sequence);
+            }
+        }
+
+        public async Task ExportSequenceAsync(Sequence sequence, string sequenceFilename)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var sequenceJson = JsonConvert.SerializeObject(sequence);
+                await File.WriteAllTextAsync(sequenceFilename, sequenceJson);
+            }
+        }
+
         public async Task<bool> IsSequenceNameAvailableAsync(string sequenceName)
         {
             using (await _asyncLock.LockAsync())
             {
-                return Sequences.All(s => s.Name != sequenceName);
+                return IsSequenceNameAvailable(sequenceName);
             }
+        }
+
+        private bool IsSequenceNameAvailable(string sequenceName)
+        {
+            return Sequences.All(s => s.Name != sequenceName);
         }
 
         public async Task<Sequence> AddSequenceAsync(string sequenceName)

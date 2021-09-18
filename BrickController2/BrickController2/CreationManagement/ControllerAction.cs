@@ -1,4 +1,5 @@
 ﻿using BrickController2.Helpers;
+using Newtonsoft.Json;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 
@@ -22,12 +23,15 @@ namespace BrickController2.CreationManagement
         private string _sequenceName;
 
         [PrimaryKey, AutoIncrement]
+        [JsonIgnore]
         public int Id { get; set; }
 
         [ForeignKey(typeof(ControllerEvent))]
+        [JsonIgnore]
         public int ControllerEventId { get; set; }
 
         [ManyToOne]
+        [JsonIgnore]
         public ControllerEvent ControllerEvent { get; set; }
 
         public string DeviceId

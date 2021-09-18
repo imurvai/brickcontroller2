@@ -143,6 +143,8 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="PlatformServices\Localization\LocalizationService.cs" />
+    <Compile Include="PlatformServices\Permission\ReadWriteExternalStoragePermission.cs" />
+    <Compile Include="PlatformServices\SharedFileStorage\SharedFileStorageService.cs" />
     <Compile Include="PlatformServices\Versioning\VersionService.cs" />
     <Compile Include="UI\CustomRenderers\ColorImageRenderer.cs" />
     <Compile Include="UI\CustomRenderers\ExtendedSliderRenderer.cs" />
@@ -215,7 +217,7 @@
       <Version>1.6.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>5.0.0.1931</Version>
+      <Version>5.0.0.2012</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

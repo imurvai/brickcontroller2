@@ -11,12 +11,15 @@ namespace BrickController2.CreationManagement
         ObservableCollection<Sequence> Sequences { get; }
 
         Task LoadCreationsAndSequencesAsync();
-
+        Task ImportCreationAsync(string creationFilename);
+        Task ExportCreationAsync(Creation creation, string creationFilename);
         Task<bool> IsCreationNameAvailableAsync(string creationName);
         Task<Creation> AddCreationAsync(string creationName);
         Task DeleteCreationAsync(Creation creation);
         Task RenameCreationAsync(Creation creation, string newName);
 
+        Task ImportControllerProfileAsync(Creation creation, string controllerProfileFilename);
+        Task ExportControllerProfileAsync(ControllerProfile controllerProfile, string ControllerProfileFilename);
         Task<bool> IsControllerProfileNameAvailableAsync(Creation creation, string controllerProfileName);
         Task<ControllerProfile> AddControllerProfileAsync(Creation creation, string controllerProfileName);
         Task DeleteControllerProfileAsync(ControllerProfile controllerProfile);
@@ -59,6 +62,8 @@ namespace BrickController2.CreationManagement
             int stepperAngle,
             string sequenceName);
 
+        Task ImportSequenceAsync(string sequenceFilename);
+        Task ExportSequenceAsync(Sequence sequence, string sequenceFilename);
         Task<bool> IsSequenceNameAvailableAsync(string sequenceName);
         Task<Sequence> AddSequenceAsync(string sequenceName);
         Task UpdateSequenceAsync(Sequence sequence, string sequenceName, bool loop, bool interpolate, IEnumerable<SequenceControlPoint> controlPoints);

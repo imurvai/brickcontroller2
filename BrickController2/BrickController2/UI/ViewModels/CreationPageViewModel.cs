@@ -8,6 +8,10 @@ using System.Threading;
 using System;
 using BrickController2.UI.Services.Translation;
 using BrickController2.BusinessLogic;
+using BrickController2.Helpers;
+using System.IO;
+using BrickController2.PlatformServices.SharedFileStorage;
+using System.Linq;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -24,16 +28,20 @@ namespace BrickController2.UI.ViewModels
             ITranslationService translationService,
             ICreationManager creationManager,
             IDialogService dialogService,
+            ISharedFileStorageService sharedFileStorageService,
             IPlayLogic playLogic,
             NavigationParameters parameters)
             : base(navigationService, translationService)
         {
             _creationManager = creationManager;
             _dialogService = dialogService;
+            SharedFileStorageService = sharedFileStorageService;
             _playLogic = playLogic;
 
             Creation = parameters.Get<Creation>("creation");
 
+            ImportControllerProfileCommand = new SafeCommand(async () => await ImportControllerProfileAsync(), () => SharedFileStorageService.IsSharedStorageAvailable);
+            ExportCreationCommand = new SafeCommand(async () => await ExportCreationAsync(), () => SharedFileStorageService.IsSharedStorageAvailable);
             RenameCreationCommand = new SafeCommand(async () => await RenameCreationAsync());
             PlayCommand = new SafeCommand(async () => await PlayAsync());
             AddControllerProfileCommand = new SafeCommand(async () => await AddControllerProfileAsync());
@@ -43,6 +51,10 @@ namespace BrickController2.UI.ViewModels
 
         public Creation Creation { get; }
 
+        public ISharedFileStorageService SharedFileStorageService { get; }
+
+        public ICommand ImportControllerProfileCommand { get; }
+        public ICommand ExportCreationCommand { get; }
         public ICommand RenameCreationCommand { get; }
         public ICommand PlayCommand { get; }
         public ICommand AddControllerProfileCommand { get; }
@@ -98,35 +110,41 @@ namespace BrickController2.UI.ViewModels
 
         private async Task PlayAsync()
         {
-            var validationResult = _playLogic.ValidateCreation(Creation);
-
-            string warning = null;
-            switch (validationResult)
+            try
             {
-                case CreationValidationResult.MissingControllerAction:
-                    warning = Translate("NoControllerActions");
-                    break;
+                var validationResult = _playLogic.ValidateCreation(Creation);
 
-                case CreationValidationResult.MissingDevice:
-                    warning = Translate("MissingDevices");
-                    break;
+                string warning = null;
+                switch (validationResult)
+                {
+                    case CreationValidationResult.MissingControllerAction:
+                        warning = Translate("NoControllerActions");
+                        break;
 
-                case CreationValidationResult.MissingSequence:
-                    warning = Translate("MissingSequence");
-                    break;
+                    case CreationValidationResult.MissingDevice:
+                        warning = Translate("MissingDevices");
+                        break;
+
+                    case CreationValidationResult.MissingSequence:
+                        warning = Translate("MissingSequence");
+                        break;
+                }
+
+                if (validationResult == CreationValidationResult.Ok)
+                {
+                    await NavigationService.NavigateToAsync<PlayerPageViewModel>(new NavigationParameters(("creation", Creation)));
+                }
+                else
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Warning"),
+                        warning,
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
+                }
             }
-
-            if (validationResult == CreationValidationResult.Ok)
+            catch (OperationCanceledException)
             {
-                await NavigationService.NavigateToAsync<PlayerPageViewModel>(new NavigationParameters(("creation", Creation)));
-            }
-            else
-            {
-                await _dialogService.ShowMessageBoxAsync(
-                    Translate("Warning"),
-                    warning,
-                    Translate("Ok"),
-                    _disappearingTokenSource.Token);
             }
         }
 
@@ -188,6 +206,113 @@ namespace BrickController2.UI.ViewModels
                         Translate("Deleting"),
                         token: _disappearingTokenSource.Token);
                 }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        private async Task ImportControllerProfileAsync()
+        {
+            try
+            {
+                var controllerProfileFilesMap = FileHelper.EnumerateDirectoryFilesToFilenameMap(SharedFileStorageService.SharedStorageDirectory, $"*.{FileHelper.ControllerProfileFileExtension}");
+                if (controllerProfileFilesMap?.Any() ?? false)
+                {
+                    var result = await _dialogService.ShowSelectionDialogAsync(
+                        controllerProfileFilesMap.Keys,
+                        Translate("ControllerProfile"),
+                        Translate("Cancel"),
+                        _disappearingTokenSource.Token);
+
+                    if (result.IsOk)
+                    {
+                        try
+                        {
+                            await _creationManager.ImportControllerProfileAsync(Creation, controllerProfileFilesMap[result.SelectedItem]);
+                        }
+                        catch (Exception)
+                        {
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("Error"),
+                                Translate("FailedToImportControllerProfile"),
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+                        }
+                    }
+                }
+                else
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Information"),
+                        Translate("NoProfilesToImport"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        private async Task ExportCreationAsync()
+        {
+            try
+            {
+                var filename = Creation.Name;
+                var done = false;
+
+                do
+                {
+                    var result = await _dialogService.ShowInputDialogAsync(
+                        filename,
+                        Translate("CreationName"),
+                        Translate("Ok"),
+                        Translate("Cancel"),
+                        KeyboardType.Text,
+                        fn => FileHelper.FilenameValidator(fn),
+                        _disappearingTokenSource.Token);
+
+                    if (!result.IsOk)
+                    {
+                        return;
+                    }
+
+                    filename = result.Result;
+                    var filePath = Path.Combine(SharedFileStorageService.SharedStorageDirectory, $"{filename}.{FileHelper.CreationFileExtension}");
+
+                    if (!File.Exists(filePath) || 
+                        await _dialogService.ShowQuestionDialogAsync(
+                            Translate("FileAlreadyExists"),
+                            Translate("DoYouWantToOverWrite"),
+                            Translate("Yes"),
+                            Translate("No"),
+                            _disappearingTokenSource.Token))
+                    {
+                        try
+                        {
+                            await _creationManager.ExportCreationAsync(Creation, filePath);
+                            done = true;
+
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("ExportSuccessful"),
+                                filePath,
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+                        }
+                        catch (Exception)
+                        {
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("Error"),
+                                Translate("FailedToExportCreation"),
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+                            
+                            return;
+                        }
+                    }
+                }
+                while (!done);
             }
             catch (OperationCanceledException)
             {

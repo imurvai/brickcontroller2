@@ -288,6 +288,9 @@
   <data name="Disconnecting" xml:space="preserve">
     <value>Disconnecting</value>
   </data>
+  <data name="DoYouWantToOverWrite" xml:space="preserve">
+    <value>Do you want to overwrite it?</value>
+  </data>
   <data name="DurationMs" xml:space="preserve">
     <value>Duration (ms)</value>
   </data>
@@ -312,14 +315,41 @@
   <data name="ErrorDuringScanning" xml:space="preserve">
     <value>Error during scanning</value>
   </data>
+  <data name="ExportSuccessful" xml:space="preserve">
+    <value>Export successful:</value>
+  </data>
   <data name="ExternalLibraries" xml:space="preserve">
     <value>3rd party components</value>
   </data>
   <data name="FailedToConnect" xml:space="preserve">
     <value>Failed to connect.</value>
   </data>
+  <data name="FailedToExportControllerProfile" xml:space="preserve">
+    <value>Failed to export the controller profile.</value>
+  </data>
+  <data name="FailedToExportCreation" xml:space="preserve">
+    <value>Failed to export the creation.</value>
+  </data>
+  <data name="FailedToExportSequence" xml:space="preserve">
+    <value>Failed to export the sequence.</value>
+  </data>
+  <data name="FailedToImportControllerProfile" xml:space="preserve">
+    <value>Failed to import the controller profile.</value>
+  </data>
+  <data name="FailedToImportCreation" xml:space="preserve">
+    <value>Failed to import the creation.</value>
+  </data>
+  <data name="FailedToImportSequence" xml:space="preserve">
+    <value>Failed to import the sequence.</value>
+  </data>
+  <data name="FileAlreadyExists" xml:space="preserve">
+    <value>File already exits</value>
+  </data>
   <data name="IconSet" xml:space="preserve">
     <value>Icon set</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Information</value>
   </data>
   <data name="Interpolate" xml:space="preserve">
     <value>Interpolate</value>
@@ -360,8 +390,17 @@
   <data name="NoControllerActions" xml:space="preserve">
     <value>There are no controller actions added to the creation.</value>
   </data>
+  <data name="NoCreationsToImport" xml:space="preserve">
+    <value>No creations to import.</value>
+  </data>
+  <data name="NoProfilesToImport" xml:space="preserve">
+    <value>No controller profiles to import.</value>
+  </data>
   <data name="NoSequences" xml:space="preserve">
     <value>There are no sequences.</value>
+  </data>
+  <data name="NoSequencesToImport" xml:space="preserve">
+    <value>No sequences to import.</value>
   </data>
   <data name="Ok" xml:space="preserve">
     <value>Ok</value>
@@ -383,6 +422,9 @@
   </data>
   <data name="PressScanToDiscoverDevices" xml:space="preserve">
     <value>Press scan to discover devices</value>
+  </data>
+  <data name="ProfileLoadSaveWillNotBeAvailable" xml:space="preserve">
+    <value>Loading and saving profiles will not be available.</value>
   </data>
   <data name="ProfileName" xml:space="preserve">
     <value>Profile name</value>

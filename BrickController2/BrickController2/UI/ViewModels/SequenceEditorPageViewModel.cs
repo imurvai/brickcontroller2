@@ -1,10 +1,13 @@
 ﻿using BrickController2.CreationManagement;
+using BrickController2.Helpers;
+using BrickController2.PlatformServices.SharedFileStorage;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Translation;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,11 +27,13 @@ namespace BrickController2.UI.ViewModels
             ITranslationService translationService,
             IDialogService dialogService,
             ICreationManager creationManager,
+            ISharedFileStorageService sharedFileStorageService,
             NavigationParameters parameters) :
             base(navigationService, translationService)
         {
             _dialogService = dialogService;
             _creationManager = creationManager;
+            SharedFileStorageService = sharedFileStorageService;
 
             OriginalSequence = parameters.Get<Sequence>("sequence");
 
@@ -40,6 +45,7 @@ namespace BrickController2.UI.ViewModels
                 ControlPoints = new ObservableCollection<SequenceControlPoint>(OriginalSequence.ControlPoints.Select(cp => new SequenceControlPoint { Value = cp.Value, DurationMs = cp.DurationMs }).ToArray())
             };
 
+            ExportSequenceCommand = new SafeCommand(async () => await ExportSequenceAsync(), () => SharedFileStorageService.IsSharedStorageAvailable);
             RenameSequenceCommand = new SafeCommand(async () => await RenameSequenceAsync());
             AddControlPointCommand = new SafeCommand(() => AddControlPoint());
             DeleteControlPointCommand = new SafeCommand<SequenceControlPoint>(async (controlPoint) => await DeleteControlPointAsync(controlPoint));
@@ -50,6 +56,9 @@ namespace BrickController2.UI.ViewModels
         public Sequence OriginalSequence { get; }
         public Sequence Sequence { get; }
 
+        public ISharedFileStorageService SharedFileStorageService { get; }
+
+        public ICommand ExportSequenceCommand { get; }
         public ICommand RenameSequenceCommand { get; }
         public ICommand AddControlPointCommand { get; }
         public ICommand DeleteControlPointCommand { get; }
@@ -65,6 +74,70 @@ namespace BrickController2.UI.ViewModels
         public override void OnDisappearing()
         {
             _disappearingTokenSource?.Cancel();
+        }
+
+        private async Task ExportSequenceAsync()
+        {
+            try
+            {
+                var filename = Sequence.Name;
+                var done = false;
+
+                do
+                {
+                    var result = await _dialogService.ShowInputDialogAsync(
+                        filename,
+                        Translate("SequenceName"),
+                        Translate("Ok"),
+                        Translate("Cancel"),
+                        KeyboardType.Text,
+                        fn => FileHelper.FilenameValidator(fn),
+                        _disappearingTokenSource.Token);
+
+                    if (!result.IsOk)
+                    {
+                        return;
+                    }
+
+                    filename = result.Result;
+                    var filePath = Path.Combine(SharedFileStorageService.SharedStorageDirectory, $"{filename}.{FileHelper.SequenceFileExtension}");
+
+                    if (!File.Exists(filePath) ||
+                        await _dialogService.ShowQuestionDialogAsync(
+                            Translate("FileAlreadyExists"),
+                            Translate("DoYouWantToOverWrite"),
+                            Translate("Yes"),
+                            Translate("No"),
+                            _disappearingTokenSource.Token))
+                    {
+                        try
+                        {
+                            await _creationManager.ExportSequenceAsync(Sequence, filePath);
+                            done = true;
+
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("ExportSuccessful"),
+                                filePath,
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+                        }
+                        catch (Exception)
+                        {
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("Error"),
+                                Translate("FailedToExportSequence"),
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+
+                            return;
+                        }
+                    }
+                }
+                while (!done);
+            }
+            catch (OperationCanceledException)
+            {
+            }
         }
 
         private async Task RenameSequenceAsync()

@@ -273,6 +273,9 @@
   <data name="Disconnecting" xml:space="preserve">
     <value>Verbindung trennen...</value>
   </data>
+  <data name="DoYouWantToOverWrite" xml:space="preserve">
+    <value>Willst du es überschreiben?</value>
+  </data>
   <data name="DurationMs" xml:space="preserve">
     <value>Dauer (ms)</value>
   </data>
@@ -297,14 +300,41 @@
   <data name="ErrorDuringScanning" xml:space="preserve">
     <value>Fehler beim Scannen</value>
   </data>
+  <data name="ExportSuccessful" xml:space="preserve">
+    <value>Export erfolgreich:</value>
+  </data>
   <data name="ExternalLibraries" xml:space="preserve">
     <value>Externe Komponenten</value>
   </data>
   <data name="FailedToConnect" xml:space="preserve">
     <value>Verbindung nicht möglich</value>
   </data>
+  <data name="FailedToExportControllerProfile" xml:space="preserve">
+    <value>Fehler beim Exportieren des Controller-Profils.</value>
+  </data>
+  <data name="FailedToExportCreation" xml:space="preserve">
+    <value>Fehler beim Exportieren der Kreation.</value>
+  </data>
+  <data name="FailedToExportSequence" xml:space="preserve">
+    <value>Fehler beim Exportieren der Sequenz.</value>
+  </data>
+  <data name="FailedToImportControllerProfile" xml:space="preserve">
+    <value>Fehler beim Importieren des Controller-Profils.</value>
+  </data>
+  <data name="FailedToImportCreation" xml:space="preserve">
+    <value>Fehler beim Importieren der Kreation.</value>
+  </data>
+  <data name="FailedToImportSequence" xml:space="preserve">
+    <value>Fehler beim Importieren der Sequenz.</value>
+  </data>
+  <data name="FileAlreadyExists" xml:space="preserve">
+    <value>Die Datei existiert bereits</value>
+  </data>
   <data name="IconSet" xml:space="preserve">
     <value>Icon-Set</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Information</value>
   </data>
   <data name="Interpolate" xml:space="preserve">
     <value>Interpolieren</value>
@@ -345,8 +375,17 @@
   <data name="NoControllerActions" xml:space="preserve">
     <value>Keine Controller-Aktionen für diese Kreation</value>
   </data>
+  <data name="NoCreationsToImport" xml:space="preserve">
+    <value>Keine zu importierenden Kreationen.</value>
+  </data>
+  <data name="NoProfilesToImport" xml:space="preserve">
+    <value>Keine zu importierenden Controller-Profile.</value>
+  </data>
   <data name="NoSequences" xml:space="preserve">
     <value>Keine Sequenzen.</value>
+  </data>
+  <data name="NoSequencesToImport" xml:space="preserve">
+    <value>Keine Sequenzen zum Importieren.</value>
   </data>
   <data name="Ok" xml:space="preserve">
     <value>OK</value>
@@ -368,6 +407,9 @@
   </data>
   <data name="PressScanToDiscoverDevices" xml:space="preserve">
     <value>Auf Scannen drücken, um Geräte zu finden</value>
+  </data>
+  <data name="ProfileLoadSaveWillNotBeAvailable" xml:space="preserve">
+    <value>Laden und Speichern von Profilen ist nicht erreichbar.</value>
   </data>
   <data name="ProfileName" xml:space="preserve">
     <value>Profilname</value>

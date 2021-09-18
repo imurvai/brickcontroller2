@@ -1,4 +1,5 @@
 ﻿using BrickController2.Helpers;
+using Newtonsoft.Json;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 using System.Collections.ObjectModel;
@@ -13,6 +14,7 @@ namespace BrickController2.CreationManagement
         private ObservableCollection<SequenceControlPoint> _controlPoints = new ObservableCollection<SequenceControlPoint>();
 
         [PrimaryKey, AutoIncrement]
+        [JsonIgnore]
         public int Id { get; set; }
 
         public string Name

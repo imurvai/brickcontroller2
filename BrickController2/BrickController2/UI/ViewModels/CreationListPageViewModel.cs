@@ -1,15 +1,19 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
+using BrickController2.Helpers;
+using BrickController2.PlatformServices.SharedFileStorage;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
-using System.Threading;
-using System;
 using BrickController2.UI.Services.Translation;
-using Xamarin.Essentials;
+using BrickController2.PlatformServices.Permission;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -18,22 +22,33 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
+        private readonly IReadWriteExternalStoragePermission _readWriteExternalStoragePermission;
 
         private CancellationTokenSource _disappearingTokenSource;
         private bool _isLoaded;
+
+        // Permission request fires OnDisappearing somehow (WTF???)
+        private bool _isRequestingPermission = false;
+        private bool _isLocationPermissionRequested = false;
+        private bool _isStoragePermissionRequested = false;
 
         public CreationListPageViewModel(
             INavigationService navigationService,
             ITranslationService translationService,
             ICreationManager creationManager,
             IDeviceManager deviceManager,
-            IDialogService dialogService)
+            IDialogService dialogService,
+            ISharedFileStorageService sharedFileStorageService,
+            IReadWriteExternalStoragePermission readWriteExternalStoragePermission)
             : base(navigationService, translationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;
             _dialogService = dialogService;
+            _readWriteExternalStoragePermission = readWriteExternalStoragePermission;
+            SharedFileStorageService = sharedFileStorageService;
 
+            ImportCreationCommand = new SafeCommand(async () => await ImportCreationAsync(), () => SharedFileStorageService.IsSharedStorageAvailable);
             OpenSettingsPageCommand = new SafeCommand(async () => await navigationService.NavigateToAsync<SettingsPageViewModel>(), () => !_dialogService.IsDialogOpen);
             AddCreationCommand = new SafeCommand(async () => await AddCreationAsync());
             CreationTappedCommand = new SafeCommand<Creation>(async creation => await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation))));
@@ -46,10 +61,13 @@ namespace BrickController2.UI.ViewModels
 
         public ObservableCollection<Creation> Creations => _creationManager.Creations;
 
+        public ISharedFileStorageService SharedFileStorageService { get; }
+
         public ICommand OpenSettingsPageCommand { get; }
         public ICommand AddCreationCommand { get; }
         public ICommand CreationTappedCommand { get; }
         public ICommand DeleteCreationCommand { get; }
+        public ICommand ImportCreationCommand { get; }
         public ICommand NavigateToDevicesCommand { get; }
         public ICommand NavigateToControllerTesterCommand { get; }
         public ICommand NavigateToSequencesCommand { get; }
@@ -57,40 +75,132 @@ namespace BrickController2.UI.ViewModels
 
         public override async void OnAppearing()
         {
-            _disappearingTokenSource?.Cancel();
-            _disappearingTokenSource = new CancellationTokenSource();
+            if (!_isRequestingPermission)
+            {
+                _disappearingTokenSource?.Cancel();
+                _disappearingTokenSource = new CancellationTokenSource();
 
-            await RequestPermissionsAsync();
-            await LoadCreationsAndDevicesAsync();
+                await LoadCreationsAndDevicesAsync();
+                await RequestPermissionsAsync();
+            }
         }
 
         public override void OnDisappearing()
         {
-            _disappearingTokenSource.Cancel();
+            if (!_isRequestingPermission)
+            {
+                _disappearingTokenSource.Cancel();
+                _disappearingTokenSource = null;
+            }
         }
 
         private async Task RequestPermissionsAsync()
         {
-            var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-            if (status != PermissionStatus.Granted)
+            try
             {
-                status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
-            }
+                var locationPermissionStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                if (locationPermissionStatus != PermissionStatus.Granted && !_isLocationPermissionRequested)
+                {
+                    _isRequestingPermission = true;
+                    locationPermissionStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                    _isLocationPermissionRequested = true;
+                    _isRequestingPermission = false;
 
-            if (status != PermissionStatus.Granted)
+                    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+                }
+
+                if (locationPermissionStatus != PermissionStatus.Granted)
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Warning"),
+                        Translate("BluetoothDevicesWillNOTBeAvailable"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
+
+                    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+                }
+
+                var storagePermissionStatus = await _readWriteExternalStoragePermission.CheckStatusAsync();
+                if (storagePermissionStatus != PermissionStatus.Granted && !_isStoragePermissionRequested)
+                {
+                    _isRequestingPermission = true;
+                    storagePermissionStatus = await _readWriteExternalStoragePermission.RequestAsync();
+                    _isStoragePermissionRequested = true;
+                    _isRequestingPermission = false;
+
+                    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+                }
+
+                SharedFileStorageService.IsPermissionGranted = storagePermissionStatus == PermissionStatus.Granted;
+
+                if (!SharedFileStorageService.IsSharedStorageAvailable)
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Warning"),
+                        Translate("ProfileLoadSaveWillNotBeAvailable"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
+
+                    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+                }
+            }
+            catch (OperationCanceledException)
             {
-                await _dialogService.ShowMessageBoxAsync(
-                    Translate("Warning"),
-                    Translate("BluetoothDevicesWillNOTBeAvailable"),
-                    Translate("Ok"),
-                    _disappearingTokenSource.Token);
+            }
+        }
+
+        private async Task ImportCreationAsync()
+        {
+            try
+            {
+                var creationFilesMap = FileHelper.EnumerateDirectoryFilesToFilenameMap(SharedFileStorageService.SharedStorageDirectory, $"*.{FileHelper.CreationFileExtension}");
+                if (creationFilesMap?.Any() ?? false)
+                {
+                    var result = await _dialogService.ShowSelectionDialogAsync(
+                        creationFilesMap.Keys,
+                        Translate("Creations"),
+                        Translate("Cancel"),
+                        _disappearingTokenSource.Token);
+
+                    if (result.IsOk)
+                    {
+                        try
+                        {
+                            await _creationManager.ImportCreationAsync(creationFilesMap[result.SelectedItem]);
+                        }
+                        catch (Exception)
+                        {
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("Error"),
+                                Translate("FailedToImportCreation"),
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+                        }
+                    }
+                }
+                else
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Information"),
+                        Translate("NoCreationsToImport"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 
         private async Task LoadCreationsAndDevicesAsync()
         {
-            if (!_isLoaded)
+            try
             {
+                if (_isLoaded)
+                {
+                    return;
+                }
+
                 await _dialogService.ShowProgressDialogAsync(
                     false,
                     async (progressDialog, token) =>
@@ -101,6 +211,9 @@ namespace BrickController2.UI.ViewModels
                     },
                     Translate("Loading"),
                     token: _disappearingTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
             }
         }
 

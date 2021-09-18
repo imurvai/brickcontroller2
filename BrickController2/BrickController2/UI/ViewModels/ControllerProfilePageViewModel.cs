@@ -1,16 +1,19 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using BrickController2.CreationManagement;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.DeviceManagement;
-using System;
-using System.Threading;
 using BrickController2.UI.Services.Translation;
-using System.Linq;
 using BrickController2.BusinessLogic;
-using System.Collections.Generic;
+using BrickController2.PlatformServices.SharedFileStorage;
+using BrickController2.Helpers;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -31,6 +34,7 @@ namespace BrickController2.UI.ViewModels
             ICreationManager creationManager,
             IDeviceManager deviceManager,
             IDialogService dialogService,
+            ISharedFileStorageService sharedFileStorageService,
             IPlayLogic playLogic,
             NavigationParameters parameters)
             : base(navigationService, translationService)
@@ -38,10 +42,12 @@ namespace BrickController2.UI.ViewModels
             _creationManager = creationManager;
             _deviceManager = deviceManager;
             _dialogService = dialogService;
+            SharedFileStorageService = sharedFileStorageService;
             _playLogic = playLogic;
 
             ControllerProfile = parameters.Get<ControllerProfile>("controllerprofile");
 
+            ExportControllerProfileCommand = new SafeCommand(async () => await ExportControllerProfileAsync(), () => SharedFileStorageService.IsSharedStorageAvailable);
             RenameProfileCommand = new SafeCommand(async () => await RenameControllerProfileAsync());
             AddControllerEventCommand = new SafeCommand(async () => await AddControllerEventAsync());
             PlayCommand = new SafeCommand(async () => await PlayAsync());
@@ -67,12 +73,15 @@ namespace BrickController2.UI.ViewModels
 
         public ControllerProfile ControllerProfile { get; }
 
+        public ISharedFileStorageService SharedFileStorageService { get; }
+
         public List<ControllerEventViewModel> ControllerEvents
         {
             get { return _controllerEvents; }
             set { _controllerEvents = value; RaisePropertyChanged(); }
         }
 
+        public ICommand ExportControllerProfileCommand { get; }
         public ICommand RenameProfileCommand { get; }
         public ICommand AddControllerEventCommand { get; }
         public ICommand PlayCommand { get; }
@@ -83,6 +92,70 @@ namespace BrickController2.UI.ViewModels
         private void PopulateControllerEvents()
         {
             ControllerEvents = new List<ControllerEventViewModel>(ControllerProfile.ControllerEvents.Select(ce => new ControllerEventViewModel(ce, _deviceManager, _playLogic, TranslationService)));
+        }
+
+        private async Task ExportControllerProfileAsync()
+        {
+            try
+            {
+                var filename = ControllerProfile.Name;
+                var done = false;
+
+                do
+                {
+                    var result = await _dialogService.ShowInputDialogAsync(
+                        filename,
+                        Translate("ProfileName"),
+                        Translate("Ok"),
+                        Translate("Cancel"),
+                        KeyboardType.Text,
+                        fn => FileHelper.FilenameValidator(fn),
+                        _disappearingTokenSource.Token);
+
+                    if (!result.IsOk)
+                    {
+                        return;
+                    }
+
+                    filename = result.Result;
+                    var filePath = Path.Combine(SharedFileStorageService.SharedStorageDirectory, $"{filename}.{FileHelper.ControllerProfileFileExtension}");
+
+                    if (!File.Exists(filePath) ||
+                        await _dialogService.ShowQuestionDialogAsync(
+                            Translate("FileAlreadyExists"),
+                            Translate("DoYouWantToOverWrite"),
+                            Translate("Yes"),
+                            Translate("No"),
+                            _disappearingTokenSource.Token))
+                    {
+                        try
+                        {
+                            await _creationManager.ExportControllerProfileAsync(ControllerProfile, filePath);
+                            done = true;
+
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("ExportSuccessful"),
+                                filePath,
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+                        }
+                        catch (Exception)
+                        {
+                            await _dialogService.ShowMessageBoxAsync(
+                                Translate("Error"),
+                                Translate("FailedToExportControllerProfile"),
+                                Translate("Ok"),
+                                _disappearingTokenSource.Token);
+
+                            return;
+                        }
+                    }
+                }
+                while (!done);
+            }
+            catch (OperationCanceledException)
+            {
+            }
         }
 
         private async Task RenameControllerProfileAsync()

@@ -3,6 +3,7 @@ using BrickController2.Helpers;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 using System.Collections.ObjectModel;
+using Newtonsoft.Json;
 
 namespace BrickController2.CreationManagement
 {
@@ -13,12 +14,15 @@ namespace BrickController2.CreationManagement
         private ObservableCollection<ControllerAction> _controllerActions = new ObservableCollection<ControllerAction>();
 
         [PrimaryKey, AutoIncrement]
+        [JsonIgnore]
         public int Id { get; set; }
 
         [ForeignKey(typeof(ControllerProfile))]
+        [JsonIgnore]
         public int ControllerProfileId { get; set; }
 
         [ManyToOne]
+        [JsonIgnore]
         public ControllerProfile ControllerProfile { get; set; }
 
         public GameControllerEventType EventType
