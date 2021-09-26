@@ -73,7 +73,21 @@ namespace BrickController2.DeviceManagement
             {
                 case "98-01": return (DeviceType.SBrick, manufacturerData);
                 case "48-4d": return (DeviceType.BuWizz, manufacturerData);
-                case "4e-05": return (DeviceType.BuWizz2, manufacturerData);
+                case "4e-05":
+                    var completeLocalName = advertismentData[0x09];
+                    if (completeLocalName != null)
+                    {
+                        var completeLocalNameString = BitConverter.ToString(completeLocalName).ToLower();
+                        if (completeLocalNameString == "42-75-57-69-7a-7a") // BuWizz
+                        {
+                            return (DeviceType.BuWizz2, manufacturerData);
+                        }
+                        else
+                        {
+                            return (DeviceType.BuWizz3, manufacturerData);
+                        }
+                    }
+                    break;
                 case "97-03":
                     if (manufacturerDataString.Length >= 11)
                     {
