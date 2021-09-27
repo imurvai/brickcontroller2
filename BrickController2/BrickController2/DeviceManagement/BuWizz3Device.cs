@@ -70,14 +70,8 @@ namespace BrickController2.DeviceManagement
             return Task.FromResult(_characteristic != null && _firmwareRevisionCharacteristic != null && _modelNumberCharacteristic != null);
         }
 
-        protected override Task ProcessOutputsAsync(CancellationToken token)
+        protected override async Task ProcessOutputsAsync(CancellationToken token)
         {
-            throw new System.NotImplementedException();
-        }
-
-        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
