@@ -5,12 +5,12 @@ using Xamarin.Forms.Xaml;
 
 namespace BrickController2.UI.Controls
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class DeviceChannelSelector : ContentView
-	{
-		public DeviceChannelSelector()
-		{
-			InitializeComponent();
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class DeviceChannelSelector : ContentView
+    {
+        public DeviceChannelSelector()
+        {
+            InitializeComponent();
 
             SBrickChannel0.Command = new SafeCommand(() => SelectedChannel = 0);
             SBrickChannel1.Command = new SafeCommand(() => SelectedChannel = 1);
@@ -20,6 +20,12 @@ namespace BrickController2.UI.Controls
             BuWizzChannel1.Command = new SafeCommand(() => SelectedChannel = 1);
             BuWizzChannel2.Command = new SafeCommand(() => SelectedChannel = 2);
             BuWizzChannel3.Command = new SafeCommand(() => SelectedChannel = 3);
+            BuWizz3Channel0.Command = new SafeCommand(() => SelectedChannel = 0);
+            BuWizz3Channel1.Command = new SafeCommand(() => SelectedChannel = 1);
+            BuWizz3Channel2.Command = new SafeCommand(() => SelectedChannel = 2);
+            BuWizz3Channel3.Command = new SafeCommand(() => SelectedChannel = 3);
+            BuWizz3Channel4.Command = new SafeCommand(() => SelectedChannel = 4);
+            BuWizz3Channel5.Command = new SafeCommand(() => SelectedChannel = 5);
             InfraredChannel0.Command = new SafeCommand(() => SelectedChannel = 0);
             InfraredChannel1.Command = new SafeCommand(() => SelectedChannel = 1);
             PoweredUpChannel0.Command = new SafeCommand(() => SelectedChannel = 0);
@@ -57,6 +63,7 @@ namespace BrickController2.UI.Controls
                 var deviceType = (DeviceType)newValue;
                 dcs.SbrickSection.IsVisible = deviceType == DeviceType.SBrick;
                 dcs.BuWizzSection.IsVisible = deviceType == DeviceType.BuWizz || deviceType == DeviceType.BuWizz2;
+                dcs.BuWizz3Section.IsVisible = deviceType == DeviceType.BuWizz3;
                 dcs.InfraredSection.IsVisible = deviceType == DeviceType.Infrared;
                 dcs.PoweredUpSection.IsVisible = deviceType == DeviceType.PoweredUp;
                 dcs.BoostSection.IsVisible = deviceType == DeviceType.Boost;
@@ -78,6 +85,12 @@ namespace BrickController2.UI.Controls
                 dcs.BuWizzChannel1.SelectedChannel = selectedChannel;
                 dcs.BuWizzChannel2.SelectedChannel = selectedChannel;
                 dcs.BuWizzChannel3.SelectedChannel = selectedChannel;
+                dcs.BuWizz3Channel0.SelectedChannel = selectedChannel;
+                dcs.BuWizz3Channel1.SelectedChannel = selectedChannel;
+                dcs.BuWizz3Channel2.SelectedChannel = selectedChannel;
+                dcs.BuWizz3Channel3.SelectedChannel = selectedChannel;
+                dcs.BuWizz3Channel4.SelectedChannel = selectedChannel;
+                dcs.BuWizz3Channel5.SelectedChannel = selectedChannel;
                 dcs.InfraredChannel0.SelectedChannel = selectedChannel;
                 dcs.InfraredChannel1.SelectedChannel = selectedChannel;
                 dcs.PoweredUpChannel0.SelectedChannel = selectedChannel;

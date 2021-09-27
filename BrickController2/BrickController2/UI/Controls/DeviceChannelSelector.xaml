@@ -58,6 +58,29 @@
                 </Grid>
             </Grid>
 
+            <!-- BuWizz3 -->
+            <Grid x:Name="BuWizz3Section">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizz3Channel0" DeviceType="BuWizz3" Channel="0" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizz3Channel4" DeviceType="BuWizz3" Channel="4" HorizontalOptions="End" VerticalOptions="Center"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizz3Channel1" DeviceType="BuWizz3" Channel="1" HorizontalOptions="End" VerticalOptions="End"/>
+                </Grid>
+
+                <Image Grid.Column="1" Source="{extensions:ImageResource Source=buwizz3_image.png}" WidthRequest="150" HeightRequest="100"/>
+
+                <Grid Grid.Column="2">
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizz3Channel3" DeviceType="BuWizz3" Channel="3" HorizontalOptions="Start" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizz3Channel5" DeviceType="BuWizz3" Channel="5" HorizontalOptions="Start" VerticalOptions="Center"/>
+                    <controls:ChannelSelectorRadioButton x:Name="BuWizz3Channel2" DeviceType="BuWizz3" Channel="2" HorizontalOptions="Start" VerticalOptions="End"/>
+                </Grid>
+            </Grid>
+
             <!-- Infrared -->
             <Grid x:Name="InfraredSection">
                 <Grid.ColumnDefinitions>
