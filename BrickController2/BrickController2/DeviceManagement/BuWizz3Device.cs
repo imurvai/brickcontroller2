@@ -1,5 +1,4 @@
-﻿using BrickController2.Helpers;
-using BrickController2.PlatformServices.BluetoothLE;
+﻿using BrickController2.PlatformServices.BluetoothLE;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +11,8 @@ namespace BrickController2.DeviceManagement
     {
         private const int MAX_SEND_ATTEMPTS = 10;
 
-        private readonly Guid SERVICE_UUID = new Guid("936E67B1-1999-B388-8144-FB74D1920550");
-        private readonly Guid CHARACTERISTIC_UUID = new Guid("00002901-0000-1000-8000-00805f9b34fb");
-
-        private readonly Guid SERVICE_UUID_DEVICE_INFORMATION = new Guid("0000180a-0000-1000-8000-00805f9b34fb");
-        private readonly Guid CHARACTERISTIC_UUID_MODEL_NUMBER = new Guid("00002a24-0000-1000-8000-00805f9b34fb");
-        private readonly Guid CHARACTERISTIC_UUID_FIRMWARE_REVISION = new Guid("00002a26-0000-1000-8000-00805f9b34fb");
+        private readonly Guid SERVICE_UUID = new Guid("500592d1-74fb-4481-88b3-9919b1676e93");
+        private readonly Guid CHARACTERISTIC_UUID = new Guid("50052901-74fb-4481-88b3-9919b1676e93");
 
         private readonly int[] _outputValues = new int[6];
         private readonly int[] _lastOutputValues = new int[6];
@@ -26,8 +21,6 @@ namespace BrickController2.DeviceManagement
         private volatile int _sendAttemptsLeft;
 
         private IGattCharacteristic _characteristic;
-        private IGattCharacteristic _modelNumberCharacteristic;
-        private IGattCharacteristic _firmwareRevisionCharacteristic;
 
         public BuWizz3Device(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, bleService)
@@ -64,25 +57,7 @@ namespace BrickController2.DeviceManagement
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
 
-            var deviceInformationService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_DEVICE_INFORMATION);
-            _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_FIRMWARE_REVISION);
-            _modelNumberCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_MODEL_NUMBER);
-
-            return Task.FromResult(_characteristic != null && _firmwareRevisionCharacteristic != null && _modelNumberCharacteristic != null);
-        }
-
-        protected override async Task<bool> AfterConnectSetupAsync(bool requestDeviceInformation, CancellationToken token)
-        {
-            try
-            {
-                if (requestDeviceInformation)
-                {
-                    await ReadDeviceInfo(token);
-                }
-            }
-            catch { }
-
-            return true;
+            return Task.FromResult(_characteristic != null);
         }
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
@@ -169,23 +144,6 @@ namespace BrickController2.DeviceManagement
             catch (Exception)
             {
                 return false;
-            }
-        }
-
-        private async Task ReadDeviceInfo(CancellationToken token)
-        {
-            var firmwareData = await _bleDevice?.ReadAsync(_firmwareRevisionCharacteristic, token);
-            var firmwareVersion = firmwareData?.ToAsciiStringSafe();
-            if (!string.IsNullOrEmpty(firmwareVersion))
-            {
-                FirmwareVersion = firmwareVersion;
-            }
-
-            var modelNumberData = await _bleDevice?.ReadAsync(_modelNumberCharacteristic, token);
-            var modelNumber = modelNumberData?.ToAsciiStringSafe();
-            if (!string.IsNullOrEmpty(modelNumber))
-            {
-                HardwareVersion = modelNumber;
             }
         }
     }
