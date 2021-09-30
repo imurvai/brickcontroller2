@@ -130,7 +130,7 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                var sendOutputBuffer = new byte[] { 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+                var sendOutputBuffer = new byte[] { 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
                 sendOutputBuffer[1] = (byte)v0;
                 sendOutputBuffer[2] = (byte)v1;
