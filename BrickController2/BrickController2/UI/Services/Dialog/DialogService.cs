@@ -57,7 +57,9 @@ namespace BrickController2.UI.Services.Dialog
 
         public void UnregisterDialogServer(IDialogServer dialogServer)
         {
-            _dialogServer = null;
+            // reset only in case previously set server matches
+            if (_dialogServer == dialogServer)
+                _dialogServer = null;
         }
     }
 }
