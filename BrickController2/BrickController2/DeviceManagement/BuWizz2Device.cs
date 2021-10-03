@@ -11,6 +11,7 @@ namespace BrickController2.DeviceManagement
     internal class BuWizz2Device : BluetoothDevice
     {
         private const int MAX_SEND_ATTEMPTS = 10;
+        private static readonly TimeSpan VoltageMeasurementTimeout = TimeSpan.FromSeconds(5);
 
         private readonly Guid SERVICE_UUID = new Guid("4e050000-74fb-4481-88b3-9919b1676e93");
         private readonly Guid CHARACTERISTIC_UUID = new Guid("000092d1-0000-1000-8000-00805f9b34fb");
@@ -23,6 +24,11 @@ namespace BrickController2.DeviceManagement
         private readonly int[] _lastOutputValues = new int[4];
         private readonly object _outputLock = new object();
         private readonly bool _swapChannels;
+
+        private DateTime _batteryMeasurementTimestamp;
+        private byte _batteryVoltageRaw;
+        private byte _motorVoltageRaw;
+
 
         private volatile int _outputLevelValue;
         private volatile int _sendAttemptsLeft;
@@ -44,6 +50,8 @@ namespace BrickController2.DeviceManagement
         public override int NumberOfOutputLevels => 4;
         public override int DefaultOutputLevel => 1;
         protected override bool AutoConnectOnFirstConnect => false;
+
+        public override string BatteryVoltageSign => "V";
 
         public override void SetOutput(int channel, float value)
         {
@@ -71,7 +79,7 @@ namespace BrickController2.DeviceManagement
 
         public override bool CanBePowerSource => true;
 
-        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
@@ -80,7 +88,52 @@ namespace BrickController2.DeviceManagement
             _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_FIRMWARE_REVISION);
             _modelNumberCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_MODEL_NUMBER);
 
-            return Task.FromResult(_characteristic != null && _firmwareRevisionCharacteristic != null && _modelNumberCharacteristic != null);
+            if (_characteristic != null)
+            {
+                await _bleDevice?.EnableNotificationAsync(_characteristic, token);
+            }
+
+            return _characteristic != null && _firmwareRevisionCharacteristic != null && _modelNumberCharacteristic != null;
+        }
+
+        protected override void OnCharacteristicChanged(Guid characteristicGuid, byte[] data)
+        {
+            if (characteristicGuid != _characteristic.Uuid || data.Length < 4 || data[0] != 0x00)
+            {
+                return;
+            }
+
+            // Byte 1: Status flags - Bits 3-4 Battery level status (0 - empty, motors disabled; 1 - low; 2 - medium; 3 - full) 
+
+            // do some change filtering as data are comming at 25Hz frequency
+            if (GetVoltage(data, out float batteryVoltage, out float motorVoltage))
+            {
+                BatteryVoltage = $"{batteryVoltage:F2} / {motorVoltage:F2}";
+            }
+        }
+
+        private bool GetVoltage(byte[] data, out float batteryVoltage, out float motorVoltage)
+        {
+            // Byte 2: Battery voltage (3 V + value * 0,01 V) -range 3,00 V - 4,27 V
+            // Byte 3: Output(motor) voltage(4 V + value * 0,05 V) - range 4,00 V - 16,75 V
+            batteryVoltage = 3.0f + data[2] * 0.01f;
+            motorVoltage = 4.0f + data[3] * 0.05f;
+
+            const int delta = 2;
+
+            if (Math.Abs(_batteryVoltageRaw - data[2]) > delta ||
+                Math.Abs(_motorVoltageRaw - data[3]) > delta || 
+                DateTime.Now - _batteryMeasurementTimestamp > VoltageMeasurementTimeout)
+            {
+                _batteryVoltageRaw = data[2];
+                _motorVoltageRaw = data[3];
+
+                _batteryMeasurementTimestamp = DateTime.Now;
+
+                return true;
+            }
+
+            return false;
         }
 
         protected override async Task<bool> AfterConnectSetupAsync(bool requestDeviceInformation, CancellationToken token)
