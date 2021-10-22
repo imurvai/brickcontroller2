@@ -32,11 +32,12 @@ namespace BrickController2.DeviceManagement
         private readonly int[] _maxServoAngles;
         private readonly int[] _servoBaseAngles;
         private readonly int[] _stepperAngles;
-        
+
         private readonly int[] _absolutePositions;
         private readonly int[] _relativePositions;
         private readonly bool[] _positionsUpdated;
         private readonly DateTime[] _positionUpdateTimes;
+        private readonly object _positionLock = new object();
 
         private IGattCharacteristic _characteristic;
 
@@ -71,23 +72,24 @@ namespace BrickController2.DeviceManagement
             CancellationToken token)
         {
             lock (_outputLock)
-            {
-                for (int c = 0; c < NumberOfChannels; c++)
+                lock (_positionLock)
                 {
-                    _outputValues[c] = 0;
-                    _lastOutputValues[c] = 0;
+                    for (int c = 0; c < NumberOfChannels; c++)
+                    {
+                        _outputValues[c] = 0;
+                        _lastOutputValues[c] = 0;
 
-                    _channelOutputTypes[c] = ChannelOutputType.NormalMotor;
-                    _maxServoAngles[c] = 0;
-                    _servoBaseAngles[c] = 0;
-                    _stepperAngles[c] = 0;
+                        _channelOutputTypes[c] = ChannelOutputType.NormalMotor;
+                        _maxServoAngles[c] = 0;
+                        _servoBaseAngles[c] = 0;
+                        _stepperAngles[c] = 0;
 
-                    _absolutePositions[c] = 0;
-                    _relativePositions[c] = 0;
-                    _positionsUpdated[c] = false;
-                    _positionUpdateTimes[c] = DateTime.MinValue;
+                        _absolutePositions[c] = 0;
+                        _relativePositions[c] = 0;
+                        _positionsUpdated[c] = false;
+                        _positionUpdateTimes[c] = DateTime.MinValue;
+                    }
                 }
-            }
 
             foreach (var channelConfig in channelConfigurations)
             {
@@ -218,50 +220,53 @@ namespace BrickController2.DeviceManagement
                     break;
 
                 case 0x46: // Port value (combined mode)
-                    var portId = data[3];
-                    var modeMask = data[5];
-                    var dataIndex = 6;
-
-                    if ((modeMask & 0x01) != 0)
+                    lock (_positionLock)
                     {
-                        var absPosBuffer = BitConverter.IsLittleEndian ?
-                            new byte[] { data[dataIndex + 0], data[dataIndex + 1] } :
-                            new byte[] { data[dataIndex + 1], data[dataIndex + 0] };
+                        var portId = data[3];
+                        var modeMask = data[5];
+                        var dataIndex = 6;
 
-                        var absPosition = BitConverter.ToInt16(absPosBuffer, 0);
-                        _absolutePositions[portId] = absPosition;
-
-                        dataIndex += 2;
-                    }
-
-                    if ((modeMask & 0x02) != 0)
-                    {
-                        // TODO: Read the post value format response and determine the value length accordingly
-                        if ((dataIndex + 3) < data.Length)
+                        if ((modeMask & 0x01) != 0)
                         {
-                            var relPosBuffer = BitConverter.IsLittleEndian ?
-                                new byte[] { data[dataIndex + 0], data[dataIndex + 1], data[dataIndex + 2], data[dataIndex + 3] } :
-                                new byte[] { data[dataIndex + 3], data[dataIndex + 2], data[dataIndex + 1], data[dataIndex + 0] };
-
-                            var relPosition = BitConverter.ToInt32(relPosBuffer, 0);
-                            _relativePositions[portId] = relPosition;
-                        }
-                        else if ((dataIndex + 1) < data.Length)
-                        {
-                            var relPosBuffer = BitConverter.IsLittleEndian ?
+                            var absPosBuffer = BitConverter.IsLittleEndian ?
                                 new byte[] { data[dataIndex + 0], data[dataIndex + 1] } :
                                 new byte[] { data[dataIndex + 1], data[dataIndex + 0] };
 
-                            var relPosition = BitConverter.ToInt16(relPosBuffer, 0);
-                            _relativePositions[portId] = relPosition;
-                        }
-                        else
-                        {
-                            _relativePositions[portId] = data[dataIndex];
+                            var absPosition = BitConverter.ToInt16(absPosBuffer, 0);
+                            _absolutePositions[portId] = absPosition;
+
+                            dataIndex += 2;
                         }
 
-                        _positionsUpdated[portId] = true;
-                        _positionUpdateTimes[portId] = DateTime.Now;
+                        if ((modeMask & 0x02) != 0)
+                        {
+                            // TODO: Read the post value format response and determine the value length accordingly
+                            if ((dataIndex + 3) < data.Length)
+                            {
+                                var relPosBuffer = BitConverter.IsLittleEndian ?
+                                    new byte[] { data[dataIndex + 0], data[dataIndex + 1], data[dataIndex + 2], data[dataIndex + 3] } :
+                                    new byte[] { data[dataIndex + 3], data[dataIndex + 2], data[dataIndex + 1], data[dataIndex + 0] };
+
+                                var relPosition = BitConverter.ToInt32(relPosBuffer, 0);
+                                _relativePositions[portId] = relPosition;
+                            }
+                            else if ((dataIndex + 1) < data.Length)
+                            {
+                                var relPosBuffer = BitConverter.IsLittleEndian ?
+                                    new byte[] { data[dataIndex + 0], data[dataIndex + 1] } :
+                                    new byte[] { data[dataIndex + 1], data[dataIndex + 0] };
+
+                                var relPosition = BitConverter.ToInt16(relPosBuffer, 0);
+                                _relativePositions[portId] = relPosition;
+                            }
+                            else
+                            {
+                                _relativePositions[portId] = data[dataIndex];
+                            }
+
+                            _positionsUpdated[portId] = true;
+                            _positionUpdateTimes[portId] = DateTime.Now;
+                        }
                     }
 
                     break;
@@ -290,16 +295,17 @@ namespace BrickController2.DeviceManagement
             try
             {
                 lock (_outputLock)
-                {
-                    for (int channel = 0; channel < NumberOfChannels; channel++)
+                    lock (_positionLock)
                     {
-                        _outputValues[channel] = 0;
-                        _lastOutputValues[channel] = 1;
-                        _sendAttemptsLeft[channel] = MAX_SEND_ATTEMPTS;
-                        _positionsUpdated[channel] = false;
-                        _positionUpdateTimes[channel] = DateTime.MinValue;
+                        for (int channel = 0; channel < NumberOfChannels; channel++)
+                        {
+                            _outputValues[channel] = 0;
+                            _lastOutputValues[channel] = 1;
+                            _sendAttemptsLeft[channel] = MAX_SEND_ATTEMPTS;
+                            _positionsUpdated[channel] = false;
+                            _positionUpdateTimes[channel] = DateTime.MinValue;
+                        }
                     }
-                }
 
                 while (!token.IsCancellationRequested)
                 {
@@ -570,7 +576,7 @@ namespace BrickController2.DeviceManagement
                 return false;
             }
         }
-        
+
         private async Task<bool> ResetServoAsync(int channel, int baseAngle, CancellationToken token)
         {
             try
@@ -686,20 +692,23 @@ namespace BrickController2.DeviceManagement
 
         private int CalculateServoSpeed(int channel, int targetAngle)
         {
-            if (_positionsUpdated[channel])
+            lock (_positionLock)
             {
-                var diff = Math.Abs(_relativePositions[channel] - targetAngle);
-                _positionsUpdated[channel] = false;
+                if (_positionsUpdated[channel])
+                {
+                    var diffAngle = Math.Abs(_relativePositions[channel] - targetAngle);
+                    _positionsUpdated[channel] = false;
 
-                return Math.Max(20, Math.Min(100, diff));
-            }
+                    return Math.Max(20, Math.Min(100, diffAngle));
+                }
 
-            var positionUpdateTime = _positionUpdateTimes[channel];
-            if (positionUpdateTime == DateTime.MinValue ||
-                POSITION_EXPIRATION < DateTime.Now - positionUpdateTime)
-            {
-                // Position update never happened or too old
-                return 50;
+                var positionUpdateTime = _positionUpdateTimes[channel];
+                if (positionUpdateTime == DateTime.MinValue ||
+                    POSITION_EXPIRATION < DateTime.Now - positionUpdateTime)
+                {
+                    // Position update never happened or too old
+                    return 50;
+                }
             }
 
             return 0;
