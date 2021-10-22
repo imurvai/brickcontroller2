@@ -10,6 +10,7 @@
         Boost,
         PoweredUp,
         TechnicHub,
-        DuploTrainHub
+        DuploTrainHub,
+        BuWizz3
     }
 }

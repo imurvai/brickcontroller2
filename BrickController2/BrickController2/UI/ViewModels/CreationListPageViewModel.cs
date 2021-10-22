@@ -120,28 +120,31 @@ namespace BrickController2.UI.ViewModels
                     _disappearingTokenSource.Token.ThrowIfCancellationRequested();
                 }
 
-                var storagePermissionStatus = await _readWriteExternalStoragePermission.CheckStatusAsync();
-                if (storagePermissionStatus != PermissionStatus.Granted && !_isStoragePermissionRequested)
+                if (SharedFileStorageService.SharedStorageDirectory != null)
                 {
-                    _isRequestingPermission = true;
-                    storagePermissionStatus = await _readWriteExternalStoragePermission.RequestAsync();
-                    _isStoragePermissionRequested = true;
-                    _isRequestingPermission = false;
+                    var storagePermissionStatus = await _readWriteExternalStoragePermission.CheckStatusAsync();
+                    if (storagePermissionStatus != PermissionStatus.Granted && !_isStoragePermissionRequested)
+                    {
+                        _isRequestingPermission = true;
+                        storagePermissionStatus = await _readWriteExternalStoragePermission.RequestAsync();
+                        _isStoragePermissionRequested = true;
+                        _isRequestingPermission = false;
 
-                    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
-                }
+                        _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+                    }
 
-                SharedFileStorageService.IsPermissionGranted = storagePermissionStatus == PermissionStatus.Granted;
+                    SharedFileStorageService.IsPermissionGranted = storagePermissionStatus == PermissionStatus.Granted;
 
-                if (!SharedFileStorageService.IsSharedStorageAvailable)
-                {
-                    await _dialogService.ShowMessageBoxAsync(
-                        Translate("Warning"),
-                        Translate("ProfileLoadSaveWillNotBeAvailable"),
-                        Translate("Ok"),
-                        _disappearingTokenSource.Token);
+                    //if (!SharedFileStorageService.IsSharedStorageAvailable)
+                    //{
+                    //    await _dialogService.ShowMessageBoxAsync(
+                    //        Translate("Warning"),
+                    //        Translate("ProfileLoadSaveWillNotBeAvailable"),
+                    //        Translate("Ok"),
+                    //        _disappearingTokenSource.Token);
 
-                    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+                    //    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+                    //}
                 }
             }
             catch (OperationCanceledException)

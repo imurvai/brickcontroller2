@@ -21,6 +21,19 @@ namespace BrickController2.iOS.PlatformServices.SharedFileStorage
             }
         }
 
-        public string SharedStorageDirectory => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        public string SharedStorageDirectory
+        {
+            get
+            {
+                try
+                {
+                    return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
     }
 }

@@ -9,6 +9,8 @@
     <Compile Remove="UI\Navigation\**" />
     <EmbeddedResource Remove="UI\Navigation\**" />
     <None Remove="UI\Navigation\**" />
+    <None Remove="UI\Images\buwizz3_image.png" />
+    <None Remove="UI\Images\buwizz3_image_small.png" />
     <None Remove="UI\Images\ic_add.png" />
     <None Remove="UI\Images\ic_back.png" />
     <None Remove="UI\Images\ic_checkmark.png" />
@@ -54,6 +56,8 @@
   <ItemGroup>
     <EmbeddedResource Include="UI\Images\boost_image.png" />
     <EmbeddedResource Include="UI\Images\boost_image_small.png" />
+    <EmbeddedResource Include="UI\Images\buwizz3_image.png" />
+    <EmbeddedResource Include="UI\Images\buwizz3_image_small.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image_small.png" />
     <EmbeddedResource Include="UI\Images\duplotrainhub_image.png" />
@@ -89,10 +93,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.1.0" />
+    <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="SQLiteNetExtensions.Async" Version="2.1.0" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2125" />
   </ItemGroup>
 
   <ItemGroup>

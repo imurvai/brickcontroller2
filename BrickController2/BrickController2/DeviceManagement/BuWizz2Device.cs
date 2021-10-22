@@ -11,14 +11,15 @@ namespace BrickController2.DeviceManagement
     internal class BuWizz2Device : BluetoothDevice
     {
         private const int MAX_SEND_ATTEMPTS = 10;
+
+        private static readonly Guid SERVICE_UUID = new Guid("4e050000-74fb-4481-88b3-9919b1676e93");
+        private static readonly Guid CHARACTERISTIC_UUID = new Guid("000092d1-0000-1000-8000-00805f9b34fb");
+                
+        private static readonly Guid SERVICE_UUID_DEVICE_INFORMATION = new Guid("0000180a-0000-1000-8000-00805f9b34fb");
+        private static readonly Guid CHARACTERISTIC_UUID_MODEL_NUMBER = new Guid("00002a24-0000-1000-8000-00805f9b34fb");
+        private static readonly Guid CHARACTERISTIC_UUID_FIRMWARE_REVISION = new Guid("00002a26-0000-1000-8000-00805f9b34fb");
+
         private static readonly TimeSpan VoltageMeasurementTimeout = TimeSpan.FromSeconds(5);
-
-        private readonly Guid SERVICE_UUID = new Guid("4e050000-74fb-4481-88b3-9919b1676e93");
-        private readonly Guid CHARACTERISTIC_UUID = new Guid("000092d1-0000-1000-8000-00805f9b34fb");
-
-        private readonly Guid SERVICE_UUID_DEVICE_INFORMATION = new Guid("0000180a-0000-1000-8000-00805f9b34fb");
-        private readonly Guid CHARACTERISTIC_UUID_MODEL_NUMBER = new Guid("00002a24-0000-1000-8000-00805f9b34fb");
-        private readonly Guid CHARACTERISTIC_UUID_FIRMWARE_REVISION = new Guid("00002a26-0000-1000-8000-00805f9b34fb");
 
         private readonly int[] _outputValues = new int[4];
         private readonly int[] _lastOutputValues = new int[4];
@@ -28,7 +29,6 @@ namespace BrickController2.DeviceManagement
         private DateTime _batteryMeasurementTimestamp;
         private byte _batteryVoltageRaw;
         private byte _motorVoltageRaw;
-
 
         private volatile int _outputLevelValue;
         private volatile int _sendAttemptsLeft;

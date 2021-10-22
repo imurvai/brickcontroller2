@@ -17,6 +17,9 @@ namespace BrickController2.UI.Converters
                 case DeviceType.BuWizz2:
                    return ResourceHelper.GetImageResource("buwizz_image_small.png");
 
+                case DeviceType.BuWizz3:
+                    return ResourceHelper.GetImageResource("buwizz3_image_small.png");
+
                 case DeviceType.SBrick:
                     return ResourceHelper.GetImageResource("sbrick_image_small.png");
 
