@@ -1,4 +1,5 @@
-﻿using BrickController2.PlatformServices.BluetoothLE;
+﻿using BrickController2.Helpers;
+using BrickController2.PlatformServices.BluetoothLE;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,24 @@ namespace BrickController2.DeviceManagement
         private static readonly Guid SERVICE_UUID = new Guid("500592d1-74fb-4481-88b3-9919b1676e93");
         private static readonly Guid CHARACTERISTIC_UUID = new Guid("50052901-74fb-4481-88b3-9919b1676e93");
 
+        private static readonly Guid SERVICE_UUID_DEVICE_INFORMATION = new Guid("0000180a-0000-1000-8000-00805f9b34fb");
+        private static readonly Guid CHARACTERISTIC_UUID_MODEL_NUMBER = new Guid("00002a24-0000-1000-8000-00805f9b34fb");
+        private static readonly Guid CHARACTERISTIC_UUID_FIRMWARE_REVISION = new Guid("00002a26-0000-1000-8000-00805f9b34fb");
+
+        private static readonly TimeSpan VoltageMeasurementTimeout = TimeSpan.FromSeconds(5);
+
         private readonly int[] _outputValues = new int[6];
         private readonly int[] _lastOutputValues = new int[6];
         private readonly object _outputLock = new object();
 
+        private DateTime _batteryMeasurementTimestamp;
+        private byte _batteryVoltageRaw;
+
         private volatile int _sendAttemptsLeft;
 
         private IGattCharacteristic _characteristic;
+        private IGattCharacteristic _modelNumberCharacteristic;
+        private IGattCharacteristic _firmwareRevisionCharacteristic;
 
         public BuWizz3Device(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, bleService)
@@ -32,6 +44,8 @@ namespace BrickController2.DeviceManagement
         public override int NumberOfOutputLevels => 1;
         public override int DefaultOutputLevel => 0;
         protected override bool AutoConnectOnFirstConnect => false;
+
+        public override string BatteryVoltageSign => "V";
 
         public override void SetOutput(int channel, float value)
         {
@@ -52,12 +66,51 @@ namespace BrickController2.DeviceManagement
 
         public override bool CanBePowerSource => false;
 
-        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
 
-            return Task.FromResult(_characteristic != null);
+            var deviceInformationService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_DEVICE_INFORMATION);
+            _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_FIRMWARE_REVISION);
+            _modelNumberCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_MODEL_NUMBER);
+
+            if (_characteristic != null)
+            {
+                await _bleDevice?.EnableNotificationAsync(_characteristic, token);
+            }
+
+            return _characteristic != null && _firmwareRevisionCharacteristic != null && _modelNumberCharacteristic != null;
+        }
+
+        protected override void OnCharacteristicChanged(Guid characteristicGuid, byte[] data)
+        {
+            if (characteristicGuid != _characteristic.Uuid || data.Length < 3 || data[0] != 0x01)
+            {
+                return;
+            }
+
+            // Byte 1: Status flags - Bits 3-4 Battery level status (0 - empty, motors disabled; 1 - low; 2 - medium; 3 - full) 
+
+            // do some change filtering as data are comming at 20Hz frequency
+            if (GetVoltage(data, out float batteryVoltage))
+            {
+                BatteryVoltage = $"{batteryVoltage:F2}";
+            }
+        }
+
+        protected override async Task<bool> AfterConnectSetupAsync(bool requestDeviceInformation, CancellationToken token)
+        {
+            try
+            {
+                if (requestDeviceInformation)
+                {
+                    await ReadDeviceInfo(token);
+                }
+            }
+            catch { }
+
+            return true;
         }
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
@@ -144,6 +197,42 @@ namespace BrickController2.DeviceManagement
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        private bool GetVoltage(byte[] data, out float batteryVoltage)
+        {
+            // Battery voltage(9 V + value * 0,05 V) - range 9,00 V – 15,35 V
+            batteryVoltage = 9.0f + data[2] * 0.05f;
+
+            const int delta = 2;
+
+            if (Math.Abs(_batteryVoltageRaw - data[2]) > delta ||
+                DateTime.Now - _batteryMeasurementTimestamp > VoltageMeasurementTimeout)
+            {
+                _batteryVoltageRaw = data[2];
+                _batteryMeasurementTimestamp = DateTime.Now;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private async Task ReadDeviceInfo(CancellationToken token)
+        {
+            var firmwareData = await _bleDevice?.ReadAsync(_firmwareRevisionCharacteristic, token);
+            var firmwareVersion = firmwareData?.ToAsciiStringSafe();
+            if (!string.IsNullOrEmpty(firmwareVersion))
+            {
+                FirmwareVersion = firmwareVersion;
+            }
+
+            var modelNumberData = await _bleDevice?.ReadAsync(_modelNumberCharacteristic, token);
+            var modelNumber = modelNumberData?.ToAsciiStringSafe();
+            if (!string.IsNullOrEmpty(modelNumber))
+            {
+                HardwareVersion = modelNumber;
             }
         }
     }
