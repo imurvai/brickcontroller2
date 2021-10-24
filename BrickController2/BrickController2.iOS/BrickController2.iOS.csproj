@@ -29,8 +29,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
     <IOSDebugOverWiFi>true</IOSDebugOverWiFi>
-    <CodesignKey>iPhone Developer: Istvan Murvai (V4B6W68637)</CodesignKey>
-    <CodesignProvision>BrickController2 iOS dev profile</CodesignProvision>
+    <CodesignKey>iPhone Developer</CodesignKey>
     <CodesignExtraArgs />
     <CodesignResourceRules />
     <CodesignEntitlements />
@@ -58,7 +57,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
-    <CodesignKey>Apple Development: Istvan Murvai (V4B6W68637)</CodesignKey>
+    <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>
     </CodesignEntitlements>
