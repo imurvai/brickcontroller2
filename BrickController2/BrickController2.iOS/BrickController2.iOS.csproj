@@ -235,4 +235,9 @@
   <ItemGroup>
     <BundleResource Include="Resources\ic_launcher.png" />
   </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties XamarinHotReloadMonoInterpreterErrorInfoBarBrickController2iOSHideInfoBar="True" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

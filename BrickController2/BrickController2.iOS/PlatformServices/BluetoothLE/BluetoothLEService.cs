@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BrickController2.PlatformServices.BluetoothLE;
@@ -112,6 +113,12 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 result[0xFF] = manufacturerData;
             }
 
+            var completeDeviceName = GetDataForKey(advertisementData, CBAdvertisement.DataLocalNameKey);
+            if (completeDeviceName != null)
+            {
+                result[0x09] = completeDeviceName;
+            }
+
             // TODO: add the rest of the advertisementdata...
 
             return result;
@@ -124,7 +131,17 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 return null;
             }
 
-            return ((NSData)advertisementData.ObjectForKey(key))?.ToArray();
+            var rawObject = advertisementData[key];
+            if (rawObject is NSData dataObject)
+            {
+                return dataObject.ToArray();
+            }
+            else if (rawObject is NSString stringObject)
+            {
+                return Encoding.ASCII.GetBytes(stringObject.ToString());
+            }
+
+            return null;
         }
     }
 }

@@ -74,8 +74,7 @@ namespace BrickController2.DeviceManagement
                 case "98-01": return (DeviceType.SBrick, manufacturerData);
                 case "48-4d": return (DeviceType.BuWizz, manufacturerData);
                 case "4e-05":
-                    var completeLocalName = advertismentData[0x09];
-                    if (completeLocalName != null)
+                    if (advertismentData.TryGetValue(0x09, out byte[] completeLocalName))
                     {
                         var completeLocalNameString = BitConverter.ToString(completeLocalName).ToLower();
                         if (completeLocalNameString == "42-75-57-69-7a-7a") // BuWizz
