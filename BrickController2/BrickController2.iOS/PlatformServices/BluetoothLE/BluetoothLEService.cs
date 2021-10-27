@@ -112,6 +112,12 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 result[0xFF] = manufacturerData;
             }
 
+            var completeDeviceName = GetDataForKey(advertisementData, CBAdvertisement.DataLocalNameKey);
+            if (completeDeviceName != null)
+            {
+                result[0x09] = completeDeviceName;
+            }
+
             // TODO: add the rest of the advertisementdata...
 
             return result;
