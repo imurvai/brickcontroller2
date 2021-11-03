@@ -4,6 +4,7 @@ using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BrickController2.CreationManagement
@@ -59,6 +60,16 @@ namespace BrickController2.CreationManagement
             {
                 await InitAsync();
                 await _databaseConnection.InsertAsync(creation);
+
+                // insert all available profiles as well as it's present for a creation when it's imported only
+                if (creation.ControllerProfiles.Any())
+                {
+                    foreach (var profile in creation.ControllerProfiles)
+                    {
+                        await InsertControllerProfileAsync(profile);
+                    }
+                    await _databaseConnection.UpdateWithChildrenAsync(creation);
+                }
             }
         }
 
@@ -82,7 +93,7 @@ namespace BrickController2.CreationManagement
         {
             using (await _lock.LockAsync())
             {
-                await _databaseConnection.InsertAsync(controllerProfile);
+                await InsertControllerProfileAsync(controllerProfile);
 
                 if (creation.ControllerProfiles == null)
                 {
@@ -91,6 +102,21 @@ namespace BrickController2.CreationManagement
 
                 creation.ControllerProfiles.Add(controllerProfile);
                 await _databaseConnection.UpdateWithChildrenAsync(creation);
+            }
+        }
+
+        private async Task InsertControllerProfileAsync(ControllerProfile controllerProfile)
+        {
+            await _databaseConnection.InsertAsync(controllerProfile);
+
+            // insert all available events as well as it's present for a profile when it's imported only
+            if (controllerProfile.ControllerEvents.Any())
+            {
+                foreach (var controllerEvent in controllerProfile.ControllerEvents)
+                {
+                    await InsertControllerEventAsync(controllerEvent);
+                }
+                await _databaseConnection.UpdateWithChildrenAsync(controllerProfile);
             }
         }
 
@@ -114,7 +140,7 @@ namespace BrickController2.CreationManagement
         {
             using (await _lock.LockAsync())
             {
-                await _databaseConnection.InsertAsync(controllerEvent);
+                await InsertControllerEventAsync(controllerEvent);
 
                 if (controllerProfile.ControllerEvents == null)
                 {
@@ -123,6 +149,21 @@ namespace BrickController2.CreationManagement
 
                 controllerProfile.ControllerEvents.Add(controllerEvent);
                 await _databaseConnection.UpdateWithChildrenAsync(controllerProfile);
+            }
+        }
+
+        private async Task InsertControllerEventAsync(ControllerEvent controllerEvent)
+        {
+            await _databaseConnection.InsertAsync(controllerEvent);
+
+            // insert all available action as well as it's present for an event when it's imported only
+            if (controllerEvent.ControllerActions.Any())
+            {
+                foreach (var controllerAction in controllerEvent.ControllerActions)
+                {
+                    await _databaseConnection.InsertAsync(controllerAction);
+                }
+                await _databaseConnection.UpdateWithChildrenAsync(controllerEvent);
             }
         }
 
