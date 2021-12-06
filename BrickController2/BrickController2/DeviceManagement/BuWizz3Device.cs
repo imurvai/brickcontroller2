@@ -1,4 +1,5 @@
-﻿using BrickController2.Helpers;
+﻿using BrickController2.CreationManagement;
+using BrickController2.Helpers;
 using BrickController2.PlatformServices.BluetoothLE;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace BrickController2.DeviceManagement
     internal class BuWizz3Device : BluetoothDevice
     {
         private const int MAX_SEND_ATTEMPTS = 10;
+        public const int NUMBER_OF_PU_PORTS = 4;
 
         private static readonly Guid SERVICE_UUID = new Guid("500592d1-74fb-4481-88b3-9919b1676e93");
         private static readonly Guid CHARACTERISTIC_UUID = new Guid("50052901-74fb-4481-88b3-9919b1676e93");
@@ -21,9 +23,25 @@ namespace BrickController2.DeviceManagement
 
         private static readonly TimeSpan VoltageMeasurementTimeout = TimeSpan.FromSeconds(5);
 
+        private readonly byte[] _sendOutputBuffer = new byte[] { 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
         private readonly int[] _outputValues = new int[6];
         private readonly int[] _lastOutputValues = new int[6];
         private readonly object _outputLock = new object();
+
+        private readonly ChannelOutputType[] _channelOutputTypes = new ChannelOutputType[NUMBER_OF_PU_PORTS];
+        private readonly int[] _maxServoAngles = new int[NUMBER_OF_PU_PORTS];
+        private readonly int[] _servoBaseAngles = new int[NUMBER_OF_PU_PORTS];
+        private readonly int[] _stepperAngles = new int[NUMBER_OF_PU_PORTS];
+
+        private readonly int[] _currentStepperAngles = new int[NUMBER_OF_PU_PORTS];
+
+        private readonly int[] _absolutePositions = new int[NUMBER_OF_PU_PORTS];
+        private readonly int[] _relativePositions = new int[NUMBER_OF_PU_PORTS];
+        private readonly bool[] _positionsUpdated = new bool[NUMBER_OF_PU_PORTS];
+        private readonly DateTime[] _positionUpdateTimes = new DateTime[NUMBER_OF_PU_PORTS];
+
+        private readonly object _positionLock = new object();
 
         private DateTime _batteryMeasurementTimestamp;
         private byte _batteryVoltageRaw;
@@ -46,6 +64,45 @@ namespace BrickController2.DeviceManagement
         protected override bool AutoConnectOnFirstConnect => false;
 
         public override string BatteryVoltageSign => "V";
+
+        public async override Task<DeviceConnectionResult> ConnectAsync(
+            bool reconnect,
+            Action<Device> onDeviceDisconnected,
+            IEnumerable<ChannelConfiguration> channelConfigurations,
+            bool startOutputProcessing,
+            bool requestDeviceInformation,
+            CancellationToken token)
+        {
+            lock (_outputLock)
+            {
+                for (int channel = 0; channel < NumberOfChannels; channel++)
+                {
+                    _outputValues[channel] = 0;
+                    _lastOutputValues[channel] = 0;
+                }
+            }
+            lock (_positionLock)
+            {
+                // process only PU ports
+                for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)                
+                {
+                    var channelConfig = channelConfigurations.FirstOrDefault(c => c.Channel == channel);
+
+                    _channelOutputTypes[channel] = channelConfig.ChannelOutputType;
+                    _absolutePositions[channel] = 0;
+                    _relativePositions[channel] = 0;
+                    _currentStepperAngles[channel] = 0;
+
+                    _maxServoAngles[channel] = channelConfig.ChannelOutputType == ChannelOutputType.ServoMotor ? channelConfig.MaxServoAngle : 0;
+                    _servoBaseAngles[channel] = channelConfig.ChannelOutputType == ChannelOutputType.ServoMotor ? channelConfig.ServoBaseAngle : 0;
+                    _stepperAngles[channel] = channelConfig.ChannelOutputType == ChannelOutputType.StepperMotor ? channelConfig.StepperAngle : 0;
+
+                    _positionsUpdated[channel] = false;
+                    _positionUpdateTimes[channel] = DateTime.MinValue;
+                }
+            }
+            return await base.ConnectAsync(reconnect, onDeviceDisconnected, channelConfigurations, startOutputProcessing, requestDeviceInformation, token);
+        }
 
         public override void SetOutput(int channel, float value)
         {
@@ -85,7 +142,7 @@ namespace BrickController2.DeviceManagement
 
         protected override void OnCharacteristicChanged(Guid characteristicGuid, byte[] data)
         {
-            if (characteristicGuid != _characteristic.Uuid || data.Length < 3 || data[0] != 0x01)
+            if (characteristicGuid != _characteristic.Uuid || data.Length < 54 || data[0] != 0x01)
             {
                 return;
             }
@@ -97,6 +154,32 @@ namespace BrickController2.DeviceManagement
             {
                 BatteryVoltage = $"{batteryVoltage:F2}";
             }
+
+            // Byte 22 - 53: PoweredUp motor data structure(4x)
+            //  - Motor type(unsigned 8 - bit)
+            //  - Velocity(signed 8 - bit)
+            //  - Absolute position(unsigned 16 - bit)
+            //  - Position(unsigned 32 - bit)
+            lock (_positionLock)
+            {
+                int baseOffset = 22;
+                var timestamp = DateTime.Now;
+                for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
+                {
+                    _absolutePositions[channel] = data.GetInt16(baseOffset + 2);
+                    _relativePositions[channel] = data.GetInt32(baseOffset + 4);
+
+                    _positionsUpdated[channel] = true;
+                    _positionUpdateTimes[channel] = timestamp;
+#if DEBUG
+                    byte motorType = data[baseOffset + 0];
+                    sbyte velocity = (sbyte)data[baseOffset + 1];
+
+                    System.Diagnostics.Debug.WriteLine($"Channel: {channel}, Motor:{motorType}, Velocity: {velocity}, Abs: {_absolutePositions[channel]}, Pos:{_relativePositions[channel]}");
+#endif
+                    baseOffset += 8;
+                }
+            }
         }
 
         protected override async Task<bool> AfterConnectSetupAsync(bool requestDeviceInformation, CancellationToken token)
@@ -106,6 +189,37 @@ namespace BrickController2.DeviceManagement
                 if (requestDeviceInformation)
                 {
                     await ReadDeviceInfo(token);
+                }
+
+                // Configure the function on the target PU port. 
+                var poweredUpCfgBuffer = new byte[] { 0x50, 0x00, 0x00, 0x00, 0x00 };
+                for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
+                {
+                    poweredUpCfgBuffer[1 + channel] = _channelOutputTypes[channel] switch
+                    {
+                        ChannelOutputType.ServoMotor => 0x16,   // PU absolute position servo
+                        ChannelOutputType.StepperMotor => 0x15, // PU position servo 
+                        _ => 0x10,                              // PU simple PWM (default) 
+                    };
+                }
+                await _bleDevice?.WriteAsync(_characteristic, poweredUpCfgBuffer, token);
+
+                // get initial position of a stepper if any
+                var baseline = DateTime.Now;
+                int attempsLeft = _channelOutputTypes.Any(t => t == ChannelOutputType.StepperMotor) ? MAX_SEND_ATTEMPTS : 0;
+
+                while (--attempsLeft > 0)
+                {
+                    lock (_positionLock)
+                    {
+                        if (_positionUpdateTimes.All(p => p >= baseline))
+                        {
+                            // store current position required for stepper(s)
+                            _relativePositions.CopyTo(_currentStepperAngles, 0);
+                            break;
+                        }
+                    }
+                    await Task.Delay(10);
                 }
             }
             catch { }
@@ -158,7 +272,7 @@ namespace BrickController2.DeviceManagement
                         v5 != _lastOutputValues[5] ||
                         sendAttemptsLeft > 0)
                     {
-                        if (await SendOutputValuesAsync(v0, v1, v2, v3, v4, v5, token).ConfigureAwait(false))
+                        if (await SendOutputValuesAsync(new[] { v0, v1, v2, v3 }, v4, v5, token).ConfigureAwait(false))
                         {
                             _lastOutputValues[0] = v0;
                             _lastOutputValues[1] = v1;
@@ -166,6 +280,11 @@ namespace BrickController2.DeviceManagement
                             _lastOutputValues[3] = v3;
                             _lastOutputValues[4] = v4;
                             _lastOutputValues[5] = v5;
+                            // reset attemps due to success
+                            lock (_outputLock)
+                            {
+                                _sendAttemptsLeft = 0;
+                            }
                         }
                     }
                     else
@@ -179,20 +298,31 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private async Task<bool> SendOutputValuesAsync(int v0, int v1, int v2, int v3, int v4, int v5, CancellationToken token)
+        private async Task<bool> SendOutputValuesAsync(int[] poweredUpValues, int v4, int v5, CancellationToken token)
         {
             try
             {
-                var sendOutputBuffer = new byte[] { 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+                // 1 - 16 4x motor reference for ports 1 - 4(signed 32 - bit value for each motor output),
+                //           function depends on the PU port state(simple PWM, speed or position servo)
+                foreach (var port in poweredUpValues.Select((Value, Index) => (Value, Index)))
+                {
+                    var valueRatio = port.Value / 127;
+                    var channelValue = _channelOutputTypes[port.Index] switch
+                    {
+                        ChannelOutputType.ServoMotor => _servoBaseAngles[port.Index] + valueRatio * _maxServoAngles[port.Index],
+                        ChannelOutputType.StepperMotor => _currentStepperAngles[port.Index] += valueRatio * _stepperAngles[port.Index],
 
-                sendOutputBuffer[1] = (byte)v0;
-                sendOutputBuffer[2] = (byte)v1;
-                sendOutputBuffer[3] = (byte)v2;
-                sendOutputBuffer[4] = (byte)v3;
-                sendOutputBuffer[5] = (byte)v4;
-                sendOutputBuffer[6] = (byte)v5;
+                        _ => port.Value
+                    };
 
-                return await _bleDevice?.WriteAsync(_characteristic, sendOutputBuffer, token);
+                    _sendOutputBuffer.SetInt32(1 + 4 * port.Index, channelValue);
+                }
+
+                // 17 - 18 2x motor reference for ports 5 - 6(same as bytes 1 - 6 of command 0x30)
+                _sendOutputBuffer[17] = (byte)v4;
+                _sendOutputBuffer[18] = (byte)v5;
+
+                return await _bleDevice?.WriteAsync(_characteristic, _sendOutputBuffer, token);
             }
             catch (Exception)
             {

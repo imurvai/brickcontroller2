@@ -69,7 +69,13 @@
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
                         <Label Text="{extensions:Translate AdvancedSettings}" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
 
-                        <StackLayout Orientation="Vertical" IsVisible="{Binding SelectedDevice.DeviceType, Converter={StaticResource DeviceTypeToChannelOutputVisible}}">
+                        <StackLayout Orientation="Vertical">
+                            <StackLayout.IsVisible>
+                                <MultiBinding Converter="{StaticResource DeviceTypeToChannelOutputVisible}">
+                                    <Binding Path="SelectedDevice.DeviceType" />
+                                    <Binding Path="Action.Channel" />
+                                </MultiBinding>
+                            </StackLayout.IsVisible>
                             <!-- Channel output type selector -->
                             <Grid>
                                 <Grid.ColumnDefinitions>

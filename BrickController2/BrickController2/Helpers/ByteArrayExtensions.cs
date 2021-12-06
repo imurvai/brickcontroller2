@@ -42,5 +42,13 @@ namespace BrickController2.Helpers
                 (data[offset + 2] << 16) |
                 (data[offset + 3] << 24);
         }
+
+        public static void SetInt32(this byte[] data, int offset, int value)
+        {
+            data[offset + 0] = (byte)(value & 0xff);
+            data[offset + 1] = (byte)((value >> 8) & 0xff);
+            data[offset + 2] = (byte)((value >> 16) & 0xff);
+            data[offset + 3] = (byte)((value >> 24) & 0xff);
+        }
     }
 }
