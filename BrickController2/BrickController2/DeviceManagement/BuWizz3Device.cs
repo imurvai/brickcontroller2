@@ -38,8 +38,8 @@ namespace BrickController2.DeviceManagement
 
         private readonly int[] _absolutePositions = new int[NUMBER_OF_PU_PORTS];
         private readonly int[] _relativePositions = new int[NUMBER_OF_PU_PORTS];
-        private readonly bool[] _positionsUpdated = new bool[NUMBER_OF_PU_PORTS];
-        private readonly DateTime[] _positionUpdateTimes = new DateTime[NUMBER_OF_PU_PORTS];
+
+        private DateTime _positionUpdateTime;
 
         private readonly object _positionLock = new object();
 
@@ -96,10 +96,8 @@ namespace BrickController2.DeviceManagement
                     _maxServoAngles[channel] = channelConfig.ChannelOutputType == ChannelOutputType.ServoMotor ? channelConfig.MaxServoAngle : 0;
                     _servoBaseAngles[channel] = channelConfig.ChannelOutputType == ChannelOutputType.ServoMotor ? channelConfig.ServoBaseAngle : 0;
                     _stepperAngles[channel] = channelConfig.ChannelOutputType == ChannelOutputType.StepperMotor ? channelConfig.StepperAngle : 0;
-
-                    _positionsUpdated[channel] = false;
-                    _positionUpdateTimes[channel] = DateTime.MinValue;
                 }
+                _positionUpdateTime = DateTime.MinValue;
             }
             return await base.ConnectAsync(reconnect, onDeviceDisconnected, channelConfigurations, startOutputProcessing, requestDeviceInformation, token);
         }
@@ -163,14 +161,11 @@ namespace BrickController2.DeviceManagement
             lock (_positionLock)
             {
                 int baseOffset = 22;
-                var timestamp = DateTime.Now;
                 for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
                 {
                     _absolutePositions[channel] = data.GetInt16(baseOffset + 2);
                     _relativePositions[channel] = data.GetInt32(baseOffset + 4);
 
-                    _positionsUpdated[channel] = true;
-                    _positionUpdateTimes[channel] = timestamp;
 #if DEBUG
                     byte motorType = data[baseOffset + 0];
                     sbyte velocity = (sbyte)data[baseOffset + 1];
@@ -179,6 +174,7 @@ namespace BrickController2.DeviceManagement
 #endif
                     baseOffset += 8;
                 }
+                _positionUpdateTime = DateTime.Now;
             }
         }
 
@@ -212,7 +208,7 @@ namespace BrickController2.DeviceManagement
                 {
                     lock (_positionLock)
                     {
-                        if (_positionUpdateTimes.All(p => p >= baseline))
+                        if (_positionUpdateTime >= baseline)
                         {
                             // store current position required for stepper(s)
                             _relativePositions.CopyTo(_currentStepperAngles, 0);
