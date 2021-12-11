@@ -8,6 +8,7 @@ namespace BrickController2.UI.Controls
     public class DeviceChannelLabel : Label
     {
         private readonly static string[] _controlPlusChannelLetters = new[] { "A", "B", "C", "D" };
+        private readonly static string[] _circuitCubesChannelLetters = new[] { "A", "B", "C" };
 
         public static BindableProperty DeviceTypeProperty = BindableProperty.Create(nameof(DeviceType), typeof(DeviceType), typeof(DeviceChannelLabel), default(DeviceType), BindingMode.OneWay, null, OnDeviceChanged);
         public static BindableProperty ChannelProperty = BindableProperty.Create(nameof(Channel), typeof(int), typeof(DeviceChannelLabel), 0, BindingMode.OneWay, null, OnChannelChanged);
@@ -49,6 +50,10 @@ namespace BrickController2.UI.Controls
                 case DeviceType.PoweredUp:
                 case DeviceType.TechnicHub:
                     Text = _controlPlusChannelLetters[Math.Min(Math.Max(Channel, 0), 3)];
+                    break;
+
+                case DeviceType.CircuitCubes:
+                    Text = _circuitCubesChannelLetters[Math.Min(Math.Max(Channel, 0), 2)];
                     break;
 
                 case DeviceType.Infrared:

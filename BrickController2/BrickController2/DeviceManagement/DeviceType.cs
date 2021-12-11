@@ -11,6 +11,7 @@
         PoweredUp,
         TechnicHub,
         DuploTrainHub,
-        BuWizz3
+        BuWizz3,
+        CircuitCubes,
     }
 }

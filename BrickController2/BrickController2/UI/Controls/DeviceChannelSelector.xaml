@@ -176,6 +176,26 @@
                 <Image Grid.Column="1" Source="{extensions:ImageResource Source=duplotrainhub_image.png}" WidthRequest="150" HeightRequest="80" HorizontalOptions="Center"/>
             </Grid>
 
+
+            <!-- CircuitCubes -->
+            <Grid x:Name="CircuitCubes">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <controls:ChannelSelectorRadioButton Grid.Column="0" Grid.Row="1" x:Name="CircuitCubesA" DeviceType="CircuitCubes" Channel="0" HorizontalOptions="End" VerticalOptions="Center"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="1" Grid.Row="1" x:Name="CircuitCubesB" DeviceType="CircuitCubes" Channel="1" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <controls:ChannelSelectorRadioButton Grid.Column="2" Grid.Row="1" x:Name="CircuitCubesC" DeviceType="CircuitCubes" Channel="2" HorizontalOptions="Start" VerticalOptions="Center"/>
+
+                <Image Grid.Column="1" Grid.Row="0" Source="{extensions:ImageResource Source=circuitcubes_image.png}" WidthRequest="168" HeightRequest="176"/>
+            </Grid>
+
         </Grid>
     </ContentView.Content>
 </ContentView>

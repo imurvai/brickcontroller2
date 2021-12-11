@@ -38,6 +38,9 @@ namespace BrickController2.UI.Converters
                 case DeviceType.DuploTrainHub:
                     return ResourceHelper.GetImageResource("duplotrainhub_image_small.png");
 
+                case DeviceType.CircuitCubes:
+                    return ResourceHelper.GetImageResource("circuitcubes_image_small.png");
+
                 default:
                     return null;
             }
