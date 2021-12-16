@@ -14,8 +14,9 @@ namespace BrickController2.DeviceManagement
         private const int MAX_SEND_ATTEMPTS = 5;
 
         internal static readonly Guid SERVICE_UUID = new Guid("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
-        private static readonly Guid CHARACTERISTIC_UUID = new Guid("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
-                
+        private static readonly Guid CHARACTERISTIC_UUID_WRITE = new Guid("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+        private static readonly Guid CHARACTERISTIC_UUID_NOTIFY = new Guid("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+
         private static readonly Guid SERVICE_UUID_DEVICE_INFORMATION = new Guid("0000180a-0000-1000-8000-00805f9b34fb");
         private static readonly Guid CHARACTERISTIC_UUID_HARDWARE_REVISION = new Guid("00002a27-0000-1000-8000-00805f9b34fb");
         private static readonly Guid CHARACTERISTIC_UUID_FIRMWARE_REVISION = new Guid("00002a26-0000-1000-8000-00805f9b34fb");
@@ -33,7 +34,8 @@ namespace BrickController2.DeviceManagement
 
         private volatile int _sendAttemptsLeft;
 
-        private IGattCharacteristic _characteristic;
+        private IGattCharacteristic _writeCharacteristic;
+        private IGattCharacteristic _notifyCharacteristic;
         private IGattCharacteristic _hardwareRevisionCharacteristic;
         private IGattCharacteristic _firmwareRevisionCharacteristic;
 
@@ -66,16 +68,34 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
-            _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
+            _writeCharacteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_WRITE);
 
             var deviceInformationService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_DEVICE_INFORMATION);
             _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_FIRMWARE_REVISION);
             _hardwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_HARDWARE_REVISION);
 
-            return Task.FromResult(_characteristic != null && _firmwareRevisionCharacteristic != null && _hardwareRevisionCharacteristic != null);
+            _notifyCharacteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_NOTIFY);
+            if (_notifyCharacteristic != null)
+            {
+                await _bleDevice?.EnableNotificationAsync(_notifyCharacteristic, token);
+            }
+
+            return _writeCharacteristic != null && _firmwareRevisionCharacteristic != null && _hardwareRevisionCharacteristic != null;
+        }
+
+        protected override void OnCharacteristicChanged(Guid characteristicGuid, byte[] data)
+        {
+            if (characteristicGuid == _notifyCharacteristic.Uuid && data.Length > 0)
+            {
+                var bateryVoltage = data.ToAsciiStringSafe();
+                if (!string.IsNullOrEmpty(bateryVoltage))
+                {
+                    BatteryVoltage = bateryVoltage;
+                }
+            }
         }
 
         protected override async Task<bool> AfterConnectSetupAsync(bool requestDeviceInformation, CancellationToken token)
@@ -166,7 +186,7 @@ namespace BrickController2.DeviceManagement
                     commendBytes.CopyTo(_driveMotorsBuffer, idx);
                     idx += 5;
                 }
-                return await _bleDevice?.WriteAsync(_characteristic, _driveMotorsBuffer, token);
+                return await _bleDevice?.WriteNoResponseAsync(_writeCharacteristic, _driveMotorsBuffer, token);
             }
             catch (Exception)
             {
@@ -178,7 +198,7 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                return await _bleDevice?.WriteAsync(_characteristic, TURN_OFF_ALL_COMMAND, token);
+                return await _bleDevice?.WriteNoResponseAsync(_writeCharacteristic, TURN_OFF_ALL_COMMAND, token);
             }
             catch (Exception)
             {
@@ -202,16 +222,7 @@ namespace BrickController2.DeviceManagement
                 HardwareVersion = hardwareRevision;
             }
 
-            var success = await _bleDevice?.WriteAsync(_characteristic, BATTERY_STATUS_COMMAND, token);
-            if (success)
-            {
-                var batteryData = await _bleDevice?.ReadAsync(_characteristic, token);
-                var bateryVoltage = batteryData?.ToAsciiStringSafe();
-                if (!string.IsNullOrEmpty(bateryVoltage))
-                {
-                    BatteryVoltage = bateryVoltage;
-                }
-            }
+            await _bleDevice?.WriteNoResponseAsync(_writeCharacteristic, BATTERY_STATUS_COMMAND, token);
         }
     }
 }
