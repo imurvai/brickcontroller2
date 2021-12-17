@@ -26,7 +26,7 @@ namespace BrickController2.DeviceManagement
         // Battery Status Command: <b>
         private static readonly byte[] BATTERY_STATUS_COMMAND = new[] { (byte)'b' };
         // Motor Driving Commands: <+/-><000~255><a/b/c>
-        private readonly byte[] _driveMotorsBuffer = new byte[] { 0x00, 0x00, 0x00, 0x00, (byte)'a', 0x00, 0x00, 0x00, 0x00, (byte)'b', 0x00, 0x00, 0x00, 0x00, (byte)'c', };
+        private readonly byte[] _driveMotorsBuffer = new byte[] { 0x00, 0x00, 0x00, 0x00, (byte)'a', 0x00, 0x00, 0x00, 0x00, (byte)'b', 0x00, 0x00, 0x00, 0x00, (byte)'c' };
 
         private readonly int[] _outputValues = new int[3];
         private readonly int[] _lastOutputValues = new int[3];
@@ -88,13 +88,13 @@ namespace BrickController2.DeviceManagement
 
         protected override void OnCharacteristicChanged(Guid characteristicGuid, byte[] data)
         {
-            if (characteristicGuid == _notifyCharacteristic.Uuid && data.Length > 0)
+            if (characteristicGuid != _notifyCharacteristic.Uuid || data.Length <= 1)
+                return;
+
+            var bateryVoltage = data.ToAsciiStringSafe();
+            if (!string.IsNullOrEmpty(bateryVoltage))
             {
-                var bateryVoltage = data.ToAsciiStringSafe();
-                if (!string.IsNullOrEmpty(bateryVoltage))
-                {
-                    BatteryVoltage = bateryVoltage;
-                }
+                BatteryVoltage = bateryVoltage;
             }
         }
 
@@ -127,11 +127,11 @@ namespace BrickController2.DeviceManagement
                     _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
                 }
 
+                int[] values = new int[NumberOfChannels];
+                int sendAttemptsLeft;
+
                 while (!token.IsCancellationRequested)
                 {
-                    int[] values = new int[NumberOfChannels];
-                    int sendAttemptsLeft;
-
                     lock (_outputLock)
                     {
                         _outputValues.CopyTo(values, 0);
@@ -151,6 +151,7 @@ namespace BrickController2.DeviceManagement
                                 _sendAttemptsLeft = 0;
                             }
                         }
+                        await Task.Delay(5, token).ConfigureAwait(false);
                     }
                     else
                     {
@@ -186,7 +187,7 @@ namespace BrickController2.DeviceManagement
                     commendBytes.CopyTo(_driveMotorsBuffer, idx);
                     idx += 5;
                 }
-                return await _bleDevice?.WriteNoResponseAsync(_writeCharacteristic, _driveMotorsBuffer, token);
+                return await _bleDevice?.WriteAsync(_writeCharacteristic, _driveMotorsBuffer, token);
             }
             catch (Exception)
             {
@@ -198,7 +199,7 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                return await _bleDevice?.WriteNoResponseAsync(_writeCharacteristic, TURN_OFF_ALL_COMMAND, token);
+                return await _bleDevice?.WriteAsync(_writeCharacteristic, TURN_OFF_ALL_COMMAND, token);
             }
             catch (Exception)
             {
@@ -222,7 +223,7 @@ namespace BrickController2.DeviceManagement
                 HardwareVersion = hardwareRevision;
             }
 
-            await _bleDevice?.WriteNoResponseAsync(_writeCharacteristic, BATTERY_STATUS_COMMAND, token);
+            await _bleDevice?.WriteAsync(_writeCharacteristic, BATTERY_STATUS_COMMAND, token);
         }
     }
 }
