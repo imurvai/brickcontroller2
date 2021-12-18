@@ -11,6 +11,8 @@
     <None Remove="UI\Navigation\**" />
     <None Remove="UI\Images\buwizz3_image.png" />
     <None Remove="UI\Images\buwizz3_image_small.png" />
+    <None Remove="UI\Images\circuitcubes_image.png" />
+    <None Remove="UI\Images\circuitcubes_image_small.png" />
     <None Remove="UI\Images\ic_add.png" />
     <None Remove="UI\Images\ic_back.png" />
     <None Remove="UI\Images\ic_checkmark.png" />
@@ -60,6 +62,8 @@
     <EmbeddedResource Include="UI\Images\buwizz3_image_small.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image.png" />
     <EmbeddedResource Include="UI\Images\buwizz_image_small.png" />
+    <EmbeddedResource Include="UI\Images\circuitcubes_image.png" />
+    <EmbeddedResource Include="UI\Images\circuitcubes_image_small.png" />
     <EmbeddedResource Include="UI\Images\duplotrainhub_image.png" />
     <EmbeddedResource Include="UI\Images\duplotrainhub_image_small.png" />
     <EmbeddedResource Include="UI\Images\ic_add.png" />

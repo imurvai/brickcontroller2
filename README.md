@@ -16,6 +16,7 @@ Cross platform mobile application for controlling Lego creations using a bluetoo
 - Lego Powered-Up hub
 - Lego Boost Hub
 - Lego Technic Hub
+- Circuit Cubes
 
 ## Project details
 
