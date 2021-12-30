@@ -25,8 +25,8 @@ namespace BrickController2.DeviceManagement
 
         private readonly byte[] _sendOutputBuffer = new byte[] { 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-        private readonly int[] _outputValues = new int[6];
-        private readonly int[] _lastOutputValues = new int[6];
+        private readonly sbyte[] _outputValues = new sbyte[6];
+        private readonly sbyte[] _lastOutputValues = new sbyte[6];
         private readonly object _outputLock = new object();
 
         private readonly ChannelOutputType[] _channelOutputTypes = new ChannelOutputType[NUMBER_OF_PU_PORTS];
@@ -36,7 +36,7 @@ namespace BrickController2.DeviceManagement
 
         private readonly int[] _currentStepperAngles = new int[NUMBER_OF_PU_PORTS];
 
-        private readonly int[] _absolutePositions = new int[NUMBER_OF_PU_PORTS];
+        private readonly short[] _absolutePositions = new short[NUMBER_OF_PU_PORTS];
         private readonly int[] _relativePositions = new int[NUMBER_OF_PU_PORTS];
 
         private DateTime _positionUpdateTime;
@@ -107,7 +107,7 @@ namespace BrickController2.DeviceManagement
             CheckChannel(channel);
             value = CutOutputValue(value);
 
-            var intValue = (int)(value * 127);
+            var intValue = (sbyte)(value * 127);
 
             lock (_outputLock)
             {
@@ -121,7 +121,7 @@ namespace BrickController2.DeviceManagement
 
         public override bool CanBePowerSource => false;
 
-        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
@@ -130,12 +130,7 @@ namespace BrickController2.DeviceManagement
             _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_FIRMWARE_REVISION);
             _modelNumberCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_MODEL_NUMBER);
 
-            if (_characteristic != null)
-            {
-                await _bleDevice?.EnableNotificationAsync(_characteristic, token);
-            }
-
-            return _characteristic != null && _firmwareRevisionCharacteristic != null && _modelNumberCharacteristic != null;
+            return Task.FromResult(_characteristic != null && _firmwareRevisionCharacteristic != null && _modelNumberCharacteristic != null);
         }
 
         protected override void OnCharacteristicChanged(Guid characteristicGuid, byte[] data)
@@ -165,16 +160,17 @@ namespace BrickController2.DeviceManagement
                 {
                     _absolutePositions[channel] = data.GetInt16(baseOffset + 2);
                     _relativePositions[channel] = data.GetInt32(baseOffset + 4);
-
 #if DEBUG
-                    byte motorType = data[baseOffset + 0];
-                    sbyte velocity = (sbyte)data[baseOffset + 1];
-
-                    System.Diagnostics.Debug.WriteLine($"Channel: {channel}, Motor:{motorType}, Velocity: {velocity}, Abs: {_absolutePositions[channel]}, Pos:{_relativePositions[channel]}");
+                    if (data[baseOffset] != 0)
+                        System.Diagnostics.Debug.Write($"[{channel}: Type:{data[baseOffset]}, Velocity:{(sbyte)data[baseOffset + 1]}, Abs:{_absolutePositions[channel]}, Pos:{_relativePositions[channel]}]");
 #endif
                     baseOffset += 8;
                 }
                 _positionUpdateTime = DateTime.Now;
+
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine("");
+#endif
             }
         }
 
@@ -199,12 +195,16 @@ namespace BrickController2.DeviceManagement
                     };
                 }
                 await _bleDevice?.WriteAsync(_characteristic, poweredUpCfgBuffer, token);
+                await Task.Delay(10, token);
+
+                // once configured, enable notification
+                await _bleDevice?.EnableNotificationAsync(_characteristic, token);
 
                 // get initial position of a stepper if any
                 var baseline = DateTime.Now;
                 int attempsLeft = _channelOutputTypes.Any(t => t == ChannelOutputType.StepperMotor) ? MAX_SEND_ATTEMPTS : 0;
 
-                while (--attempsLeft > 0)
+                while (attempsLeft-- > 0)
                 {
                     lock (_positionLock)
                     {
@@ -215,8 +215,12 @@ namespace BrickController2.DeviceManagement
                             break;
                         }
                     }
-                    await Task.Delay(10);
+                    await Task.Delay(20, token);
                 }
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine($"Motor cfg:: [{poweredUpCfgBuffer[1]},{poweredUpCfgBuffer[2]},{poweredUpCfgBuffer[3]},{poweredUpCfgBuffer[4]}]");
+                System.Diagnostics.Debug.WriteLine($"Base stepper angles: [{_currentStepperAngles[0]},{_currentStepperAngles[1]},{_currentStepperAngles[2]},{_currentStepperAngles[3]}]");
+#endif
             }
             catch { }
 
@@ -246,7 +250,8 @@ namespace BrickController2.DeviceManagement
 
                 while (!token.IsCancellationRequested)
                 {
-                    int v0, v1, v2, v3, v4, v5, sendAttemptsLeft;
+                    sbyte v0, v1, v2, v3, v4, v5;
+                    int sendAttemptsLeft;
 
                     lock (_outputLock)
                     {
@@ -294,7 +299,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private async Task<bool> SendOutputValuesAsync(int[] poweredUpValues, int v4, int v5, CancellationToken token)
+        private async Task<bool> SendOutputValuesAsync(sbyte[] poweredUpValues, sbyte v4, sbyte v5, CancellationToken token)
         {
             try
             {
@@ -302,11 +307,12 @@ namespace BrickController2.DeviceManagement
                 //           function depends on the PU port state(simple PWM, speed or position servo)
                 foreach (var port in poweredUpValues.Select((Value, Index) => (Value, Index)))
                 {
-                    var valueRatio = port.Value / 127;
                     var channelValue = _channelOutputTypes[port.Index] switch
                     {
-                        ChannelOutputType.ServoMotor => _servoBaseAngles[port.Index] + valueRatio * _maxServoAngles[port.Index],
-                        ChannelOutputType.StepperMotor => _currentStepperAngles[port.Index] += valueRatio * _stepperAngles[port.Index],
+                        // angle of servo motor is adjusted according to channel value from range of [-127 .. +127]
+                        ChannelOutputType.ServoMotor => _servoBaseAngles[port.Index] + port.Value * _maxServoAngles[port.Index] / 127,
+                        // stepper angle is added only if channel value is -127 or +127
+                        ChannelOutputType.StepperMotor => _currentStepperAngles[port.Index] += port.Value / 127 * _stepperAngles[port.Index],
 
                         _ => port.Value
                     };
