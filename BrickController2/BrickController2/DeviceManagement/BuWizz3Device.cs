@@ -311,6 +311,8 @@ namespace BrickController2.DeviceManagement
                     {
                         // angle of servo motor is adjusted according to channel value from range of [-127 .. +127]
                         ChannelOutputType.ServoMotor => _servoBaseAngles[port.Index] + port.Value * _maxServoAngles[port.Index] / 127,
+                        // keep the previous angle for stepper if there is no change of channel value 
+                        ChannelOutputType.StepperMotor when port.Value == _lastOutputValues[port.Index] => _currentStepperAngles[port.Index],
                         // stepper angle is added only if channel value is -127 or +127
                         ChannelOutputType.StepperMotor => _currentStepperAngles[port.Index] += port.Value / 127 * _stepperAngles[port.Index],
 
