@@ -14,8 +14,9 @@ namespace BrickController2.DeviceManagement
         private static readonly Guid SERVICE_UUID = new Guid("0000ffe0-0000-1000-8000-00805f9b34fb");
         private static readonly Guid CHARACTERISTIC_UUID = new Guid("0000ffe1-0000-1000-8000-00805f9b34fb");
 
+        private static readonly TimeSpan LastOutputTimeout = TimeSpan.FromMilliseconds(1500);
+
         private readonly int[] _outputValues = new int[4];
-        private readonly int[] _lastOutputValues = new int[4];
         private readonly object _outputLock = new object();
 
         private volatile int _outputLevelValue;
@@ -55,7 +56,10 @@ namespace BrickController2.DeviceManagement
 
         public override void SetOutputLevel(int value)
         {
-            _outputLevelValue = Math.Max(0, Math.Min(NumberOfOutputLevels - 1, value));
+            lock (_outputLock)
+            {
+                _outputLevelValue = Math.Max(0, Math.Min(NumberOfOutputLevels - 1, value));
+            }
         }
 
         public override bool CanBePowerSource => true;
@@ -76,19 +80,19 @@ namespace BrickController2.DeviceManagement
                 _outputValues[1] = 0;
                 _outputValues[2] = 0;
                 _outputValues[3] = 0;
-                _lastOutputValues[0] = 1;
-                _lastOutputValues[1] = 1;
-                _lastOutputValues[2] = 1;
-                _lastOutputValues[3] = 1;
                 _outputLevelValue = DefaultOutputLevel;
                 _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
             }
+
+            int[] lastOutputValues = new int[4] { 1, 1, 1, 1 };
+            var lastOutputLevelValue = -1;
+            DateTime lastOutputWrite = DateTime.MinValue;
 
             while (!token.IsCancellationRequested)
             {
                 try
                 {
-                    int v0, v1, v2, v3, sendAttemptsLeft;
+                    int v0, v1, v2, v3, level, sendAttemptsLeft;
 
                     lock (_outputLock)
                     {
@@ -96,18 +100,23 @@ namespace BrickController2.DeviceManagement
                         v1 = _outputValues[1];
                         v2 = _outputValues[2];
                         v3 = _outputValues[3];
+                        level = _outputLevelValue;
                         sendAttemptsLeft = _sendAttemptsLeft;
                         _sendAttemptsLeft = sendAttemptsLeft > 0 ? sendAttemptsLeft - 1 : 0;
                     }
 
-                    if (v0 != _lastOutputValues[0] || v1 != _lastOutputValues[1] || v2 != _lastOutputValues[2] || v3 != _lastOutputValues[3] || sendAttemptsLeft > 0)
+                    if (v0 != lastOutputValues[0] || v1 != lastOutputValues[1] || v2 != lastOutputValues[2] || v3 != lastOutputValues[3] || sendAttemptsLeft > 0 ||
+                        level != lastOutputLevelValue || (DateTime.Now - lastOutputWrite > LastOutputTimeout))
                     {
-                        if (await SendOutputValuesAsync(v0, v1, v2, v3, token).ConfigureAwait(false))
+                        if (await SendOutputValuesAsync(v0, v1, v2, v3, level, token).ConfigureAwait(false))
                         {
-                            _lastOutputValues[0] = v0;
-                            _lastOutputValues[1] = v1;
-                            _lastOutputValues[2] = v2;
-                            _lastOutputValues[3] = v3;
+                            lastOutputValues[0] = v0;
+                            lastOutputValues[1] = v1;
+                            lastOutputValues[2] = v2;
+                            lastOutputValues[3] = v3;
+
+                            lastOutputLevelValue = level;
+                            lastOutputWrite = DateTime.Now;
                         }
                     }
                     else
@@ -121,7 +130,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private async Task<bool> SendOutputValuesAsync(int v0, int v1, int v2, int v3, CancellationToken token)
+        private async Task<bool> SendOutputValuesAsync(int v0, int v1, int v2, int v3, int level, CancellationToken token)
         {
             try
             {
@@ -131,7 +140,7 @@ namespace BrickController2.DeviceManagement
                     (byte)((Math.Abs(v1) >> 2) | (v1 < 0 ? 0x40 : 0)),
                     (byte)((Math.Abs(v2) >> 2) | (v2 < 0 ? 0x40 : 0)),
                     (byte)((Math.Abs(v3) >> 2) | (v3 < 0 ? 0x40 : 0)),
-                    (byte)(_outputLevelValue * 0x20)
+                    (byte)(level * 0x20)
                 };
 
                 var result = await _bleDevice?.WriteNoResponseAsync(_characteristic, sendOutputBuffer, token);
