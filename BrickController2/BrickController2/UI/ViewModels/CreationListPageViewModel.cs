@@ -98,27 +98,27 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                var locationPermissionStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-                if (locationPermissionStatus != PermissionStatus.Granted && !_isLocationPermissionRequested)
-                {
-                    _isRequestingPermission = true;
-                    locationPermissionStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
-                    _isLocationPermissionRequested = true;
-                    _isRequestingPermission = false;
+                //var locationPermissionStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                //if (locationPermissionStatus != PermissionStatus.Granted && !_isLocationPermissionRequested)
+                //{
+                //    _isRequestingPermission = true;
+                //    locationPermissionStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                //    _isLocationPermissionRequested = true;
+                //    _isRequestingPermission = false;
 
-                    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
-                }
+                //    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+                //}
 
-                if (locationPermissionStatus != PermissionStatus.Granted)
-                {
-                    await _dialogService.ShowMessageBoxAsync(
-                        Translate("Warning"),
-                        Translate("BluetoothDevicesWillNOTBeAvailable"),
-                        Translate("Ok"),
-                        _disappearingTokenSource.Token);
+                //if (locationPermissionStatus != PermissionStatus.Granted)
+                //{
+                //    await _dialogService.ShowMessageBoxAsync(
+                //        Translate("Warning"),
+                //        Translate("BluetoothDevicesWillNOTBeAvailable"),
+                //        Translate("Ok"),
+                //        _disappearingTokenSource.Token);
 
-                    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
-                }
+                //    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+                //}
 
                 if (SharedFileStorageService.SharedStorageDirectory != null)
                 {
