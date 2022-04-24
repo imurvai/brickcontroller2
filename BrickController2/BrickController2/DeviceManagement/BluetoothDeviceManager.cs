@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using BrickController2.Helpers;
@@ -47,9 +46,8 @@ namespace BrickController2.DeviceManagement
                 {
                     return true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine("pukk");
                     return false;
                 }
             }
