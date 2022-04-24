@@ -39,9 +39,9 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Location access is required to use SBrick, BuWizz or Powered-Up devices.</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.1</string>
+	<string>3.2</string>
 	<key>CFBundleVersion</key>
-	<string>43</string>
+	<string>47</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Bluetooth access is required to use SBrick, BuWizz or Powered-Up devices.</string>
 	<key>NSContactsUsageDescription</key>

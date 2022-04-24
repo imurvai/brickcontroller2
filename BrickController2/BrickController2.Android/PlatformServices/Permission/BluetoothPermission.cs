@@ -1,0 +1,30 @@
+﻿using BrickController2.PlatformServices.Permission;
+using System.Collections.Generic;
+using static Xamarin.Essentials.Permissions;
+
+namespace BrickController2.Droid.PlatformServices.Permission
+{
+    internal class BluetoothPermission : BasePlatformPermission, IBluetoothPermission
+    {
+        public override (string androidPermission, bool isRuntime)[] RequiredPermissions
+        {
+            get
+            {
+                var permissions = new List<(string androidPermission, bool isRuntime)>
+                {
+                    (Android.Manifest.Permission.BluetoothConnect, true),
+                    (Android.Manifest.Permission.BluetoothScan, true)
+                };
+
+                if (Android.OS.Build.VERSION.SdkInt <= Android.OS.BuildVersionCodes.R)
+                {
+                    permissions.Add((Android.Manifest.Permission.Bluetooth, true));
+                    permissions.Add((Android.Manifest.Permission.BluetoothAdmin, true));
+
+                }
+
+                return permissions.ToArray();
+            }
+        }
+    }
+}

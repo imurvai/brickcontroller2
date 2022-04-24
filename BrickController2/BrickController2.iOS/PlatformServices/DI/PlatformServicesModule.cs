@@ -27,6 +27,7 @@ namespace BrickController2.iOS.PlatformServices.DI
             builder.RegisterType<LocalizationService>().As<ILocalizationService>().SingleInstance();
             builder.RegisterType<SharedFileStorageService>().As<ISharedFileStorageService>().SingleInstance();
             builder.RegisterType<ReadWriteExternalStoragePermission>().As<IReadWriteExternalStoragePermission>().InstancePerDependency();
+            builder.RegisterType<BluetoothPermission>().As<IBluetoothPermission>().InstancePerDependency();
         }
     }
 }
