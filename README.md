@@ -12,6 +12,7 @@ Cross platform mobile application for controlling Lego creations using a bluetoo
 - SBrick - both normal and plus (output only)
 - BuWizz 1
 - BuWizz 2
+- BuWizz 3
 - Lego PowerFunctions infrared receiver on Android devices having IR emitter
 - Lego Powered-Up hub
 - Lego Boost Hub
