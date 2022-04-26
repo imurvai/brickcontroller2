@@ -22,6 +22,7 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
+        private readonly IBluetoothPermission _bluetoothPermission;
         private readonly IReadWriteExternalStoragePermission _readWriteExternalStoragePermission;
 
         private CancellationTokenSource _disappearingTokenSource;
@@ -29,6 +30,7 @@ namespace BrickController2.UI.ViewModels
 
         // Permission request fires OnDisappearing somehow (WTF???)
         private bool _isRequestingPermission = false;
+        private bool _isBluetoothPermissionRequested = false;
         private bool _isLocationPermissionRequested = false;
         private bool _isStoragePermissionRequested = false;
 
@@ -39,12 +41,14 @@ namespace BrickController2.UI.ViewModels
             IDeviceManager deviceManager,
             IDialogService dialogService,
             ISharedFileStorageService sharedFileStorageService,
+            IBluetoothPermission bluetoothPermission,
             IReadWriteExternalStoragePermission readWriteExternalStoragePermission)
             : base(navigationService, translationService)
         {
             _creationManager = creationManager;
             _deviceManager = deviceManager;
             _dialogService = dialogService;
+            _bluetoothPermission = bluetoothPermission;
             _readWriteExternalStoragePermission = readWriteExternalStoragePermission;
             SharedFileStorageService = sharedFileStorageService;
 
@@ -98,27 +102,27 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                //var locationPermissionStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-                //if (locationPermissionStatus != PermissionStatus.Granted && !_isLocationPermissionRequested)
-                //{
-                //    _isRequestingPermission = true;
-                //    locationPermissionStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
-                //    _isLocationPermissionRequested = true;
-                //    _isRequestingPermission = false;
+                var bluetoothPermissionStatus = await _bluetoothPermission.CheckStatusAsync();
+                if (bluetoothPermissionStatus != PermissionStatus.Granted && !_isBluetoothPermissionRequested)
+                {
+                    _isRequestingPermission = true;
+                    bluetoothPermissionStatus = await _bluetoothPermission.RequestAsync();
+                    _isBluetoothPermissionRequested = true;
+                    _isRequestingPermission = false;
 
-                //    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
-                //}
+                    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+                }
 
-                //if (locationPermissionStatus != PermissionStatus.Granted)
-                //{
-                //    await _dialogService.ShowMessageBoxAsync(
-                //        Translate("Warning"),
-                //        Translate("BluetoothDevicesWillNOTBeAvailable"),
-                //        Translate("Ok"),
-                //        _disappearingTokenSource.Token);
+                if (bluetoothPermissionStatus != PermissionStatus.Granted)
+                {
+                    await _dialogService.ShowMessageBoxAsync(
+                        Translate("Warning"),
+                        Translate("BluetoothDevicesWillNOTBeAvailable"),
+                        Translate("Ok"),
+                        _disappearingTokenSource.Token);
 
-                //    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
-                //}
+                    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
+                }
 
                 if (SharedFileStorageService.SharedStorageDirectory != null)
                 {
@@ -134,17 +138,6 @@ namespace BrickController2.UI.ViewModels
                     }
 
                     SharedFileStorageService.IsPermissionGranted = storagePermissionStatus == PermissionStatus.Granted;
-
-                    //if (!SharedFileStorageService.IsSharedStorageAvailable)
-                    //{
-                    //    await _dialogService.ShowMessageBoxAsync(
-                    //        Translate("Warning"),
-                    //        Translate("ProfileLoadSaveWillNotBeAvailable"),
-                    //        Translate("Ok"),
-                    //        _disappearingTokenSource.Token);
-
-                    //    _disappearingTokenSource.Token.ThrowIfCancellationRequested();
-                    //}
                 }
             }
             catch (OperationCanceledException)
