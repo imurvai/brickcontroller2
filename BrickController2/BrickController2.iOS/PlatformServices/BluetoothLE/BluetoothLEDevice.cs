@@ -73,16 +73,23 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             }
         }
 
-        public void Disconnect()
+        internal void Disconnect()
+        {
+            _onDeviceDisconnected = null;
+            _onCharacteristicChanged = null;
+
+            _centralManager.CancelPeripheralConnection(_peripheral);
+            State = BluetoothLEDeviceState.Disconnected;
+        }
+
+        public Task DisconnectAsync()
         {
             lock (_lock)
             {
-                _onDeviceDisconnected = null;
-                _onCharacteristicChanged = null;
-
-                _centralManager.CancelPeripheralConnection(_peripheral);
-                State = BluetoothLEDeviceState.Disconnected;
+                Disconnect();
             }
+
+            return Task.CompletedTask;
         }
 
         public Task<bool> EnableNotificationAsync(IGattCharacteristic characteristic, CancellationToken token)

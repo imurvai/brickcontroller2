@@ -15,7 +15,7 @@ namespace BrickController2.PlatformServices.BluetoothLE
             Action<Guid, byte[]> onCharacteristicChanged,
             Action<IBluetoothLEDevice> onDeviceDisconnected,
             CancellationToken token);
-        void Disconnect();
+        Task DisconnectAsync();
 
         Task<bool> EnableNotificationAsync(IGattCharacteristic characteristic, CancellationToken token);
 

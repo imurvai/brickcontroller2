@@ -104,26 +104,34 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             }
         }
 
-        public void Disconnect()
+        internal void Disconnect()
         {
-            lock(_lock)
+
+            _onDeviceDisconnected = null;
+            _onCharacteristicChanged = null;
+
+            if (_bluetoothGatt != null)
             {
-                _onDeviceDisconnected = null;
-                _onCharacteristicChanged = null;
+                _bluetoothGatt.Disconnect();
+                _bluetoothGatt.Close();
+                _bluetoothGatt.Dispose();
+                _bluetoothGatt = null;
 
-                if (_bluetoothGatt != null)
-                {
-                    _bluetoothGatt.Disconnect();
-                    _bluetoothGatt.Close();
-                    _bluetoothGatt.Dispose();
-                    _bluetoothGatt = null;
-
-                    _bluetoothDevice.Dispose();
-                    _bluetoothDevice = null;
-                }
-
-                State = BluetoothLEDeviceState.Disconnected;
+                _bluetoothDevice.Dispose();
+                _bluetoothDevice = null;
             }
+
+            State = BluetoothLEDeviceState.Disconnected;
+        }
+
+        public Task DisconnectAsync()
+        {
+            lock (_lock)
+            {
+                Disconnect();
+            }
+
+            return Task.CompletedTask;
         }
 
         public Task<bool> EnableNotificationAsync(IGattCharacteristic characteristic, CancellationToken token)
