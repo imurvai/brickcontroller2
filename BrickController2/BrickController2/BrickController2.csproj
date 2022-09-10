@@ -53,6 +53,8 @@
     <None Remove="UI\Images\sbrick_image_small.png" />
     <None Remove="UI\Images\technichub_image.png" />
     <None Remove="UI\Images\technichub_image_small.png" />
+    <None Remove="UI\Images\wedo2hub_image.png" />
+    <None Remove="UI\Images\wedo2hub_image_small.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -94,6 +96,8 @@
     <EmbeddedResource Include="UI\Images\sbrick_image.png" />
     <EmbeddedResource Include="UI\Images\sbrick_image_small.png" />
     <EmbeddedResource Include="UI\Images\ic_sequence.png" />
+    <EmbeddedResource Include="UI\Images\wedo2hub_image.png" />
+    <EmbeddedResource Include="UI\Images\wedo2hub_image_small.png" />
   </ItemGroup>
 
   <ItemGroup>

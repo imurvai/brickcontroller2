@@ -196,6 +196,25 @@
                 <Image Grid.Column="1" Grid.Row="0" Source="{extensions:ImageResource Source=circuitcubes_image.png}" WidthRequest="168" HeightRequest="176"/>
             </Grid>
 
+            <!-- Wedo 2 -->
+            <Grid x:Name="Wedo2Section">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <controls:ChannelSelectorRadioButton x:Name="WedoChannel1" DeviceType="WeDo2" Channel="1" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <controls:ChannelSelectorRadioButton x:Name="WedoChannel0" DeviceType="WeDo2" Channel="0" HorizontalOptions="End" VerticalOptions="End"/>
+                </Grid>
+
+                <Image Grid.Column="1" Source="{extensions:ImageResource Source=wedo2hub_image.png}" WidthRequest="150" HeightRequest="120"/>
+
+                <Grid Grid.Column="2">
+                </Grid>
+            </Grid>
+
         </Grid>
     </ContentView.Content>
 </ContentView>

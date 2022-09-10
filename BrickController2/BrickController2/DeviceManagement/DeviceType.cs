@@ -13,5 +13,6 @@
         DuploTrainHub,
         BuWizz3,
         CircuitCubes,
+        WeDo2,
     }
 }

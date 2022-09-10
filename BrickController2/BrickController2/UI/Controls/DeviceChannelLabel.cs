@@ -50,6 +50,7 @@ namespace BrickController2.UI.Controls
                 case DeviceType.DuploTrainHub:
                 case DeviceType.PoweredUp:
                 case DeviceType.TechnicHub:
+                case DeviceType.WeDo2:
                     Text = _controlPlusChannelLetters[Math.Min(Math.Max(Channel, 0), 3)];
                     break;
 

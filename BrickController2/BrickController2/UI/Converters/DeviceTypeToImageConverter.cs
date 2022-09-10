@@ -46,6 +46,9 @@ namespace BrickController2.UI.Converters
                 case DeviceType.CircuitCubes:
                     return ResourceHelper.GetImageResource("circuitcubes_image.png");
 
+                case DeviceType.WeDo2:
+                    return ResourceHelper.GetImageResource("wedo2hub_image.png");
+
                 default:
                     return null;
             }
