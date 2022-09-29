@@ -116,7 +116,7 @@ namespace BrickController2.DeviceManagement
             {
                 await StopOutputTaskAsync();
                 DeviceState = DeviceState.Disconnecting;
-                _bleDevice.Disconnect();
+                await _bleDevice.DisconnectAsync();
                 _bleDevice = null;
             }
 
