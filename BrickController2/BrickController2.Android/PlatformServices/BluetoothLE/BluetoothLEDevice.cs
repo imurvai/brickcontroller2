@@ -26,6 +26,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
         private TaskCompletionSource<IEnumerable<IGattService>> _connectCompletionSource = null;
         private TaskCompletionSource<byte[]> _readCompletionSource = null;
         private TaskCompletionSource<bool> _writeCompletionSource = null;
+        private TaskCompletionSource<bool> _descriptorWriteCompletionSource = null;
 
         private Action<Guid, byte[]> _onCharacteristicChanged = null;
         private Action<IBluetoothLEDevice> _onDeviceDisconnected = null;
@@ -134,34 +135,55 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             return Task.CompletedTask;
         }
 
-        public Task<bool> EnableNotificationAsync(IGattCharacteristic characteristic, CancellationToken token)
+        public async Task<bool> EnableNotificationAsync(IGattCharacteristic characteristic, CancellationToken token)
         {
+            using (token.Register(() =>
+            {
+                lock (_lock)
+                {
+                    _descriptorWriteCompletionSource?.TrySetResult(false);
+                }
+            }))
+
             lock (_lock)
             {
                 if (_bluetoothGatt == null || State != BluetoothLEDeviceState.Connected)
                 {
-                    return Task.FromResult(false);
+                    return false;
                 }
 
                 var nativeCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
                 if (!_bluetoothGatt.SetCharacteristicNotification(nativeCharacteristic, true))
                 {
-                    return Task.FromResult(false);
+                    return false;
                 }
 
                 var descriptor = nativeCharacteristic.GetDescriptor(ClientCharacteristicConfigurationUUID);
                 if (descriptor == null)
                 {
-                    return Task.FromResult(false);
+                    return false;
                 }
 
                 if (!descriptor.SetValue(BluetoothGattDescriptor.EnableNotificationValue.ToArray()))
                 {
-                    return Task.FromResult(false);
+                    return false;
                 }
 
-                var result = _bluetoothGatt.WriteDescriptor(descriptor);
-                return Task.FromResult(result);
+                _descriptorWriteCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+                if (!_bluetoothGatt.WriteDescriptor(descriptor))
+                {
+                    _descriptorWriteCompletionSource = null;
+                    return false;
+                }
+            }
+
+            var result = await _descriptorWriteCompletionSource.Task.ConfigureAwait(false);
+
+            lock (_lock)
+            {
+                _descriptorWriteCompletionSource = null;
+                return result;
             }
         }
 
@@ -384,6 +406,14 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             lock (_lock)
             {
                 _writeCompletionSource?.TrySetResult(status == GattStatus.Success);
+            }
+        }
+
+        public override void OnDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, [GeneratedEnum] GattStatus status)
+        {
+            lock (_lock)
+            {
+                _descriptorWriteCompletionSource?.TrySetResult(status == GattStatus.Success);
             }
         }
 
