@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BrickController2.Helpers;
@@ -118,6 +119,9 @@ namespace BrickController2.DeviceManagement
             {
                 case var service when service == CircuitCubeDevice.SERVICE_UUID:
                     return (DeviceType.CircuitCubes, null);
+
+                case var service when service == Wedo2Device.SERVICE_UUID:
+                    return (DeviceType.WeDo2, null);
 
                 default:
                     return (DeviceType.Unknown, null);

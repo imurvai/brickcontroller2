@@ -29,6 +29,17 @@ namespace BrickController2.Helpers
                 data[offset + 7], data[offset + 6], data[offset + 5], data[offset + 4], data[offset + 3], data[offset + 2], data[offset + 1], data[offset]);
         }
 
+        public static float GetFloat(this byte[] data, int offset = 0)
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.ToSingle(data, offset);
+            }
+
+            var reversedData = new byte[] { data[offset + 3], data[offset + 2], data[offset + 1], data[offset] };
+            return BitConverter.ToSingle(reversedData, 0);
+        }
+
         public static short GetInt16(this byte[] data, int offset)
         {
             return (short)(data[offset] |
