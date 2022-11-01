@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.scn.BrickController2" android:installLocation="auto" android:versionCode="47" android:versionName="3.2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.scn.BrickController2" android:installLocation="auto" android:versionCode="48" android:versionName="3.3">
 	<uses-sdk android:targetSdkVersion="31" android:minSdkVersion="19" />
 	<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />

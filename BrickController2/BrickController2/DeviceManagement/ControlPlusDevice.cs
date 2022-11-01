@@ -149,9 +149,7 @@ namespace BrickController2.DeviceManagement
             CheckChannel(channel);
 
             await SetupChannelForPortInformationAsync(channel, token);
-
             await Task.Delay(TimeSpan.FromMilliseconds(300), token);
-
             return await AutoCalibrateServoAsync(channel, token);
         }
 
@@ -295,17 +293,17 @@ namespace BrickController2.DeviceManagement
             try
             {
                 lock (_outputLock)
-                    lock (_positionLock)
+                lock (_positionLock)
+                {
+                    for (int channel = 0; channel < NumberOfChannels; channel++)
                     {
-                        for (int channel = 0; channel < NumberOfChannels; channel++)
-                        {
-                            _outputValues[channel] = 0;
-                            _lastOutputValues[channel] = 1;
-                            _sendAttemptsLeft[channel] = MAX_SEND_ATTEMPTS;
-                            _positionsUpdated[channel] = false;
-                            _positionUpdateTimes[channel] = DateTime.MinValue;
-                        }
+                        _outputValues[channel] = 0;
+                        _lastOutputValues[channel] = 1;
+                        _sendAttemptsLeft[channel] = MAX_SEND_ATTEMPTS;
+                        _positionsUpdated[channel] = false;
+                        _positionUpdateTimes[channel] = DateTime.MinValue;
                     }
+                }
 
                 while (!token.IsCancellationRequested)
                 {
@@ -327,7 +325,7 @@ namespace BrickController2.DeviceManagement
 
                 if (requestDeviceInformation)
                 {
-                    await RequestHubProperties(token);
+                    await RequestHubPropertiesAsync(token);
                 }
 
                 for (int channel = 0; channel < NumberOfChannels; channel++)
@@ -587,25 +585,25 @@ namespace BrickController2.DeviceManagement
 
                 var result = true;
 
-                result = result && await Reset(channel, 0, token);
-                result = result && await Stop(channel, token);
-                result = result && await Turn(channel, 0, 40, token);
+                result = result && await ResetAsync(channel, 0, token);
+                result = result && await StopAsync(channel, token);
+                result = result && await TurnAsync(channel, 0, 40, token);
                 await Task.Delay(50);
-                result = result && await Stop(channel, token);
-                result = result && await Reset(channel, resetToAngle, token);
-                result = result && await Turn(channel, 0, 40, token);
+                result = result && await StopAsync(channel, token);
+                result = result && await ResetAsync(channel, resetToAngle, token);
+                result = result && await TurnAsync(channel, 0, 40, token);
                 await Task.Delay(500);
-                result = result && await Stop(channel, token);
+                result = result && await StopAsync(channel, token);
 
                 var diff = Math.Abs(NormalizeAngle(_absolutePositions[channel] - baseAngle));
                 if (diff > 5)
                 {
                     // Can't reset to base angle, rebease to current position not to stress the plastic
-                    result = result && await Reset(channel, 0, token);
-                    result = result && await Stop(channel, token);
-                    result = result && await Turn(channel, 0, 40, token);
+                    result = result && await ResetAsync(channel, 0, token);
+                    result = result && await StopAsync(channel, token);
+                    result = result && await TurnAsync(channel, 0, 40, token);
                     await Task.Delay(50);
-                    result = result && await Stop(channel, token);
+                    result = result && await StopAsync(channel, token);
                 }
 
                 return result;
@@ -622,21 +620,21 @@ namespace BrickController2.DeviceManagement
             {
                 var result = true;
 
-                result = result && await Reset(channel, 0, token);
-                result = result && await Stop(channel, token);
-                result = result && await Turn(channel, 0, 50, token);
+                result = result && await ResetAsync(channel, 0, token);
+                result = result && await StopAsync(channel, token);
+                result = result && await TurnAsync(channel, 0, 50, token);
                 await Task.Delay(600);
-                result = result && await Stop(channel, token);
+                result = result && await StopAsync(channel, token);
                 await Task.Delay(500);
                 var absPositionAt0 = _absolutePositions[channel];
-                result = result && await Turn(channel, -160, 60, token);
+                result = result && await TurnAsync(channel, -160, 60, token);
                 await Task.Delay(600);
-                result = result && await Stop(channel, token);
+                result = result && await StopAsync(channel, token);
                 await Task.Delay(500);
                 var absPositionAtMin160 = _absolutePositions[channel];
-                result = result && await Turn(channel, 160, 60, token);
+                result = result && await TurnAsync(channel, 160, 60, token);
                 await Task.Delay(600);
-                result = result && await Stop(channel, token);
+                result = result && await StopAsync(channel, token);
                 await Task.Delay(500);
                 var absPositionAt160 = _absolutePositions[channel];
 
@@ -648,15 +646,15 @@ namespace BrickController2.DeviceManagement
                     RoundAngleToNearest90(midPoint2);
                 var resetToAngle = NormalizeAngle(_absolutePositions[channel] - baseAngle);
 
-                result = result && await Reset(channel, 0, token);
-                result = result && await Stop(channel, token);
-                result = result && await Turn(channel, 0, 40, token);
+                result = result && await ResetAsync(channel, 0, token);
+                result = result && await StopAsync(channel, token);
+                result = result && await TurnAsync(channel, 0, 40, token);
                 await Task.Delay(50);
-                result = result && await Stop(channel, token);
-                result = result && await Reset(channel, resetToAngle, token);
-                result = result && await Turn(channel, 0, 40, token);
+                result = result && await StopAsync(channel, token);
+                result = result && await ResetAsync(channel, resetToAngle, token);
+                result = result && await TurnAsync(channel, 0, 40, token);
                 await Task.Delay(600);
-                result = result && await Stop(channel, token);
+                result = result && await StopAsync(channel, token);
 
                 return (result, baseAngle / 180F);
             }
@@ -714,12 +712,12 @@ namespace BrickController2.DeviceManagement
             return 0;
         }
 
-        private Task<bool> Stop(int channel, CancellationToken token)
+        private Task<bool> StopAsync(int channel, CancellationToken token)
         {
             return _bleDevice.WriteAsync(_characteristic, new byte[] { 0x08, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x00, 0x00 }, token);
         }
 
-        private Task<bool> Turn(int channel, int angle, int speed, CancellationToken token)
+        private Task<bool> TurnAsync(int channel, int angle, int speed, CancellationToken token)
         {
             angle = NormalizeAngle(angle);
 
@@ -731,7 +729,7 @@ namespace BrickController2.DeviceManagement
             return _bleDevice.WriteAsync(_characteristic, new byte[] { 0x0e, 0x00, 0x81, (byte)channel, 0x11, 0x0d, a0, a1, a2, a3, (byte)speed, 0x64, 0x7e, 0x00 }, token);
         }
 
-        private Task<bool> Reset(int channel, int angle, CancellationToken token)
+        private Task<bool> ResetAsync(int channel, int angle, CancellationToken token)
         {
             angle = NormalizeAngle(angle);
 
@@ -743,7 +741,7 @@ namespace BrickController2.DeviceManagement
             return _bleDevice.WriteAsync(_characteristic, new byte[] { 0x0b, 0x00, 0x81, (byte)channel, 0x11, 0x51, 0x02, a0, a1, a2, a3 }, token);
         }
 
-        private async Task RequestHubProperties(CancellationToken token)
+        private async Task RequestHubPropertiesAsync(CancellationToken token)
         {
             try
             {
