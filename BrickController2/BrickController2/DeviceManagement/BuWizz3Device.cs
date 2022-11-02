@@ -396,7 +396,7 @@ namespace BrickController2.DeviceManagement
                 var relPos1 = _relativePositions[channel];
 
                 result = await SetSpeedAsync(channel, -0x33, token);
-                await Task.Delay(2000);
+                await Task.Delay(1200);
                 result = await SetSpeedAsync(channel, 0, token);
                 await Task.Delay(100);
 
@@ -409,7 +409,7 @@ namespace BrickController2.DeviceManagement
                 await Task.Delay(100);
 
                 // TODO: calculate servo reference
-                var servoReference = 90;
+                var servoReference = 0;
                 result = await SetServoReferenceAsync(channel, servoReference, token);
                 await Task.Delay(500);
 
@@ -456,18 +456,18 @@ namespace BrickController2.DeviceManagement
             var buffer = new byte[38];
             buffer[0] = 0x53;
             buffer[1] = (byte)channel;
-            buffer.SetFloat(0.5f, 2); // outLP
-            buffer.SetFloat(0.5f, 6); // D_LP
-            buffer.SetFloat(0.9f, 10); // speed_LP
-            buffer.SetFloat(0.8f, 14); // Kp
-            buffer.SetFloat(0.06f, 18); // Ki
-            buffer.SetFloat(-3f, 22); // Kd
+            buffer.SetFloat(0f, 2); // outLP
+            buffer.SetFloat(0.9f, 6); // D_LP
+            buffer.SetFloat(0.6f, 10); // speed_LP
+            buffer.SetFloat(1f, 14); // Kp
+            buffer.SetFloat(0f, 18); // Ki
+            buffer.SetFloat(0f, 22); // Kd
             buffer.SetFloat(127f, 26); // Liml
             buffer.SetFloat(0f, 30); // Reference rate limit
             buffer[34] = 127; // limOut
             buffer[35] = 2; // DeadbandOut
             buffer[36] = 2; // DeadbandOutBoost
-            buffer[37] = isServo ? (byte)0x15 : (byte)0x10; // valid mode (equal to port mode selectd)
+            buffer[37] = isServo ? (byte)0x15 : (byte)0x10; // valid mode (equal to port mode selected)
             return _bleDevice.WriteAsync(_characteristic, buffer, token);
         }
 
