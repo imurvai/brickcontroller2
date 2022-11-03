@@ -385,6 +385,11 @@ namespace BrickController2.DeviceManagement
                 var result = true;
 
                 result = result && await SetServoReferenceAsync(channel, 0, token);
+
+                await WaitForNextCharacteristicNotificationAsync(token);
+                var absPosStart = _absolutePositions[channel];
+                var relPosStart = _relativePositions[channel];
+
                 result = result && await SetPuPortModeAsync(channel, false, token);
                 result = result && await SetSpeedAsync(channel, 0x33, token);
                 await Task.Delay(1000);
@@ -408,15 +413,23 @@ namespace BrickController2.DeviceManagement
                 result = await SetDefaultPidParametersAsync(channel, true, token);
                 await Task.Delay(100);
 
-                // TODO: calculate servo reference
-                var servoReference = 0;
+                var absPos2Corrected = (absPos2 <= absPos1) ? absPos2 : absPos2 - 360;
+                var absPosMid = RoundAngleToNearest90((absPos1 + absPos2Corrected) / 2);
+
+                // Good for small differences, but not for big ones
+                var servoReference = absPosMid - absPosStart;
+
                 result = await SetServoReferenceAsync(channel, servoReference, token);
                 await Task.Delay(500);
 
                 result = await SetPuPortModeAsync(channel, false, token);
                 result = await SetSpeedAsync(channel, 0, token);
 
-                return (result, servoReference);
+                await WaitForNextCharacteristicNotificationAsync(token);
+                var absPosStop = _absolutePositions[channel];
+                var relPosStop = _relativePositions[channel];
+
+                return (result, absPosMid);
             }
             catch
             {
@@ -475,6 +488,30 @@ namespace BrickController2.DeviceManagement
         {
             _characteristicNotificationResetEvent.Reset();
             return _characteristicNotificationResetEvent.WaitAsync(token);
+        }
+
+        private int NormalizeAngle(int angle)
+        {
+            if (angle >= 180)
+            {
+                return angle - (360 * ((angle + 180) / 360));
+            }
+            else if (angle < -180)
+            {
+                return angle + (360 * ((180 - angle) / 360));
+            }
+
+            return angle;
+        }
+
+        private int RoundAngleToNearest90(int angle)
+        {
+            angle = NormalizeAngle(angle);
+            if (angle < -135) return -180;
+            if (angle < -45) return -90;
+            if (angle < 45) return 0;
+            if (angle < 135) return 90;
+            return -180;
         }
     }
 }
