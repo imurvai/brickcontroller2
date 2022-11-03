@@ -416,7 +416,7 @@ namespace BrickController2.DeviceManagement
                 var absPos2Corrected = (absPos2 <= absPos1) ? absPos2 : absPos2 - 360;
                 var absPosMid = RoundAngleToNearest90((absPos1 + absPos2Corrected) / 2);
 
-                // Good for small differences, but not for big ones
+                // Good for small differences, but not for big ones, also relPosStart matters!!!
                 var servoReference = absPosMid - absPosStart;
 
                 result = await SetServoReferenceAsync(channel, servoReference, token);
