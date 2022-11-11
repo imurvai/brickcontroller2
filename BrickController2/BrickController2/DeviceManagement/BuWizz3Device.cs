@@ -12,7 +12,7 @@ namespace BrickController2.DeviceManagement
     internal class BuWizz3Device : BluetoothDevice
     {
         private const int MAX_SEND_ATTEMPTS = 10;
-        public const int NUMBER_OF_PU_PORTS = 4;
+        private const int NUMBER_OF_PU_PORTS = 4;
 
         private static readonly Guid SERVICE_UUID = new Guid("500592d1-74fb-4481-88b3-9919b1676e93");
         private static readonly Guid CHARACTERISTIC_UUID = new Guid("50052901-74fb-4481-88b3-9919b1676e93");
@@ -38,7 +38,6 @@ namespace BrickController2.DeviceManagement
 
         private readonly short[] _absolutePositions = new short[NUMBER_OF_PU_PORTS];
         private readonly int[] _relativePositions = new int[NUMBER_OF_PU_PORTS];
-        private readonly bool[] _positionsUpdated = new bool[NUMBER_OF_PU_PORTS];
         private readonly object _positionLock = new object();
         private readonly ManualResetEventSlim _characteristicNotificationResetEvent = new ManualResetEventSlim();
 
@@ -63,6 +62,8 @@ namespace BrickController2.DeviceManagement
         protected override bool AutoConnectOnFirstConnect => false;
 
         public override string BatteryVoltageSign => "V";
+
+        public override bool CanChangeOutputType(int channel) => channel < NUMBER_OF_PU_PORTS;
 
         public async override Task<DeviceConnectionResult> ConnectAsync(
             bool reconnect,
@@ -96,7 +97,6 @@ namespace BrickController2.DeviceManagement
                     _maxServoAngles[channel] = channelConfig.ChannelOutputType == ChannelOutputType.ServoMotor ? channelConfig.MaxServoAngle : 0;
                     _servoBaseAngles[channel] = channelConfig.ChannelOutputType == ChannelOutputType.ServoMotor ? channelConfig.ServoBaseAngle : 0;
                     _stepperAngles[channel] = channelConfig.ChannelOutputType == ChannelOutputType.StepperMotor ? channelConfig.StepperAngle : 0;
-                    _positionsUpdated[channel] = false;
                 }
             }
 
@@ -122,7 +122,7 @@ namespace BrickController2.DeviceManagement
 
         public override bool CanBePowerSource => false;
 
-        public override bool CanResetOutput => true;
+        public override bool CanResetOutput(int channel) => channel < NUMBER_OF_PU_PORTS;
 
         public override async Task ResetOutputAsync(int channel, float value, CancellationToken token)
         {
@@ -133,10 +133,10 @@ namespace BrickController2.DeviceManagement
                 return;
             }
 
-            // TODO: implement
+            await ResetServoAsync(channel, Convert.ToInt32(value * 180), token);
         }
 
-        public override bool CanAutoCalibrateOutput => true;
+        public override bool CanAutoCalibrateOutput(int channel) => channel < NUMBER_OF_PU_PORTS;
 
         public override async Task<(bool Success, float BaseServoAngle)> AutoCalibrateOutputAsync(int channel, CancellationToken token)
         {
@@ -189,7 +189,6 @@ namespace BrickController2.DeviceManagement
                 {
                     _absolutePositions[channel] = data.GetInt16(baseOffset + 2);
                     _relativePositions[channel] = data.GetInt32(baseOffset + 4);
-                    _positionsUpdated[channel] = true;
 
                     baseOffset += 8;
                 }
@@ -249,7 +248,6 @@ namespace BrickController2.DeviceManagement
                     {
                         _outputValues[channel] = 0;
                         _lastOutputValues[channel] = 1;
-                        _positionsUpdated[channel] = false;
                     }
 
                     _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
@@ -378,6 +376,54 @@ namespace BrickController2.DeviceManagement
             }
         }
 
+        private async Task<bool> ResetServoAsync(int channel, int baseAngle, CancellationToken token)
+        {
+            try
+            {
+                baseAngle = Math.Max(-180, Math.Min(179, baseAngle));
+
+                var result = true;
+
+                result = result && await SetServoReferenceAsync(channel, 0, token);
+
+                await WaitForNextCharacteristicNotificationAsync(token);
+                var absPosStart = _absolutePositions[channel];
+                var relPosStart = _relativePositions[channel];
+                var posStart = NormalizeAngle(absPosStart - relPosStart);
+
+                result = await SetPuPortModeAsync(channel, true, token);
+                result = await SetDefaultPidParametersAsync(channel, true, token);
+                await Task.Delay(100);
+
+                // TODO: based on the two abs positions determine if CW or CCW set is needed
+                //var isCW = 
+
+                var servoReference = NormalizeAngle(baseAngle - posStart);
+
+                result = await SetServoReferenceAsync(channel, servoReference, token);
+                await Task.Delay(500);
+
+                result = await SetPuPortModeAsync(channel, false, token);
+                result = await SetSpeedAsync(channel, 0, token);
+
+                Console.WriteLine($"abs pos start: {absPosStart}");
+                Console.WriteLine($"rel pos start: {relPosStart}");
+                Console.WriteLine($"    pos start: {posStart}");
+                Console.WriteLine($"servo ref    : {servoReference}");
+
+                return result;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private int CalculateServoReference(int apsPosStart, int relPosStart, int baseAngle)
+        {
+            throw new NotImplementedException();
+        }
+
         private async Task<(bool, float)> AutoCalibrateServoAsync(int channel, CancellationToken token)
         {
             try
@@ -415,9 +461,9 @@ namespace BrickController2.DeviceManagement
 
                 var absPos2Corrected = (absPos2 <= absPos1) ? absPos2 : absPos2 - 360;
                 var absPosMid = RoundAngleToNearest90((absPos1 + absPos2Corrected) / 2);
+                //var absPosMid = NormalizeAngle((absPos1 + absPos2Corrected) / 2);
 
-                // Good for small differences, but not for big ones, also relPosStart matters!!!
-                var servoReference = absPosMid - absPosStart;
+                var servoReference = NormalizeAngle(absPosMid - absPosStart + relPosStart);
 
                 result = await SetServoReferenceAsync(channel, servoReference, token);
                 await Task.Delay(500);
@@ -425,11 +471,11 @@ namespace BrickController2.DeviceManagement
                 result = await SetPuPortModeAsync(channel, false, token);
                 result = await SetSpeedAsync(channel, 0, token);
 
-                await WaitForNextCharacteristicNotificationAsync(token);
-                var absPosStop = _absolutePositions[channel];
-                var relPosStop = _relativePositions[channel];
+                //await WaitForNextCharacteristicNotificationAsync(token);
+                //var absPosStop = _absolutePositions[channel];
+                //var relPosStop = _relativePositions[channel];
 
-                return (result, absPosMid);
+                return (result, absPosMid / 180f);
             }
             catch
             {

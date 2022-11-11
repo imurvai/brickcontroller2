@@ -117,6 +117,8 @@ namespace BrickController2.UI.ViewModels
 
         public ControllerAction Action { get; } = new ControllerAction();
 
+        public bool CanChangeOutputType => SelectedDevice.CanChangeOutputType(Action.Channel);
+
         public ICommand SaveControllerActionCommand { get; }
         public ICommand SelectDeviceCommand { get; }
         public ICommand SelectChannelOutputTypeCommand { get; }

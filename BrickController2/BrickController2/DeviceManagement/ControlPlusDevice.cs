@@ -61,6 +61,8 @@ namespace BrickController2.DeviceManagement
 
         public override string BatteryVoltageSign => "%";
 
+        public override bool CanChangeOutputType(int channel) => true;
+
         protected override bool AutoConnectOnFirstConnect => true;
 
         public async override Task<DeviceConnectionResult> ConnectAsync(
@@ -131,7 +133,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        public override bool CanResetOutput => true;
+        public override bool CanResetOutput(int channel) => true;
 
         public override async Task ResetOutputAsync(int channel, float value, CancellationToken token)
         {
@@ -142,7 +144,9 @@ namespace BrickController2.DeviceManagement
             await ResetServoAsync(channel, Convert.ToInt32(value * 180), token);
         }
 
-        public override bool CanAutoCalibrateOutput => true;
+        public override bool CanAutoCalibrateOutput(int channel) => true;
+
+        public override bool CanChangeMaxServoAngle(int channel) => true;
 
         public override async Task<(bool Success, float BaseServoAngle)> AutoCalibrateOutputAsync(int channel, CancellationToken token)
         {
