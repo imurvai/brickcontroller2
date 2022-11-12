@@ -73,7 +73,7 @@
                         <!-- Channel output type selector -->
                         <StackLayout Orientation="Vertical">
                             <StackLayout.IsVisible>
-                                <MultiBinding Converter="{StaticResource DeviceAndChannelToChannelOutputTypeVisibleConverter}">
+                                <MultiBinding Converter="{StaticResource DeviceAndChannelToChannelOutputTypeVisible}">
                                     <Binding Path="SelectedDevice" />
                                     <Binding Path="Action.Channel" />
                                 </MultiBinding>
