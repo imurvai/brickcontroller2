@@ -332,7 +332,7 @@ namespace BrickController2.DeviceManagement
                 _sendOutputBuffer[17] = (byte)v4;
                 _sendOutputBuffer[18] = (byte)v5;
 
-                return await _bleDevice?.WriteAsync(_characteristic, _sendOutputBuffer, token);
+                return await _bleDevice?.WriteNoResponseAsync(_characteristic, _sendOutputBuffer, token);
             }
             catch (Exception)
             {
