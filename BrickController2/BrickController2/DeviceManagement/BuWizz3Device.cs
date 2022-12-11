@@ -212,8 +212,8 @@ namespace BrickController2.DeviceManagement
                 {
                     poweredUpCfgBuffer[1 + channel] = _channelOutputTypes[channel] switch
                     {
-                        ChannelOutputType.ServoMotor => 0x16,   // PU absolute position servo
-                        ChannelOutputType.StepperMotor => 0x15, // PU position servo 
+                        ChannelOutputType.ServoMotor => 0x16,   // PU absolute servo
+                        ChannelOutputType.StepperMotor => 0x15, // PU position servo, not sure about this
                         _ => 0x10,                              // PU simple PWM (default) 
                     };
                 }
@@ -333,7 +333,7 @@ namespace BrickController2.DeviceManagement
                 _sendOutputBuffer[18] = (byte)v5;
 
                 var result = await _bleDevice?.WriteNoResponseAsync(_characteristic, _sendOutputBuffer, token);
-                await Task.Delay(50, token);
+                await Task.Delay(50, token); // this delay is needed not to flood the BW3 internal command queue
                 return result;
             }
             catch (Exception)
@@ -402,16 +402,19 @@ namespace BrickController2.DeviceManagement
 
                 var servoReference = NormalizeAngle(baseAngle - posStart);
 
+                Console.WriteLine($"abs pos start: {absPosStart}");
+                Console.WriteLine($"rel pos start: {relPosStart}");
+                Console.WriteLine($"    pos start: {posStart}");
+                Console.WriteLine($"servo ref    : {servoReference}");
+
                 result = await SetServoReferenceAsync(channel, servoReference, token);
                 await Task.Delay(500);
 
                 result = await SetPuPortModeAsync(channel, false, token);
                 result = await SetSpeedAsync(channel, 0, token);
 
-                Console.WriteLine($"abs pos start: {absPosStart}");
-                Console.WriteLine($"rel pos start: {relPosStart}");
-                Console.WriteLine($"    pos start: {posStart}");
-                Console.WriteLine($"servo ref    : {servoReference}");
+                await WaitForNextCharacteristicNotificationAsync(token);
+                LogPositions(channel);
 
                 return result;
             }
@@ -419,6 +422,12 @@ namespace BrickController2.DeviceManagement
             {
                 return false;
             }
+        }
+
+        private void LogPositions(int channel)
+        {
+            Console.WriteLine($"abs pos: {_absolutePositions[channel]}");
+            Console.WriteLine($"rel pos: {_relativePositions[channel]}");
         }
 
         private int CalculateServoReference(int apsPosStart, int relPosStart, int baseAngle)
@@ -515,20 +524,37 @@ namespace BrickController2.DeviceManagement
         private Task<bool> SetDefaultPidParametersAsync(int channel, bool isServo, CancellationToken token)
         {
             var buffer = new byte[38];
+
+            //buffer[0] = 0x53;
+            //buffer[1] = (byte)channel;
+            //buffer.SetFloat(0f, 2); // outLP
+            //buffer.SetFloat(0.9f, 6); // D_LP
+            //buffer.SetFloat(0.6f, 10); // speed_LP
+            //buffer.SetFloat(1f, 14); // Kp
+            //buffer.SetFloat(0f, 18); // Ki
+            //buffer.SetFloat(0f, 22); // Kd
+            //buffer.SetFloat(127f, 26); // Liml
+            //buffer.SetFloat(0f, 30); // Reference rate limit
+            //buffer[34] = 127; // limOut
+            //buffer[35] = 2; // DeadbandOut
+            //buffer[36] = 2; // DeadbandOutBoost
+            //buffer[37] = isServo ? (byte)0x15 : (byte)0x10; // valid mode (equal to port mode selected)
+
             buffer[0] = 0x53;
             buffer[1] = (byte)channel;
             buffer.SetFloat(0f, 2); // outLP
-            buffer.SetFloat(0.9f, 6); // D_LP
+            buffer.SetFloat(0f, 6); // D_LP
             buffer.SetFloat(0.6f, 10); // speed_LP
             buffer.SetFloat(1f, 14); // Kp
-            buffer.SetFloat(0f, 18); // Ki
-            buffer.SetFloat(0f, 22); // Kd
-            buffer.SetFloat(127f, 26); // Liml
-            buffer.SetFloat(0f, 30); // Reference rate limit
+            buffer.SetFloat(0.01f, 18); // Ki
+            buffer.SetFloat(-1.0f, 22); // Kd
+            buffer.SetFloat(20f, 26); // Liml
+            buffer.SetFloat(50f, 30); // Reference rate limit
             buffer[34] = 127; // limOut
-            buffer[35] = 2; // DeadbandOut
-            buffer[36] = 2; // DeadbandOutBoost
+            buffer[35] = 10; // DeadbandOut
+            buffer[36] = 5; // DeadbandOutBoost
             buffer[37] = isServo ? (byte)0x15 : (byte)0x10; // valid mode (equal to port mode selected)
+
             return _bleDevice.WriteAsync(_characteristic, buffer, token);
         }
 
