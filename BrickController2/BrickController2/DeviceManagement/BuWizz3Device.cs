@@ -333,7 +333,7 @@ namespace BrickController2.DeviceManagement
                 _sendOutputBuffer[18] = (byte)v5;
 
                 var result = await _bleDevice?.WriteNoResponseAsync(_characteristic, _sendOutputBuffer, token);
-                await Task.Delay(50, token); // this delay is needed not to flood the BW3 internal command queue
+                await Task.Delay(80, token); // this delay is needed not to flood the BW3 internal command queue
                 return result;
             }
             catch (Exception)
@@ -398,14 +398,6 @@ namespace BrickController2.DeviceManagement
 
                 var servoReference = CalculateServoReference(absPosStart, relPosStart, baseAngle);
 
-                //Console.WriteLine($"-------------");
-                //Console.WriteLine($"Base angle   : {baseAngle}");
-                //Console.WriteLine($"abs pos start: {absPosStart}");
-                //Console.WriteLine($"rel pos start: {relPosStart}");
-                //Console.WriteLine($"    pos start: {posStart}");
-                //Console.WriteLine($"servo ref    : {servoReference}");
-                //Console.WriteLine($"-------------");
-
                 result = await SetServoReferenceAsync(channel, servoReference, token);
                 await Task.Delay(500);
 
@@ -413,7 +405,6 @@ namespace BrickController2.DeviceManagement
                 result = await SetSpeedAsync(channel, 0, token);
 
                 await WaitForNextCharacteristicNotificationAsync(token);
-                //LogPositions(channel);
 
                 return result;
             }
@@ -421,12 +412,6 @@ namespace BrickController2.DeviceManagement
             {
                 return false;
             }
-        }
-
-        private void LogPositions(int channel)
-        {
-            Console.WriteLine($"abs pos: {_absolutePositions[channel]}");
-            Console.WriteLine($"rel pos: {_relativePositions[channel]}");
         }
 
         private int CalculateServoReference(short absPosStart, int relPosStart, int baseAngle)
@@ -492,10 +477,6 @@ namespace BrickController2.DeviceManagement
                 result = await SetPuPortModeAsync(channel, false, token);
                 result = await SetSpeedAsync(channel, 0, token);
 
-                //await WaitForNextCharacteristicNotificationAsync(token);
-                //var absPosStop = _absolutePositions[channel];
-                //var relPosStop = _relativePositions[channel];
-
                 return (result, absPosMid / 180f);
             }
             catch
@@ -555,14 +536,14 @@ namespace BrickController2.DeviceManagement
             buffer.SetFloat(0f, 2); // outLP
             buffer.SetFloat(0f, 6); // D_LP
             buffer.SetFloat(0.6f, 10); // speed_LP
-            buffer.SetFloat(1f, 14); // Kp
+            buffer.SetFloat(2f, 14); // Kp
             buffer.SetFloat(0.01f, 18); // Ki
-            buffer.SetFloat(-1.0f, 22); // Kd
+            buffer.SetFloat(-0.5f, 22); // Kd
             buffer.SetFloat(20f, 26); // Liml
             buffer.SetFloat(50f, 30); // Reference rate limit
             buffer[34] = 127; // limOut
-            buffer[35] = 10; // DeadbandOut
-            buffer[36] = 5; // DeadbandOutBoost
+            buffer[35] = 5; // DeadbandOut
+            buffer[36] = 10; // DeadbandOutBoost
             buffer[37] = isServo ? (byte)0x15 : (byte)0x10; // valid mode (equal to port mode selected)
 
             return _bleDevice.WriteAsync(_characteristic, buffer, token);
