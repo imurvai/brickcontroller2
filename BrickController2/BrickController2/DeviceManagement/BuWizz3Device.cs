@@ -391,21 +391,20 @@ namespace BrickController2.DeviceManagement
                 await WaitForNextCharacteristicNotificationAsync(token);
                 var absPosStart = _absolutePositions[channel];
                 var relPosStart = _relativePositions[channel];
-                var posStart = NormalizeAngle(absPosStart - relPosStart);
 
                 result = await SetPuPortModeAsync(channel, true, token);
                 result = await SetDefaultPidParametersAsync(channel, true, token);
                 await Task.Delay(100);
 
-                // TODO: based on the two abs positions determine if CW or CCW set is needed
-                //var isCW = 
+                var servoReference = CalculateServoReference(absPosStart, relPosStart, baseAngle);
 
-                var servoReference = NormalizeAngle(baseAngle - posStart);
-
-                Console.WriteLine($"abs pos start: {absPosStart}");
-                Console.WriteLine($"rel pos start: {relPosStart}");
-                Console.WriteLine($"    pos start: {posStart}");
-                Console.WriteLine($"servo ref    : {servoReference}");
+                //Console.WriteLine($"-------------");
+                //Console.WriteLine($"Base angle   : {baseAngle}");
+                //Console.WriteLine($"abs pos start: {absPosStart}");
+                //Console.WriteLine($"rel pos start: {relPosStart}");
+                //Console.WriteLine($"    pos start: {posStart}");
+                //Console.WriteLine($"servo ref    : {servoReference}");
+                //Console.WriteLine($"-------------");
 
                 result = await SetServoReferenceAsync(channel, servoReference, token);
                 await Task.Delay(500);
@@ -414,7 +413,7 @@ namespace BrickController2.DeviceManagement
                 result = await SetSpeedAsync(channel, 0, token);
 
                 await WaitForNextCharacteristicNotificationAsync(token);
-                LogPositions(channel);
+                //LogPositions(channel);
 
                 return result;
             }
@@ -430,9 +429,21 @@ namespace BrickController2.DeviceManagement
             Console.WriteLine($"rel pos: {_relativePositions[channel]}");
         }
 
-        private int CalculateServoReference(int apsPosStart, int relPosStart, int baseAngle)
+        private int CalculateServoReference(short absPosStart, int relPosStart, int baseAngle)
         {
-            throw new NotImplementedException();
+            var posStart = absPosStart - relPosStart;
+            var servoReference = baseAngle - posStart;
+
+            var absDiff = Math.Abs(baseAngle - absPosStart);
+
+            if (180 <= absDiff)
+            {
+                servoReference = absPosStart < 0 ?
+                    servoReference - 360 :
+                    servoReference + 360;
+            }
+
+            return servoReference;
         }
 
         private async Task<(bool, float)> AutoCalibrateServoAsync(int channel, CancellationToken token)
@@ -472,9 +483,8 @@ namespace BrickController2.DeviceManagement
 
                 var absPos2Corrected = (absPos2 <= absPos1) ? absPos2 : absPos2 - 360;
                 var absPosMid = RoundAngleToNearest90((absPos1 + absPos2Corrected) / 2);
-                //var absPosMid = NormalizeAngle((absPos1 + absPos2Corrected) / 2);
 
-                var servoReference = NormalizeAngle(absPosMid - absPosStart + relPosStart);
+                var servoReference = CalculateServoReference(absPosStart, relPosStart, absPosMid);
 
                 result = await SetServoReferenceAsync(channel, servoReference, token);
                 await Task.Delay(500);
