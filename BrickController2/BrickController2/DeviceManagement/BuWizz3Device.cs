@@ -206,20 +206,39 @@ namespace BrickController2.DeviceManagement
                     await ReadDeviceInfo(token);
                 }
 
+                await ResetMotorRampUpDownAsync(token);
+
                 // Configure the function on the target PU port. 
                 var poweredUpCfgBuffer = new byte[] { 0x50, 0x00, 0x00, 0x00, 0x00 };
                 for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
                 {
-                    poweredUpCfgBuffer[1 + channel] = _channelOutputTypes[channel] switch
+                    switch (_channelOutputTypes[channel])
                     {
-                        ChannelOutputType.ServoMotor => 0x16,   // PU absolute servo
-                        ChannelOutputType.StepperMotor => 0x15, // PU position servo, not sure about this
-                        _ => 0x10,                              // PU simple PWM (default) 
-                    };
+                        case ChannelOutputType.ServoMotor:
+                            poweredUpCfgBuffer[channel + 1] = 0x16;
+                            //await ResetServoAsync(channel, _servoBaseAngles[channel], token);
+                            break;
+
+                        case ChannelOutputType.StepperMotor:
+                            poweredUpCfgBuffer[channel + 1] = 0x15;
+                            break;
+
+                        default:
+                            poweredUpCfgBuffer[channel + 1] = 0x10;
+                            break;
+                    }
                 }
 
                 await _bleDevice?.WriteAsync(_characteristic, poweredUpCfgBuffer, token);
                 await Task.Delay(10, token);
+
+                for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
+                {
+                    if (_channelOutputTypes[channel] == ChannelOutputType.ServoMotor)
+                    {
+                        await SetDefaultPidParametersAsync(channel, true, token);
+                    }
+                }
 
                 // once configured, enable notification
                 await _bleDevice?.EnableNotificationAsync(_characteristic, token);
@@ -386,17 +405,17 @@ namespace BrickController2.DeviceManagement
 
                 var result = true;
 
+                result = result && await ResetMotorRampUpDownAsync(token);
                 result = result && await SetServoReferenceAsync(channel, 0, token);
 
                 await WaitForNextCharacteristicNotificationAsync(token);
                 var absPosStart = _absolutePositions[channel];
                 var relPosStart = _relativePositions[channel];
+                var servoReference = CalculateServoReference(absPosStart, relPosStart, baseAngle);
 
                 result = await SetPuPortModeAsync(channel, true, token);
                 result = await SetDefaultPidParametersAsync(channel, true, token);
                 await Task.Delay(100);
-
-                var servoReference = CalculateServoReference(absPosStart, relPosStart, baseAngle);
 
                 result = await SetServoReferenceAsync(channel, servoReference, token);
                 await Task.Delay(500);
@@ -485,34 +504,42 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private Task<bool> SetServoReferenceAsync(int channel, int value, CancellationToken token)
+        private async Task<bool> SetServoReferenceAsync(int channel, int value, CancellationToken token)
         {
             var buffer = new byte[] { 0x52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             buffer.SetInt32(value, 1 + channel * 4);
-            return _bleDevice.WriteAsync(_characteristic, buffer, token);
+            var result = await _bleDevice.WriteAsync(_characteristic, buffer, token);
+            await Task.Delay(50, token);
+            return result;
         }
 
-        private Task<bool> SetPuPortModeAsync(int channel, bool isServo, CancellationToken token)
+        private async Task<bool> SetPuPortModeAsync(int channel, bool isServo, CancellationToken token)
         {
             var buffer = new byte[] { 0x50, 0x10, 0x10, 0x10, 0x10 };
             buffer[1 + channel] = isServo ? (byte)0x15 : (byte)0x10;
-            return _bleDevice.WriteAsync(_characteristic, buffer, token);
+            var result = await _bleDevice.WriteAsync(_characteristic, buffer, token);
+            await Task.Delay(50, token);
+            return result;
         }
 
-        private Task<bool> SetSpeedAsync(int channel, int value, CancellationToken token)
+        private async Task<bool> SetSpeedAsync(int channel, int value, CancellationToken token)
         {
             var buffer = new byte[] { 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
             buffer.SetInt32(value, 1 + channel * 4);
-            return _bleDevice.WriteAsync(_characteristic, buffer, token);
+            var result = await _bleDevice.WriteAsync(_characteristic, buffer, token);
+            await Task.Delay(50, token);
+            return result;
         }
 
-        private Task<bool> ResetMotorRampUpDownAsync(CancellationToken token)
+        private async Task<bool> ResetMotorRampUpDownAsync(CancellationToken token)
         {
             var buffer = new byte[] { 0x33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            return _bleDevice.WriteAsync(_characteristic, buffer, token);
+            var result = await _bleDevice.WriteAsync(_characteristic, buffer, token);
+            await Task.Delay(50, token);
+            return result;
         }
 
-        private Task<bool> SetDefaultPidParametersAsync(int channel, bool isServo, CancellationToken token)
+        private async Task<bool> SetDefaultPidParametersAsync(int channel, bool isServo, CancellationToken token)
         {
             var buffer = new byte[38];
 
@@ -546,7 +573,9 @@ namespace BrickController2.DeviceManagement
             buffer[36] = 10; // DeadbandOutBoost
             buffer[37] = isServo ? (byte)0x15 : (byte)0x10; // valid mode (equal to port mode selected)
 
-            return _bleDevice.WriteAsync(_characteristic, buffer, token);
+            var result = await _bleDevice.WriteAsync(_characteristic, buffer, token);
+            await Task.Delay(50, token);
+            return result;
         }
 
         private Task<bool> WaitForNextCharacteristicNotificationAsync(CancellationToken token)
