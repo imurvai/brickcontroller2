@@ -35,6 +35,7 @@ namespace BrickController2.DeviceManagement
         private readonly int[] _servoBaseAngles = new int[NUMBER_OF_PU_PORTS];
         private readonly int[] _stepperAngles = new int[NUMBER_OF_PU_PORTS];
 
+        private readonly int[] _servoBiasAngles = new int[NUMBER_OF_PU_PORTS];
         private readonly int[] _currentStepperAngles = new int[NUMBER_OF_PU_PORTS];
 
         private readonly short[] _absolutePositions = new short[NUMBER_OF_PU_PORTS];
@@ -210,6 +211,7 @@ namespace BrickController2.DeviceManagement
                 var result = true;
 
                 result = result && await _bleDevice?.EnableNotificationAsync(_characteristic, token);
+                result = result && await WaitForNextCharacteristicNotificationAsync(token);
 
                 result = result && await ResetMotorRampUpDownAsync(token);
                 result = result && await SetPuPortModesAsync(token);
@@ -220,30 +222,21 @@ namespace BrickController2.DeviceManagement
                     {
                         result = result && await SetServoReferenceAsync(channel, 0, token);
                         result = result && await WaitForNextCharacteristicNotificationAsync(token);
+
                         result = result && await SetPuPortModesAsync(token);
                         result = result && await SetDefaultPidParametersAsync(channel, true, token);
                         var servoRef = CalculateServoReference(_absolutePositions[channel], _relativePositions[channel], _servoBaseAngles[channel]);
                         result = result && await SetServoReferenceAsync(channel, servoRef, token);
+                        await Task.Delay(200);
+
+                        result = result && await WaitForNextCharacteristicNotificationAsync(token);
+                        _servoBiasAngles[channel] = _relativePositions[channel];
                     }
                 }
 
                 // get initial position of a stepper if any
                 result = result && await WaitForNextCharacteristicNotificationAsync(token);
                 _relativePositions.CopyTo(_currentStepperAngles, 0);
-
-                //result = result && await ResetMotorRampUpDownAsync(token);
-                //result = result && await SetServoReferenceAsync(channel, 0, token);
-
-                //await WaitForNextCharacteristicNotificationAsync(token);
-                //var absPosStart = _absolutePositions[channel];
-                //var relPosStart = _relativePositions[channel];
-                //var servoReference = CalculateServoReference(absPosStart, relPosStart, baseAngle);
-
-                //result = await SetPuPortModeAsync(channel, true, token);
-                //result = await SetDefaultPidParametersAsync(channel, true, token);
-
-                //result = await SetServoReferenceAsync(channel, servoReference, token);
-                //await Task.Delay(500);
 
                 return true;
             }
@@ -327,21 +320,21 @@ namespace BrickController2.DeviceManagement
             {
                 // 1 - 16 4x motor reference for ports 1 - 4(signed 32 - bit value for each motor output),
                 //           function depends on the PU port state(simple PWM, speed or position servo)
-                foreach (var port in poweredUpValues.Select((Value, Index) => (Value, Index)))
+                foreach (var channel in poweredUpValues.Select((Value, Index) => (Value, Index)))
                 {
-                    var channelValue = _channelOutputTypes[port.Index] switch
+                    var channelValue = _channelOutputTypes[channel.Index] switch
                     {
                         // angle of servo motor is adjusted according to channel value from range of [-127 .. +127]
-                        ChannelOutputType.ServoMotor => _servoBaseAngles[port.Index] + port.Value * _maxServoAngles[port.Index] / 127,
+                        ChannelOutputType.ServoMotor => _servoBiasAngles[channel.Index] + channel.Value * _maxServoAngles[channel.Index] / 127,
                         // keep the previous angle for stepper if there is no change of channel value 
-                        ChannelOutputType.StepperMotor when port.Value == _lastOutputValues[port.Index] => _currentStepperAngles[port.Index],
+                        ChannelOutputType.StepperMotor when channel.Value == _lastOutputValues[channel.Index] => _currentStepperAngles[channel.Index],
                         // stepper angle is added only if channel value is -127 or +127
-                        ChannelOutputType.StepperMotor => _currentStepperAngles[port.Index] += port.Value / 127 * _stepperAngles[port.Index],
+                        ChannelOutputType.StepperMotor => _currentStepperAngles[channel.Index] += channel.Value / 127 * _stepperAngles[channel.Index],
 
-                        _ => port.Value
+                        _ => channel.Value
                     };
 
-                    _sendOutputBuffer.SetInt32(channelValue, 1 + 4 * port.Index);
+                    _sendOutputBuffer.SetInt32(channelValue, 1 + 4 * channel.Index);
                 }
 
                 // 17 - 18 2x motor reference for ports 5 - 6(same as bytes 1 - 6 of command 0x30)
