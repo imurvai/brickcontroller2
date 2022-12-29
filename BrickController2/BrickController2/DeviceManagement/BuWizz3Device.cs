@@ -214,28 +214,28 @@ namespace BrickController2.DeviceManagement
                 result = result && await WaitForNextCharacteristicNotificationAsync(token);
 
                 result = result && await ResetMotorRampUpDownAsync(token);
+                result = result && await SetServoReferencesAsync(new[] { 0, 0, 0, 0 }, token);
+
+                result = result && await WaitForNextCharacteristicNotificationAsync(token);
+
                 result = result && await SetPuPortModesAsync(token);
 
+                var servoRefs = new int[NUMBER_OF_PU_PORTS];
                 for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
                 {
+                    servoRefs[channel] = CalculateServoReference(_absolutePositions[channel], _relativePositions[channel], _servoBaseAngles[channel]);
+
                     if (_channelOutputTypes[channel] == ChannelOutputType.ServoMotor)
                     {
-                        result = result && await SetServoReferenceAsync(channel, 0, token);
-                        result = result && await WaitForNextCharacteristicNotificationAsync(token);
-
-                        result = result && await SetPuPortModesAsync(token);
                         result = result && await SetDefaultPidParametersAsync(channel, true, token);
-                        var servoRef = CalculateServoReference(_absolutePositions[channel], _relativePositions[channel], _servoBaseAngles[channel]);
-                        result = result && await SetServoReferenceAsync(channel, servoRef, token);
-                        await Task.Delay(200);
-
-                        result = result && await WaitForNextCharacteristicNotificationAsync(token);
-                        _servoBiasAngles[channel] = _relativePositions[channel];
                     }
                 }
 
-                // get initial position of a stepper if any
+                result = result && await SetServoReferencesAsync(servoRefs, token);
+                await Task.Delay(200);
+
                 result = result && await WaitForNextCharacteristicNotificationAsync(token);
+                _relativePositions.CopyTo(_servoBiasAngles, 0);
                 _relativePositions.CopyTo(_currentStepperAngles, 0);
 
                 return true;
@@ -494,6 +494,18 @@ namespace BrickController2.DeviceManagement
         {
             var buffer = new byte[] { 0x52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             buffer.SetInt32(value, 1 + channel * 4);
+            var result = await _bleDevice.WriteAsync(_characteristic, buffer, token);
+            await Task.Delay(50, token);
+            return result;
+        }
+
+        private async Task<bool> SetServoReferencesAsync(int[] refValues, CancellationToken token)
+        {
+            var buffer = new byte[] { 0x52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
+            {
+                buffer.SetInt32(refValues[channel], 1 + channel * 4);
+            }
             var result = await _bleDevice.WriteAsync(_characteristic, buffer, token);
             await Task.Delay(50, token);
             return result;
