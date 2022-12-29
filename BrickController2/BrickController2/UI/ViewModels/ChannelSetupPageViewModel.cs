@@ -187,7 +187,7 @@ namespace BrickController2.UI.ViewModels
                 },
                 Translate("Calibrating"),
                 null,
-                null,
+                Translate("Cancel"),
                 _disappearingTokenSource.Token);
         }
 
@@ -201,7 +201,7 @@ namespace BrickController2.UI.ViewModels
                 },
                 Translate("Reseting"),
                 null,
-                null,
+                Translate("Cancel"),
                 _disappearingTokenSource.Token);
         }
     }
