@@ -216,23 +216,27 @@ namespace BrickController2.DeviceManagement
                 result = result && await ResetMotorRampUpDownAsync(token);
                 result = result && await SetServoReferencesAsync(new[] { 0, 0, 0, 0 }, token);
 
-                result = result && await WaitForNextCharacteristicNotificationAsync(token);
-
-                result = result && await SetPuPortModesAsync(token);
-
-                var servoRefs = new int[NUMBER_OF_PU_PORTS];
-                for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
+                // Need to set the modes a couple of times to take effect
+                for (int i = 0; i < 4; i++)
                 {
-                    servoRefs[channel] = CalculateServoReference(_absolutePositions[channel], _relativePositions[channel], _servoBaseAngles[channel]);
+                    result = result && await WaitForNextCharacteristicNotificationAsync(token);
 
-                    if (_channelOutputTypes[channel] == ChannelOutputType.ServoMotor)
+                    result = result && await SetPuPortModesAsync(token);
+
+                    var servoRefs = new int[NUMBER_OF_PU_PORTS];
+                    for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
                     {
-                        result = result && await SetDefaultPidParametersAsync(channel, true, token);
-                    }
-                }
+                        servoRefs[channel] = CalculateServoReference(_absolutePositions[channel], _relativePositions[channel], _servoBaseAngles[channel]);
 
-                result = result && await SetServoReferencesAsync(servoRefs, token);
-                await Task.Delay(200);
+                        if (_channelOutputTypes[channel] == ChannelOutputType.ServoMotor)
+                        {
+                            result = result && await SetDefaultPidParametersAsync(channel, true, token);
+                        }
+                    }
+
+                    result = result && await SetServoReferencesAsync(servoRefs, token);
+                    await Task.Delay(200);
+                }
 
                 result = result && await WaitForNextCharacteristicNotificationAsync(token);
                 _relativePositions.CopyTo(_servoBiasAngles, 0);
