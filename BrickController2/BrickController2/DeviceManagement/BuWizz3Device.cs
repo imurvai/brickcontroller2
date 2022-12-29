@@ -558,21 +558,6 @@ namespace BrickController2.DeviceManagement
         {
             var buffer = new byte[38];
 
-            //buffer[0] = 0x53;
-            //buffer[1] = (byte)channel;
-            //buffer.SetFloat(0f, 2); // outLP
-            //buffer.SetFloat(0.9f, 6); // D_LP
-            //buffer.SetFloat(0.6f, 10); // speed_LP
-            //buffer.SetFloat(1f, 14); // Kp
-            //buffer.SetFloat(0f, 18); // Ki
-            //buffer.SetFloat(0f, 22); // Kd
-            //buffer.SetFloat(127f, 26); // Liml
-            //buffer.SetFloat(0f, 30); // Reference rate limit
-            //buffer[34] = 127; // limOut
-            //buffer[35] = 2; // DeadbandOut
-            //buffer[36] = 2; // DeadbandOutBoost
-            //buffer[37] = isServo ? (byte)0x15 : (byte)0x10; // valid mode (equal to port mode selected)
-
             buffer[0] = 0x53;
             buffer[1] = (byte)channel;
             buffer.SetFloat(0f, 2); // outLP
