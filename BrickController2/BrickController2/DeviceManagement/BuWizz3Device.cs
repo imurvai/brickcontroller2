@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using static SQLite.SQLite3;
 
 namespace BrickController2.DeviceManagement
 {
@@ -206,54 +207,50 @@ namespace BrickController2.DeviceManagement
                     await ReadDeviceInfo(token);
                 }
 
-                await ResetMotorRampUpDownAsync(token);
+                var result = true;
 
-                // Configure the function on the target PU port. 
-                var poweredUpCfgBuffer = new byte[] { 0x50, 0x00, 0x00, 0x00, 0x00 };
-                for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
-                {
-                    switch (_channelOutputTypes[channel])
-                    {
-                        case ChannelOutputType.ServoMotor:
-                            poweredUpCfgBuffer[channel + 1] = 0x16;
-                            //await ResetServoAsync(channel, _servoBaseAngles[channel], token);
-                            break;
+                result = result && await _bleDevice?.EnableNotificationAsync(_characteristic, token);
 
-                        case ChannelOutputType.StepperMotor:
-                            poweredUpCfgBuffer[channel + 1] = 0x15;
-                            break;
-
-                        default:
-                            poweredUpCfgBuffer[channel + 1] = 0x10;
-                            break;
-                    }
-                }
-
-                await _bleDevice?.WriteAsync(_characteristic, poweredUpCfgBuffer, token);
-                await Task.Delay(10, token);
+                result = result && await ResetMotorRampUpDownAsync(token);
+                result = result && await SetPuPortModesAsync(token);
 
                 for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
                 {
                     if (_channelOutputTypes[channel] == ChannelOutputType.ServoMotor)
                     {
-                        await SetDefaultPidParametersAsync(channel, true, token);
+                        result = result && await SetServoReferenceAsync(channel, 0, token);
+                        result = result && await WaitForNextCharacteristicNotificationAsync(token);
+                        result = result && await SetPuPortModesAsync(token);
+                        result = result && await SetDefaultPidParametersAsync(channel, true, token);
+                        var servoRef = CalculateServoReference(_absolutePositions[channel], _relativePositions[channel], _servoBaseAngles[channel]);
+                        result = result && await SetServoReferenceAsync(channel, servoRef, token);
                     }
                 }
 
-                // once configured, enable notification
-                await _bleDevice?.EnableNotificationAsync(_characteristic, token);
-
                 // get initial position of a stepper if any
-                await WaitForNextCharacteristicNotificationAsync(token);
+                result = result && await WaitForNextCharacteristicNotificationAsync(token);
                 _relativePositions.CopyTo(_currentStepperAngles, 0);
+
+                //result = result && await ResetMotorRampUpDownAsync(token);
+                //result = result && await SetServoReferenceAsync(channel, 0, token);
+
+                //await WaitForNextCharacteristicNotificationAsync(token);
+                //var absPosStart = _absolutePositions[channel];
+                //var relPosStart = _relativePositions[channel];
+                //var servoReference = CalculateServoReference(absPosStart, relPosStart, baseAngle);
+
+                //result = await SetPuPortModeAsync(channel, true, token);
+                //result = await SetDefaultPidParametersAsync(channel, true, token);
+
+                //result = await SetServoReferenceAsync(channel, servoReference, token);
+                //await Task.Delay(500);
 
                 return true;
             }
             catch
             {
+                return false;
             }
-
-            return false;
         }
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)
@@ -415,15 +412,12 @@ namespace BrickController2.DeviceManagement
 
                 result = await SetPuPortModeAsync(channel, true, token);
                 result = await SetDefaultPidParametersAsync(channel, true, token);
-                await Task.Delay(100);
 
                 result = await SetServoReferenceAsync(channel, servoReference, token);
                 await Task.Delay(500);
 
                 result = await SetPuPortModeAsync(channel, false, token);
                 result = await SetSpeedAsync(channel, 0, token);
-
-                await WaitForNextCharacteristicNotificationAsync(token);
 
                 return result;
             }
@@ -483,7 +477,6 @@ namespace BrickController2.DeviceManagement
 
                 result = await SetPuPortModeAsync(channel, true, token);
                 result = await SetDefaultPidParametersAsync(channel, true, token);
-                await Task.Delay(100);
 
                 var absPos2Corrected = (absPos2 <= absPos1) ? absPos2 : absPos2 - 360;
                 var absPosMid = RoundAngleToNearest90((absPos1 + absPos2Corrected) / 2);
@@ -508,6 +501,23 @@ namespace BrickController2.DeviceManagement
         {
             var buffer = new byte[] { 0x52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             buffer.SetInt32(value, 1 + channel * 4);
+            var result = await _bleDevice.WriteAsync(_characteristic, buffer, token);
+            await Task.Delay(50, token);
+            return result;
+        }
+
+        private async Task<bool> SetPuPortModesAsync(CancellationToken token)
+        {
+            var buffer = new byte[] { 0x50, 0x10, 0x10, 0x10, 0x10 };
+            for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
+            {
+                buffer[1 + channel] = _channelOutputTypes[channel] switch
+                {
+                    ChannelOutputType.ServoMotor => 0x15,
+                    ChannelOutputType.StepperMotor => 0x16, // Not sure about this
+                    _ => 0x10
+                };
+            }
             var result = await _bleDevice.WriteAsync(_characteristic, buffer, token);
             await Task.Delay(50, token);
             return result;
@@ -563,7 +573,7 @@ namespace BrickController2.DeviceManagement
             buffer.SetFloat(0f, 2); // outLP
             buffer.SetFloat(0f, 6); // D_LP
             buffer.SetFloat(0.6f, 10); // speed_LP
-            buffer.SetFloat(2f, 14); // Kp
+            buffer.SetFloat(1f, 14); // Kp
             buffer.SetFloat(0.01f, 18); // Ki
             buffer.SetFloat(-0.5f, 22); // Kd
             buffer.SetFloat(20f, 26); // Liml
@@ -574,7 +584,7 @@ namespace BrickController2.DeviceManagement
             buffer[37] = isServo ? (byte)0x15 : (byte)0x10; // valid mode (equal to port mode selected)
 
             var result = await _bleDevice.WriteAsync(_characteristic, buffer, token);
-            await Task.Delay(50, token);
+            await Task.Delay(100, token);
             return result;
         }
 
