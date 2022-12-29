@@ -578,9 +578,9 @@ namespace BrickController2.DeviceManagement
             buffer.SetFloat(0f, 2); // outLP
             buffer.SetFloat(0f, 6); // D_LP
             buffer.SetFloat(0.6f, 10); // speed_LP
-            buffer.SetFloat(1f, 14); // Kp
+            buffer.SetFloat(0.5f, 14); // Kp
             buffer.SetFloat(0.01f, 18); // Ki
-            buffer.SetFloat(-0.5f, 22); // Kd
+            buffer.SetFloat(-1f, 22); // Kd
             buffer.SetFloat(20f, 26); // Liml
             buffer.SetFloat(50f, 30); // Reference rate limit
             buffer[34] = 127; // limOut
