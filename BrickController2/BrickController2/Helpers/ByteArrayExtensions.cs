@@ -18,48 +18,64 @@ namespace BrickController2.Helpers
             {
             }
 
-            return null;
+            return string.Empty;
         }
 
         public static Guid GetGuid(this byte[] data, int offset = 0)
         {
-            return new Guid(data.GetInt32(offset + 12),
+            return new Guid(
+                data.GetInt32(offset + 12),
                 data.GetInt16(offset + 10),
                 data.GetInt16(offset + 8),
                 data[offset + 7], data[offset + 6], data[offset + 5], data[offset + 4], data[offset + 3], data[offset + 2], data[offset + 1], data[offset]);
         }
 
-        public static float GetFloat(this byte[] data, int offset = 0)
+        public static short GetInt16(this byte[] data, int offset = 0)
+        {
+            var tempBuffer = BitConverter.IsLittleEndian ?
+                new byte[] { data[offset + 0], data[offset + 1] } :
+                new byte[] { data[offset + 1], data[offset + 0] };
+            return BitConverter.ToInt16(tempBuffer, 0);
+        }
+
+        public static int GetInt32(this byte[] data, int offset = 0)
+        {
+            var tempBuffer = BitConverter.IsLittleEndian ?
+                new byte[] { data[offset + 0], data[offset + 1], data[offset + 2], data[offset + 3] } :
+                new byte[] { data[offset + 3], data[offset + 2], data[offset + 1], data[offset + 0] };
+            return BitConverter.ToInt32(tempBuffer, 0);
+        }
+
+        public static void SetInt32(this byte[] data, int value, int offset = 0)
         {
             if (BitConverter.IsLittleEndian)
             {
-                return BitConverter.ToSingle(data, offset);
+                data[offset + 0] = (byte)(value & 0xff);
+                data[offset + 1] = (byte)((value >> 8) & 0xff);
+                data[offset + 2] = (byte)((value >> 16) & 0xff);
+                data[offset + 3] = (byte)((value >> 24) & 0xff);
             }
-
-            var reversedData = new byte[] { data[offset + 3], data[offset + 2], data[offset + 1], data[offset] };
-            return BitConverter.ToSingle(reversedData, 0);
+            else
+            {
+                data[offset + 3] = (byte)(value & 0xff);
+                data[offset + 2] = (byte)((value >> 8) & 0xff);
+                data[offset + 1] = (byte)((value >> 16) & 0xff);
+                data[offset + 0] = (byte)((value >> 24) & 0xff);
+            }
         }
 
-        public static short GetInt16(this byte[] data, int offset)
+        public static float GetFloat(this byte[] data, int offset = 0)
         {
-            return (short)(data[offset] |
-                (data[offset + 1] << 8));
+            var tempBuffer = BitConverter.IsLittleEndian ?
+                new byte[] { data[offset + 0], data[offset + 1], data[offset + 2], data[offset + 3] } :
+                new byte[] { data[offset + 3], data[offset + 2], data[offset + 1], data[offset + 0] };
+            return BitConverter.ToSingle(tempBuffer, 0);
         }
 
-        public static int GetInt32(this byte[] data, int offset)
+        public static void SetFloat(this byte[] data, float value, int offset = 0)
         {
-            return data[offset] |
-                (data[offset + 1] << 8) |
-                (data[offset + 2] << 16) |
-                (data[offset + 3] << 24);
-        }
-
-        public static void SetInt32(this byte[] data, int offset, int value)
-        {
-            data[offset + 0] = (byte)(value & 0xff);
-            data[offset + 1] = (byte)((value >> 8) & 0xff);
-            data[offset + 2] = (byte)((value >> 16) & 0xff);
-            data[offset + 3] = (byte)((value >> 24) & 0xff);
+            var intValue = BitConverter.SingleToInt32Bits(value);
+            SetInt32(data, intValue, offset);
         }
     }
 }

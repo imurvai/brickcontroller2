@@ -71,6 +71,8 @@ namespace BrickController2.DeviceManagement
         public virtual int NumberOfOutputLevels => 1;
         public virtual int DefaultOutputLevel => 1;
 
+        public virtual bool CanChangeOutputType(int channel) => false;
+
         public abstract Task<DeviceConnectionResult> ConnectAsync(
             bool reconnect,
             Action<Device> onDeviceDisconnected,
@@ -85,13 +87,14 @@ namespace BrickController2.DeviceManagement
         public virtual bool CanSetOutputLevel => false;
         public virtual void SetOutputLevel(int value) { }
 
-        public virtual bool CanResetOutput => false;
+        public virtual bool CanResetOutput(int channel) => false;
         public virtual Task ResetOutputAsync(int channel, float value, CancellationToken token)
         {
             return Task.FromResult(true);
         }
 
-        public virtual bool CanAutoCalibrateOutput => false;
+        public virtual bool CanAutoCalibrateOutput(int channel) => false;
+        public virtual bool CanChangeMaxServoAngle(int channel) => false;
         public virtual Task<(bool Success, float BaseServoAngle)> AutoCalibrateOutputAsync(int channel, CancellationToken token)
         {
             return Task.FromResult((true, 0F));

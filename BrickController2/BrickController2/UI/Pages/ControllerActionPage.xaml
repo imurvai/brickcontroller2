@@ -16,7 +16,8 @@
 
     <local:PageBase.Resources>
         <ResourceDictionary>
-            <converters:DeviceTypeToChannelOutputVisibleConverter x:Key="DeviceTypeToChannelOutputVisible"/>
+            <converters:DeviceAndChannelToChannelOutputTypeVisibleConverter x:Key="DeviceAndChannelToChannelOutputTypeVisible"/>
+            <converters:DeviceAndChannelToMaxServoAngleVisibleConverter x:Key="DeviceAndChannelToMaxServoAngleVisible"/>
         </ResourceDictionary>
     </local:PageBase.Resources>
 
@@ -69,14 +70,14 @@
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
                         <Label Text="{extensions:Translate AdvancedSettings}" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
 
+                        <!-- Channel output type selector -->
                         <StackLayout Orientation="Vertical">
                             <StackLayout.IsVisible>
-                                <MultiBinding Converter="{StaticResource DeviceTypeToChannelOutputVisible}">
-                                    <Binding Path="SelectedDevice.DeviceType" />
+                                <MultiBinding Converter="{StaticResource DeviceAndChannelToChannelOutputTypeVisible}">
+                                    <Binding Path="SelectedDevice" />
                                     <Binding Path="Action.Channel" />
                                 </MultiBinding>
                             </StackLayout.IsVisible>
-                            <!-- Channel output type selector -->
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
@@ -103,12 +104,13 @@
                             </Grid>
 
                             <!-- Max servo angle setting -->
-                            <StackLayout Orientation="Vertical" IsVisible="False">
-                                <StackLayout.Triggers>
-                                    <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
-                                        <Setter Property="IsVisible" Value="True"/>
-                                    </DataTrigger>
-                                </StackLayout.Triggers>
+                            <StackLayout Orientation="Vertical">
+                                <StackLayout.IsVisible>
+                                    <MultiBinding Converter="{StaticResource DeviceAndChannelToMaxServoAngleVisible}">
+                                        <Binding Path="SelectedDevice" />
+                                        <Binding Path="Action.Channel" />
+                                    </MultiBinding>
+                                </StackLayout.IsVisible>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="2*"/>

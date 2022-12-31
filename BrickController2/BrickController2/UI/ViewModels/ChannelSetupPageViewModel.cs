@@ -39,8 +39,8 @@ namespace BrickController2.UI.ViewModels
             ServoBaseAngle = Action.ServoBaseAngle;
 
             SaveChannelSettingsCommand = new SafeCommand(async () => await SaveChannelSettingsAsync(), () => !_dialogService.IsDialogOpen);
-            AutoCalibrateServoCommand = new SafeCommand(async () => await AutoCalibrateServoAsync(), () => Device.CanAutoCalibrateOutput);
-            ResetServoBaseCommand = new SafeCommand(async () => await ResetServoBaseAngleAsync(), () => Device.CanResetOutput);
+            AutoCalibrateServoCommand = new SafeCommand(async () => await AutoCalibrateServoAsync(), () => Device.CanAutoCalibrateOutput(Action.Channel));
+            ResetServoBaseCommand = new SafeCommand(async () => await ResetServoBaseAngleAsync(), () => Device.CanResetOutput(Action.Channel));
         }
 
         public Device Device { get; }
@@ -187,7 +187,7 @@ namespace BrickController2.UI.ViewModels
                 },
                 Translate("Calibrating"),
                 null,
-                null,
+                Translate("Cancel"),
                 _disappearingTokenSource.Token);
         }
 
@@ -201,7 +201,7 @@ namespace BrickController2.UI.ViewModels
                 },
                 Translate("Reseting"),
                 null,
-                null,
+                Translate("Cancel"),
                 _disappearingTokenSource.Token);
         }
     }
