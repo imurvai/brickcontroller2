@@ -1,14 +1,9 @@
 ﻿using BrickController2.UI.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace BrickController2.UI.Controls
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class SegmentedControl : ContentView
 	{
         private readonly IList<Label> _labels = new List<Label>();
@@ -104,7 +99,7 @@ namespace BrickController2.UI.Controls
 
                 var frame = new Frame
                 {
-                    BackgroundColor = Color.Transparent,
+                    BackgroundColor = Colors.Transparent,
                     Padding = new Thickness(1),
                     HasShadow = false
                 };

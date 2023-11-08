@@ -1,10 +1,8 @@
 ﻿using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace BrickController2.UI.Controls
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class FloatingActionButton : ContentView
 	{
 		public FloatingActionButton()

@@ -1,13 +1,11 @@
 ﻿using BrickController2.Helpers;
 using BrickController2.UI.Converters;
 using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.Controls
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class DeviceOutputTesterControl : ContentView
 	{
 		public DeviceOutputTesterControl ()

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using Xamarin.Forms;
+using Microsoft.Maui;
 using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.Converters

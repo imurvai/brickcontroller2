@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using BrickController2.UI.DI;
 using BrickController2.UI.ViewModels;
-using Xamarin.Forms;
+using Microsoft.Maui;
 
 namespace BrickController2.UI.Services.Navigation
 {
