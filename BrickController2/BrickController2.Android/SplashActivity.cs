@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Support.V7.App;
+using AndroidX.AppCompat.App;
 
 namespace BrickController2.Droid
 {
@@ -21,7 +21,7 @@ namespace BrickController2.Droid
         protected override void OnResume()
         {
             base.OnResume();
-            StartActivity(new Intent(Application.Context, typeof(MainActivity)));
+            StartActivity(new Intent(Android.App.Application.Context, typeof(MainActivity)));
         }
 
         public override void OnBackPressed()

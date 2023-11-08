@@ -1,12 +1,13 @@
-﻿using System.ComponentModel;
-using Android.Content;
+﻿using Android.Content;
 using Android.Graphics;
 using BrickController2.Droid.UI.CustomRenderers;
 using BrickController2.UI.Controls;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.Android;
+using Microsoft.Maui.Controls.Compatibility;
+using Microsoft.Maui.Controls.Compatibility.Platform.Android;
+using Microsoft.Maui.Controls.Platform;
+using System.ComponentModel;
 
-[assembly:ExportRenderer(typeof(ColorImage), typeof(ColorImageRenderer))]
+[assembly: ExportRenderer(typeof(ColorImage), typeof(ColorImageRenderer))]
 namespace BrickController2.Droid.UI.CustomRenderers
 {
     public class ColorImageRenderer : ImageRenderer
@@ -38,7 +39,7 @@ namespace BrickController2.Droid.UI.CustomRenderers
                 return;
             }
 
-            if (colorImage.Color.Equals(Xamarin.Forms.Color.Transparent))
+            if (colorImage.Color.Equals(Colors.Transparent))
             {
                 if (Control.ColorFilter != null)
                 {

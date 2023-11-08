@@ -1,9 +1,7 @@
 ﻿using BrickController2.PlatformServices.Localization;
 using System.Globalization;
-using System.Threading;
-using Xamarin.Forms;
 
-[assembly:Dependency(typeof(BrickController2.Droid.PlatformServices.Localization.LocalizationService))]
+[assembly: Dependency(typeof(BrickController2.Droid.PlatformServices.Localization.LocalizationService))]
 namespace BrickController2.Droid.PlatformServices.Localization
 {
     public class LocalizationService : ILocalizationService
