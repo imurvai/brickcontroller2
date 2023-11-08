@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Autofac" Version="6.5.0" />
-	<PackageVersion Include="SQLiteNetExtensions.Async" Version="2.1.0" />
+    <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageVersion Include="SQLiteNetExtensions.Async" Version="2.1.0" />
   </ItemGroup>
 </Project>
