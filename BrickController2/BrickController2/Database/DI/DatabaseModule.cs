@@ -11,23 +11,21 @@ namespace BrickController2.Database.DI
             builder.RegisterType<SQLiteConnection>().WithParameter(new TypedParameter(typeof(string), "databasePath"));
             builder.RegisterType<SQLiteAsyncConnection>().WithParameter(new TypedParameter(typeof(string), "databasePath"));
 
-            builder.Register<SQLiteConnectionFactory>(c =>
+            builder.Register<SQLiteConnectionFactory>(componentContext =>
             {
-                var componentContext = c.Resolve<IComponentContext>();
                 return (databaseFilename) =>
                 {
                     var databasePath = PathHelper.AddAppDataPathToFilename(databaseFilename);
-                    return c.Resolve<SQLiteConnection>(new TypedParameter(typeof(string), databasePath));
+                    return componentContext.Resolve<SQLiteConnection>(new TypedParameter(typeof(string), databasePath));
                 };
             });
 
-            builder.Register<SQLiteAsyncConnectionFactory>(c =>
+            builder.Register<SQLiteAsyncConnectionFactory>(componentContext =>
             {
-                var componentContext = c.Resolve<IComponentContext>();
                 return (databaseFilename) =>
                 {
                     var databasePath = PathHelper.AddAppDataPathToFilename(databaseFilename);
-                    return c.Resolve<SQLiteAsyncConnection>(new TypedParameter(typeof(string), databasePath));
+                    return componentContext.Resolve<SQLiteAsyncConnection>(new TypedParameter(typeof(string), databasePath));
                 };
             });
         }

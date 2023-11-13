@@ -24,9 +24,8 @@ namespace BrickController2.DeviceManagement.DI
             builder.RegisterType<CircuitCubeDevice>().Keyed<Device>(DeviceType.CircuitCubes);
             builder.RegisterType<Wedo2Device>().Keyed<Device>(DeviceType.WeDo2);
 
-            builder.Register<DeviceFactory>(c =>
+            builder.Register<DeviceFactory>(ctx =>
             {
-                IComponentContext ctx = c.Resolve<IComponentContext>();
                 return (deviceType, name, address, deviceData) => ctx.ResolveKeyed<Device>(deviceType, new NamedParameter("name", name), new NamedParameter("address", address), new NamedParameter("deviceData", deviceData));
             });
         }

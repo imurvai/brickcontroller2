@@ -12,11 +12,7 @@ using BrickController2.UI.DI;
 
 namespace BrickController2.Droid
 {
-#if DEBUG
-    [Application(Debuggable = true)]
-#else
-[Application(Debuggable = false)]
-#endif
+    [Application]
     public class MainApplication : MauiApplication
     {
         public MainApplication(IntPtr handle, JniHandleOwnership ownership) : base(handle, ownership)
@@ -25,23 +21,25 @@ namespace BrickController2.Droid
 
         protected override MauiApp CreateMauiApp()
         {
-            var appBuilder = MauiApp.CreateBuilder();
+            var builder = MauiApp.CreateBuilder();
 
-            appBuilder.ConfigureContainer(new AutofacServiceProviderFactory(), (builder) =>
-            {
-                //TODO builder.RegisterInstance(this).As<Context>().As<Activity>();
-                builder.RegisterModule(new PlatformServicesModule());
-                builder.RegisterModule(new UIServicesModule());
+            builder
+                .UseMauiApp<App>()
+                .ConfigureContainer(new AutofacServiceProviderFactory(), (containerBuilder) =>
+                {
+                    containerBuilder.Register<Android.Content.Context>((c) => Android.App.Application.Context).SingleInstance();
+                    containerBuilder.RegisterModule<PlatformServicesModule>();
+                    containerBuilder.RegisterModule<UIServicesModule>();
 
-                builder.RegisterModule(new BusinessLogicModule());
-                builder.RegisterModule(new DatabaseModule());
-                builder.RegisterModule(new CreationManagementModule());
-                builder.RegisterModule(new DeviceManagementModule());
-                builder.RegisterModule(new UiModule());
-            });
+                    containerBuilder.RegisterModule<BusinessLogicModule>();
+                    containerBuilder.RegisterModule<DatabaseModule>();
+                    containerBuilder.RegisterModule<CreationManagementModule>();
+                    containerBuilder.RegisterModule<DeviceManagementModule>();
+                    containerBuilder.RegisterModule<UiModule>();
+                })
+                ;
 
-            return appBuilder.UseMauiApp<App>()
-                .Build();
+            return builder.Build();
         }
     }
 }

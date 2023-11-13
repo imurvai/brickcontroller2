@@ -44,16 +44,14 @@ namespace BrickController2.UI.DI
             }
 
             // Register the viewmodel factory
-            builder.Register<ViewModelFactory>(c =>
+            builder.Register<ViewModelFactory>(componentContext =>
             {
-                var componentContext = c.Resolve<IComponentContext>();
                 return (type, parameters) => componentContext.ResolveKeyed<PageViewModelBase>(type, new TypedParameter(typeof(NavigationParameters), parameters));
             });
 
             // Register the page factory
-            builder.Register<PageFactory>(c =>
+            builder.Register<PageFactory>(componentContext =>
             {
-                var componentContext = c.Resolve<IComponentContext>();
                 return (type, vm) => componentContext.ResolveKeyed<PageBase>(type, new TypedParameter(typeof(PageViewModelBase), vm));
             });
 

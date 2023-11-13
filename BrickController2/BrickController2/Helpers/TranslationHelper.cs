@@ -19,7 +19,7 @@ namespace BrickController2.Helpers
                 _localizationService = DependencyService.Get<ILocalizationService>();
             }
 
-            var translation = ResourceHelper.TranslationResourceManager.GetString(key, _localizationService.CurrentCultureInfo);
+            var translation = ResourceHelper.TranslationResourceManager.GetString(key, _localizationService?.CurrentCultureInfo);
             return translation ?? key;
         }
     }

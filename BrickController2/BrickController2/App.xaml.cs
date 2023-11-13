@@ -12,15 +12,15 @@ namespace BrickController2
         private readonly BackgroundService _backgroundService;
 
 		public App(
-            ViewModelFactory viewModelFactory, 
-            PageFactory pageFactory, 
-            Func<Page, NavigationPage> navigationPageFactory,
-            BackgroundService backgroundService,
-			IThemeService themeService)
+			ViewModelFactory viewModelFactory,
+			PageFactory pageFactory,
+			Func<Page, NavigationPage> navigationPageFactory,
+			BackgroundService backgroundService,
+   IThemeService themeService)
 		{
 			InitializeComponent();
 
-            _backgroundService = backgroundService;
+			_backgroundService = backgroundService;
 
 			RequestedThemeChanged += (s, e) =>
 			{
@@ -34,13 +34,13 @@ namespace BrickController2
 			};
 			themeService.ApplyCurrentTheme();
 
-            var vm = viewModelFactory(typeof(CreationListPageViewModel), null);
-		    var page = pageFactory(typeof(CreationListPage), vm);
-		    var navigationPage = navigationPageFactory(page);
-            navigationPage.BarBackgroundColor = Colors.Red;
-            navigationPage.BarTextColor = Colors.White;
+			var vm = viewModelFactory(typeof(CreationListPageViewModel), null);
+			var page = pageFactory(typeof(CreationListPage), vm);
+			var navigationPage = navigationPageFactory(page);
+			navigationPage.BarBackgroundColor = Colors.Red;
+			navigationPage.BarTextColor = Colors.White;
 
-            MainPage = navigationPage;
+			MainPage = navigationPage;
 		}
 
 		protected override void OnStart()
