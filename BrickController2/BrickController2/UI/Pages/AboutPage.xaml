@@ -41,8 +41,7 @@
                         <Label Text="{extensions:Translate ExternalLibraries}" FontAttributes="Bold"/>
                         <Label Text="Autofac"/>
                         <Label Text="SQLiteNetExtensionsAsync"/>
-                        <Label Text="Xamarin.Forms"/>
-                        <Label Text="Xamarin.Essentials"/>
+                        <Label Text=".NET MAUI"/>
 
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
