@@ -38,6 +38,9 @@ namespace BrickController2.Droid
                     containerBuilder.RegisterModule<UiModule>();
                 })
                 ;
+#if DEBUG
+            //builder.Logging.AddDebug();
+#endif
 
             return builder.Build();
         }

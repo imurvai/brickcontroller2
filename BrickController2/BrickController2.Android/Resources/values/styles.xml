@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
 
-  <style name="SplashTheme.Base" parent="Theme.AppCompat.Light">
+  <style name="SplashTheme.Base" parent="Maui.SplashTheme">
   </style>
 
   <style name="SplashTheme" parent="SplashTheme.Base">
@@ -17,7 +17,7 @@
   </style>
   
   <!-- Base theme applied no matter what API -->
-  <style name="MainTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+  <style name="MainTheme.Base" parent="Maui.SplashTheme">
     <!--If you are using revision 22.1 please use just windowNoTitle. Without android:-->
     <item name="windowNoTitle">true</item>
     <!--We will be using the toolbar so no need to show ActionBar-->

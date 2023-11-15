@@ -3,7 +3,6 @@ using Android.App;
 using Android.Content.PM;
 using Android.Views;
 using Android.Runtime;
-using AndroidX.AppCompat.App;
 
 namespace BrickController2.Droid
 {
@@ -13,7 +12,7 @@ namespace BrickController2.Droid
         Theme = "@style/MainTheme",
         MainLauncher = false,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
-    public class MainActivity : AppCompatActivity
+    public class MainActivity : MauiAppCompatActivity
     {
         private readonly GameControllerService _gameControllerService;
 

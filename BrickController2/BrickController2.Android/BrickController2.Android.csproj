@@ -2,8 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net7.0-android</TargetFrameworks>
-		<UseMaui>true</UseMaui>
-		<ImplicitUsings>enable</ImplicitUsings>
 		<OutputType>Exe</OutputType>
 		
 		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>

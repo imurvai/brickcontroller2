@@ -62,7 +62,7 @@ namespace BrickController2.UI.Controls
 
         private void Build(IList<string> items)
         {
-            StackLayout.Children.Clear();
+            StackLayout.Clear();
             _labels.Clear();
 
             if (items == null || items.Count() == 0)
@@ -85,7 +85,7 @@ namespace BrickController2.UI.Controls
                     };
                     separator.SetDynamicResource(BoxView.BackgroundColorProperty, "DividerColor");
 
-                    StackLayout.Children.Add(separator);
+                    StackLayout.Add(separator);
                 }
 
                 var label = new Label
@@ -106,7 +106,7 @@ namespace BrickController2.UI.Controls
                 frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>(i => ItemTapped(i)), CommandParameter = index });
                 frame.Content = label;
 
-                StackLayout.Children.Add(frame);
+                StackLayout.Add(frame);
             }
 
             SetSelection(SelectedIndex);
