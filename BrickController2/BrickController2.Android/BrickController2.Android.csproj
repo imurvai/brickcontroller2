@@ -7,8 +7,6 @@
 		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
 		<RootNamespace>BrickController2.Droid</RootNamespace>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-
-		<!--<MauiSplashScreen Include="Resources\drawable\splash_screen.xml" Color="#512BD4" BaseSize="128,128" />-->
 	</PropertyGroup>
 
   <PropertyGroup>
@@ -23,13 +21,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\gamepad.svg" />
+    <None Remove="Resources\values-night\colors.xml" />
+    <None Remove="Resources\values-night\styles.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" />
 	<PackageReference Include="Autofac.Extensions.DependencyInjection" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
-    <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Tabbar.axml" />
@@ -53,7 +56,7 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\splash_screen.xml" />
+    <MauiSplashScreen Include="Resources\gamepad.svg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BrickController2\BrickController2.csproj" />

@@ -26,17 +26,12 @@ namespace BrickController2.Droid
         #region Activity
         protected override void OnCreate(Bundle bundle)
         {
-            //TabLayoutResource = Resource.Layout.Tabbar;
-            //ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
 
             Window.AddFlags(WindowManagerFlags.KeepScreenOn);
 
             Platform.Init(this, bundle);
-
-            //Forms.SetFlags("SwipeView_Experimental");
-            //Forms.Init(this, bundle);
         }
 
         public override bool OnKeyDown([GeneratedEnum] Keycode keyCode, KeyEvent e)
