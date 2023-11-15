@@ -3,6 +3,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.Views;
 using Android.Runtime;
+using Android.OS;
 
 namespace BrickController2.Droid
 {
@@ -10,7 +11,7 @@ namespace BrickController2.Droid
         Label = "BrickController2",
         Icon = "@mipmap/ic_launcher",
         Theme = "@style/MainTheme",
-        MainLauncher = false,
+        MainLauncher = true,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize)]
     public class MainActivity : MauiAppCompatActivity
     {
@@ -23,7 +24,20 @@ namespace BrickController2.Droid
         }
 
         #region Activity
+        protected override void OnCreate(Bundle bundle)
+        {
+            //TabLayoutResource = Resource.Layout.Tabbar;
+            //ToolbarResource = Resource.Layout.Toolbar;
 
+            base.OnCreate(bundle);
+
+            Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+
+            Platform.Init(this, bundle);
+
+            //Forms.SetFlags("SwipeView_Experimental");
+            //Forms.Init(this, bundle);
+        }
 
         public override bool OnKeyDown([GeneratedEnum] Keycode keyCode, KeyEvent e)
         {

@@ -7,6 +7,8 @@
 		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
 		<RootNamespace>BrickController2.Droid</RootNamespace>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+		<!--<MauiSplashScreen Include="Resources\drawable\splash_screen.xml" Color="#512BD4" BaseSize="128,128" />-->
 	</PropertyGroup>
 
   <PropertyGroup>
@@ -34,13 +36,6 @@
     <AndroidResource Include="Resources\layout\Toolbar.axml" />
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values\colors.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\drawable-hdpi\" />
-    <Folder Include="Resources\drawable-mdpi\" />
-    <Folder Include="Resources\drawable-xhdpi\" />
-    <Folder Include="Resources\drawable-xxhdpi\" />
-    <Folder Include="Resources\drawable-xxxhdpi\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher.png" />
