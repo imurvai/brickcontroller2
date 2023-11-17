@@ -1,34 +1,28 @@
-﻿using Android.Content;
-using BrickController2.Droid.UI.CustomRenderers;
+﻿using Android.Widget;
 using BrickController2.UI.Controls;
-using Microsoft.Maui.Controls.Compatibility;
-using Microsoft.Maui.Controls.Compatibility.Platform.Android;
+using Microsoft.Maui.Handlers;
 
-[assembly: ExportRenderer(typeof(ExtendedSlider), typeof(ExtendedSliderRenderer))]
 namespace BrickController2.Droid.UI.CustomRenderers
 {
-    public class ExtendedSliderRenderer : SliderRenderer
+    public class ExtendedSliderRenderer : SliderHandler
     {
-        public ExtendedSliderRenderer(Context context) : base(context)
-        {
-        }
+        public static readonly PropertyMapper<ExtendedSlider, ExtendedSliderHnadler> PropertyMapper = new(ViewHandler.ViewMapper);
 
-        protected override void OnLayout(bool changed, int l, int t, int r, int b)
-        {
-            base.OnLayout(changed, l, t, r, b);
+        private ExtendedSlider Slider => VirtualView as ExtendedSlider;
 
-            if (Element is ExtendedSlider extendedSlider && Control != null)
+        protected override void ConnectHandler(SeekBar nativeSlider)
+        {
+            base.ConnectHandler(nativeSlider);
+
+            nativeSlider.StartTrackingTouch += (sender, args) => Slider?.TouchDown();
+            nativeSlider.StopTrackingTouch += (sender, args) => Slider?.TouchUp();
+            nativeSlider.ProgressChanged += (sender, args) =>
             {
-                Control.StartTrackingTouch += (sender, args) => extendedSlider.TouchDown();
-                Control.StopTrackingTouch += (sender, args) => extendedSlider.TouchUp();
-                Control.ProgressChanged += (sender, args) =>
+                if (args.FromUser)
                 {
-                    if (args.FromUser)
-                    {
-                        extendedSlider.Value = extendedSlider.Minimum + ((extendedSlider.Maximum - extendedSlider.Minimum) * args.Progress / 1000);
-                    }
-                };
-            }
+                    VirtualView.Value = VirtualView.Minimum + ((VirtualView.Maximum - VirtualView.Minimum) * args.Progress / int.MaxValue);
+                }
+            };
         }
     }
 }
