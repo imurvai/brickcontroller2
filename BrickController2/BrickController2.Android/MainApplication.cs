@@ -11,7 +11,6 @@ using BrickController2.Droid.UI.CustomRenderers;
 using BrickController2.Droid.UI.Services.DI;
 using BrickController2.UI.Controls;
 using BrickController2.UI.DI;
-using CommunityToolkit.Maui;
 
 namespace BrickController2.Droid
 {
@@ -28,10 +27,12 @@ namespace BrickController2.Droid
 
             builder
                 .UseMauiApp<App>()
-                .UseMauiCommunityToolkit()
                 .ConfigureMauiHandlers(handlers =>
                 {
-                    handlers.AddHandler(typeof(ExtendedSlider), typeof(ExtendedSliderRenderer));
+                    handlers
+                        .AddHandler(typeof(ExtendedSlider), typeof(ExtendedSliderRenderer))
+                        .AddHandler(typeof(ColorImage), typeof(ColorImageRenderer));
+                    ;
                 })
                 .ConfigureContainer(new AutofacServiceProviderFactory(), (containerBuilder) =>
                 {

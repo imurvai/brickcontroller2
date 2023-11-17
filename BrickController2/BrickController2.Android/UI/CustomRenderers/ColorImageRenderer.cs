@@ -1,55 +1,43 @@
-﻿using Android.Content;
-using Android.Graphics;
-using BrickController2.Droid.UI.CustomRenderers;
+﻿using Android.Graphics;
+using Android.Widget;
 using BrickController2.UI.Controls;
-using Microsoft.Maui.Controls.Compatibility;
 using Microsoft.Maui.Controls.Compatibility.Platform.Android;
-using Microsoft.Maui.Controls.Platform;
-using System.ComponentModel;
+using Microsoft.Maui.Handlers;
 
-[assembly: ExportRenderer(typeof(ColorImage), typeof(ColorImageRenderer))]
 namespace BrickController2.Droid.UI.CustomRenderers
 {
-    public class ColorImageRenderer : ImageRenderer
+    public class ColorImageRenderer : ImageHandler
     {
-        public ColorImageRenderer(Context context) : base(context)
+        public static readonly PropertyMapper<ColorImage, ColorImageRenderer> PropertyMapper = new(ViewHandler.ViewMapper)
         {
+            [ColorImage.ColorProperty.PropertyName] = SetColor,
+            [ColorImage.SourceProperty.PropertyName] = SetColor,
+        };
+
+        protected override void ConnectHandler(ImageView platformView)
+        {
+            base.ConnectHandler(platformView);
+            SetColor(this, this.VirtualView as ColorImage);
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<Image> e)
+        private static void SetColor(ColorImageRenderer handler, ColorImage colorImage)
         {
-            base.OnElementChanged(e);
-            SetColor();
-        }
-
-        protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            base.OnElementPropertyChanged(sender, e);
-
-            if (e.PropertyName == ColorImage.ColorProperty.PropertyName || e.PropertyName == ColorImage.SourceProperty.PropertyName)
-            {
-                SetColor();
-            }
-        }
-
-        private void SetColor()
-        {
-            if (Control == null || !(Element is ColorImage colorImage))
+            if (colorImage is null)
             {
                 return;
             }
 
             if (colorImage.Color.Equals(Colors.Transparent))
             {
-                if (Control.ColorFilter != null)
+                if (handler.PlatformView.ColorFilter != null)
                 {
-                    Control.ClearColorFilter();
+                    handler.PlatformView.ClearColorFilter();
                 }
             }
             else
             {
                 var colorFilter = new PorterDuffColorFilter(colorImage.Color.ToAndroid(), PorterDuff.Mode.SrcIn);
-                Control.SetColorFilter(colorFilter);
+                handler.PlatformView.SetColorFilter(colorFilter);
             }
         }
     }

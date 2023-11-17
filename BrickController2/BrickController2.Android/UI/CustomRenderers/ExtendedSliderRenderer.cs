@@ -6,7 +6,7 @@ namespace BrickController2.Droid.UI.CustomRenderers
 {
     public class ExtendedSliderRenderer : SliderHandler
     {
-        public static readonly PropertyMapper<ExtendedSlider, ExtendedSliderHnadler> PropertyMapper = new(ViewHandler.ViewMapper);
+        public static readonly PropertyMapper<ExtendedSlider, ExtendedSliderRenderer> PropertyMapper = new(ViewHandler.ViewMapper);
 
         private ExtendedSlider Slider => VirtualView as ExtendedSlider;
 

@@ -1,7 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <SingleProject>false</SingleProject>
-    <UseMaui>true</UseMaui>
-  </PropertyGroup>
-</Project>
