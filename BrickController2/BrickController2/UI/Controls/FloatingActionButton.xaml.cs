@@ -43,7 +43,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is FloatingActionButton fab && newValue is Color backgroundColor)
             {
-                fab.Frame.BackgroundColor = backgroundColor;
+                fab.ImageFrame.BackgroundColor = backgroundColor;
             }
         }
 

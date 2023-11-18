@@ -52,6 +52,9 @@ namespace BrickController2.UI.Controls
             if (bindable is ImageButton imageButton && newValue is Color color)
             {
                 imageButton.Image.Color = color;
+                // workaround to render image in MAUI
+                imageButton.Image.HeightRequest = imageButton.HeightRequest;
+                imageButton.Image.WidthRequest = imageButton.WidthRequest;
             }
         }
 

@@ -6,7 +6,7 @@
     x:Class="BrickController2.UI.Controls.ImageButton">
     
   <ContentView.Content>
-        <Frame x:Name="Frame" BackgroundColor="Transparent" HasShadow="False" Padding="0">
+        <Frame x:Name="ImageFrame" BackgroundColor="Transparent" HasShadow="False" Padding="0">
             <Frame.GestureRecognizers>
                 <TapGestureRecognizer x:Name="TapGuestureRecognizer"/>
             </Frame.GestureRecognizers>
