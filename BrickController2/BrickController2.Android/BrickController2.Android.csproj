@@ -21,12 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\gamepad.svg" />
-    <None Remove="Resources\values-night\colors.xml" />
-    <None Remove="Resources\values-night\styles.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Autofac" />
 	<PackageReference Include="Autofac.Extensions.DependencyInjection" />
   </ItemGroup>
@@ -37,8 +31,6 @@
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Tabbar.axml" />
     <AndroidResource Include="Resources\layout\Toolbar.axml" />
-    <AndroidResource Include="Resources\values\styles.xml" />
-    <AndroidResource Include="Resources\values\colors.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher.png" />
@@ -56,7 +48,7 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
   </ItemGroup>
   <ItemGroup>
-    <MauiSplashScreen Include="Resources\gamepad.svg" />
+    <MauiSplashScreen Include="Resources\launcher.svg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BrickController2\BrickController2.csproj" />
