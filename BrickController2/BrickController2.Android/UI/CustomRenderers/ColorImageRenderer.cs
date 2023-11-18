@@ -15,7 +15,7 @@ namespace BrickController2.Droid.UI.CustomRenderers
             [ColorImage.SourceProperty.PropertyName] = SetColor
         };
 
-        private static IResourceDictionary ResourceDicrionary => Application.Current.Resources;
+        private static IResourceDictionary ResourceDictionary => Application.Current.Resources;
 
         protected override void ConnectHandler(ImageView platformView)
         {
@@ -23,7 +23,7 @@ namespace BrickController2.Droid.UI.CustomRenderers
             SetColor();
 
             // react on theme change
-            ResourceDicrionary.ValuesChanged += (sender, args) => SetColor();
+            ResourceDictionary.ValuesChanged += (sender, args) => SetColor();
         }
 
         private void SetColor() => SetColor(this, VirtualView as ColorImage);
