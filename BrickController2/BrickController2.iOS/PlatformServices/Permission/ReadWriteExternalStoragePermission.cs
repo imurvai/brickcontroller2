@@ -1,4 +1,4 @@
-﻿using static Xamarin.Essentials.Permissions;
+﻿using static Microsoft.Maui.ApplicationModel.Permissions;
 using BrickController2.PlatformServices.Permission;
 
 namespace BrickController2.iOS.PlatformServices.Permission

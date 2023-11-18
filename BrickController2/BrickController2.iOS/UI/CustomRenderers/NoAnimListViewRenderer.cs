@@ -1,16 +1,17 @@
-﻿using BrickController2.iOS.UI.CustomRenderers;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
+﻿using Microsoft.Maui.Handlers;
+using UIKit;
 
-[assembly: ExportRenderer(typeof(ListView), typeof(NoAnimListViewRenderer))]
+//[assembly: ExportRenderer(typeof(ListView), typeof(NoAnimListViewRenderer))]
 namespace BrickController2.iOS.UI.CustomRenderers
 {
-    public class NoAnimListViewRenderer : ListViewRenderer
-    {
-        protected override void OnElementChanged(ElementChangedEventArgs<ListView> e)
-        {
-            base.OnElementChanged(e);
-            AnimationsEnabled = false;
-        }
-    }
+    //public class NoAnimListViewRenderer : ListViewHnadler
+    //{
+    //    public static readonly PropertyMapper<ListView, NoAnimListViewRenderer> PropertyMapper = new(ViewHandler.ViewMapper);
+
+    //    protected override void ConnectHandler(UISlider nativeSlider)
+    //    {
+    //        base.ConnectHandler(nativeSlider);
+    //        AnimationsEnabled = false;
+    //    }
+    //}
 }
