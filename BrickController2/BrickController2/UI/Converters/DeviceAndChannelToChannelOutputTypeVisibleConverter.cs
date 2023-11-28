@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using Microsoft.Maui;
+﻿using System.Globalization;
 using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.Converters

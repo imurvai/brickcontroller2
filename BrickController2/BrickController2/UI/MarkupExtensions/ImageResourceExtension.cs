@@ -1,7 +1,4 @@
-﻿using System;
-using BrickController2.Helpers;
-using Microsoft.Maui;
-using Microsoft.Maui.Controls.Xaml;
+﻿using BrickController2.Helpers;
 
 namespace BrickController2.UI.MarkupExtensions
 {

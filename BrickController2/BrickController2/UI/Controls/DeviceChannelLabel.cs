@@ -1,7 +1,4 @@
-﻿using BrickController2.DeviceManagement;
-using BrickController2.Helpers;
-using System;
-using Microsoft.Maui;
+﻿using BrickController2.Helpers;
 using DeviceType = BrickController2.DeviceManagement.DeviceType;
 
 namespace BrickController2.UI.Controls
