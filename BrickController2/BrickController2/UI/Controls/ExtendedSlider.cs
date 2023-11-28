@@ -10,7 +10,8 @@ namespace BrickController2.UI.Controls
 
         public ExtendedSlider()
         {
-            ValueChanged += ExtendedSlider_ValueChanged;
+            // due to (probably) Maui chnages, we need earlier event than ValueChanged
+            PropertyChanging += ExtendedSlider_PropertyChanging;
         }
 
         public ICommand TouchDownCommand
@@ -55,11 +56,15 @@ namespace BrickController2.UI.Controls
             }
         }
 
-        private void ExtendedSlider_ValueChanged(object sender, ValueChangedEventArgs e)
+        private void ExtendedSlider_PropertyChanging(object sender, PropertyChangingEventArgs e)
         {
-            if (Step > 0)
+            if (e.PropertyName != ValueProperty.PropertyName || Step == 0)
+                return;
+
+            var newValue = Round(Value, Step);
+            if (Value != newValue)
             {
-                Value = Round(e.NewValue, Step);
+                Value = newValue;
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using Android.Widget;
 using BrickController2.UI.Controls;
 using Microsoft.Maui.Handlers;
+using Microsoft.Maui.Platform;
 
 namespace BrickController2.Droid.UI.CustomRenderers
 {
@@ -18,10 +19,14 @@ namespace BrickController2.Droid.UI.CustomRenderers
             nativeSlider.StopTrackingTouch += (sender, args) => Slider?.TouchUp();
             nativeSlider.ProgressChanged += (sender, args) =>
             {
-                if (args.FromUser)
-                {
-                    VirtualView.Value = VirtualView.Minimum + ((VirtualView.Maximum - VirtualView.Minimum) * args.Progress / int.MaxValue);
-                }
+                if (VirtualView == null || !args.FromUser)
+                    return;
+
+                var min = VirtualView.Minimum;
+                var max = VirtualView.Maximum;
+
+                var value = min + (max - min) * (args.Progress / SliderExtensions.PlatformMaxValue);
+                VirtualView.Value = value;
             };
         }
     }
