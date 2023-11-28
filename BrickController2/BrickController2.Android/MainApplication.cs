@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Android.Runtime;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using BrickController2.BusinessLogic.DI;
 using BrickController2.CreationManagement.DI;
 using BrickController2.Database.DI;
@@ -9,6 +8,7 @@ using BrickController2.DeviceManagement.DI;
 using BrickController2.Droid.PlatformServices.DI;
 using BrickController2.Droid.UI.CustomRenderers;
 using BrickController2.Droid.UI.Services.DI;
+using BrickController2.Helpers;
 using BrickController2.UI.Controls;
 using BrickController2.UI.DI;
 
@@ -30,11 +30,11 @@ namespace BrickController2.Droid
                 .ConfigureMauiHandlers(handlers =>
                 {
                     handlers
-                        .AddHandler(typeof(ExtendedSlider), typeof(ExtendedSliderRenderer))
-                        .AddHandler(typeof(ColorImage), typeof(ColorImageRenderer));
+                        .AddHandler<ExtendedSlider, ExtendedSliderRenderer>()
+                        .AddHandler<ColorImage, ColorImageRenderer>()
                     ;
                 })
-                .ConfigureContainer(new AutofacServiceProviderFactory(), (containerBuilder) =>
+                .ConfigureContainer((containerBuilder) =>
                 {
                     containerBuilder.Register<Android.Content.Context>((c) => Android.App.Application.Context).SingleInstance();
                     containerBuilder.RegisterModule<PlatformServicesModule>();
@@ -47,9 +47,6 @@ namespace BrickController2.Droid
                     containerBuilder.RegisterModule<UiModule>();
                 })
                 ;
-#if DEBUG
-            //builder.Logging.AddDebug();
-#endif
 
             return builder.Build();
         }

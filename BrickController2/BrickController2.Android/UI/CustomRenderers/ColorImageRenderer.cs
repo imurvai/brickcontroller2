@@ -2,7 +2,7 @@
 using Android.Widget;
 using BrickController2.UI.Controls;
 using Microsoft.Maui.Controls.Internals;
-using Microsoft.Maui.Controls.Compatibility.Platform.Android;
+using Microsoft.Maui.Platform;
 using Microsoft.Maui.Handlers;
 
 namespace BrickController2.Droid.UI.CustomRenderers
@@ -44,7 +44,7 @@ namespace BrickController2.Droid.UI.CustomRenderers
             }
             else
             {
-                var colorFilter = new PorterDuffColorFilter(colorImage.Color.ToAndroid(), PorterDuff.Mode.SrcIn);
+                var colorFilter = new PorterDuffColorFilter(colorImage.Color.ToPlatform(), PorterDuff.Mode.SrcIn);
                 handler.PlatformView.SetColorFilter(colorFilter);
             }
         }

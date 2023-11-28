@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>net7.0</TargetFrameworks>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+	  <UseMaui>true</UseMaui>
+  </PropertyGroup>
 
 
   <ItemGroup>
@@ -11,6 +12,8 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" />
+	<PackageReference Include="Autofac.Extensions.DependencyInjection" />
+	<PackageReference Include="Microsoft.Maui.Controls" />
     <PackageReference Include="SQLiteNetExtensions.Async" />
   </ItemGroup>
 

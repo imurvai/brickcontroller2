@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-android</TargetFrameworks>
+		<TargetFrameworks>net8.0-android</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		
 		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" />
-	<PackageReference Include="Autofac.Extensions.DependencyInjection" />
+	<PackageReference Include="Microsoft.Maui.Controls" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0-ios</TargetFrameworks>
+		<TargetFrameworks>net8.0-ios</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 
 		<SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
@@ -198,7 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" />
-	<PackageReference Include="Autofac.Extensions.DependencyInjection" />
+	<PackageReference Include="Microsoft.Maui.Controls" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BrickController2\BrickController2.csproj">

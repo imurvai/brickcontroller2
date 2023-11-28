@@ -1,9 +1,9 @@
 ﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using BrickController2.BusinessLogic.DI;
 using BrickController2.CreationManagement.DI;
 using BrickController2.Database.DI;
 using BrickController2.DeviceManagement.DI;
+using BrickController2.Helpers;
 using BrickController2.iOS.PlatformServices.DI;
 using BrickController2.iOS.UI.CustomRenderers;
 using BrickController2.iOS.UI.Services.DI;
@@ -25,12 +25,12 @@ namespace BrickController2.iOS
                 .ConfigureMauiHandlers(handlers =>
                 {
                     handlers
-                        .AddHandler(typeof(ExtendedSlider), typeof(ExtendedSliderRenderer))
-                        .AddHandler(typeof(ColorImage), typeof(ColorImageRenderer));
+                        .AddHandler<ExtendedSlider, ExtendedSliderRenderer>()
+                        .AddHandler<ColorImage, ColorImageRenderer>()
                     //TODO NoAnimListViewRenderer
                     ;
                 })
-                .ConfigureContainer(new AutofacServiceProviderFactory(), (containerBuilder) =>
+                .ConfigureContainer((containerBuilder) =>
                 {
                     containerBuilder.RegisterModule<PlatformServicesModule>();
                     containerBuilder.RegisterModule<UIServicesModule>();

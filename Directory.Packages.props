@@ -5,6 +5,7 @@
   <ItemGroup>
     <PackageVersion Include="Autofac" Version="7.1.0" />
     <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.3" />
     <PackageVersion Include="SQLiteNetExtensions.Async" Version="2.1.0" />
   </ItemGroup>
 </Project>
