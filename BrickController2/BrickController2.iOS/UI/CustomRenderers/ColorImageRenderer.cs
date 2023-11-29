@@ -2,7 +2,7 @@
 using UIKit;
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Controls.Internals;
-using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
+using Microsoft.Maui.Platform;
 
 namespace BrickController2.iOS.UI.CustomRenderers
 {
@@ -11,8 +11,12 @@ namespace BrickController2.iOS.UI.CustomRenderers
         public static readonly PropertyMapper<ColorImage, ColorImageRenderer> PropertyMapper = new(ViewHandler.ViewMapper)
         {
             [ColorImage.ColorProperty.PropertyName] = SetColor,
-            [ColorImage.SourceProperty.PropertyName] = SetColor
+            [ColorImage.SourceProperty.PropertyName] = MapSourceAndColor
         };
+
+        public ColorImageRenderer() : base(PropertyMapper)
+        {
+        }
 
         private static IResourceDictionary ResourceDictionary => Microsoft.Maui.Controls.Application.Current.Resources;
 
@@ -26,6 +30,12 @@ namespace BrickController2.iOS.UI.CustomRenderers
         }
 
         private void SetColor() => SetColor(this, VirtualView as ColorImage);
+
+        private static void MapSourceAndColor(ColorImageRenderer handler, ColorImage colorImage)
+        {
+            SetColor(handler, colorImage);
+            MapSource(handler, colorImage);
+        }
 
         private static void SetColor(ColorImageRenderer handler, ColorImage colorImage)
         {
@@ -42,7 +52,7 @@ namespace BrickController2.iOS.UI.CustomRenderers
             else
             {
                 handler.PlatformView.Image = handler.PlatformView.Image.ImageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate);
-                handler.PlatformView.TintColor = colorImage.Color.ToUIColor();
+                handler.PlatformView.TintColor = colorImage.Color.ToPlatform();
             }
         }
     }

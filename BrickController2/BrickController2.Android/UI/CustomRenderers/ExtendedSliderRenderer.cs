@@ -7,8 +7,6 @@ namespace BrickController2.Droid.UI.CustomRenderers
 {
     public class ExtendedSliderRenderer : SliderHandler
     {
-        public static readonly PropertyMapper<ExtendedSlider, ExtendedSliderRenderer> PropertyMapper = new(ViewHandler.ViewMapper);
-
         private ExtendedSlider Slider => VirtualView as ExtendedSlider;
 
         protected override void ConnectHandler(SeekBar nativeSlider)

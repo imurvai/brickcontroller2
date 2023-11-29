@@ -7,6 +7,7 @@ using Android.App;
 // associated with an assembly.
 [assembly: AssemblyTitle("BrickController2.Android")]
 [assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SCN")]
 [assembly: AssemblyProduct("BrickController2.Android")]
 [assembly: AssemblyCopyright("Copyright © SCN 2014")]

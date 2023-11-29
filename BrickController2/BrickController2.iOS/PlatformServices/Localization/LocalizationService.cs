@@ -2,7 +2,7 @@
 using BrickController2.PlatformServices.Localization;
 using Foundation;
 
-[assembly: Dependency(typeof(BrickController2.iOS.PlatformServices.Localization.LocalizationService))]
+[assembly:Dependency(typeof(BrickController2.iOS.PlatformServices.Localization.LocalizationService))]
 namespace BrickController2.iOS.PlatformServices.Localization
 {
     public class LocalizationService : ILocalizationService

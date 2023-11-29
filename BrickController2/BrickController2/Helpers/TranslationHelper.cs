@@ -1,5 +1,4 @@
 ﻿using BrickController2.PlatformServices.Localization;
-using Microsoft.Maui;
 
 namespace BrickController2.Helpers
 {

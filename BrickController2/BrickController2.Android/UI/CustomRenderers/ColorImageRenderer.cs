@@ -9,11 +9,15 @@ namespace BrickController2.Droid.UI.CustomRenderers
 {
     public class ColorImageRenderer : ImageHandler
     {
-        public static readonly PropertyMapper<ColorImage, ColorImageRenderer> PropertyMapper = new(ViewHandler.ViewMapper)
+        public static readonly PropertyMapper<ColorImage, ColorImageRenderer> PropertyMapper = new(ImageHandler.Mapper)
         {
             [ColorImage.ColorProperty.PropertyName] = SetColor,
-            [ColorImage.SourceProperty.PropertyName] = SetColor
+            [ColorImage.SourceProperty.PropertyName] = MapSourceAndColor
         };
+
+        public ColorImageRenderer() : base(PropertyMapper)
+        {
+        }
 
         private static IResourceDictionary ResourceDictionary => Application.Current.Resources;
 
@@ -27,6 +31,12 @@ namespace BrickController2.Droid.UI.CustomRenderers
         }
 
         private void SetColor() => SetColor(this, VirtualView as ColorImage);
+
+        private static void MapSourceAndColor(ColorImageRenderer handler, ColorImage colorImage)
+        { 
+            SetColor(handler, colorImage);
+            MapSource(handler, colorImage);
+        }
 
         private static void SetColor(ColorImageRenderer handler, ColorImage colorImage)
         {

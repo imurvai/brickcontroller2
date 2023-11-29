@@ -4,7 +4,7 @@ using BrickController2.UI.Pages;
 using BrickController2.UI.Services.Background;
 using BrickController2.UI.Services.Theme;
 
-[assembly: XamlCompilation(XamlCompilationOptions.Skip)]
+[assembly:XamlCompilation(XamlCompilationOptions.Skip)]
 namespace BrickController2
 {
 	public partial class App
@@ -16,7 +16,7 @@ namespace BrickController2
 			PageFactory pageFactory,
 			Func<Page, NavigationPage> navigationPageFactory,
 			BackgroundService backgroundService,
-   IThemeService themeService)
+            IThemeService themeService)
 		{
 			InitializeComponent();
 

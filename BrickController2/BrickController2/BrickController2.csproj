@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
-	  <UseMaui>true</UseMaui>
+	<UseMaui>true</UseMaui>
   </PropertyGroup>
 
 

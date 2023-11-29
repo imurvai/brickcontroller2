@@ -6,19 +6,15 @@ namespace BrickController2.iOS.UI.CustomRenderers
 {
     public class ExtendedSliderRenderer : SliderHandler
     {
-        public static readonly PropertyMapper<ExtendedSlider, ExtendedSliderRenderer> PropertyMapper = new(ViewHandler.ViewMapper);
-
-        private ExtendedSlider Slider => VirtualView as ExtendedSlider;
-
         protected override void ConnectHandler(UISlider nativeSlider)
         {
             base.ConnectHandler(nativeSlider);
 
-            if (Slider is not null)
+            if (VirtualView is ExtendedSlider slider)
             {
-                PlatformView.TouchDown += (sender, args) => Slider?.TouchDown();
-                PlatformView.TouchUpInside += (sender, args) => Slider?.TouchUp();
-                PlatformView.TouchUpOutside += (sender, args) => Slider?.TouchUp();
+                nativeSlider.TouchDown += (sender, args) => slider.TouchDown();
+                nativeSlider.TouchUpInside += (sender, args) => slider.TouchUp();
+                nativeSlider.TouchUpOutside += (sender, args) => slider.TouchUp();
             }
         }
     }

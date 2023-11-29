@@ -1,7 +1,6 @@
 ﻿using BrickController2.Resources;
 using System.Reflection;
 using System.Resources;
-using Microsoft.Maui;
 
 namespace BrickController2.Helpers
 {
