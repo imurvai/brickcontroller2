@@ -20,18 +20,15 @@ namespace BrickController2.Droid
         public MainActivity()
         {
             // inject the controller
-            _gameControllerService = MauiApplication.Current.Services.GetRequiredService<GameControllerService>();
+            _gameControllerService = IPlatformApplication.Current.Services.GetRequiredService<GameControllerService>();
         }
 
         #region Activity
         protected override void OnCreate(Bundle bundle)
         {
-
             base.OnCreate(bundle);
 
             Window.AddFlags(WindowManagerFlags.KeepScreenOn);
-
-            Platform.Init(this, bundle);
         }
 
         public override bool OnKeyDown([GeneratedEnum] Keycode keyCode, KeyEvent e)

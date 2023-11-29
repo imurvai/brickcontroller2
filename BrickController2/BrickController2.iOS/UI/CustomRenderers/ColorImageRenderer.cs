@@ -8,7 +8,7 @@ namespace BrickController2.iOS.UI.CustomRenderers
 {
     public class ColorImageRenderer : ImageHandler
     {
-        public static readonly PropertyMapper<ColorImage, ColorImageRenderer> PropertyMapper = new(ViewHandler.ViewMapper)
+        public static readonly PropertyMapper<ColorImage, ColorImageRenderer> PropertyMapper = new(Mapper)
         {
             [ColorImage.ColorProperty.PropertyName] = SetColor,
             [ColorImage.SourceProperty.PropertyName] = MapSourceAndColor
