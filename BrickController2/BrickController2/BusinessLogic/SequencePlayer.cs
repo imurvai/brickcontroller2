@@ -123,7 +123,7 @@ namespace BrickController2.BusinessLogic
             var sequenceDurationMs = sequence.TotalDurationMs;
             var elapsedTimeMs = nowMs - startTimeMs;
 
-            if ((!sequence.Loop && (sequenceDurationMs < elapsedTimeMs)) || sequenceDurationMs == 0)
+            if ((!sequence.Loop && (sequenceDurationMs <= elapsedTimeMs)) || sequenceDurationMs == 0)
             {
                 // Sequence is not looping and has finished
                 return false;
