@@ -33,7 +33,11 @@ namespace BrickController2.Droid.PlatformServices.SharedFileStorage
                 try
                 {
 #pragma warning disable CS0618 // Type or member is obsolete
-                    var storageDirectory = Environment.ExternalStorageDirectory?.AbsolutePath;
+                    var storageDirectory = (Build.VERSION.SdkInt <= BuildVersionCodes.SV2) ?
+                        // Android API 32 and older - keep backward compatible: /storage/emulated/0/
+                        Environment.ExternalStorageDirectory?.AbsolutePath:
+                        // Android API 33+ - use /storage/emulated/0/Documents
+                        Environment.GetExternalStoragePublicDirectory(Environment.DirectoryDocuments)?.AbsolutePath;
                     var storageState = Environment.ExternalStorageState;
 #pragma warning restore CS0618 // Type or member is obsolete
 
