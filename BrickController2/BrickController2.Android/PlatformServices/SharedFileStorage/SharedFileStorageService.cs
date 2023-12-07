@@ -26,18 +26,44 @@ namespace BrickController2.Droid.PlatformServices.SharedFileStorage
             }
         }
 
-        public string SharedStorageDirectory
+        public string SharedStorageBaseDirectory
         {
             get
             {
                 try
                 {
 #pragma warning disable CS0618 // Type or member is obsolete
-                    var storageDirectory = Environment.ExternalStorageDirectory?.AbsolutePath;
+                    var storageDirectory = ((int)Build.VERSION.SdkInt <= 32) ?
+                        // Android API 32 and older - keep backward compatible: /storage/emulated/0/
+                        Environment.ExternalStorageDirectory?.AbsolutePath :
+                        // Android API 33+ - use /storage/emulated/0/Documents
+                        Environment.GetExternalStoragePublicDirectory(Environment.DirectoryDocuments)?.AbsolutePath;
                     var storageState = Environment.ExternalStorageState;
 #pragma warning restore CS0618 // Type or member is obsolete
 
                     if (storageDirectory == null || !Directory.Exists(storageDirectory) || !Environment.MediaMounted.Equals(storageState))
+                    {
+                        return null;
+                    }
+
+                    return storageDirectory;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+
+        public string SharedStorageDirectory
+        {
+            get
+            {
+                try
+                {
+                    var storageDirectory = SharedStorageBaseDirectory;
+
+                    if (storageDirectory == null)
                     {
                         return null;
                     }
