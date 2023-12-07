@@ -124,7 +124,7 @@ namespace BrickController2.UI.ViewModels
                     _disappearingTokenSource.Token.ThrowIfCancellationRequested();
                 }
 
-                if (SharedFileStorageService.SharedStorageDirectory != null)
+                if (SharedFileStorageService.SharedStorageBaseDirectory != null)
                 {
                     var storagePermissionStatus = await _readWriteExternalStoragePermission.CheckStatusAsync();
                     if (storagePermissionStatus != PermissionStatus.Granted && !_isStoragePermissionRequested)
