@@ -43,10 +43,10 @@ jobs:
         run: dotnet restore BrickController2/BrickController2.Android/BrickController2.Android.csproj
 
       - name: Build MAUI Android
-        run: dotnet publish BrickController2/BrickController2.Android/BrickController2.Android.csproj -c Release -f net8.0-android --no-restore
+        run: dotnet publish BrickController2/BrickController2.Android/BrickController2.Android.csproj -c Debug -f net8.0-android --no-restore
 
       - name: Upload Android Artifact
         uses: actions/upload-artifact@v3
         with:
           name: mauibeach-android-ci-build
-          path: BrickController2/BrickController2.Android/bin/Release/net8.0-android/*Signed.a*
+          path: BrickController2/BrickController2.Android/bin/Debug/net8.0-android/*Signed.a*
