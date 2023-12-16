@@ -1,0 +1,52 @@
+name: CI Build
+
+on:
+  push:
+    branches:
+      - master
+      - '*'
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true                     # Disable the .NET logo
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
+
+jobs:
+# MAUI Android Build
+  build-android:
+    runs-on: windows-2022
+    name: Android Build
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet
+        with:
+          dotnet-version: 8.0.x
+          
+      - name: Install MAUI Workload
+        run: dotnet workload install maui --ignore-failed-sources
+
+      - name: Restore Dependencies
+        run: dotnet restore BrickController2/BrickController2.Android/BrickController2.Android.csproj
+
+      - name: Build MAUI Android
+        run: dotnet publish BrickController2/BrickController2.Android/BrickController2.Android.csproj -c Release -f net8.0-android --no-restore
+
+      - name: Upload Android Artifact
+        uses: actions/upload-artifact
+        with:
+          name: mauibeach-android-ci-build
+          path: BrickController2/BrickController2.Android/bin/Release/net8.0-android/*Signed.a*
