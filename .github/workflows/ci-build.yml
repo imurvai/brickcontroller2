@@ -46,7 +46,7 @@ jobs:
         run: dotnet publish BrickController2/BrickController2.Android/BrickController2.Android.csproj -c Release -f net8.0-android --no-restore
 
       - name: Upload Android Artifact
-        uses: actions/upload-artifact
+        uses: actions/upload-artifact@v3
         with:
           name: mauibeach-android-ci-build
           path: BrickController2/BrickController2.Android/bin/Release/net8.0-android/*Signed.a*
