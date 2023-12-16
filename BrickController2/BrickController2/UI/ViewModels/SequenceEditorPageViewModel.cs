@@ -202,9 +202,6 @@ namespace BrickController2.UI.ViewModels
                     _disappearingTokenSource.Token))
                 {
                     Sequence.ControlPoints.Remove(controlPoint);
-
-                    // This hack is needed to rebuild the bindings properly in the listview
-                    Sequence.ControlPoints = new ObservableCollection<SequenceControlPoint>(Sequence.ControlPoints);
                 }
             }
             catch (OperationCanceledException)
