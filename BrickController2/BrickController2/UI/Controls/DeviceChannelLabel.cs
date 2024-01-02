@@ -1,7 +1,5 @@
-﻿using BrickController2.DeviceManagement;
-using BrickController2.Helpers;
-using System;
-using Xamarin.Forms;
+﻿using BrickController2.Helpers;
+using DeviceType = BrickController2.DeviceManagement.DeviceType;
 
 namespace BrickController2.UI.Controls
 {
@@ -11,8 +9,8 @@ namespace BrickController2.UI.Controls
         private readonly static string[] _circuitCubesChannelLetters = new[] { "A", "B", "C" };
         private readonly static string[] _buwizz3ChannelLetters = new[] { "1", "2", "3", "4", "A", "B" };
 
-        public static BindableProperty DeviceTypeProperty = BindableProperty.Create(nameof(DeviceType), typeof(DeviceType), typeof(DeviceChannelLabel), default(DeviceType), BindingMode.OneWay, null, OnDeviceChanged);
-        public static BindableProperty ChannelProperty = BindableProperty.Create(nameof(Channel), typeof(int), typeof(DeviceChannelLabel), 0, BindingMode.OneWay, null, OnChannelChanged);
+        public static readonly BindableProperty DeviceTypeProperty = BindableProperty.Create(nameof(DeviceType), typeof(DeviceType), typeof(DeviceChannelLabel), default(DeviceType), BindingMode.OneWay, null, OnDeviceChanged);
+        public static readonly BindableProperty ChannelProperty = BindableProperty.Create(nameof(Channel), typeof(int), typeof(DeviceChannelLabel), 0, BindingMode.OneWay, null, OnChannelChanged);
 
         public DeviceType DeviceType
         {

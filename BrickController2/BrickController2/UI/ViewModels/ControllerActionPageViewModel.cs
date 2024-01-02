@@ -5,12 +5,9 @@ using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Preferences;
 using BrickController2.UI.Services.Translation;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.ViewModels
 {

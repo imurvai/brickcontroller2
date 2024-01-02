@@ -1,7 +1,6 @@
 ﻿using BrickController2.DeviceManagement;
 using BrickController2.UI.Commands;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using DeviceType = BrickController2.DeviceManagement.DeviceType;
 
 namespace BrickController2.UI.Controls
 {

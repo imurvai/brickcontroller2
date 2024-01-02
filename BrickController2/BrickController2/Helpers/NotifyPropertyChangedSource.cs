@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Xamarin.Forms;
 
 namespace BrickController2.Helpers
 {
@@ -10,7 +9,7 @@ namespace BrickController2.Helpers
 
         protected void RaisePropertyChanged([CallerMemberName]string propertyName = null)
         {
-            Device.BeginInvokeOnMainThread(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
+            MainThread.BeginInvokeOnMainThread(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
         }
     }
 }

@@ -2,10 +2,7 @@
 using BrickController2.Helpers;
 using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BrickController2.CreationManagement
 {

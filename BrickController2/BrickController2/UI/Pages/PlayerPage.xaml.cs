@@ -1,7 +1,6 @@
 ﻿using BrickController2.UI.Services.Background;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.ViewModels;
-using Xamarin.Forms.Xaml;
 
 namespace BrickController2.UI.Pages
 {
