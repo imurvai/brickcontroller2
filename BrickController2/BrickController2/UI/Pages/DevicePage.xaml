@@ -118,9 +118,11 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="30"/>
                                                 <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="30"/>
                                             </Grid.ColumnDefinitions>
                                             <controls:DeviceChannelLabel Grid.Column="0" DeviceType="{Binding Device.DeviceType}" Channel="{Binding Channel}"/>
                                             <controls:ExtendedSlider Grid.Column="1" Minimum="-100" Maximum="100" IsEnabled="{Binding Device.DeviceState, Converter={StaticResource DeviceConnectedToBool}}" Value="{Binding Output}" TouchUpCommand="{Binding TouchUpCommand}"/>
+                                            <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_settings.png}" ImageColor="White" Command="{Binding OpenChannelSetupCommand}" IsVisible="{Binding ChannelSetupEnabled}"/>
                                         </Grid>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
