@@ -65,12 +65,12 @@ internal class GamepadController
 
     private bool HasChanged((string AxisName, GameControllerEventType EventType, float Value) readingValue)
     {
-        if (_lastReadingValues.TryGetValue(readingValue.AxisName, out float lastValue))
+        // get last reported value of the default one
+        _lastReadingValues.TryGetValue(readingValue.AxisName, out float lastValue);
+        // skip value if there is no change
+        if (AreAlmostEqual(readingValue.Value, lastValue))
         {
-            if (AreAlmostEqual(readingValue.Value, lastValue))
-            {
-                return false;
-            }
+            return false;
         }
 
         _lastReadingValues[readingValue.AxisName] = readingValue.Value;
