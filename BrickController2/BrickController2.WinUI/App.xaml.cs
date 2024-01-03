@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using BrickController2.DI;
 using BrickController2.UI.Controls;
+using BrickController2.UI.Pages;
 using BrickController2.Windows.PlatformServices.DI;
 using BrickController2.Windows.UI.CustomHandlers;
 using Windows.Devices.Input;
@@ -22,6 +23,7 @@ namespace BrickController2.Windows
             {
                 handlers
                     .AddHandler<ExtendedSlider, ExtendedSliderHandler>()
+                    .AddHandler<PageBase, CustomPageHandler>()
                 ;
 
                 // handle swipe if there is no touch screen
