@@ -102,6 +102,11 @@
             <Setter Property="HeightRequest" Value="20"/>
             <Setter Property="Color" Value="{DynamicResource PrimaryColor}"/>
         </Style>
+
+        <!-- TitleView related -->
+        <Style x:Key="TitleViewGridStyle" TargetType="Grid">
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+        </Style>
         
         <!-- CollectionView related -->
 

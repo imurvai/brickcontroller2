@@ -22,7 +22,7 @@
     </local:PageBase.Resources>
 
     <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand">
+        <Grid Style="{StaticResource TitleViewGridStyle}">
             <Label Text="{extensions:Translate Device}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
         </Grid>
     </NavigationPage.TitleView>
@@ -35,7 +35,7 @@
                 <ScrollView>
                     <StackLayout Orientation="Vertical" Padding="10">
 
-                        <Grid>
+                        <Grid ColumnSpacing="6">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
@@ -82,12 +82,12 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <StackLayout Grid.Column="0" Orientation="Horizontal">
-                                        <Label Text="FW: " FontSize="Small"/>
+                                    <StackLayout Grid.Column="0" Orientation="Horizontal" Spacing="6">
+                                        <Label Text="FW:" FontSize="Small"/>
                                         <Label Text="{Binding Device.FirmwareVersion}" FontSize="Small" FontAttributes="Bold"/>
                                     </StackLayout>
-                                    <StackLayout Grid.Column="1" Orientation="Horizontal">
-                                        <Label Text="HW: " FontSize="Small"/>
+                                    <StackLayout Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                                        <Label Text="HW:" FontSize="Small"/>
                                         <Label Text="{Binding Device.HardwareVersion}" FontSize="Small" FontAttributes="Bold"/>
                                     </StackLayout>
                                 </Grid>
@@ -95,21 +95,21 @@
                         </Grid>
 
                         <!-- BuWizz 1 output level -->
-                        <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizzDevice}" Padding="10">
+                        <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizzDevice}" Padding="10" Spacing="6">
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,4,0,4"/>
                             <Label Text="{extensions:Translate OutputLevel}"/>
                             <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                         </StackLayout>
 
                         <!-- BuWizz 2 output level -->
-                        <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizz2Device}" Padding="10">
+                        <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizz2Device}" Padding="10" Spacing="6">
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,4,0,4"/>
                             <Label Text="{extensions:Translate OutputLevel}"/>
                             <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizz2OutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
                         </StackLayout>
 
                         <!-- Outputs -->
-                        <StackLayout Orientation="Vertical">
+                        <StackLayout Orientation="Vertical" Spacing="6">
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="10,4,10,8"/>
                             <StackLayout BindableLayout.ItemsSource="{Binding DeviceOutputs}" Orientation="Vertical">
                                 <BindableLayout.ItemTemplate>

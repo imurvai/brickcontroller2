@@ -22,7 +22,7 @@
     </local:PageBase.Resources>
 
     <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand">
+        <Grid Style="{StaticResource TitleViewGridStyle}">
             <Label Text="{extensions:Translate ControllerAction}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
             <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark.png}" Command="{Binding SaveControllerActionCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" HorizontalOptions="End" Margin="12,0"/>
         </Grid>

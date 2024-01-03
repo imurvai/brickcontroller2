@@ -20,7 +20,7 @@
     </local:PageBase.Resources>
 
     <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand">
+        <Grid Style="{StaticResource TitleViewGridStyle}">
             <Label Text="{extensions:Translate Devices}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
         </Grid>
     </NavigationPage.TitleView>

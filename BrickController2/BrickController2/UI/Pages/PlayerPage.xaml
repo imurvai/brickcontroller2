@@ -12,7 +12,7 @@
     BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand">
+        <Grid Style="{StaticResource TitleViewGridStyle}">
             <Label Text="{extensions:Translate Play}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
         </Grid>
     </NavigationPage.TitleView>

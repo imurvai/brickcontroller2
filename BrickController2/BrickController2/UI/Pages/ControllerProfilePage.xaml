@@ -21,7 +21,7 @@
     </local:PageBase.Resources>
 
     <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand">
+        <Grid Style="{StaticResource TitleViewGridStyle}">
             <Label Text="{extensions:Translate ControllerProfile}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
             <StackLayout Orientation="Horizontal" HorizontalOptions="End" Margin="12,0" Spacing="12">
                 <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_export.png}" Command="{Binding ExportControllerProfileCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" IsVisible="{Binding SharedFileStorageService.IsSharedStorageAvailable}"/>
