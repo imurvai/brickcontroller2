@@ -4,6 +4,7 @@ using BrickController2.PlatformServices.GameController;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeviceType = BrickController2.DeviceManagement.DeviceType;
 
 namespace BrickController2.BusinessLogic
 {

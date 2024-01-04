@@ -17,7 +17,7 @@ namespace BrickController2.Database.DI
                 return (databaseFilename) =>
                 {
                     var databasePath = PathHelper.AddAppDataPathToFilename(databaseFilename);
-                    return c.Resolve<SQLiteConnection>(new TypedParameter(typeof(string), databasePath));
+                    return componentContext.Resolve<SQLiteConnection>(new TypedParameter(typeof(string), databasePath));
                 };
             });
 
@@ -27,7 +27,7 @@ namespace BrickController2.Database.DI
                 return (databaseFilename) =>
                 {
                     var databasePath = PathHelper.AddAppDataPathToFilename(databaseFilename);
-                    return c.Resolve<SQLiteAsyncConnection>(new TypedParameter(typeof(string), databasePath));
+                    return componentContext.Resolve<SQLiteAsyncConnection>(new TypedParameter(typeof(string), databasePath));
                 };
             });
         }

@@ -1,14 +1,9 @@
 ﻿using BrickController2.UI.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace BrickController2.UI.Controls
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class SegmentedControl : ContentView
 	{
         private readonly IList<Label> _labels = new List<Label>();
@@ -18,9 +13,9 @@ namespace BrickController2.UI.Controls
 			InitializeComponent ();
 		}
 
-        public static BindableProperty ItemsCsvPropery = BindableProperty.Create(nameof(ItemsCsv), typeof(string), typeof(SegmentedControl), default(string), propertyChanged: ItemsCsvChanged);
-        public static BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(SegmentedControl), -1, BindingMode.TwoWay, propertyChanged: SelectedIndexChanged, coerceValue: CoerceSelectedIndex);
-        public static BindableProperty SelectionChangedCommandProperty = BindableProperty.Create(nameof(SelectionChangedCommand), typeof(ICommand), typeof(SegmentedControl));
+        public static readonly BindableProperty ItemsCsvPropery = BindableProperty.Create(nameof(ItemsCsv), typeof(string), typeof(SegmentedControl), default(string), propertyChanged: ItemsCsvChanged);
+        public static readonly BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(SegmentedControl), -1, BindingMode.TwoWay, propertyChanged: SelectedIndexChanged, coerceValue: CoerceSelectedIndex);
+        public static readonly BindableProperty SelectionChangedCommandProperty = BindableProperty.Create(nameof(SelectionChangedCommand), typeof(ICommand), typeof(SegmentedControl));
 
         public string ItemsCsv
         {
@@ -67,7 +62,7 @@ namespace BrickController2.UI.Controls
 
         private void Build(IList<string> items)
         {
-            StackLayout.Children.Clear();
+            StackLayout.Clear();
             _labels.Clear();
 
             if (items == null || items.Count() == 0)
@@ -90,7 +85,7 @@ namespace BrickController2.UI.Controls
                     };
                     separator.SetDynamicResource(BoxView.BackgroundColorProperty, "DividerColor");
 
-                    StackLayout.Children.Add(separator);
+                    StackLayout.Add(separator);
                 }
 
                 var label = new Label
@@ -104,14 +99,14 @@ namespace BrickController2.UI.Controls
 
                 var frame = new Frame
                 {
-                    BackgroundColor = Color.Transparent,
+                    BackgroundColor = Colors.Transparent,
                     Padding = new Thickness(1),
                     HasShadow = false
                 };
                 frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>(i => ItemTapped(i)), CommandParameter = index });
                 frame.Content = label;
 
-                StackLayout.Children.Add(frame);
+                StackLayout.Add(frame);
             }
 
             SetSelection(SelectedIndex);

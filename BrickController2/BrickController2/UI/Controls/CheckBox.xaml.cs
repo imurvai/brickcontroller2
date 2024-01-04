@@ -1,7 +1,4 @@
-﻿using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-namespace BrickController2.UI.Controls
+﻿namespace BrickController2.UI.Controls
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CheckBox : ContentView
@@ -13,7 +10,7 @@ namespace BrickController2.UI.Controls
             TapRecognizer.Command = new Command(() => Checked = !Checked);
         }
 
-        public static BindableProperty CheckedProperty = BindableProperty.Create(nameof(Checked), typeof(bool), typeof(CheckBox), false, BindingMode.TwoWay, null, CheckedChanged);
+        public static readonly BindableProperty CheckedProperty = BindableProperty.Create(nameof(Checked), typeof(bool), typeof(CheckBox), false, BindingMode.TwoWay, null, CheckedChanged);
 
         public bool Checked
         {

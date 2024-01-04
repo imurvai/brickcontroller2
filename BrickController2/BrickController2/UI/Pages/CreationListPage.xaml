@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <local:PageBase
-    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
-    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationListPage"
     x:Name="Page"
@@ -70,7 +70,7 @@
                 </CollectionView>
 
                 <!-- Footer -->
-                <Grid Grid.Row="1" Style="{StaticResource FooterGridStyle}">
+                <Grid Grid.Row="1" Style="{StaticResource FooterGridStyle}" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -82,37 +82,37 @@
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToDevicesCommand}"/>
                         </Frame.GestureRecognizers>
-                        <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_link.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Devices}" FontSize="Small"/>
-                        </StackLayout>
+                        </VerticalStackLayout>
                     </Frame>
                     <Frame Grid.Column="1" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToControllerTesterCommand}"/>
                         </Frame.GestureRecognizers>
-                        <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_console.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Controller}" FontSize="Small"/>
-                        </StackLayout>
+                        </VerticalStackLayout>
                     </Frame>
                     <Frame Grid.Column="2" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToSequencesCommand}"/>
                         </Frame.GestureRecognizers>
-                        <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_sequence.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Sequences}" FontSize="Small"/>
-                        </StackLayout>
+                        </VerticalStackLayout>
                     </Frame>
                     <Frame Grid.Column="3" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToAboutCommand}"/>
                         </Frame.GestureRecognizers>
-                        <StackLayout Orientation="Vertical" HorizontalOptions="CenterAndExpand">
+                        <VerticalStackLayout HorizontalOptions="Center" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_info.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate About}" FontSize="Small"/>
-                        </StackLayout>
+                        </VerticalStackLayout>
                     </Frame>
                 </Grid>
 

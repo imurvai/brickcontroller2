@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <local:PageBase
-    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
-    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.SequenceEditorPage"
     x:Name="Page"
@@ -16,7 +16,7 @@
     <local:PageBase.Resources>
         <ResourceDictionary>
             <converters:FloatValueToPercentConverter x:Key="FloatValueToPercent"/>
-        </ResourceDictionary>    
+        </ResourceDictionary>
     </local:PageBase.Resources>
 
     <NavigationPage.TitleView>
@@ -49,7 +49,7 @@
                 </Grid>
 
                 <!-- Sequence properties -->
-                <Grid Grid.Row="1" Padding="20,10,20,10">
+                <Grid Grid.Row="1" Padding="20,10,20,10" ColumnSpacing="6" RowSpacing="6">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="3*"/>

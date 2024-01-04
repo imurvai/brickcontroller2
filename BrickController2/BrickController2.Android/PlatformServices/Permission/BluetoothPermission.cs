@@ -1,6 +1,5 @@
 ﻿using BrickController2.PlatformServices.Permission;
-using System.Collections.Generic;
-using static Xamarin.Essentials.Permissions;
+using static Microsoft.Maui.ApplicationModel.Permissions;
 
 namespace BrickController2.Droid.PlatformServices.Permission
 {

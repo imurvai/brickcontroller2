@@ -1,10 +1,8 @@
 ﻿using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace BrickController2.UI.Controls
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ImageButton : ContentView
 	{
 		public ImageButton ()
@@ -12,10 +10,10 @@ namespace BrickController2.UI.Controls
 			InitializeComponent ();
 		}
 
-        public static BindableProperty ImageSourceProperty = BindableProperty.Create(nameof(ImageSource), typeof(ImageSource), typeof(ImageButton), null, BindingMode.OneWay, null, ImageSourceChanged);
-        public static BindableProperty ImageColorProperty = BindableProperty.Create(nameof(ImageColor), typeof(Color), typeof(ImageButton), default(Color), BindingMode.OneWay, null, ImageColorChanged);
-        public static BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ImageButton), null, BindingMode.OneWay, null, CommandChanged);
-        public static BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(Command), typeof(object), typeof(ImageButton), null, BindingMode.OneWay, null, CommandParameterChanged);
+        public static readonly BindableProperty ImageSourceProperty = BindableProperty.Create(nameof(ImageSource), typeof(ImageSource), typeof(ImageButton), null, BindingMode.OneWay, null, ImageSourceChanged);
+        public static readonly BindableProperty ImageColorProperty = BindableProperty.Create(nameof(ImageColor), typeof(Color), typeof(ImageButton), default(Color), BindingMode.OneWay, null, ImageColorChanged);
+        public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ImageButton), null, BindingMode.OneWay, null, CommandChanged);
+        public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(Command), typeof(object), typeof(ImageButton), null, BindingMode.OneWay, null, CommandParameterChanged);
 
         public ImageSource ImageSource
         {
