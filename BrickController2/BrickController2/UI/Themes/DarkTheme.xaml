@@ -25,6 +25,7 @@
     <Color x:Key="DialogBackgroundColor">#202020</Color>
     <Color x:Key="DialogBorderColor">Gray</Color>
     <Color x:Key="DeleteSwipeItemBackgroundColor">Red</Color>
+    <Color x:Key="SwipeItemBackgroundColor">Green</Color>
     <Color x:Key="CollectionViewHeaderBackgroundColor">#202020</Color>
     <Color x:Key="CollectionViewSelectedItemBackgroundColor">#404040</Color>
     <Color x:Key="SwitchOnColor">Green</Color>

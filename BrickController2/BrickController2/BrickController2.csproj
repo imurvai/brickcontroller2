@@ -16,6 +16,7 @@
     <PackageReference Include="SQLitePCLRaw.bundle_green" />
 	<PackageReference Include="SQLiteNetExtensions" />
     <PackageReference Include="SQLiteNetExtensions.Async" />
+	<PackageReference Include="ZXing.Net.Maui.Controls" />
   </ItemGroup>
-
+  	
 </Project>

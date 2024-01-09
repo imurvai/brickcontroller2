@@ -28,6 +28,7 @@ namespace BrickController2.Droid.PlatformServices.DI
             builder.RegisterType<SharedFileStorageService>().As<ISharedFileStorageService>().SingleInstance();
             builder.RegisterType<ReadWriteExternalStoragePermission>().As<IReadWriteExternalStoragePermission>().InstancePerDependency();
             builder.RegisterType<BluetoothPermission>().As<IBluetoothPermission>().InstancePerDependency();
+            builder.RegisterType<CameraPermission>().As<ICameraPermission>().InstancePerDependency();
         }
     }
 }

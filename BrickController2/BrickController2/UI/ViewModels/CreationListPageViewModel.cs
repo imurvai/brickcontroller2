@@ -48,10 +48,12 @@ namespace BrickController2.UI.ViewModels
             SharedFileStorageService = sharedFileStorageService;
 
             ImportCreationCommand = new SafeCommand(async () => await ImportCreationAsync(), () => SharedFileStorageService.IsSharedStorageAvailable);
+            ScanCreationCommand = new SafeCommand(ScanCreationAsync, () => SharedFileStorageService.IsSharedStorageAvailable);
             OpenSettingsPageCommand = new SafeCommand(async () => await navigationService.NavigateToAsync<SettingsPageViewModel>(), () => !_dialogService.IsDialogOpen);
             AddCreationCommand = new SafeCommand(async () => await AddCreationAsync());
             CreationTappedCommand = new SafeCommand<Creation>(async creation => await NavigationService.NavigateToAsync<CreationPageViewModel>(new NavigationParameters(("creation", creation))));
             DeleteCreationCommand = new SafeCommand<Creation>(async creation => await DeleteCreationAsync(creation));
+            ShareCreationCommand = new SafeCommand<Creation>(async creation => await ShareCreationAsync(creation));
             NavigateToDevicesCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<DeviceListPageViewModel>());
             NavigateToControllerTesterCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<ControllerTesterPageViewModel>());
             NavigateToSequencesCommand = new SafeCommand(async () => await NavigationService.NavigateToAsync<SequenceListPageViewModel>());
@@ -67,6 +69,8 @@ namespace BrickController2.UI.ViewModels
         public ICommand CreationTappedCommand { get; }
         public ICommand DeleteCreationCommand { get; }
         public ICommand ImportCreationCommand { get; }
+        public ICommand ScanCreationCommand { get; }
+        public ICommand ShareCreationCommand { get; }
         public ICommand NavigateToDevicesCommand { get; }
         public ICommand NavigateToControllerTesterCommand { get; }
         public ICommand NavigateToSequencesCommand { get; }
@@ -183,6 +187,17 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
+        private async Task ScanCreationAsync()
+        {
+            try
+            {
+                await NavigationService.NavigateToAsync<BarcodeScannerPageViewModel>(new NavigationParameters());
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
         private async Task LoadCreationsAndDevicesAsync()
         {
             try
@@ -270,6 +285,17 @@ namespace BrickController2.UI.ViewModels
                         Translate("Deleting"),
                         token: _disappearingTokenSource.Token);
                 }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        private async Task ShareCreationAsync(Creation creation)
+        {
+            try
+            {
+                await NavigationService.NavigateToAsync<BarcodeSharePageViewModel>(new NavigationParameters(("item", creation)));
             }
             catch (OperationCanceledException)
             {

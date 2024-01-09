@@ -67,12 +67,46 @@ namespace BrickController2.CreationManagement
             }
         }
 
+        public async Task ImportCreationPayloadAsync(string creationJson)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var creation = JsonConvert.DeserializeObject<Creation>(creationJson);
+
+                var creationName = creation.Name;
+                if (!IsCreationNameAvailable(creationName))
+                {
+                    for (var suffix = 1; suffix < 1000; suffix++)
+                    {
+                        var newCreationName = $"{creationName} {suffix}";
+                        if (IsCreationNameAvailable(newCreationName))
+                        {
+                            creationName = newCreationName;
+                            break;
+                        }
+                    }
+                }
+
+                creation.Name = creationName;
+                await _creationRepository.InsertCreationAsync(creation);
+                Creations.Add(creation);
+            }
+        }
+
         public async Task ExportCreationAsync(Creation creation, string creationFilename)
         {
             using (await _asyncLock.LockAsync())
             {
                 var creationJson = JsonConvert.SerializeObject(creation);
                 await File.WriteAllTextAsync(creationFilename, creationJson);
+            }
+        }
+
+        public async Task<string> ExportCreationAsync(Creation creation)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                return await JsonConvert.SerializeObjectAsync(creation);
             }
         }
 

@@ -24,6 +24,7 @@
         <Grid Style="{StaticResource TitleViewGridStyle}">
             <Label Text="{extensions:Translate Creations}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
             <StackLayout Orientation="Horizontal" HorizontalOptions="End" Margin="12,0" Spacing="12">
+                <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_search.png}" Command="{Binding ScanCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" IsVisible="true"/>
                 <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_import.png}" Command="{Binding ImportCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" IsVisible="{Binding SharedFileStorageService.IsSharedStorageAvailable}"/>
                 <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_settings.png}" Command="{Binding OpenSettingsPageCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
             </StackLayout>
@@ -48,6 +49,11 @@
                                         <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteCreationCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem Text="{extensions:Translate Share}" IconImageSource="{extensions:ImageResource Source=ic_export.png}" BackgroundColor="{DynamicResource SwipeItemBackgroundColor}" Command="{Binding BindingContext.ShareCreationCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
                                 <Grid Style="{StaticResource CollectionItemGridStyle}">
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding BindingContext.CreationTappedCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>

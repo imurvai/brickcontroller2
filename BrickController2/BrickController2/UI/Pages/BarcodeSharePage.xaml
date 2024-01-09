@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:PageBase
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:local="clr-namespace:BrickController2.UI.Pages"
+	xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+    x:Class="BrickController2.UI.Pages.BarcodeSharePage"
+    Title="{extensions:Translate Share}"
+    ios:Page.UseSafeArea="True"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+    <NavigationPage.TitleView>
+        <Grid Style="{StaticResource TitleViewGridStyle}">
+            <Label Text="{extensions:Translate Share}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="End" Margin="12,0" Spacing="12">
+                <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_export.png}" Command="{Binding ExportCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" IsEnabled="False" IsVisible="{Binding SharedFileStorageService.IsSharedStorageAvailable}"/>
+            </StackLayout>
+        </Grid>
+    </NavigationPage.TitleView>
+
+    <local:PageBase.Content>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <Grid Grid.Row="0" Style="{StaticResource HeaderGridStyle}">
+                    <Label Text="{Binding Item.Name}" TextColor="{DynamicResource EditableTextColor}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center" />
+                </Grid>
+
+                <!-- QR code -->
+                <zxing:BarcodeGeneratorView Grid.Row="1" x:Name="BarcodeBoxView" HeightRequest="320" WidthRequest="320" HorizontalOptions="Center" Margin="3" Format="{Binding BarcodeFormat}" Value="{Binding BarcodeValue}" />
+            </Grid>
+
+            <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
+        </AbsoluteLayout>
+     </local:PageBase.Content>
+</local:PageBase>

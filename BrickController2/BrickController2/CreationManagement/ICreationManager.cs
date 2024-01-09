@@ -1,7 +1,5 @@
 ﻿using BrickController2.PlatformServices.GameController;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace BrickController2.CreationManagement
 {
@@ -12,7 +10,9 @@ namespace BrickController2.CreationManagement
 
         Task LoadCreationsAndSequencesAsync();
         Task ImportCreationAsync(string creationFilename);
+        Task ImportCreationPayloadAsync(string creationJson);
         Task ExportCreationAsync(Creation creation, string creationFilename);
+        Task<string> ExportCreationAsync(Creation creation);
         Task<bool> IsCreationNameAvailableAsync(string creationName);
         Task<Creation> AddCreationAsync(string creationName);
         Task DeleteCreationAsync(Creation creation);
