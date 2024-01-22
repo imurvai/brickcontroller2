@@ -14,6 +14,7 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDialogService _dialogService;
         private bool _scanningEnabled;
+        private string _currentValue;
         private CancellationTokenSource _disappearingTokenSource;
 
         public BarcodeScannerPageViewModel(
@@ -27,10 +28,8 @@ namespace BrickController2.UI.ViewModels
             _creationManager = creationManager;
             _dialogService = dialogService;
 
-            ImportCommand = new SafeCommand(ImportAsync, () => ScanningEnabled && Barcodes.Any());
+            ImportCommand = new SafeCommand(ImportAsync, () => ScanningEnabled && CurrentValue is not null);
         }
-
-        public ObservableCollection<string> Barcodes { get; } = [];
 
         public bool ScanningEnabled
         {
@@ -42,12 +41,28 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        public BarcodeReaderOptions ReaderOptions { get; } = new BarcodeReaderOptions
+        public string CurrentValue
         {
-            AutoRotate = true,
+            get { return _currentValue; }
+            set
+            {
+                if (_currentValue != value)
+                {
+                    _currentValue = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        public BarcodeReaderOptions Options { get; } = new BarcodeReaderOptions
+        {
+            AutoRotate = false,
             Formats = BarcodeFormat.QrCode,
-            Multiple = false
+            Multiple = false,
+            TryHarder = false
         };
+
+        public BarcodeFormat Format => BarcodeFormat.QrCode;
 
         public ICommand ImportCommand { get; }
 
@@ -70,13 +85,8 @@ namespace BrickController2.UI.ViewModels
 
         internal void OnBarcodeDetected(BarcodeResult[] results)
         {
-            foreach (BarcodeResult result in results)
-            {
-                if (!Barcodes.Contains(result.Value))
-                {
-                    Barcodes.Add(result.Value);
-                }
-            }
+            // update preview
+            CurrentValue = results.First().Value;
         }
 
         private async Task ImportAsync()
@@ -84,23 +94,27 @@ namespace BrickController2.UI.ViewModels
             // disable scanning
             ScanningEnabled = false;
 
-            int errorCounter = 0;
-            foreach (var barcodeValue in Barcodes)
+            try
             {
-                try
-                {
-                    await _creationManager.ImportCreationPayloadAsync(barcodeValue);
-                }
-                catch
-                {
-                    ++errorCounter;
-                }
+                await _creationManager.ImportCreationPayloadAsync(CurrentValue);
+
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Import"),
+                    Translate("CreationImported"),
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
+            }
+            catch
+            {
+                await _dialogService.ShowMessageBoxAsync(
+                    Translate("Error"),
+                    Translate("FailedToImportCreation"),
+                    Translate("Ok"),
+                    _disappearingTokenSource.Token);
             }
 
-            await _dialogService.ShowMessageBoxAsync("Imported", $"Imported {Barcodes.Count - errorCounter} of {Barcodes.Count}.", "OK", _disappearingTokenSource.Token);
-
-            // clear imported codes and enable scanning
-            Barcodes.Clear();
+            // clear imported code and enable scanning
+            CurrentValue = default;
             ScanningEnabled = true;
         }
     }

@@ -1,13 +1,13 @@
-﻿using BrickController2.Helpers;
+﻿using BrickController2.CreationManagement.Sharing;
+using BrickController2.Helpers;
 using Newtonsoft.Json;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace BrickController2.CreationManagement
 {
-    public class Creation : NotifyPropertyChangedSource
+    public class Creation : NotifyPropertyChangedSource, IShareable
     {
         private string _name;
         private ObservableCollection<ControllerProfile> _controllerProfiles = new ObservableCollection<ControllerProfile>();

@@ -22,27 +22,25 @@
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                
-                <!-- Barcode detection properties -->
-                <Grid Grid.Row="0" Padding="20,10,20,10" ColumnSpacing="6" RowSpacing="6">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="3*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
 
-                    <Label Grid.Column="0" Grid.Row="0" Text="{extensions:Translate Detected}" FontSize="Small" VerticalOptions="Center"/>
-                    <controls:CheckBox Grid.Column="1" Grid.Row="0" Checked="{Binding Barcodes.Count}" HorizontalOptions="End" VerticalOptions="Center"/>
-                </Grid>
                 <!-- QR code scanner -->
-                <zxing:CameraBarcodeReaderView Grid.Row="1" x:Name="cameraBarcodeReaderView" BarcodesDetected="CameraBarcodeReaderView_BarcodesDetected" Options="{Binding ReaderOptions}" />
+                <zxing:CameraBarcodeReaderView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" BarcodesDetected="BarcodesDetected" Options="{Binding Options}" />
+
+                <!-- Detected QR preview -->
+                <zxing:BarcodeGeneratorView Grid.Row="1" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" Format="{Binding Format}" Value="{Binding CurrentValue}" BarcodeMargin="0" Margin="20" />
+                <Border Grid.Row="1" Grid.Column="0" WidthRequest="20" HeightRequest="20" VerticalOptions="End" HorizontalOptions="End" Padding="1" StrokeShape="RoundRectangle 10" BackgroundColor="{DynamicResource CheckBoxCheckedColor}" Margin="0,20">
+                    <controls:ColorImage Source="{extensions:ImageResource Source=ic_checkmark.png}" Color="{DynamicResource PageBackgroundColor}" WidthRequest="16" HeightRequest="16" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
                 
-                <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_import.png}" ImageColor="White" Command="{Binding ImportCommand}" HorizontalOptions="Center" VerticalOptions="End" Margin="10"/>
+                <controls:FloatingActionButton Grid.Row="3" Grid.Column="1" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_import.png}" ImageColor="White" Command="{Binding ImportCommand}" HorizontalOptions="Center" VerticalOptions="Center" Margin="10"/>
             </Grid>
            
             <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>

@@ -40,6 +40,31 @@ namespace BrickController2.CreationManagement
             }
         }
 
+
+        public async Task ImportCreationAsync(Creation creation)
+        {
+            using (await _asyncLock.LockAsync())
+            {
+                var creationName = creation.Name;
+                if (!IsCreationNameAvailable(creationName))
+                {
+                    for (var suffix = 1; suffix < 1000; suffix++)
+                    {
+                        var newCreationName = $"{creationName} {suffix}";
+                        if (IsCreationNameAvailable(newCreationName))
+                        {
+                            creationName = newCreationName;
+                            break;
+                        }
+                    }
+                }
+
+                creation.Name = creationName;
+                await _creationRepository.InsertCreationAsync(creation);
+                Creations.Add(creation);
+            }
+        }
+
         public async Task ImportCreationAsync(string creationFilename)
         {
             using (await _asyncLock.LockAsync())

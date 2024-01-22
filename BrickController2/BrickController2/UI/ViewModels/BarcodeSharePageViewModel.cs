@@ -36,7 +36,7 @@ public class BarcodeSharePageViewModel : PageViewModelBase
         get { return _barcodeValue; }
         set
         {
-            _barcodeValue = value;
+            _barcodeValue = value + value + value + value + value + value + value + value + value + value;
             RaisePropertyChanged();
         }
     }

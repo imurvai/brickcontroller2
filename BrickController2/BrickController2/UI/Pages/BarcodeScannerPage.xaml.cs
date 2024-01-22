@@ -19,7 +19,7 @@ public partial class BarcodeScannerPage
 
     public BarcodeScannerPageViewModel ViewModel { get; }
 
-    private void CameraBarcodeReaderView_BarcodesDetected(object sender, BarcodeDetectionEventArgs e)
+    private void BarcodesDetected(object sender, BarcodeDetectionEventArgs e)
     {
         ViewModel?.OnBarcodeDetected(e.Results);
     }

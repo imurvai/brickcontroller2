@@ -17,6 +17,7 @@
             <Label Text="{extensions:Translate Creation}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
             <StackLayout Orientation="Horizontal" HorizontalOptions="End" Margin="12,0" Spacing="12">
                 <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_import.png}" Command="{Binding ImportControllerProfileCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" IsVisible="{Binding SharedFileStorageService.IsSharedStorageAvailable}"/>
+                <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_copy.png}" Command="{Binding CopyCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" />
                 <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_export.png}" Command="{Binding ExportCreationCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" IsVisible="{Binding SharedFileStorageService.IsSharedStorageAvailable}"/>
             </StackLayout>
         </Grid>

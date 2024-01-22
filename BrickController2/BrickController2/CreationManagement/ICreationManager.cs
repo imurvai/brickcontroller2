@@ -9,6 +9,7 @@ namespace BrickController2.CreationManagement
         ObservableCollection<Sequence> Sequences { get; }
 
         Task LoadCreationsAndSequencesAsync();
+        Task ImportCreationAsync(Creation creation);
         Task ImportCreationAsync(string creationFilename);
         Task ImportCreationPayloadAsync(string creationJson);
         Task ExportCreationAsync(Creation creation, string creationFilename);
