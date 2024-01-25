@@ -20,7 +20,7 @@ public static class ApplicationBuilder
             .UseMauiApp<App>()
             // configure other common dependencies if needed
             .UseBarcodeReader();
-        ;
+            ;
     }
 
     public static MauiAppBuilder ConfigureContainer(this MauiAppBuilder builder, Action<ContainerBuilder> configure)

@@ -1,7 +1,5 @@
 ﻿using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace BrickController2.BusinessLogic
 {
@@ -138,7 +136,7 @@ namespace BrickController2.BusinessLogic
 
             for (int i = 1; i <= sequence.ControlPoints.Count; i++)
             {
-                controlPoint2 = i < sequence.ControlPoints.Count ? 
+                controlPoint2 = i < sequence.ControlPoints.Count ?
                     sequence.ControlPoints[i] :
                     sequence.Loop ?
                         sequence.ControlPoints[0] :

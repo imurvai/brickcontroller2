@@ -4,14 +4,14 @@ using System.Windows.Input;
 namespace BrickController2.UI.Controls
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class SegmentedControl : ContentView
-	{
+    public partial class SegmentedControl : ContentView
+    {
         private readonly IList<Label> _labels = new List<Label>();
 
-        public SegmentedControl ()
-		{
-			InitializeComponent ();
-		}
+        public SegmentedControl()
+        {
+            InitializeComponent();
+        }
 
         public static readonly BindableProperty ItemsCsvPropery = BindableProperty.Create(nameof(ItemsCsv), typeof(string), typeof(SegmentedControl), default(string), propertyChanged: ItemsCsvChanged);
         public static readonly BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(SegmentedControl), -1, BindingMode.TwoWay, propertyChanged: SelectedIndexChanged, coerceValue: CoerceSelectedIndex);

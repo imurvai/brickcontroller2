@@ -18,5 +18,5 @@
     <PackageReference Include="SQLiteNetExtensions.Async" />
 	<PackageReference Include="ZXing.Net.Maui.Controls" />
   </ItemGroup>
-  	
+
 </Project>

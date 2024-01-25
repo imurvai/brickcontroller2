@@ -1,18 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using BrickController2.BusinessLogic;
 using BrickController2.CreationManagement;
-using BrickController2.UI.Services.Navigation;
-using System.Windows.Input;
-using BrickController2.UI.Services.Dialog;
-using BrickController2.UI.Commands;
-using System.Threading;
-using System;
-using BrickController2.UI.Services.Translation;
-using BrickController2.BusinessLogic;
 using BrickController2.Helpers;
-using System.IO;
 using BrickController2.PlatformServices.SharedFileStorage;
-using System.Linq;
-using BrickController2.CreationManagement.Sharing;
+using BrickController2.UI.Commands;
+using BrickController2.UI.Services.Dialog;
+using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Services.Translation;
+using System.Windows.Input;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -285,7 +279,7 @@ namespace BrickController2.UI.ViewModels
                     filename = result.Result;
                     var filePath = Path.Combine(SharedFileStorageService.SharedStorageDirectory, $"{filename}.{FileHelper.CreationFileExtension}");
 
-                    if (!File.Exists(filePath) || 
+                    if (!File.Exists(filePath) ||
                         await _dialogService.ShowQuestionDialogAsync(
                             Translate("FileAlreadyExists"),
                             Translate("DoYouWantToOverWrite"),
@@ -311,7 +305,7 @@ namespace BrickController2.UI.ViewModels
                                 Translate("FailedToExportCreation"),
                                 Translate("Ok"),
                                 _disappearingTokenSource.Token);
-                            
+
                             return;
                         }
                     }

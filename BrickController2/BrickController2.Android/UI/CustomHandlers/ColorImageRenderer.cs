@@ -33,7 +33,7 @@ namespace BrickController2.Droid.UI.CustomRenderers
         private void SetColor() => SetColor(this, VirtualView as ColorImage);
 
         private static void MapSourceAndColor(ColorImageHnadler handler, ColorImage colorImage)
-        { 
+        {
             SetColor(handler, colorImage);
             MapSource(handler, colorImage);
         }

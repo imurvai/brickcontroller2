@@ -7,7 +7,6 @@ using BrickController2.UI.Services.Translation;
 using Device = BrickController2.DeviceManagement.Device;
 using BrickController2.Helpers;
 using DeviceType = BrickController2.DeviceManagement.DeviceType;
-using BrickController2.CreationManagement;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -34,7 +33,7 @@ namespace BrickController2.UI.ViewModels
             _dialogService = dialogService;
 
             Device = parameters.Get<Device>("device");
-            DeviceOutputs =  Enumerable
+            DeviceOutputs = Enumerable
                 .Range(0, Device.NumberOfChannels)
                 .Select(channel => new DeviceOutputViewModel(NavigationService, Device, channel))
                 .ToArray();

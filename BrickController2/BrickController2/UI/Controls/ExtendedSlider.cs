@@ -56,7 +56,7 @@ namespace BrickController2.UI.Controls
         }
 
         private static object CoerceStepValue(object bindable, object value)
-		{
+        {
             return Math.Max((double)value, DefaultStepValue);
         }
 
