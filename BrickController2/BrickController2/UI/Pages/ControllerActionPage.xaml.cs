@@ -6,11 +6,11 @@ namespace BrickController2.UI.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ControllerActionPage
-	{
-		public ControllerActionPage(PageViewModelBase vm, IBackgroundService backgroundService, IDialogServerHost dialogServerHost)
+    {
+        public ControllerActionPage(PageViewModelBase vm, IBackgroundService backgroundService, IDialogServerHost dialogServerHost)
             : base(backgroundService, dialogServerHost)
         {
-			InitializeComponent();
+            InitializeComponent();
             AfterInitialize(vm);
         }
     }

@@ -6,12 +6,12 @@ using Device = BrickController2.DeviceManagement.Device;
 namespace BrickController2.UI.Controls
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class DeviceOutputTesterControl : ContentView
-	{
-		public DeviceOutputTesterControl ()
-		{
-			InitializeComponent ();
-		}
+    public partial class DeviceOutputTesterControl : ContentView
+    {
+        public DeviceOutputTesterControl()
+        {
+            InitializeComponent();
+        }
 
         public static BindableProperty DeviceProperty = BindableProperty.Create(nameof(Device), typeof(Device), typeof(DeviceOutputTesterControl), propertyChanged: OnDeviceChanged);
 

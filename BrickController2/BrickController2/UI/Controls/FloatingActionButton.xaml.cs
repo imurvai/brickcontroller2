@@ -3,12 +3,12 @@
 namespace BrickController2.UI.Controls
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class FloatingActionButton : ContentView
-	{
-		public FloatingActionButton()
-		{
-			InitializeComponent();
-		}
+    public partial class FloatingActionButton : ContentView
+    {
+        public FloatingActionButton()
+        {
+            InitializeComponent();
+        }
 
         public static readonly BindableProperty ButtonColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(FloatingActionButton), default(Color), BindingMode.OneWay, null, ButtonColorChanged);
         public static readonly BindableProperty ImageSourceProperty = BindableProperty.Create(nameof(ImageSource), typeof(ImageSource), typeof(FloatingActionButton), null, BindingMode.OneWay, null, ImageSourceChanged);

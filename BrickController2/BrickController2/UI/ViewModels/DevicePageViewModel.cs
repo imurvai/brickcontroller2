@@ -33,7 +33,7 @@ namespace BrickController2.UI.ViewModels
             _dialogService = dialogService;
 
             Device = parameters.Get<Device>("device");
-            DeviceOutputs =  Enumerable
+            DeviceOutputs = Enumerable
                 .Range(0, Device.NumberOfChannels)
                 .Select(channel => new DeviceOutputViewModel(Device, channel))
                 .ToArray();

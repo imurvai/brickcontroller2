@@ -3,12 +3,12 @@
 namespace BrickController2.UI.Controls
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ImageButton : ContentView
-	{
-		public ImageButton ()
-		{
-			InitializeComponent ();
-		}
+    public partial class ImageButton : ContentView
+    {
+        public ImageButton()
+        {
+            InitializeComponent();
+        }
 
         public static readonly BindableProperty ImageSourceProperty = BindableProperty.Create(nameof(ImageSource), typeof(ImageSource), typeof(ImageButton), null, BindingMode.OneWay, null, ImageSourceChanged);
         public static readonly BindableProperty ImageColorProperty = BindableProperty.Create(nameof(ImageColor), typeof(Color), typeof(ImageButton), default(Color), BindingMode.OneWay, null, ImageColorChanged);

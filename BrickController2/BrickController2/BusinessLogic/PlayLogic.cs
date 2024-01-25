@@ -1,9 +1,6 @@
 ﻿using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
 using BrickController2.PlatformServices.GameController;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using DeviceType = BrickController2.DeviceManagement.DeviceType;
 
 namespace BrickController2.BusinessLogic
@@ -115,7 +112,7 @@ namespace BrickController2.BusinessLogic
                 }
             }
         }
-        
+
         private static bool ShouldProcessButtonEvent(bool isPressed, ControllerAction controllerAction)
         {
             return controllerAction.ButtonType == ControllerButtonType.Normal || isPressed;
@@ -126,7 +123,7 @@ namespace BrickController2.BusinessLogic
             var previousOutputs = GetPreviousOutputs(controllerAction);
             float currentOutput = 0;
             float buttonValue = isPressed ? (controllerAction.IsInvert ? -1 : 1) : 0;
-            
+
             switch (controllerAction.ButtonType)
             {
                 case ControllerButtonType.Normal:
@@ -237,7 +234,7 @@ namespace BrickController2.BusinessLogic
             }
 
             axisValue = controllerAction.AxisActiveZonePercent > 0 ? axisValue * 100F / controllerAction.AxisActiveZonePercent : axisValue;
-            
+
             if (controllerAction.AxisCharacteristic == ControllerAxisCharacteristic.Exponential)
             {
                 // Cheat :)

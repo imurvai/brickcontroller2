@@ -1,10 +1,5 @@
 ﻿using BrickController2.Helpers;
 using BrickController2.PlatformServices.BluetoothLE;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
@@ -47,7 +42,7 @@ namespace BrickController2.DeviceManagement
             value = CutOutputValue(value);
 
             var intValue = (int)(value * 255);
-            
+
             lock (_outputLock)
             {
                 if (_outputValues[channel] != intValue)
@@ -76,7 +71,7 @@ namespace BrickController2.DeviceManagement
             return Task.FromResult(
                 _firmwareRevisionCharacteristic != null &&
                 _hardwareRevisionCharacteristic != null &&
-                _remoteControlCharacteristic != null && 
+                _remoteControlCharacteristic != null &&
                 _quickDriveCharacteristic != null);
         }
 

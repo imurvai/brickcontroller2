@@ -6,8 +6,8 @@ namespace BrickController2.UI.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ControllerProfilePage
-	{
-		public ControllerProfilePage(PageViewModelBase vm, IBackgroundService backgroundService, IDialogServerHost dialogServerHost)
+    {
+        public ControllerProfilePage(PageViewModelBase vm, IBackgroundService backgroundService, IDialogServerHost dialogServerHost)
             : base(backgroundService, dialogServerHost)
         {
             InitializeComponent();
