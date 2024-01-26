@@ -7,6 +7,7 @@ using BrickController2.UI.Services.Translation;
 using Device = BrickController2.DeviceManagement.Device;
 using BrickController2.Helpers;
 using DeviceType = BrickController2.DeviceManagement.DeviceType;
+using BrickController2.CreationManagement;
 
 namespace BrickController2.UI.ViewModels
 {

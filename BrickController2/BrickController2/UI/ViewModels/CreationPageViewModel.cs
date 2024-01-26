@@ -1,5 +1,6 @@
 ﻿using BrickController2.BusinessLogic;
 using BrickController2.CreationManagement;
+using BrickController2.CreationManagement.Sharing;
 using BrickController2.Helpers;
 using BrickController2.PlatformServices.SharedFileStorage;
 using BrickController2.UI.Commands;

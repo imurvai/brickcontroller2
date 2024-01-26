@@ -194,7 +194,7 @@ namespace BrickController2.UI.ViewModels
         }
 
         private async Task ImportCreationFromClipboardAsync()
-        {
+         {
             try
             {
                 var creation = await _sharingManager.ImportFromClipboardAsync<Creation>();

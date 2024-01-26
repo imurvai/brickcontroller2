@@ -35,6 +35,7 @@
                 <zxing:CameraBarcodeReaderView Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" BarcodesDetected="BarcodesDetected" Options="{Binding Options}" />
 
                 <!-- Detected QR preview -->
+                <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="#80000000" />
                 <zxing:BarcodeGeneratorView Grid.Row="1" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="64" WidthRequest="64" Format="{Binding Format}" Value="{Binding CurrentValue}" BarcodeMargin="0" Margin="20" />
                 <Border Grid.Row="1" Grid.Column="0" WidthRequest="20" HeightRequest="20" VerticalOptions="End" HorizontalOptions="End" Padding="1" StrokeShape="RoundRectangle 10" BackgroundColor="{DynamicResource CheckBoxCheckedColor}" Margin="0,20">
                     <controls:ColorImage Source="{extensions:ImageResource Source=ic_checkmark.png}" Color="{DynamicResource PageBackgroundColor}" WidthRequest="16" HeightRequest="16" HorizontalOptions="Center" VerticalOptions="Center"/>
