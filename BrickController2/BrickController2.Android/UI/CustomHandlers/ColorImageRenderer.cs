@@ -7,15 +7,15 @@ using Microsoft.Maui.Handlers;
 
 namespace BrickController2.Droid.UI.CustomRenderers
 {
-    public class ColorImageHnadler : ImageHandler
+    public class ColorImageHandler : ImageHandler
     {
-        public static readonly PropertyMapper<ColorImage, ColorImageHnadler> PropertyMapper = new(ImageHandler.Mapper)
+        public static readonly PropertyMapper<ColorImage, ColorImageHandler> PropertyMapper = new(ImageHandler.Mapper)
         {
             [ColorImage.ColorProperty.PropertyName] = SetColor,
             [ColorImage.SourceProperty.PropertyName] = MapSourceAndColor
         };
 
-        public ColorImageHnadler() : base(PropertyMapper)
+        public ColorImageHandler() : base(PropertyMapper)
         {
         }
 
@@ -32,13 +32,13 @@ namespace BrickController2.Droid.UI.CustomRenderers
 
         private void SetColor() => SetColor(this, VirtualView as ColorImage);
 
-        private static void MapSourceAndColor(ColorImageHnadler handler, ColorImage colorImage)
+        private static void MapSourceAndColor(ColorImageHandler handler, ColorImage colorImage)
         {
             SetColor(handler, colorImage);
             MapSource(handler, colorImage);
         }
 
-        private static void SetColor(ColorImageHnadler handler, ColorImage colorImage)
+        private static void SetColor(ColorImageHandler handler, ColorImage colorImage)
         {
             if (colorImage is null)
             {

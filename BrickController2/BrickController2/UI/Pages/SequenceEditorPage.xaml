@@ -104,7 +104,7 @@
                     </CollectionView.EmptyView>
                 </CollectionView>
 
-                <controls:FloatingActionButton Grid.Row="0" Grid.RowSpan="4" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddControlPointCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
+                <controls:FloatingActionButton Grid.Row="0" Grid.RowSpan="4" Style="{StaticResource FloatingActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddControlPointCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
             </Grid>
 

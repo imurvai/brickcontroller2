@@ -64,7 +64,7 @@
                     </CollectionView.EmptyView>
                 </CollectionView>
 
-                <controls:FloatingActionButton ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddSequenceCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
+                <controls:FloatingActionButton Style="{StaticResource FloatingActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddSequenceCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
             </Grid>
 
