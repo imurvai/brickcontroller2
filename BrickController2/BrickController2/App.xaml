@@ -169,7 +169,17 @@
             <Setter Property="HeightRequest" Value="40"/>
             <Setter Property="VerticalOptions" Value="Center"/>
         </Style>
-        
+
+        <!-- Floating button styles -->
+        <Style x:Key="FloatingActionButtonStyle" TargetType="controls:FloatingActionButton">
+            <Setter Property="ButtonColor" Value="{DynamicResource FloatingButtonColor}"/>
+            <Setter Property="ImageColor" Value="{DynamicResource PrimaryTextColor}"/>
+        </Style>
+        <Style x:Key="InlineActionButtonStyle" TargetType="controls:FloatingActionButton">
+            <Setter Property="ButtonColor" Value="{DynamicResource InlineButtonColor}"/>
+            <Setter Property="ImageColor" Value="{DynamicResource PrimaryTextColor}"/>
+        </Style>
+
         <!-- Misc -->
 
         <Style x:Key="DividerBoxViewStyle" TargetType="BoxView">

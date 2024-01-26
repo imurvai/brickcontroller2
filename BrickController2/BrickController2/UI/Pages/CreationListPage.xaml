@@ -116,7 +116,7 @@
                     </Frame>
                 </Grid>
 
-                <controls:FloatingActionButton Grid.Row="0" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddCreationCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
+                <controls:FloatingActionButton Grid.Row="0" Style="{StaticResource FloatingActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddCreationCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
             </Grid>
 
             <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>

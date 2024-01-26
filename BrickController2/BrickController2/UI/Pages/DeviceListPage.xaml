@@ -61,7 +61,7 @@
                     </CollectionView.EmptyView>
                 </CollectionView>
 
-                <controls:FloatingActionButton ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_search.png}" ImageColor="White" Command="{Binding ScanCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
+                <controls:FloatingActionButton Style="{StaticResource FloatingActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_search.png}" Command="{Binding ScanCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
             </Grid>
 

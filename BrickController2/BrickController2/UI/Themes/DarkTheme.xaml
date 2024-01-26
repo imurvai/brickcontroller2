@@ -38,5 +38,7 @@
     <Color x:Key="RadioButtonSelectedColor">Red</Color>
     <Color x:Key="ProgressColor">Green</Color>
     <Color x:Key="PickerTextColor">LightBlue</Color>
-
+    <Color x:Key="FloatingButtonColor">Red</Color>
+    <Color x:Key="InlineButtonColor">Green</Color>
+    
 </ResourceDictionary>

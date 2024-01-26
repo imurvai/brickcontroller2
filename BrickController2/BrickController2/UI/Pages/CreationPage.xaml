@@ -37,7 +37,7 @@
                             <TapGestureRecognizer Command="{Binding RenameCreationCommand}"/>
                         </Label.GestureRecognizers>
                     </Label>
-                    <controls:FloatingActionButton ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_play.png}" ImageColor="White" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
+                    <controls:FloatingActionButton Style="{StaticResource FloatingActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_play.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
                 </Grid>
 
                 <!-- Controller profile list -->
@@ -64,7 +64,7 @@
                     </CollectionView.EmptyView>
                 </CollectionView>
 
-                <controls:FloatingActionButton Grid.Row="0" Grid.RowSpan="2" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddControllerProfileCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
+                <controls:FloatingActionButton Grid.Row="0" Grid.RowSpan="2" Style="{StaticResource FloatingActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_add.png}" Command="{Binding AddControllerProfileCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
 
             </Grid>
 

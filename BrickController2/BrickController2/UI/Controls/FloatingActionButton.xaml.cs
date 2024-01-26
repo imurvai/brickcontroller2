@@ -10,15 +10,15 @@ namespace BrickController2.UI.Controls
             InitializeComponent();
         }
 
-        public static readonly BindableProperty ButtonColorProperty = BindableProperty.Create(nameof(BackgroundColor), typeof(Color), typeof(FloatingActionButton), default(Color), BindingMode.OneWay, null, ButtonColorChanged);
+        public static readonly BindableProperty ButtonColorProperty = BindableProperty.Create(nameof(ButtonColor), typeof(Color), typeof(FloatingActionButton), default(Color), BindingMode.OneWay, null, ButtonColorChanged);
         public static readonly BindableProperty ImageSourceProperty = BindableProperty.Create(nameof(ImageSource), typeof(ImageSource), typeof(FloatingActionButton), null, BindingMode.OneWay, null, ImageSourceChanged);
         public static readonly BindableProperty ImageColorProperty = BindableProperty.Create(nameof(ImageColor), typeof(Color), typeof(FloatingActionButton), null, BindingMode.OneWay, null, ImageColorChanged);
         public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(FloatingActionButton), null, BindingMode.OneWay, null, CommandChanged);
 
         public Color ButtonColor
         {
-            get => (Color)GetValue(BackgroundColorProperty);
-            set => SetValue(BackgroundColorProperty, value);
+            get => (Color)GetValue(ButtonColorProperty);
+            set => SetValue(ButtonColorProperty, value);
         }
 
         public ImageSource ImageSource
