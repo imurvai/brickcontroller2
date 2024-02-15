@@ -46,7 +46,7 @@
 
                             <Label Grid.Column="0" Text="{extensions:Translate Device}" VerticalOptions="Center"/>
                             <Button Grid.Column="1" Text="{Binding SelectedDevice.Name}" Command="{Binding SelectDeviceCommand}" Style="{StaticResource PickerButtonStyle}"/>
-                            <controls:FloatingActionButton Grid.Column="2" Style="{StaticResource FloatingActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_link.png}" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
+                            <controls:FloatingActionButton Grid.Column="2" Style="{StaticResource InlineActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_link.png}" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
                         </Grid>
 
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
@@ -93,7 +93,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Button Grid.Column="0" Text="{Binding Action.ChannelOutputType}" Command="{Binding SelectChannelOutputTypeCommand}" Style="{StaticResource PickerButtonStyle}"/>
-                                    <controls:FloatingActionButton Grid.Column="1" Style="{StaticResource FloatingActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_settings.png}" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
+                                    <controls:FloatingActionButton Grid.Column="1" Style="{StaticResource InlineActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_settings.png}" Command="{Binding OpenChannelSetupCommand}" IsVisible="False">
                                         <controls:FloatingActionButton.Triggers>
                                             <DataTrigger TargetType="controls:FloatingActionButton" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.ServoMotor}">
                                                 <Setter Property="IsVisible" Value="True"/>

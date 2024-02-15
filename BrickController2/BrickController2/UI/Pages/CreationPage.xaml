@@ -37,7 +37,7 @@
                             <TapGestureRecognizer Command="{Binding RenameCreationCommand}"/>
                         </Label.GestureRecognizers>
                     </Label>
-                    <controls:FloatingActionButton Style="{StaticResource FloatingActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_play.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
+                    <controls:FloatingActionButton Style="{StaticResource InlineActionButtonStyle}" ImageSource="{extensions:ImageResource Source=ic_play.png}" Command="{Binding PlayCommand}" HorizontalOptions="End" VerticalOptions="Center"/>
                 </Grid>
 
                 <!-- Controller profile list -->
