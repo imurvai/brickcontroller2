@@ -46,13 +46,16 @@ namespace BrickController2.UI.ViewModels
             RenameCommand = new SafeCommand(async () => await RenameDeviceAsync());
             BuWizzOutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
             BuWizz2OutputLevelChangedCommand = new SafeCommand<int>(outputLevel => SetBuWizzOutputLevel(outputLevel));
-            ScanCommand = new SafeCommand(async () => await ScanAsync(), () => Device.CanBePowerSource && !_deviceManager.IsScanning);
+            ScanCommand = new SafeCommand(ScanAsync, () => CanExecuteScan);
         }
 
         public Device Device { get; }
         public bool IsBuWizzDevice => Device.DeviceType == DeviceType.BuWizz;
         public bool IsBuWizz2Device => Device.DeviceType == DeviceType.BuWizz2;
         public bool CanBePowerSource => Device.CanBePowerSource;
+        public bool CanExecuteScan => Device.CanBePowerSource &&
+            Device.DeviceState == DeviceState.Connected &&
+            !_deviceManager.IsScanning;
 
         public ICommand RenameCommand { get; }
         public ICommand BuWizzOutputLevelChangedCommand { get; }
