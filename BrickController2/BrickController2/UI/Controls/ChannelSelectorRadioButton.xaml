@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView
-    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     x:Class="BrickController2.UI.Controls.ChannelSelectorRadioButton">
 
     <ContentView.Content>
-        <StackLayout Orientation="Horizontal">
+        <StackLayout Orientation="Horizontal" Spacing="6">
             <StackLayout.GestureRecognizers>
                 <TapGestureRecognizer x:Name="TapRecognizer"/>
             </StackLayout.GestureRecognizers>
             <Grid WidthRequest="25" HeightRequest="25" VerticalOptions="Center">
-                <Frame BackgroundColor="{DynamicResource SecondaryColor}" HasShadow="False" WidthRequest="22" HeightRequest="22" CornerRadius="11" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Frame BackgroundColor="{DynamicResource PageBackgroundColor}" HasShadow="False" WidthRequest="20" HeightRequest="20" CornerRadius="10" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Frame x:Name="CheckedIndicatorFrame" BackgroundColor="{DynamicResource RadioButtonSelectedColor}" HasShadow="False" WidthRequest="16" HeightRequest="16" CornerRadius="8" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Border BackgroundColor="{DynamicResource SecondaryColor}" WidthRequest="22" HeightRequest="22" StrokeShape="RoundRectangle 11" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Border BackgroundColor="{DynamicResource PageBackgroundColor}" WidthRequest="20" HeightRequest="20" StrokeShape="RoundRectangle 11"  Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Border x:Name="CheckedIndicatorFrame" BackgroundColor="{DynamicResource RadioButtonSelectedColor}" WidthRequest="16" HeightRequest="16" StrokeShape="RoundRectangle 8" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
             </Grid>
             <controls:DeviceChannelLabel x:Name="ChannelLabel"/>
         </StackLayout>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Android.Bluetooth;
+﻿using Android.Bluetooth;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
@@ -145,38 +140,38 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                 }
             }))
 
-            lock (_lock)
-            {
-                if (_bluetoothGatt == null || State != BluetoothLEDeviceState.Connected)
+                lock (_lock)
                 {
-                    return false;
-                }
+                    if (_bluetoothGatt == null || State != BluetoothLEDeviceState.Connected)
+                    {
+                        return false;
+                    }
 
-                var nativeCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
-                if (!_bluetoothGatt.SetCharacteristicNotification(nativeCharacteristic, true))
-                {
-                    return false;
-                }
+                    var nativeCharacteristic = ((GattCharacteristic)characteristic).BluetoothGattCharacteristic;
+                    if (!_bluetoothGatt.SetCharacteristicNotification(nativeCharacteristic, true))
+                    {
+                        return false;
+                    }
 
-                var descriptor = nativeCharacteristic.GetDescriptor(ClientCharacteristicConfigurationUUID);
-                if (descriptor == null)
-                {
-                    return false;
-                }
+                    var descriptor = nativeCharacteristic.GetDescriptor(ClientCharacteristicConfigurationUUID);
+                    if (descriptor == null)
+                    {
+                        return false;
+                    }
 
-                if (!descriptor.SetValue(BluetoothGattDescriptor.EnableNotificationValue.ToArray()))
-                {
-                    return false;
-                }
+                    if (!descriptor.SetValue(BluetoothGattDescriptor.EnableNotificationValue.ToArray()))
+                    {
+                        return false;
+                    }
 
-                _descriptorWriteCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+                    _descriptorWriteCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-                if (!_bluetoothGatt.WriteDescriptor(descriptor))
-                {
-                    _descriptorWriteCompletionSource = null;
-                    return false;
+                    if (!_bluetoothGatt.WriteDescriptor(descriptor))
+                    {
+                        _descriptorWriteCompletionSource = null;
+                        return false;
+                    }
                 }
-            }
 
             var result = await _descriptorWriteCompletionSource.Task.ConfigureAwait(false);
 

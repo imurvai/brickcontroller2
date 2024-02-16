@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Autofac;
+﻿using Autofac;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Pages;
 using BrickController2.UI.ViewModels;
-using Xamarin.Forms;
 using BrickController2.UI.Services.MainThread;
 using BrickController2.UI.Services.Background;
 using BrickController2.UI.Services.Translation;

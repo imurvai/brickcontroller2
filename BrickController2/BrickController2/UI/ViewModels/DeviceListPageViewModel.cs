@@ -1,13 +1,10 @@
-﻿using System;
-using BrickController2.DeviceManagement;
-using BrickController2.UI.Services.Navigation;
+﻿using BrickController2.DeviceManagement;
+using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
-using System.Threading.Tasks;
+using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Services.Translation;
 using System.Windows.Input;
 using Device = BrickController2.DeviceManagement.Device;
-using BrickController2.UI.Commands;
-using System.Threading;
-using BrickController2.UI.Services.Translation;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -22,7 +19,7 @@ namespace BrickController2.UI.ViewModels
             INavigationService navigationService,
             ITranslationService translationService,
             IDeviceManager deviceManager,
-            IDialogService dialogService) 
+            IDialogService dialogService)
             : base(navigationService, translationService)
         {
             DeviceManager = deviceManager;

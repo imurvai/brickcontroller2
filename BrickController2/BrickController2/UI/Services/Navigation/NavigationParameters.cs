@@ -9,7 +9,7 @@ namespace BrickController2.UI.Services.Navigation
 
         public NavigationParameters(params (string Key, object Value)[] parameters)
         {
-            foreach(var entry in parameters)
+            foreach (var entry in parameters)
             {
                 _parameters[entry.Key] = entry.Value;
             }

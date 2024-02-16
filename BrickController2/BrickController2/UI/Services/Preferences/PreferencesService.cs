@@ -1,4 +1,4 @@
-﻿using System;
+﻿using MauiPreferences = Microsoft.Maui.Storage.Preferences;
 
 namespace BrickController2.UI.Services.Preferences
 {
@@ -10,7 +10,7 @@ namespace BrickController2.UI.Services.Preferences
         {
             lock (_lock)
             {
-                return Xamarin.Essentials.Preferences.ContainsKey(key, section);
+                return MauiPreferences.ContainsKey(key, section);
             }
         }
 
@@ -22,17 +22,17 @@ namespace BrickController2.UI.Services.Preferences
 
                 if (typeof(T).IsEnum)
                 {
-                    var enumString = Xamarin.Essentials.Preferences.Get(key, string.Empty, section);
+                    var enumString = MauiPreferences.Get(key, string.Empty, section);
                     result = Enum.Parse(typeof(T), enumString);
                 }
                 else
                 {
                     result = (Type.GetTypeCode(typeof(T))) switch
                     {
-                        TypeCode.Boolean => Xamarin.Essentials.Preferences.Get(key, false, section),
-                        TypeCode.Int32 => Xamarin.Essentials.Preferences.Get(key, 0, section),
-                        TypeCode.Single => Xamarin.Essentials.Preferences.Get(key, 0F, section),
-                        TypeCode.String => Xamarin.Essentials.Preferences.Get(key, string.Empty, section),
+                        TypeCode.Boolean => MauiPreferences.Get(key, false, section),
+                        TypeCode.Int32 => MauiPreferences.Get(key, 0, section),
+                        TypeCode.Single => MauiPreferences.Get(key, 0F, section),
+                        TypeCode.String => MauiPreferences.Get(key, string.Empty, section),
                         _ => throw new NotSupportedException($"{typeof(T)} is not supported."),
                     };
                 }
@@ -61,26 +61,26 @@ namespace BrickController2.UI.Services.Preferences
                 if (typeof(T).IsEnum)
                 {
                     var stringValue = value.ToString();
-                    Xamarin.Essentials.Preferences.Set(key, stringValue, section);
+                    MauiPreferences.Set(key, stringValue, section);
                 }
                 else
                 {
                     switch (value)
                     {
                         case bool b:
-                            Xamarin.Essentials.Preferences.Set(key, b, section);
+                            MauiPreferences.Set(key, b, section);
                             break;
 
                         case int i:
-                            Xamarin.Essentials.Preferences.Set(key, i, section);
+                            MauiPreferences.Set(key, i, section);
                             break;
 
                         case float f:
-                            Xamarin.Essentials.Preferences.Set(key, f, section);
+                            MauiPreferences.Set(key, f, section);
                             break;
 
                         case string s:
-                            Xamarin.Essentials.Preferences.Set(key, s, section);
+                            MauiPreferences.Set(key, s, section);
                             break;
 
                         default:

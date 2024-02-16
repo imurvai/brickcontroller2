@@ -1,9 +1,7 @@
 ﻿using BrickController2.PlatformServices.GameController;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Translation;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace BrickController2.UI.ViewModels
 {
@@ -30,7 +28,7 @@ namespace BrickController2.UI.ViewModels
             _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
         }
 
-        public ObservableCollection<GameControllerEventViewModel> ControllerEventList { get; } = new ObservableCollection<GameControllerEventViewModel>(); 
+        public ObservableCollection<GameControllerEventViewModel> ControllerEventList { get; } = new ObservableCollection<GameControllerEventViewModel>();
 
         private void GameControllerEventHandler(object sender, GameControllerEventArgs args)
         {

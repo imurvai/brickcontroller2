@@ -1,6 +1,4 @@
-﻿using Xamarin.Forms;
-
-namespace BrickController2.UI.Controls
+﻿namespace BrickController2.UI.Controls
 {
     // Reference: https://github.com/shrutinambiar/xamarin-forms-tinted-image
     public class ColorImage : Image

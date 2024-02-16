@@ -1,26 +1,16 @@
-﻿using BrickController2.PlatformServices.Localization;
-using Xamarin.Forms;
+﻿using BrickController2.UI.Services.Translation;
 
 namespace BrickController2.Helpers
 {
     public static class TranslationHelper
     {
-        private static ILocalizationService _localizationService = null;
+        private static ITranslationService _translationService = null;
 
         public static string Translate(string key)
         {
-            if (string.IsNullOrEmpty(key))
-            {
-                return string.Empty;
-            }
+            _translationService ??= IPlatformApplication.Current.Services.GetRequiredService<ITranslationService>();
 
-            if (_localizationService == null)
-            {
-                _localizationService = DependencyService.Get<ILocalizationService>();
-            }
-
-            var translation = ResourceHelper.TranslationResourceManager.GetString(key, _localizationService.CurrentCultureInfo);
-            return translation ?? key;
+            return _translationService.Translate(key);
         }
     }
 }

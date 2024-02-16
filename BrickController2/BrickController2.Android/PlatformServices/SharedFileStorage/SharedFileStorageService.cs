@@ -1,8 +1,6 @@
 ﻿using Android.OS;
 using BrickController2.Helpers;
 using BrickController2.PlatformServices.SharedFileStorage;
-using System;
-using System.IO;
 using Environment = Android.OS.Environment;
 
 namespace BrickController2.Droid.PlatformServices.SharedFileStorage

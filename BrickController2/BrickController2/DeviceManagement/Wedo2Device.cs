@@ -56,7 +56,7 @@ namespace BrickController2.DeviceManagement
 
             // Per channel range of 0 to 100
             var rawValue = value < 0 ?
-                (byte) (256 + value * 100) : 
+                (byte)(256 + value * 100) :
                 (byte)(value * 100);
 
             lock (_outputLock)

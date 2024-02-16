@@ -1,12 +1,6 @@
 ﻿using BrickController2.CreationManagement;
 using BrickController2.Helpers;
 using BrickController2.PlatformServices.BluetoothLE;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using static SQLite.SQLite3;
 
 namespace BrickController2.DeviceManagement
 {
@@ -83,11 +77,11 @@ namespace BrickController2.DeviceManagement
                     _lastOutputValues[channel] = 0;
                 }
             }
-            
+
             lock (_positionLock)
             {
                 // process only PU ports
-                for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)                
+                for (int channel = 0; channel < NUMBER_OF_PU_PORTS; channel++)
                 {
                     var channelConfig = channelConfigurations.FirstOrDefault(c => c.Channel == channel);
 
@@ -255,16 +249,16 @@ namespace BrickController2.DeviceManagement
             try
             {
                 lock (_outputLock)
-                lock (_positionLock)
-                {
-                    for (int channel = 0; channel < NumberOfChannels; channel++)
+                    lock (_positionLock)
                     {
-                        _outputValues[channel] = 0;
-                        _lastOutputValues[channel] = 1;
-                    }
+                        for (int channel = 0; channel < NumberOfChannels; channel++)
+                        {
+                            _outputValues[channel] = 0;
+                            _lastOutputValues[channel] = 1;
+                        }
 
-                    _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
-                }
+                        _sendAttemptsLeft = MAX_SEND_ATTEMPTS;
+                    }
 
                 while (!token.IsCancellationRequested)
                 {

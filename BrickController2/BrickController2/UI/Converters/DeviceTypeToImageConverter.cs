@@ -1,8 +1,6 @@
-﻿using System;
-using System.Globalization;
-using BrickController2.DeviceManagement;
+﻿using System.Globalization;
 using BrickController2.Helpers;
-using Xamarin.Forms;
+using DeviceType = BrickController2.DeviceManagement.DeviceType;
 
 namespace BrickController2.UI.Converters
 {

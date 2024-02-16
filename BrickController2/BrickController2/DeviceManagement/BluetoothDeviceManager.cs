@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using BrickController2.Helpers;
+﻿using BrickController2.Helpers;
 using BrickController2.PlatformServices.BluetoothLE;
 
 namespace BrickController2.DeviceManagement
@@ -96,7 +91,7 @@ namespace BrickController2.DeviceManagement
                             case "40": return (DeviceType.Boost, manufacturerData);
                             case "41": return (DeviceType.PoweredUp, manufacturerData);
                             case "80": return (DeviceType.TechnicHub, manufacturerData);
-                            //case "20": return (DeviceType.DuploTrainHub, manufacturerData);
+                                //case "20": return (DeviceType.DuploTrainHub, manufacturerData);
                         }
                     }
                     break;

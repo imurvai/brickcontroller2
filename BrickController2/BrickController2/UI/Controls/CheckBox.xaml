@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView
-    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
@@ -11,14 +11,11 @@
             <Grid.GestureRecognizers>
                 <TapGestureRecognizer x:Name="TapRecognizer"/>
             </Grid.GestureRecognizers>
-            <Grid x:Name="UncheckedShape" WidthRequest="25" HeightRequest="25" VerticalOptions="Center">
-                <Frame BackgroundColor="{DynamicResource SecondaryColor}" HasShadow="False" WidthRequest="22" HeightRequest="22" CornerRadius="11" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Frame BackgroundColor="{DynamicResource PageBackgroundColor}" HasShadow="False" WidthRequest="20" HeightRequest="20" CornerRadius="10" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
-            </Grid>
-            <Grid x:Name="CheckedShape" WidthRequest="25" HeightRequest="25" VerticalOptions="Center">
-                <Frame BackgroundColor="{DynamicResource CheckBoxCheckedColor}" HasShadow="False" WidthRequest="22" HeightRequest="22" CornerRadius="11" Padding="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Border x:Name="UncheckedShape" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" HorizontalOptions="Center" Padding="1" StrokeShape="RoundRectangle 12" Stroke="{DynamicResource SecondaryColor}" BackgroundColor="{DynamicResource PageBackgroundColor}">
+            </Border>
+            <Border x:Name="CheckedShape" WidthRequest="25" HeightRequest="25" VerticalOptions="Center" HorizontalOptions="Center" Padding="1" StrokeShape="RoundRectangle 12" BackgroundColor="{DynamicResource CheckBoxCheckedColor}">
                 <controls:ColorImage Source="{extensions:ImageResource Source=ic_checkmark.png}" Color="{DynamicResource PageBackgroundColor}" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"/>
-            </Grid>
+            </Border>
         </Grid>
     </ContentView.Content>
 </ContentView>

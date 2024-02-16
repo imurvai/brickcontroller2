@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Autofac" Version="7.1.0" />
+    <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.7" />
+    <PackageVersion Include="sqlite-net-pcl" Version="1.8.116" />
+    <PackageVersion Include="SQLitePCLRaw.bundle_green" Version="2.1.7" />
+    <PackageVersion Include="SQLiteNetExtensions" Version="2.1.0" />
+    <PackageVersion Include="SQLiteNetExtensions.Async" Version="2.1.0" />
+  </ItemGroup>
+</Project>

@@ -3,6 +3,6 @@
     public enum BluetoothAdapterState
     {
         Off,
-        On  
+        On
     }
 }

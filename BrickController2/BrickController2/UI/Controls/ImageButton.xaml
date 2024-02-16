@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView
-    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     x:Class="BrickController2.UI.Controls.ImageButton">
     
   <ContentView.Content>
-        <Frame x:Name="Frame" BackgroundColor="Transparent" HasShadow="False" Padding="0">
-            <Frame.GestureRecognizers>
+        <StackLayout x:Name="ImageFrame" BackgroundColor="Transparent" Padding="0">
+            <StackLayout.GestureRecognizers>
                 <TapGestureRecognizer x:Name="TapGuestureRecognizer"/>
-            </Frame.GestureRecognizers>
+            </StackLayout.GestureRecognizers>
             <controls:ColorImage x:Name="Image" HorizontalOptions="Center" VerticalOptions="Center" Aspect="AspectFill"/>
-        </Frame>
+        </StackLayout>
     </ContentView.Content>
 </ContentView>

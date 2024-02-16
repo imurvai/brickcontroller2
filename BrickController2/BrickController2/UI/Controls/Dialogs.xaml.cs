@@ -1,11 +1,5 @@
 ﻿using BrickController2.PlatformServices.GameController;
 using BrickController2.UI.Services.Dialog;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace BrickController2.UI.Controls
 {

@@ -1,8 +1,4 @@
 ﻿using BrickController2.PlatformServices.BluetoothLE;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
@@ -60,7 +56,7 @@ namespace BrickController2.DeviceManagement
 
                     token.ThrowIfCancellationRequested();
 
-                    if (await ValidateServicesAsync(services, token) && 
+                    if (await ValidateServicesAsync(services, token) &&
                         await AfterConnectSetupAsync(requestDeviceInformation, token))
                     {
                         if (startOutputProcessing)

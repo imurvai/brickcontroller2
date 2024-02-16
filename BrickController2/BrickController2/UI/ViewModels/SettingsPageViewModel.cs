@@ -1,12 +1,8 @@
 ﻿using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Navigation;
-using BrickController2.UI.Services.Preferences;
 using BrickController2.UI.Services.Theme;
 using BrickController2.UI.Services.Translation;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace BrickController2.UI.ViewModels
@@ -22,7 +18,7 @@ namespace BrickController2.UI.ViewModels
             INavigationService navigationService,
             ITranslationService translationService,
             IDialogService dialogService,
-            IThemeService themeService) : 
+            IThemeService themeService) :
             base(navigationService, translationService)
         {
             _themeService = themeService;

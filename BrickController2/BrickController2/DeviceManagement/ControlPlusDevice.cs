@@ -1,10 +1,5 @@
 ﻿using BrickController2.CreationManagement;
 using BrickController2.PlatformServices.BluetoothLE;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BrickController2.DeviceManagement
 {
@@ -297,17 +292,17 @@ namespace BrickController2.DeviceManagement
             try
             {
                 lock (_outputLock)
-                lock (_positionLock)
-                {
-                    for (int channel = 0; channel < NumberOfChannels; channel++)
+                    lock (_positionLock)
                     {
-                        _outputValues[channel] = 0;
-                        _lastOutputValues[channel] = 1;
-                        _sendAttemptsLeft[channel] = MAX_SEND_ATTEMPTS;
-                        _positionsUpdated[channel] = false;
-                        _positionUpdateTimes[channel] = DateTime.MinValue;
+                        for (int channel = 0; channel < NumberOfChannels; channel++)
+                        {
+                            _outputValues[channel] = 0;
+                            _lastOutputValues[channel] = 1;
+                            _sendAttemptsLeft[channel] = MAX_SEND_ATTEMPTS;
+                            _positionsUpdated[channel] = false;
+                            _positionUpdateTimes[channel] = DateTime.MinValue;
+                        }
                     }
-                }
 
                 while (!token.IsCancellationRequested)
                 {

@@ -1,10 +1,6 @@
 ﻿using BrickController2.PlatformServices.GameController;
 using BrickController2.Helpers;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.IO;
 using Newtonsoft.Json;
 
 namespace BrickController2.CreationManagement

@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Xamarin.Essentials;
-
-namespace BrickController2.PlatformServices.Permission
+﻿namespace BrickController2.PlatformServices.Permission
 {
     public interface IBluetoothPermission
     {
