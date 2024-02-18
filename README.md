@@ -6,6 +6,7 @@ Cross platform mobile application for controlling Lego creations using a bluetoo
 
 - Android 5+
 - iOS 11+
+- Windows 10 (experimental)
 
 ## Supported receivers
 
