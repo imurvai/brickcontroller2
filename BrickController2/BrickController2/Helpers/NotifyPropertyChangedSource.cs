@@ -9,6 +9,9 @@ namespace BrickController2.Helpers
 
         protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
+            if (PropertyChanged is null)
+                return;
+
             MainThread.BeginInvokeOnMainThread(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
         }
     }
