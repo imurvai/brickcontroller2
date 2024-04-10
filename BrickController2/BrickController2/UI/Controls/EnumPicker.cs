@@ -1,10 +1,7 @@
-﻿using System;
-using Xamarin.Forms;
-
-namespace BrickController2.UI.Controls
+﻿namespace BrickController2.UI.Controls
 {
     // Thanks to Wayne Creasey ( https://intellitect.com/xamarin-forms-enumbindablepicker/ )
-    public class EnumPicker<T> : Picker where T: struct
+    public class EnumPicker<T> : Picker where T : struct
     {
         public EnumPicker()
         {

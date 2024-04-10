@@ -1,19 +1,17 @@
 ﻿using BrickController2.Helpers;
 using BrickController2.UI.Converters;
 using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.Controls
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class DeviceOutputTesterControl : ContentView
-	{
-		public DeviceOutputTesterControl ()
-		{
-			InitializeComponent ();
-		}
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class DeviceOutputTesterControl : ContentView
+    {
+        public DeviceOutputTesterControl()
+        {
+            InitializeComponent();
+        }
 
         public static BindableProperty DeviceProperty = BindableProperty.Create(nameof(Device), typeof(Device), typeof(DeviceOutputTesterControl), propertyChanged: OnDeviceChanged);
 
@@ -33,7 +31,7 @@ namespace BrickController2.UI.Controls
 
         private void Setup(Device device)
         {
-            StackLayout.Children.Clear();
+            StackLayout.Clear();
 
             for (int channel = 0; channel < device.NumberOfChannels; channel++)
             {
@@ -51,7 +49,7 @@ namespace BrickController2.UI.Controls
                 slider.SetBinding(ExtendedSlider.MinimumProperty, nameof(DeviceOutputViewModel.MinValue));
                 slider.SetBinding(ExtendedSlider.MaximumProperty, nameof(DeviceOutputViewModel.MaxValue));
 
-                StackLayout.Children.Add(slider);
+                StackLayout.Add(slider);
             }
         }
 

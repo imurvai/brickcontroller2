@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Input;
-using Xamarin.Forms;
+﻿using System.Windows.Input;
 
 namespace BrickController2.UI.Behaviors
 {

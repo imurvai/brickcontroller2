@@ -1,6 +1,5 @@
 ﻿using BrickController2.UI.Services.Preferences;
 using BrickController2.UI.Themes;
-using Xamarin.Forms;
 
 namespace BrickController2.UI.Services.Theme
 {
@@ -40,8 +39,8 @@ namespace BrickController2.UI.Services.Theme
                     ThemeType.Light => new LightTheme(),
                     _ => Application.Current.RequestedTheme switch
                     {
-                        OSAppTheme.Dark => new DarkTheme(),
-                        OSAppTheme.Light => new LightTheme(),
+                        AppTheme.Dark => new DarkTheme(),
+                        AppTheme.Light => new LightTheme(),
                         _ => new LightTheme()
                     }
                 };

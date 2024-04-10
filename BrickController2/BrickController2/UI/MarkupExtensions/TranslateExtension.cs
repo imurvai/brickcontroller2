@@ -1,7 +1,4 @@
 ﻿using BrickController2.Helpers;
-using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace BrickController2.UI.MarkupExtensions
 {

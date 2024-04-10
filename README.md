@@ -4,8 +4,8 @@ Cross platform mobile application for controlling Lego creations using a bluetoo
 
 ## Supported platforms
 
-- Android 4.3+
-- iOS 8+
+- Android 5+
+- iOS 11+
 
 ## Supported receivers
 
@@ -22,11 +22,11 @@ Cross platform mobile application for controlling Lego creations using a bluetoo
 
 ## Project details
 
-BrickController 2 is a Xamarin.Forms application and can be compiled using Visual Studio 2017 (Professional, Enterprise and Community Editions).
+BrickController 2 is a .Net Maui application and can be compiled using Visual Studio 2022 (Professional, Enterprise and Community Editions).
 
 ## 3rd party libraries used
 
-- Autofac IOC container
+- [Autofac IOC container](https://github.com/autofac/Autofac)
 - [Plugin.Permissions](https://github.com/jamesmontemagno/PermissionsPlugin)
 - [SQLite-Net-Extensions Async](https://bitbucket.org/twincoders/sqlite-net-extensions)
 

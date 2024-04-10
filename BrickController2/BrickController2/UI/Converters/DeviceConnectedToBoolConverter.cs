@@ -1,7 +1,5 @@
 ﻿using BrickController2.DeviceManagement;
-using System;
 using System.Globalization;
-using Xamarin.Forms;
 
 namespace BrickController2.UI.Converters
 {

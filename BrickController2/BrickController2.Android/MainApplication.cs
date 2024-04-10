@@ -1,24 +1,38 @@
 ﻿using Android.App;
 using Android.Runtime;
-using System;
+using Autofac;
+using BrickController2.DI;
+using BrickController2.Droid.PlatformServices.DI;
+using BrickController2.Droid.UI.CustomRenderers;
+using BrickController2.Droid.UI.Services.DI;
+using BrickController2.UI.Controls;
 
 namespace BrickController2.Droid
 {
-#if DEBUG
-[Application(Debuggable = true)]
-#else
-[Application(Debuggable = false)]
-#endif
-    public class MainApplication : Application
+    [Application]
+    public class MainApplication : MauiApplication
     {
-        public MainApplication(IntPtr handle, JniHandleOwnership transer)
-                : base(handle, transer)
+        public MainApplication(IntPtr handle, JniHandleOwnership ownership) : base(handle, ownership)
         {
         }
 
-        public override void OnCreate()
-        {
-            base.OnCreate();
-        }
+        protected override MauiApp CreateMauiApp() => ApplicationBuilder.Create()
+            // per platform handlers
+            .ConfigureMauiHandlers(handlers =>
+            {
+                handlers
+                    .AddHandler<ExtendedSlider, ExtendedSliderHandler>()
+                    .AddHandler<ColorImage, ColorImageHandler>()
+                ;
+            })
+            .ConfigureContainer((containerBuilder) =>
+            {
+                containerBuilder.Register<Android.Content.Context>((c) => Android.App.Application.Context).SingleInstance();
+                containerBuilder.RegisterModule<PlatformServicesModule>();
+                containerBuilder.RegisterModule<UIServicesModule>();
+            })
+            // finally build
+            .Build()
+            ;
     }
 }

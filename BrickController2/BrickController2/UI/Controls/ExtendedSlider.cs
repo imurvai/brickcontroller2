@@ -1,18 +1,18 @@
-﻿using System;
-using System.Windows.Input;
-using Xamarin.Forms;
+﻿using System.Windows.Input;
 
 namespace BrickController2.UI.Controls
 {
     public class ExtendedSlider : Slider
     {
-        public static BindableProperty TouchDownCommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(FloatingActionButton), null);
-        public static BindableProperty TouchUpCommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(FloatingActionButton), null);
-        public static BindableProperty StepProperty = BindableProperty.Create(nameof(Step), typeof(double), typeof(ExtendedSlider), 1.0, propertyChanged: OnStepChanged);
+        private const double DefaultStepValue = 1;
+
+        public static readonly BindableProperty TouchDownCommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(FloatingActionButton), null);
+        public static readonly BindableProperty TouchUpCommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(FloatingActionButton), null);
+        public static readonly BindableProperty StepProperty = BindableProperty.Create(nameof(Step), typeof(double), typeof(ExtendedSlider), DefaultStepValue, coerceValue: CoerceStepValue);
 
         public ExtendedSlider()
         {
-            ValueChanged += ExtendedSlider_ValueChanged;
+            // appliceation of step is done in handlers (or nativly) per each platform
         }
 
         public ICommand TouchDownCommand
@@ -49,20 +49,15 @@ namespace BrickController2.UI.Controls
             }
         }
 
-        private static void OnStepChanged(BindableObject bindable, object oldValue, object newValue)
+        public void SetValue(double newValue)
         {
-            if (bindable is ExtendedSlider slider && newValue is double newStep && newStep > 0)
-            {
-                slider.Value = Round(slider.Value, newStep);
-            }
+            // update value based on current step value
+            Value = Round(newValue, Step);
         }
 
-        private void ExtendedSlider_ValueChanged(object sender, ValueChangedEventArgs e)
+        private static object CoerceStepValue(object bindable, object value)
         {
-            if (Step > 0)
-            {
-                Value = Round(e.NewValue, Step);
-            }
+            return Math.Max((double)value, DefaultStepValue);
         }
 
         private static double Round(double value, double step)

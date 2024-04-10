@@ -1,13 +1,12 @@
 ﻿using Android.OS;
-using System;
-using static Xamarin.Essentials.Permissions;
 using BrickController2.PlatformServices.Permission;
+using static Microsoft.Maui.ApplicationModel.Permissions;
 
 namespace BrickController2.Droid.PlatformServices.Permission
 {
     public class ReadWriteExternalStoragePermission : BasePlatformPermission, IReadWriteExternalStoragePermission
     {
-        public override (string androidPermission, bool isRuntime)[] RequiredPermissions => ((int)Build.VERSION.SdkInt <= 32) ?
+        public override (string androidPermission, bool isRuntime)[] RequiredPermissions => (Build.VERSION.SdkInt <= BuildVersionCodes.SV2) ?
                 // Android API 32 and older - ask for permissions
                 new (string androidPermission, bool isRuntime)[]
                 {
