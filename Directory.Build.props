@@ -4,5 +4,6 @@
     <SingleProject>false</SingleProject>
     <UseMaui>true</UseMaui>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 </Project>
