@@ -1,5 +1,7 @@
-﻿using BrickController2.PlatformServices.Localization;
-using System.Globalization;
+﻿using System.Globalization;
+using System.Threading;
+using Microsoft.Maui.Controls;
+using BrickController2.PlatformServices.Localization;
 
 [assembly:Dependency(typeof(BrickController2.Droid.PlatformServices.Localization.LocalizationService))]
 namespace BrickController2.Droid.PlatformServices.Localization

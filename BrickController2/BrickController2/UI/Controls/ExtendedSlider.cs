@@ -6,8 +6,8 @@ namespace BrickController2.UI.Controls
 {
     public class ExtendedSlider : Slider
     {
-        public static BindableProperty TouchDownCommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(FloatingActionButton), null);
-        public static BindableProperty TouchUpCommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(FloatingActionButton), null);
+        public static BindableProperty TouchDownCommandProperty = BindableProperty.Create(nameof(TouchDownCommand), typeof(ICommand), typeof(ExtendedSlider), null);
+        public static BindableProperty TouchUpCommandProperty = BindableProperty.Create(nameof(TouchUpCommand), typeof(ICommand), typeof(ExtendedSlider), null);
         public static BindableProperty StepProperty = BindableProperty.Create(nameof(Step), typeof(double), typeof(ExtendedSlider), 1.0, propertyChanged: OnStepChanged);
 
         public ExtendedSlider()

@@ -1,4 +1,5 @@
-﻿using Android.Bluetooth;
+﻿using System;
+using Android.Bluetooth;
 using BrickController2.PlatformServices.BluetoothLE;
 
 namespace BrickController2.Droid.PlatformServices.BluetoothLE

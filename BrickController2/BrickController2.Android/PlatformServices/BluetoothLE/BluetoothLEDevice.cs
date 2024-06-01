@@ -1,9 +1,14 @@
-﻿using Android.Bluetooth;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Android.Bluetooth;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
-using BrickController2.PlatformServices.BluetoothLE;
 using Java.Util;
+using BrickController2.PlatformServices.BluetoothLE;
 
 namespace BrickController2.Droid.PlatformServices.BluetoothLE
 {

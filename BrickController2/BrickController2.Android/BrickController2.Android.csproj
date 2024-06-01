@@ -1,24 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0-android</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <SupportedOSPlatformVersion>23.0</SupportedOSPlatformVersion>
-    <OutputType>Exe</OutputType>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationId>com.scn.BrickController2</ApplicationId>
-    <ApplicationVersion>1</ApplicationVersion>
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0-android</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+		<OutputType>Exe</OutputType>
+		<Nullable>enable</Nullable>
+		<RootNamespace>BrickController2.Droid</RootNamespace>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Autofac" Version="8.0.0" />
-	<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.40" />
-	<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.40" />
-	<ProjectReference Include="..\BrickController2\BrickController2.csproj" />
-	<PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.40" />
-  </ItemGroup>
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<AndroidResgenClass>Resource</AndroidResgenClass>
+		<AndroidKeyStore>false</AndroidKeyStore>
+		<AndroidSigningKeyStore>C:\Users\imurv\AppData\Local\Xamarin\Mono for Android\Keystore\keystore\keystore.keystore</AndroidSigningKeyStore>
+	</PropertyGroup>
 
+	<ItemGroup>
+		<None Remove="Resources\mipmap-hdpi\ic_launcher.png" />
+		<None Remove="Resources\mipmap-mdpi\ic_launcher.png" />
+		<None Remove="Resources\mipmap-xhdpi\ic_launcher.png" />
+		<None Remove="Resources\mipmap-xxhdpi\ic_launcher.png" />
+		<None Remove="Resources\mipmap-xxxhdpi\ic_launcher.png" />
+		<None Remove="Resources\values-night\colors.xml" />
+		<None Remove="Resources\values-night\styles.xml" />
+		<None Remove="Resources\values\colors.xml" />
+		<None Remove="Resources\values\styles.xml" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Autofac" />
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" />
+		<PackageReference Include="Microsoft.Maui.Controls" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
+		<PackageReference Include="Microsoft.Maui.Essentials" />
+		<ProjectReference Include="..\BrickController2\BrickController2.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="Resources\AboutResources.txt" />
+		<None Include="Assets\AboutAssets.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AndroidResource Include="Resources\mipmap-hdpi\ic_launcher.png" />
+		<AndroidResource Include="Resources\mipmap-mdpi\ic_launcher.png" />
+		<AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher.png" />
+		<AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
+		<AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<MauiSplashScreen Include="Resources\splash.svg" BaseSize="128,128" />
+	</ItemGroup>
+	
 </Project>

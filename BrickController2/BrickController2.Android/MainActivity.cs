@@ -1,18 +1,12 @@
 ﻿using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
-using Autofac;
-using BrickController2.CreationManagement.DI;
-using BrickController2.Database.DI;
-using BrickController2.DeviceManagement.DI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Maui;
+using Microsoft.Maui.ApplicationModel;
 using BrickController2.Droid.PlatformServices.GameController;
-using BrickController2.Droid.PlatformServices.DI;
-using BrickController2.Droid.UI.Services.DI;
-using BrickController2.UI.DI;
-using BrickController2.BusinessLogic.DI;
 
 namespace BrickController2.Droid
 {
@@ -20,13 +14,21 @@ namespace BrickController2.Droid
         Label = "BrickController2",
         Icon = "@mipmap/ic_launcher",
         Theme = "@style/MainTheme",
-        MainLauncher = false,
-        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+        MainLauncher = true,
+        ConfigurationChanges = 
+            ConfigChanges.ScreenSize | 
+            ConfigChanges.Orientation | 
+            ConfigChanges.UiMode | 
+            ConfigChanges.ScreenLayout | 
+            ConfigChanges.SmallestScreenSize)]
     public class MainActivity : MauiAppCompatActivity
     {
-        private GameControllerService? _gameControllerService;
+        private GameControllerService _gameControllerService;
 
-        #region Activity
+        public MainActivity()
+        {
+            _gameControllerService = IPlatformApplication.Current!.Services.GetRequiredService<GameControllerService>()!;
+        }
 
         protected override void OnCreate(Bundle? bundle)
         {
@@ -37,16 +39,10 @@ namespace BrickController2.Droid
 
             Window!.AddFlags(WindowManagerFlags.KeepScreenOn);
 
-            Platform.Init(this, bundle);
+            //Platform.Init(this, bundle);
 
             //Forms.SetFlags("SwipeView_Experimental");
             //Forms.Init(this, bundle);
-
-            var container = InitDI();
-            _gameControllerService = container.Resolve<GameControllerService>();
-
-            var app = container.Resolve<App>();
-            //LoadApplication(app);
         }
 
         public override bool OnKeyDown([GeneratedEnum] global::Android.Views.Keycode keyCode, KeyEvent? e)
@@ -83,25 +79,6 @@ namespace BrickController2.Droid
         {
             Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-
-        #endregion
-
-        private Autofac.IContainer InitDI()
-        {
-            var builder = new ContainerBuilder();
-
-            builder.RegisterInstance(this).As<Context>().As<Activity>();
-            builder.RegisterModule(new PlatformServicesModule());
-            builder.RegisterModule(new UIServicesModule());
-
-            builder.RegisterModule(new BusinessLogicModule());
-            builder.RegisterModule(new DatabaseModule());
-            builder.RegisterModule(new CreationManagementModule());
-            builder.RegisterModule(new DeviceManagementModule());
-            builder.RegisterModule(new UiModule());
-
-            return builder.Build();
         }
     }
 }

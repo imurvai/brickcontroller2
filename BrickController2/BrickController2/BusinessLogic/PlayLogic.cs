@@ -1,9 +1,9 @@
-﻿using BrickController2.CreationManagement;
-using BrickController2.DeviceManagement;
-using BrickController2.PlatformServices.GameController;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BrickController2.CreationManagement;
+using BrickController2.DeviceManagement;
+using BrickController2.PlatformServices.GameController;
 
 namespace BrickController2.BusinessLogic
 {

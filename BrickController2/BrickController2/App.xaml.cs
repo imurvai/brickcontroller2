@@ -12,7 +12,7 @@ using BrickController2.UI.Services.Theme;
 [assembly: XamlCompilation (XamlCompilationOptions.Skip)]
 namespace BrickController2
 {
-	public partial class App
+	public partial class App : Application
 	{
         private readonly BackgroundService _backgroundService;
 
