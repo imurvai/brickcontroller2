@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Support.V7.App;
 
 namespace BrickController2.Droid
 {
@@ -11,9 +10,9 @@ namespace BrickController2.Droid
         Theme = "@style/SplashTheme.Splash", 
         MainLauncher = true, 
         NoHistory = true)]
-    public class SplashActivity : AppCompatActivity
+    public class SplashActivity : MauiAppCompatActivity
     {
-        public override void OnCreate(Bundle savedInstanceState, PersistableBundle persistentState)
+        public override void OnCreate(Bundle? savedInstanceState, PersistableBundle? persistentState)
         {
             base.OnCreate(savedInstanceState, persistentState);
         }
@@ -21,7 +20,7 @@ namespace BrickController2.Droid
         protected override void OnResume()
         {
             base.OnResume();
-            StartActivity(new Intent(Application.Context, typeof(MainActivity)));
+            StartActivity(new Intent(global::Android.App.Application.Context, typeof(MainActivity)));
         }
 
         public override void OnBackPressed()

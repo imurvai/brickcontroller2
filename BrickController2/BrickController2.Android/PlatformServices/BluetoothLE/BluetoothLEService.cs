@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Android.Bluetooth;
+﻿using Android.Bluetooth;
 using Android.Bluetooth.LE;
 using Android.Content;
 using Android.Content.PM;
@@ -13,7 +10,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
     public class BluetoothLEService : IBluetoothLEService
     {
         private readonly Context _context;
-        private readonly BluetoothAdapter _bluetoothAdapter;
+        private readonly BluetoothAdapter? _bluetoothAdapter;
 
         private bool _isScanning = false;
 
@@ -21,9 +18,9 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
         {
             _context = context;
 
-            if (context.PackageManager.HasSystemFeature(PackageManager.FeatureBluetoothLe))
+            if (context.PackageManager?.HasSystemFeature(PackageManager.FeatureBluetoothLe) ?? false)
             {
-                var bluetoothManager = (BluetoothManager)context.GetSystemService(Context.BluetoothService);
+                var bluetoothManager = (BluetoothManager?)context.GetSystemService(Context.BluetoothService);
                 _bluetoothAdapter = bluetoothManager?.Adapter;
             }
             else
@@ -64,9 +61,9 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             }
         }
 
-        public IBluetoothLEDevice GetKnownDevice(string address)
+        public IBluetoothLEDevice? GetKnownDevice(string address)
         {
-            if (!IsBluetoothLESupported)
+            if (!IsBluetoothLESupported || _bluetoothAdapter is null)
             {
                 return null;
             }
@@ -80,7 +77,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             {
                 var leScanner = new BluetoothLEOldScanner(scanCallback);
 #pragma warning disable CS0618 // Type or member is obsolete
-                if (!_bluetoothAdapter.StartLeScan(leScanner))
+                if (!(_bluetoothAdapter?.StartLeScan(leScanner) ?? false))
 #pragma warning restore CS0618 // Type or member is obsolete
                 {
                     return false;
@@ -90,7 +87,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                 using (token.Register(() =>
                 {
 #pragma warning disable CS0618 // Type or member is obsolete
-                    _bluetoothAdapter.StopLeScan(leScanner);
+                    _bluetoothAdapter?.StopLeScan(leScanner);
 #pragma warning restore CS0618 // Type or member is obsolete
                     tcs.TrySetResult(true);
                 }))
@@ -109,16 +106,16 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             try
             {
                 var leScanner = new BluetoothLENewScanner(scanCallback);
-                var settingsBuilder = new ScanSettings.Builder()
-                    .SetCallbackType(ScanCallbackType.AllMatches)
-                    .SetScanMode(Android.Bluetooth.LE.ScanMode.LowLatency);
+                var settingsBuilder = new ScanSettings.Builder()?
+                    .SetCallbackType(ScanCallbackType.AllMatches)?
+                    .SetScanMode(global::Android.Bluetooth.LE.ScanMode.LowLatency);
 
-                _bluetoothAdapter.BluetoothLeScanner.StartScan(null, settingsBuilder.Build(), leScanner);
+                _bluetoothAdapter?.BluetoothLeScanner?.StartScan(null, settingsBuilder?.Build(), leScanner);
 
                 var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
                 using (token.Register(() =>
                 {
-                    _bluetoothAdapter.BluetoothLeScanner.StopScan(leScanner);
+                    _bluetoothAdapter?.BluetoothLeScanner?.StopScan(leScanner);
                     tcs.TrySetResult(true);
                 }))
                 {

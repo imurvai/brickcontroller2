@@ -95,6 +95,7 @@ namespace BrickController2.UI.Controls
                     MyStackLayout.Children.Add(separator);
                 }
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 var label = new Label
                 {
                     Text = buttonText,
@@ -102,6 +103,7 @@ namespace BrickController2.UI.Controls
                     HorizontalOptions = LayoutOptions.FillAndExpand,
                     VerticalOptions = LayoutOptions.Center
                 };
+#pragma warning restore CS0618 // Type or member is obsolete
                 _labels.Add(label);
 
                 var frame = new Frame

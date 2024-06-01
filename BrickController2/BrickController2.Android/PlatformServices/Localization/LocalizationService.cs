@@ -1,15 +1,13 @@
 ﻿using BrickController2.PlatformServices.Localization;
 using System.Globalization;
-using System.Threading;
-using Microsoft.Maui;
 
 [assembly:Dependency(typeof(BrickController2.Droid.PlatformServices.Localization.LocalizationService))]
 namespace BrickController2.Droid.PlatformServices.Localization
 {
     public class LocalizationService : ILocalizationService
     {
-        private Java.Util.Locale _androidLocale;
-        private CultureInfo _ci = null;
+        private Java.Util.Locale? _androidLocale;
+        private CultureInfo? _ci = null;
 
         public CultureInfo CurrentCultureInfo
         {
@@ -21,7 +19,7 @@ namespace BrickController2.Droid.PlatformServices.Localization
                 if (_ci == null || androidLocale != _androidLocale)
                 {
                     _androidLocale = androidLocale;
-                    netLanguage = AndroidToDotnetLanguage(_androidLocale.ToString().Replace("_", "-"));
+                    netLanguage = AndroidToDotnetLanguage(_androidLocale?.ToString()?.Replace("_", "-") ?? netLanguage);
 
                     try
                     {

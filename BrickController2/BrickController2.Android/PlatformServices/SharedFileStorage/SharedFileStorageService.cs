@@ -13,7 +13,7 @@ namespace BrickController2.Droid.PlatformServices.SharedFileStorage
 
         public bool _isPermissionGranted = false;
 
-        public bool IsSharedStorageAvailable => IsPermissionGranted && SharedStorageDirectory != null;
+        public bool IsSharedStorageAvailable => IsPermissionGranted && SharedStorageDirectory is not null;
 
         public bool IsPermissionGranted
         {
@@ -26,7 +26,7 @@ namespace BrickController2.Droid.PlatformServices.SharedFileStorage
             }
         }
 
-        public string SharedStorageDirectory
+        public string? SharedStorageDirectory
         {
             get
             {
@@ -37,7 +37,7 @@ namespace BrickController2.Droid.PlatformServices.SharedFileStorage
                     var storageState = Environment.ExternalStorageState;
 #pragma warning restore CS0618 // Type or member is obsolete
 
-                    if (storageDirectory == null || !Directory.Exists(storageDirectory) || !Environment.MediaMounted.Equals(storageState))
+                    if (storageDirectory is null || !Directory.Exists(storageDirectory) || !Environment.MediaMounted.Equals(storageState))
                     {
                         return null;
                     }

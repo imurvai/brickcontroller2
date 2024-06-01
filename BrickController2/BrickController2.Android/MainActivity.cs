@@ -13,8 +13,6 @@ using BrickController2.Droid.PlatformServices.DI;
 using BrickController2.Droid.UI.Services.DI;
 using BrickController2.UI.DI;
 using BrickController2.BusinessLogic.DI;
-using Microsoft.Maui;
-using Xamarin.Essentials;
 
 namespace BrickController2.Droid
 {
@@ -24,46 +22,61 @@ namespace BrickController2.Droid
         Theme = "@style/MainTheme",
         MainLauncher = false,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    public class MainActivity : MauiAppCompatActivity
     {
-        private GameControllerService _gameControllerService;
+        private GameControllerService? _gameControllerService;
 
         #region Activity
 
-        protected override void OnCreate(Bundle bundle)
+        protected override void OnCreate(Bundle? bundle)
         {
-            TabLayoutResource = Resource.Layout.Tabbar;
-            ToolbarResource = Resource.Layout.Toolbar;
+            //TabLayoutResource = Resource.Layout.Tabbar;
+            //ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
 
-            Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+            Window!.AddFlags(WindowManagerFlags.KeepScreenOn);
 
             Platform.Init(this, bundle);
 
-            Forms.SetFlags("SwipeView_Experimental");
-            Forms.Init(this, bundle);
+            //Forms.SetFlags("SwipeView_Experimental");
+            //Forms.Init(this, bundle);
 
             var container = InitDI();
             _gameControllerService = container.Resolve<GameControllerService>();
 
             var app = container.Resolve<App>();
-            LoadApplication(app);
+            //LoadApplication(app);
         }
 
-        public override bool OnKeyDown([GeneratedEnum] Keycode keyCode, KeyEvent e)
+        public override bool OnKeyDown([GeneratedEnum] global::Android.Views.Keycode keyCode, KeyEvent? e)
         {
-            return _gameControllerService.OnKeyDown(keyCode, e) || base.OnKeyDown(keyCode, e);
+            if (_gameControllerService is not null && e is not null)
+            {
+                return _gameControllerService.OnKeyDown(keyCode, e) || base.OnKeyDown(keyCode, e);
+            }
+
+            return base.OnKeyDown(keyCode, e);
         }
 
-        public override bool OnKeyUp([GeneratedEnum] Keycode keyCode, KeyEvent e)
+        public override bool OnKeyUp([GeneratedEnum] global::Android.Views.Keycode keyCode, KeyEvent? e)
         {
-            return _gameControllerService.OnKeyUp(keyCode, e) || base.OnKeyUp(keyCode, e);
+            if (_gameControllerService is not null && e is not null)
+            {
+                return _gameControllerService.OnKeyUp(keyCode, e) || base.OnKeyUp(keyCode, e);
+            }
+
+            return base.OnKeyUp(keyCode, e);
         }
 
-        public override bool OnGenericMotionEvent(MotionEvent e)
+        public override bool OnGenericMotionEvent(MotionEvent? e)
         {
-            return _gameControllerService.OnGenericMotionEvent(e) || base.OnGenericMotionEvent(e);
+            if (_gameControllerService is not null && e is not null)
+            {
+                return _gameControllerService.OnGenericMotionEvent(e) || base.OnGenericMotionEvent(e);
+            }
+
+            return base.OnGenericMotionEvent(e);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
@@ -74,7 +87,7 @@ namespace BrickController2.Droid
 
         #endregion
 
-        private IContainer InitDI()
+        private Autofac.IContainer InitDI()
         {
             var builder = new ContainerBuilder();
 

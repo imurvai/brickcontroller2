@@ -1,5 +1,4 @@
-﻿using System;
-using Android.Bluetooth;
+﻿using Android.Bluetooth;
 using BrickController2.PlatformServices.BluetoothLE;
 
 namespace BrickController2.Droid.PlatformServices.BluetoothLE
@@ -13,9 +12,12 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
             _scanCallback = scanCallback;
         }
 
-        public void OnLeScan(BluetoothDevice device, int rssi, byte[] scanRecord)
+        public void OnLeScan(BluetoothDevice? device, int rssi, byte[]? scanRecord)
         {
-            if (device == null || string.IsNullOrEmpty(device.Name) || string.IsNullOrEmpty(device.Address))
+            if (device is null ||
+                string.IsNullOrEmpty(device.Name) ||
+                string.IsNullOrEmpty(device.Address) ||
+                scanRecord is null)
             {
                 return;
             }

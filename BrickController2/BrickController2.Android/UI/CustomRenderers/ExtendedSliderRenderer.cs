@@ -1,13 +1,15 @@
 ﻿using Android.Content;
+using Microsoft.Maui.Controls.Compatibility;
+using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 using BrickController2.Droid.UI.CustomRenderers;
 using BrickController2.UI.Controls;
-using Microsoft.Maui;
-using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(ExtendedSlider), typeof(ExtendedSliderRenderer))]
 namespace BrickController2.Droid.UI.CustomRenderers
 {
+#pragma warning disable CS0618 // Type or member is obsolete
     public class ExtendedSliderRenderer : SliderRenderer
+#pragma warning restore CS0618 // Type or member is obsolete
     {
         public ExtendedSliderRenderer(Context context) : base(context)
         {
