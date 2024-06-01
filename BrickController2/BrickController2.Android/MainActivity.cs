@@ -13,7 +13,7 @@ using BrickController2.Droid.PlatformServices.DI;
 using BrickController2.Droid.UI.Services.DI;
 using BrickController2.UI.DI;
 using BrickController2.BusinessLogic.DI;
-using Xamarin.Forms;
+using Microsoft.Maui;
 using Xamarin.Essentials;
 
 namespace BrickController2.Droid

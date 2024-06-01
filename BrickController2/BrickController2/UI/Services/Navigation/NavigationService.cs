@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Maui.Controls;
 using BrickController2.UI.DI;
 using BrickController2.UI.ViewModels;
-using Xamarin.Forms;
 
 namespace BrickController2.UI.Services.Navigation
 {

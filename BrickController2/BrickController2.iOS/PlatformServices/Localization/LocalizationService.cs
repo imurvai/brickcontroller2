@@ -2,7 +2,7 @@
 using System.Threading;
 using BrickController2.PlatformServices.Localization;
 using Foundation;
-using Xamarin.Forms;
+using Microsoft.Maui;
 
 [assembly:Dependency(typeof(BrickController2.iOS.PlatformServices.Localization.LocalizationService))]
 namespace BrickController2.iOS.PlatformServices.Localization

@@ -8,7 +8,7 @@ using BrickController2.iOS.UI.Services.DI;
 using BrickController2.UI.DI;
 using Foundation;
 using UIKit;
-using Xamarin.Forms;
+using Microsoft.Maui;
 
 namespace BrickController2.iOS
 {

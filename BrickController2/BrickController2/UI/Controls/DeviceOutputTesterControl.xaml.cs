@@ -1,8 +1,8 @@
 ﻿using BrickController2.Helpers;
 using BrickController2.UI.Converters;
 using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.Controls

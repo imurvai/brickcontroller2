@@ -1,7 +1,7 @@
-﻿using BrickController2.Resources;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Resources;
-using Xamarin.Forms;
+using Microsoft.Maui.Controls;
+using BrickController2.Resources;
 
 namespace BrickController2.Helpers
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Essentials;
+using Microsoft.Maui.ApplicationModel;
 using BrickController2.CreationManagement;
 using BrickController2.DeviceManagement;
 using BrickController2.Helpers;
@@ -31,7 +31,7 @@ namespace BrickController2.UI.ViewModels
         // Permission request fires OnDisappearing somehow (WTF???)
         private bool _isRequestingPermission = false;
         private bool _isBluetoothPermissionRequested = false;
-        private bool _isLocationPermissionRequested = false;
+        //private bool _isLocationPermissionRequested = false;
         private bool _isStoragePermissionRequested = false;
 
         public CreationListPageViewModel(

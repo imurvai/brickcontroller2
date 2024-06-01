@@ -2,7 +2,7 @@
 using BrickController2.iOS.UI.CustomRenderers;
 using BrickController2.UI.Controls;
 using UIKit;
-using Xamarin.Forms;
+using Microsoft.Maui;
 using Xamarin.Forms.Platform.iOS;
 
 [assembly:ExportRenderer(typeof(ColorImage), typeof(ColorImageRenderer))]

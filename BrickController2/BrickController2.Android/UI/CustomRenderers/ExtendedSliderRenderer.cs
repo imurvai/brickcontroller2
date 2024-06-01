@@ -1,7 +1,7 @@
 ﻿using Android.Content;
 using BrickController2.Droid.UI.CustomRenderers;
 using BrickController2.UI.Controls;
-using Xamarin.Forms;
+using Microsoft.Maui;
 using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(ExtendedSlider), typeof(ExtendedSliderRenderer))]

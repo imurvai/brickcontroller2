@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Xamarin.Essentials;
+﻿using Microsoft.Maui.ApplicationModel;
+using System.Threading.Tasks;
 
 namespace BrickController2.PlatformServices.Permission
 {

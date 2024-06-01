@@ -1,7 +1,7 @@
 ﻿using System;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 using BrickController2.Helpers;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace BrickController2.UI.MarkupExtensions
 {

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Maui.Controls;
 using Autofac;
-using BrickController2.UI.Services.Navigation;
-using BrickController2.UI.Pages;
-using BrickController2.UI.ViewModels;
-using Xamarin.Forms;
 using BrickController2.UI.Services.MainThread;
 using BrickController2.UI.Services.Background;
 using BrickController2.UI.Services.Translation;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Preferences;
 using BrickController2.UI.Services.Theme;
+using BrickController2.UI.Services.Navigation;
+using BrickController2.UI.Pages;
+using BrickController2.UI.ViewModels;
 
 namespace BrickController2.UI.DI
 {

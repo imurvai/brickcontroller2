@@ -1,17 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Microsoft.Maui.Controls;
 using BrickController2.DeviceManagement;
+using BrickController2.Helpers;
 using BrickController2.UI.Commands;
 using BrickController2.UI.Services.Navigation;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.Services.Translation;
 using Device = BrickController2.DeviceManagement.Device;
-using BrickController2.Helpers;
-using Xamarin.Forms;
-using System.Collections.Generic;
 
 namespace BrickController2.UI.ViewModels
 {

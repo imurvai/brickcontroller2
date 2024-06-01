@@ -1,6 +1,6 @@
 ﻿using BrickController2.iOS.UI.CustomRenderers;
 using BrickController2.UI.Controls;
-using Xamarin.Forms;
+using Microsoft.Maui;
 using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(ExtendedSlider), typeof(ExtendedSliderRenderer))]

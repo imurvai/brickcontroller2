@@ -1,5 +1,5 @@
-﻿using BrickController2.PlatformServices.Localization;
-using Xamarin.Forms;
+﻿using Microsoft.Maui.Controls;
+using BrickController2.PlatformServices.Localization;
 
 namespace BrickController2.Helpers
 {
