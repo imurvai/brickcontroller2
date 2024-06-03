@@ -50,10 +50,10 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" />
-	<PackageReference Include="Microsoft.Maui.Controls" />
-	<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
+    <PackageReference Include="Microsoft.Maui.Controls" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
     <PackageReference Include="Microsoft.Maui.Essentials" />
-	<PackageReference Include="sqlite-net-pcl" />
+    <PackageReference Include="sqlite-net-pcl" />
     <PackageReference Include="SQLiteNetExtensions" />
     <PackageReference Include="SQLiteNetExtensions.Async" />
     <PackageReference Include="SQLitePCLRaw.bundle_green" />

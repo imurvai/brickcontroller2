@@ -4,7 +4,7 @@
              x:Class="BrickController2.UI.Controls.DeviceOutputTesterControl">
 
     <ContentView.Content>
-        <StackLayout x:Name="StackLayout" Orientation="Vertical">
-        </StackLayout>
+        <VerticalStackLayout x:Name="MyStackLayout">
+        </VerticalStackLayout>
     </ContentView.Content>
 </ContentView>

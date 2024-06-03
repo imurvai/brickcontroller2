@@ -1,9 +1,13 @@
-﻿using Android.Graphics;
+﻿using System;
+using System.Collections.Generic;
+using Android.Graphics;
 using Android.Widget;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Handlers;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Internals;
 using BrickController2.UI.Controls;
 
 namespace BrickController2.Android.UI.CustomHandlers
@@ -12,8 +16,15 @@ namespace BrickController2.Android.UI.CustomHandlers
     {
         public static readonly PropertyMapper<ColorImage, ColorImageHandler> _PropertyMapper = new(ImageHandler.Mapper)
         {
-            [nameof(ColorImage.Color)] = MapColor
+            [nameof(ColorImage.Color)] = MapColor,
+            [nameof(ColorImage.Source)] = (handler, colorImage) =>
+            { 
+                MapColor(handler, colorImage);
+                MapSource(handler, colorImage);
+            }
         };
+
+        private static IResourceDictionary _ResourceDictionary => Application.Current!.Resources;
 
         public ColorImageHandler() : base(_PropertyMapper)
         {
@@ -22,10 +33,16 @@ namespace BrickController2.Android.UI.CustomHandlers
         protected override void ConnectHandler(ImageView platformView)
         {
             base.ConnectHandler(platformView);
+
+            ColorChangedHandler(this, new(Array.Empty<KeyValuePair<string, object>>()));
+
+            _ResourceDictionary.ValuesChanged += ColorChangedHandler;
         }
 
         protected override void DisconnectHandler(ImageView platformView)
         {
+            _ResourceDictionary.ValuesChanged -= ColorChangedHandler;
+
             platformView.Dispose();
             base.DisconnectHandler(platformView);
         }
@@ -43,6 +60,14 @@ namespace BrickController2.Android.UI.CustomHandlers
             {
                 var colorFilter = new PorterDuffColorFilter(colorImage.Color.ToAndroid(), PorterDuff.Mode.SrcIn!);
                 handler.PlatformView.SetColorFilter(colorFilter);
+            }
+        }
+
+        private void ColorChangedHandler(object? sender, ResourcesChangedEventArgs e)
+        {
+            if (VirtualView is ColorImage colorImage)
+            {
+                MapColor(this, colorImage);
             }
         }
     }

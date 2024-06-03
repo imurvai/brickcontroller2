@@ -33,7 +33,7 @@ namespace BrickController2.UI.Controls
 
         private void Setup(Device device)
         {
-            StackLayout.Children.Clear();
+            MyStackLayout.Children.Clear();
 
             for (int channel = 0; channel < device.NumberOfChannels; channel++)
             {
@@ -51,7 +51,7 @@ namespace BrickController2.UI.Controls
                 slider.SetBinding(ExtendedSlider.MinimumProperty, nameof(DeviceOutputViewModel.MinValue));
                 slider.SetBinding(ExtendedSlider.MaximumProperty, nameof(DeviceOutputViewModel.MaxValue));
 
-                StackLayout.Children.Add(slider);
+                MyStackLayout.Children.Add(slider);
             }
         }
 

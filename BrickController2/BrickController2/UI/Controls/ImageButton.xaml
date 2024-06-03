@@ -5,12 +5,13 @@
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     x:Class="BrickController2.UI.Controls.ImageButton">
     
-  <ContentView.Content>
-        <Frame x:Name="MyFrame" BackgroundColor="Transparent" HasShadow="False" Padding="0">
-            <Frame.GestureRecognizers>
-                <TapGestureRecognizer x:Name="MyTapGuestureRecognizer"/>
-            </Frame.GestureRecognizers>
-            <controls:ColorImage x:Name="MyImage" HorizontalOptions="Center" VerticalOptions="Center" Aspect="AspectFill"/>
-        </Frame>
+    <ContentView.Content>
+        <Grid BackgroundColor="Transparent" Padding="0">
+            <controls:ColorImage x:Name="MyImage" HorizontalOptions="Center" VerticalOptions="Center" Aspect="AspectFill">
+                <controls:ColorImage.GestureRecognizers>
+                    <TapGestureRecognizer x:Name="MyTapGuestureRecognizer"/>
+                </controls:ColorImage.GestureRecognizers>
+            </controls:ColorImage>
+        </Grid>
     </ContentView.Content>
 </ContentView>
