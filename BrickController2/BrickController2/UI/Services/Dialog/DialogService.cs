@@ -10,7 +10,7 @@ namespace BrickController2.UI.Services.Dialog
     {
         private readonly IGameControllerService _gameControllerService;
 
-        private IDialogServer _dialogServer;
+        private IDialogServer? _dialogServer;
 
         public bool IsDialogOpen => _dialogServer?.IsDialogOpen ?? false;
 
@@ -34,19 +34,23 @@ namespace BrickController2.UI.Services.Dialog
             return _dialogServer?.ShowInputDialogAsync(initialValue, placeHolder, positiveButtonText, negativeButtonText, keyboardType, valuePredicate, token) ?? Task.FromResult(new InputDialogResult(false, string.Empty));
         }
 
-        public Task<SelectionDialogResult<T>> ShowSelectionDialogAsync<T>(IEnumerable<T> items, string title, string cancelButtonText, CancellationToken token)
+        public Task<SelectionDialogResult<T>> ShowSelectionDialogAsync<T>(IEnumerable<T> items, string title, string cancelButtonText, CancellationToken token) where T : notnull
         {
-            return _dialogServer?.ShowSelectionDialogAsync(items, title, cancelButtonText, token) ?? Task.FromResult(new SelectionDialogResult<T>(false, default));
+            return _dialogServer?.ShowSelectionDialogAsync(items, title, cancelButtonText, token) ?? Task.FromResult(new SelectionDialogResult<T>(false, default!));
         }
 
-        public Task<ProgressDialogResult> ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText, CancellationToken token)
+        public Task<ProgressDialogResult> ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string? message, string? cancelButtonText, CancellationToken token)
         {
             return _dialogServer?.ShowProgressDialogAsync(isDeterministic, action, title, message, cancelButtonText, token) ?? Task.FromResult(new ProgressDialogResult(false));
         }
 
         public Task<GameControllerEventDialogResult> ShowGameControllerEventDialogAsync(string title, string message, string cancelButtonText, CancellationToken token)
         {
-            _dialogServer.GameControllerService = _gameControllerService;
+            if (_dialogServer is not null)
+            {
+                _dialogServer.GameControllerService = _gameControllerService;
+            }
+
             return _dialogServer?.ShowGameControllerEventDialogAsync(title, message, cancelButtonText, token) ?? Task.FromResult(new GameControllerEventDialogResult(false, GameControllerEventType.Axis, string.Empty));
         }
 
@@ -59,7 +63,9 @@ namespace BrickController2.UI.Services.Dialog
         {
             // reset only in case previously set server matches
             if (_dialogServer == dialogServer)
+            {
                 _dialogServer = null;
+            }
         }
     }
 }

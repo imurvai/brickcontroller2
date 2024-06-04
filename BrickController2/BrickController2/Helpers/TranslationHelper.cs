@@ -6,7 +6,7 @@ namespace BrickController2.Helpers
 {
     public static class TranslationHelper
     {
-        private static ILocalizationService _localizationService = null;
+        private static ILocalizationService? _localizationService = null;
 
         public static string Translate(string key)
         {

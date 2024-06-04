@@ -14,7 +14,7 @@ namespace BrickController2.BusinessLogic
         private readonly IDictionary<(string DeviceId, int Channel), (Sequence Sequence, bool Invert, int? StartTimeMs)> _sequences = new Dictionary<(string, int), (Sequence, bool, int?)>();
         private readonly object _lock = new object();
 
-        private Timer _playerTimer;
+        private Timer? _playerTimer;
         private int _timeSinceStartMs;
 
         public SequencePlayer(IDeviceManager deviceManager)
@@ -96,7 +96,7 @@ namespace BrickController2.BusinessLogic
                             _sequences[kvp.Key] = (kvp.Value.Sequence, kvp.Value.Invert, _timeSinceStartMs);
                         }
 
-                        if (!ProcessSequence(kvp.Key.DeviceId, kvp.Key.Channel, kvp.Value.Sequence, kvp.Value.Invert, kvp.Value.StartTimeMs.Value, _timeSinceStartMs))
+                        if (!ProcessSequence(kvp.Key.DeviceId, kvp.Key.Channel, kvp.Value.Sequence, kvp.Value.Invert, kvp.Value.StartTimeMs!.Value, _timeSinceStartMs))
                         {
                             sequencesToRemove.Add((kvp.Key.DeviceId, kvp.Key.Channel));
                         }
@@ -132,7 +132,7 @@ namespace BrickController2.BusinessLogic
             var sequenceTimeMs = elapsedTimeMs - ((elapsedTimeMs / sequenceDurationMs) * sequenceDurationMs);
 
             SequenceControlPoint controlPoint1 = sequence.ControlPoints[0];
-            SequenceControlPoint controlPoint2 = controlPoint1;
+            SequenceControlPoint? controlPoint2 = controlPoint1;
             var controlPoint1StartTimeMs = 0;
             var controlPoint1DurationMs = controlPoint1.DurationMs;
 
@@ -165,7 +165,7 @@ namespace BrickController2.BusinessLogic
             if (sequence.Interpolate)
             {
                 var value1 = controlPoint1.Value;
-                var value2 = controlPoint2.Value;
+                var value2 = controlPoint2?.Value ?? value1;
 
                 var relativeSequenceTime = (float)(sequenceTimeMs - controlPoint1StartTimeMs);
 

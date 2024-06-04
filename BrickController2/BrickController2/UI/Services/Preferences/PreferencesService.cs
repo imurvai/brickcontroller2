@@ -6,7 +6,7 @@ namespace BrickController2.UI.Services.Preferences
     {
         private readonly object _lock = new object();
 
-        public bool ContainsKey(string key, string section = null)
+        public bool ContainsKey(string key, string? section = null)
         {
             lock (_lock)
             {
@@ -14,11 +14,11 @@ namespace BrickController2.UI.Services.Preferences
             }
         }
 
-        public T Get<T>(string key, string section = null)
+        public T Get<T>(string key, string? section = null) where T : notnull
         {
             lock (_lock)
             {
-                object result = null;
+                object? result = null;
 
                 if (typeof(T).IsEnum)
                 {
@@ -41,7 +41,7 @@ namespace BrickController2.UI.Services.Preferences
             }
         }
 
-        public T Get<T>(string key, T defaultValue, string section = null)
+        public T Get<T>(string key, T defaultValue, string? section = null) where T : notnull
         {
             lock (_lock)
             {
@@ -54,7 +54,7 @@ namespace BrickController2.UI.Services.Preferences
             }
         }
 
-        public void Set<T>(string key, T value, string section = null)
+        public void Set<T>(string key, T value, string? section = null) where T : notnull
         {
             lock (_lock)
             {

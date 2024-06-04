@@ -1,6 +1,6 @@
 ﻿namespace BrickController2.UI.Services.Dialog
 {
-    public class SelectionDialogResult<T>
+    public class SelectionDialogResult<T> where T : notnull
     {
         public SelectionDialogResult(bool isOk, T selectedValue)
         {

@@ -8,7 +8,7 @@ namespace BrickController2.UI.MarkupExtensions
     [ContentProperty("Key")]
     public class TranslateExtension : IMarkupExtension<string>
     {
-        public string Key { get; set; }
+        public required string Key { get; set; }
 
         public string ProvideValue(IServiceProvider serviceProvider)
         {

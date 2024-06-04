@@ -21,7 +21,7 @@ namespace BrickController2.iOS.PlatformServices.SharedFileStorage
             }
         }
 
-        public string SharedStorageDirectory
+        public string? SharedStorageDirectory
         {
             get
             {

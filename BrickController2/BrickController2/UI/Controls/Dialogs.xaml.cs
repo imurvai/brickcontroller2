@@ -13,7 +13,7 @@ namespace BrickController2.UI.Controls
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Dialogs : ContentView, IDialogServer
     {
-        public IGameControllerService GameControllerService { get; set; }
+        public IGameControllerService? GameControllerService { get; set; }
 
         public Dialogs()
         {
@@ -45,21 +45,21 @@ namespace BrickController2.UI.Controls
 
             using (token.Register(() =>
             {
-                MessageBoxButton.Clicked -= buttonHandler;
+                MessageBoxButton.Clicked -= buttonHandler!;
                 MessageBox.IsVisible = false;
                 HideViewImmediately(MessageBox);
                 tcs.TrySetResult(true);
             }))
             {
                 await ShowView(MessageBox);
-                MessageBoxButton.Clicked += buttonHandler;
+                MessageBoxButton.Clicked += buttonHandler!;
 
                 await tcs.Task;
             }
 
             async void buttonHandler(object sender, EventArgs args)
             {
-                MessageBoxButton.Clicked -= buttonHandler;
+                MessageBoxButton.Clicked -= buttonHandler!;
                 await HideView(MessageBox);
                 tcs.TrySetResult(true);
             }
@@ -76,24 +76,24 @@ namespace BrickController2.UI.Controls
 
             using (token.Register(() =>
             {
-                QuestionDialogPositiveButton.Clicked -= buttonHandler;
-                QuestionDialogNegativeButton.Clicked -= buttonHandler;
+                QuestionDialogPositiveButton.Clicked -= buttonHandler!;
+                QuestionDialogNegativeButton.Clicked -= buttonHandler!;
                 QuestionDialog.IsVisible = false;
                 HideViewImmediately(QuestionDialog);
                 tcs.TrySetResult(false);
             }))
             {
                 await ShowView(QuestionDialog);
-                QuestionDialogPositiveButton.Clicked += buttonHandler;
-                QuestionDialogNegativeButton.Clicked += buttonHandler;
+                QuestionDialogPositiveButton.Clicked += buttonHandler!;
+                QuestionDialogNegativeButton.Clicked += buttonHandler!;
 
                 return await tcs.Task;
             }
 
             async void buttonHandler(object sender, EventArgs args)
             {
-                QuestionDialogPositiveButton.Clicked -= buttonHandler;
-                QuestionDialogNegativeButton.Clicked -= buttonHandler;
+                QuestionDialogPositiveButton.Clicked -= buttonHandler!;
+                QuestionDialogNegativeButton.Clicked -= buttonHandler!;
                 await HideView(QuestionDialog);
                 tcs.TrySetResult(sender == QuestionDialogPositiveButton);
             }
@@ -112,19 +112,19 @@ namespace BrickController2.UI.Controls
 
             using (token.Register(() =>
             {
-                InputDialogEntry.TextChanged -= entryTextChanged;
-                InputDialogEntry.Completed -= buttonHandler;
-                InputDialogPositiveButton.Clicked -= buttonHandler;
-                InputDialogNegativeButton.Clicked -= buttonHandler;
+                InputDialogEntry.TextChanged -= entryTextChanged!;
+                InputDialogEntry.Completed -= buttonHandler!;
+                InputDialogPositiveButton.Clicked -= buttonHandler!;
+                InputDialogNegativeButton.Clicked -= buttonHandler!;
                 HideViewImmediately(InputDialog);
                 tcs.TrySetResult(new InputDialogResult(false, InputDialogEntry.Text));
             }))
             {
                 await ShowView(InputDialog);
-                InputDialogEntry.TextChanged += entryTextChanged;
-                InputDialogEntry.Completed += buttonHandler;
-                InputDialogPositiveButton.Clicked += buttonHandler;
-                InputDialogNegativeButton.Clicked += buttonHandler;
+                InputDialogEntry.TextChanged += entryTextChanged!;
+                InputDialogEntry.Completed += buttonHandler!;
+                InputDialogPositiveButton.Clicked += buttonHandler!;
+                InputDialogNegativeButton.Clicked += buttonHandler!;
                 InputDialogEntry.Keyboard = GetKeyboard(keyboardType);
                 InputDialogEntry.Focus();
 
@@ -133,10 +133,10 @@ namespace BrickController2.UI.Controls
 
             async void buttonHandler(object sender, EventArgs args)
             {
-                InputDialogEntry.TextChanged -= entryTextChanged;
-                InputDialogEntry.Completed -= buttonHandler;
-                InputDialogPositiveButton.Clicked -= buttonHandler;
-                InputDialogNegativeButton.Clicked -= buttonHandler;
+                InputDialogEntry.TextChanged -= entryTextChanged!;
+                InputDialogEntry.Completed -= buttonHandler!;
+                InputDialogPositiveButton.Clicked -= buttonHandler!;
+                InputDialogNegativeButton.Clicked -= buttonHandler!;
                 await HideView(InputDialog);
                 tcs.TrySetResult(new InputDialogResult(sender == InputDialogPositiveButton || sender == InputDialogEntry, InputDialogEntry.Text));
             }
@@ -147,7 +147,7 @@ namespace BrickController2.UI.Controls
             }
         }
 
-        public async Task<SelectionDialogResult<T>> ShowSelectionDialogAsync<T>(IEnumerable<T> items, string title, string cancelButtonText, CancellationToken token)
+        public async Task<SelectionDialogResult<T>> ShowSelectionDialogAsync<T>(IEnumerable<T> items, string title, string cancelButtonText, CancellationToken token) where T : notnull
         {
             SelectionDialogTitle.Text = title ?? string.Empty;
             SelectionDialogItems.ItemsSource = items;
@@ -158,37 +158,37 @@ namespace BrickController2.UI.Controls
 
             using (token.Register(() =>
             {
-                SelectionDialogItems.SelectionChanged -= selectionChangedHandler;
-                SelectionDialogCancelButton.Clicked -= buttonHandler;
+                SelectionDialogItems.SelectionChanged -= selectionChangedHandler!;
+                SelectionDialogCancelButton.Clicked -= buttonHandler!;
                 HideViewImmediately(SelectionDialog);
-                tcs.TrySetResult(new SelectionDialogResult<T>(false, default));
+                tcs.TrySetResult(new SelectionDialogResult<T>(false, default!));
             }))
             {
                 await ShowView(SelectionDialog);
-                SelectionDialogItems.SelectionChanged += selectionChangedHandler;
-                SelectionDialogCancelButton.Clicked += buttonHandler;
+                SelectionDialogItems.SelectionChanged += selectionChangedHandler!;
+                SelectionDialogCancelButton.Clicked += buttonHandler!;
 
                 return await tcs.Task;
             }
 
             async void selectionChangedHandler(object sender, EventArgs args)
             {
-                SelectionDialogItems.SelectionChanged -= selectionChangedHandler;
-                SelectionDialogCancelButton.Clicked -= buttonHandler;
+                SelectionDialogItems.SelectionChanged -= selectionChangedHandler!;
+                SelectionDialogCancelButton.Clicked -= buttonHandler!;
                 await HideView(SelectionDialog);
                 tcs.TrySetResult(new SelectionDialogResult<T>(true, (T)SelectionDialogItems.SelectedItem));
             }
 
             async void buttonHandler(object sender, EventArgs args)
             {
-                SelectionDialogItems.SelectionChanged -= selectionChangedHandler;
-                SelectionDialogCancelButton.Clicked -= buttonHandler;
+                SelectionDialogItems.SelectionChanged -= selectionChangedHandler!;
+                SelectionDialogCancelButton.Clicked -= buttonHandler!;
                 await HideView(SelectionDialog);
-                tcs.TrySetResult(new SelectionDialogResult<T>(false, default));
+                tcs.TrySetResult(new SelectionDialogResult<T>(false, default!));
             }
         }
 
-        public async Task<ProgressDialogResult> ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string message, string cancelButtonText, CancellationToken token)
+        public async Task<ProgressDialogResult> ShowProgressDialogAsync(bool isDeterministic, Func<IProgressDialog, CancellationToken, Task> action, string title, string? message, string? cancelButtonText, CancellationToken token)
         {
             ProgressDialogTitle.Text = title ?? string.Empty;
             ProgressDialogTitle.IsVisible = !string.IsNullOrEmpty(title);
@@ -204,7 +204,7 @@ namespace BrickController2.UI.Controls
             using (token.Register(tokenSource.Cancel))
             {
                 await ShowView(ProgressDialog);
-                ProgressDialogCancelButton.Clicked += buttonHandler;
+                ProgressDialogCancelButton.Clicked += buttonHandler!;
 
                 try
                 {
@@ -216,7 +216,7 @@ namespace BrickController2.UI.Controls
                 }
                 finally
                 {
-                    ProgressDialogCancelButton.Clicked -= buttonHandler;
+                    ProgressDialogCancelButton.Clicked -= buttonHandler!;
                     await HideView(ProgressDialog);
                 }
 
@@ -239,23 +239,23 @@ namespace BrickController2.UI.Controls
 
             using (token.Register(() =>
             {
-                GameControllerEventDialogCancelButton.Clicked -= buttonHandler;
-                GameControllerService.GameControllerEvent -= gameControllerEventHandler;
+                GameControllerEventDialogCancelButton.Clicked -= buttonHandler!;
+                GameControllerService.GameControllerEvent -= gameControllerEventHandler!;
                 HideViewImmediately(GameControllerEventDialog);
                 tcs.TrySetResult(new GameControllerEventDialogResult(false, GameControllerEventType.Axis, string.Empty));
             }))
             {
                 await ShowView(GameControllerEventDialog);
-                GameControllerEventDialogCancelButton.Clicked += buttonHandler;
-                GameControllerService.GameControllerEvent += gameControllerEventHandler;
+                GameControllerEventDialogCancelButton.Clicked += buttonHandler!;
+                GameControllerService.GameControllerEvent += gameControllerEventHandler!;
 
                 return await tcs.Task;
             }
 
             async void buttonHandler(object sender, EventArgs args)
             {
-                GameControllerEventDialogCancelButton.Clicked -= buttonHandler;
-                GameControllerService.GameControllerEvent -= gameControllerEventHandler;
+                GameControllerEventDialogCancelButton.Clicked -= buttonHandler!;
+                GameControllerService.GameControllerEvent -= gameControllerEventHandler!;
                 await HideView(GameControllerEventDialog);
                 tcs.TrySetResult(new GameControllerEventDialogResult(false, GameControllerEventType.Axis, string.Empty));
             }
@@ -272,8 +272,8 @@ namespace BrickController2.UI.Controls
                     if ((controllerEvent.Key.EventType == GameControllerEventType.Axis && Math.Abs(controllerEvent.Value) > 0.8) ||
                         (controllerEvent.Key.EventType == GameControllerEventType.Button && Math.Abs(controllerEvent.Value) < 0.05))
                     {
-                        GameControllerEventDialogCancelButton.Clicked -= buttonHandler;
-                        GameControllerService.GameControllerEvent -= gameControllerEventHandler;
+                        GameControllerEventDialogCancelButton.Clicked -= buttonHandler!;
+                        GameControllerService.GameControllerEvent -= gameControllerEventHandler!;
                         await HideView(GameControllerEventDialog);
 
                         var gameControllerEventType = controllerEvent.Key.EventType;

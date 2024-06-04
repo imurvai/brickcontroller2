@@ -15,9 +15,9 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
     {
         private readonly CBCentralManager _centralManager;
         private readonly IDictionary<CBPeripheral, BluetoothLEDevice> _peripheralMap = new Dictionary<CBPeripheral, BluetoothLEDevice>();
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
 
-        private Action<ScanResult> _scanCallback;
+        private Action<ScanResult>? _scanCallback;
 
         public BluetoothLEService()
         {
@@ -47,7 +47,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             }))
             {
                 _scanCallback = scanCallback;
-                _centralManager.ScanForPeripherals(null, new PeripheralScanningOptions { AllowDuplicatesKey = true });
+                _centralManager.ScanForPeripherals(Array.Empty<CBUUID>(), new PeripheralScanningOptions { AllowDuplicatesKey = true });
 
                 return await tcs.Task;
             }
@@ -91,13 +91,13 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             device.OnDeviceConnected();
         }
 
-        public override void DisconnectedPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error)
+        public override void DisconnectedPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError? error)
         {
             var device = _peripheralMap[peripheral];
             device.OnDeviceDisconnected();
         }
 
-        public override void FailedToConnectPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error)
+        public override void FailedToConnectPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError? error)
         {
             var device = _peripheralMap[peripheral];
             device.OnDeviceDisconnected();
@@ -124,7 +124,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             return result;
         }
 
-        private byte[] GetDataForKey(NSDictionary advertisementData, NSString key)
+        private byte[]? GetDataForKey(NSDictionary advertisementData, NSString key)
         {
             if (advertisementData == null || !advertisementData.ContainsKey(key))
             {

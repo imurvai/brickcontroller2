@@ -16,9 +16,9 @@ namespace BrickController2.UI.ViewModels
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
 
-        private CancellationTokenSource _connectionTokenSource;
-        private Task _connectionTask;
-        private CancellationTokenSource _disappearingTokenSource;
+        private CancellationTokenSource? _connectionTokenSource;
+        private Task? _connectionTask;
+        private CancellationTokenSource? _disappearingTokenSource;
         private bool _isDisappearing = false;
 
         private int _servoBaseAngle;
@@ -70,7 +70,7 @@ namespace BrickController2.UI.ViewModels
                         Translate("Warning"),
                         Translate("TurnOnBluetoothToConnect"),
                         Translate("Ok"),
-                        _disappearingTokenSource.Token);
+                        _disappearingTokenSource?.Token ?? default);
 
                     if (!_isDisappearing)
                     {
@@ -87,9 +87,9 @@ namespace BrickController2.UI.ViewModels
         public override async void OnDisappearing()
         {
             _isDisappearing = true;
-            _disappearingTokenSource.Cancel();
+            _disappearingTokenSource?.Cancel();
 
-            if (_connectionTokenSource != null && _connectionTask != null)
+            if (_connectionTokenSource is not null && _connectionTask is not null)
             {
                 _connectionTokenSource.Cancel();
                 await _connectionTask;
@@ -100,7 +100,7 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectAsync()
         {
-            while (!_connectionTokenSource.IsCancellationRequested)
+            while (!(_connectionTokenSource?.IsCancellationRequested ?? false))
             {
                 if (Device.DeviceState != DeviceState.Connected)
                 {
@@ -110,7 +110,7 @@ namespace BrickController2.UI.ViewModels
                         false,
                         async (progressDialog, token) =>
                         {
-                            using (token.Register(() => _connectionTokenSource.Cancel()))
+                            using (token.Register(() => _connectionTokenSource?.Cancel()))
                             {
                                 await Device.ConnectAsync(
                                     false,
@@ -124,7 +124,7 @@ namespace BrickController2.UI.ViewModels
                         Translate("ConnectingTo"),
                         Device.Name,
                         Translate("Cancel"),
-                        _connectionTokenSource.Token);
+                        _connectionTokenSource?.Token ?? default);
 
                     if (dialogResult.IsCancelled)
                     {
@@ -145,7 +145,7 @@ namespace BrickController2.UI.ViewModels
                                 Translate("Warning"),
                                 Translate("FailedToConnect"),
                                 Translate("Ok"),
-                                _disappearingTokenSource.Token);
+                                _disappearingTokenSource?.Token ?? default);
 
                             if (!_isDisappearing)
                             {
@@ -188,7 +188,7 @@ namespace BrickController2.UI.ViewModels
                 Translate("Calibrating"),
                 null,
                 Translate("Cancel"),
-                _disappearingTokenSource.Token);
+                _disappearingTokenSource?.Token ?? default);
         }
 
         private async Task ResetServoBaseAngleAsync()
@@ -202,7 +202,7 @@ namespace BrickController2.UI.ViewModels
                 Translate("Reseting"),
                 null,
                 Translate("Cancel"),
-                _disappearingTokenSource.Token);
+                _disappearingTokenSource?.Token ?? default);
         }
     }
 }

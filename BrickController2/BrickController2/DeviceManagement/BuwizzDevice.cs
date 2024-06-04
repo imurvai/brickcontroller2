@@ -22,7 +22,7 @@ namespace BrickController2.DeviceManagement
         private volatile int _outputLevelValue;
         private volatile int _sendAttemptsLeft;
 
-        private IGattCharacteristic _characteristic;
+        private IGattCharacteristic? _characteristic;
 
         public BuWizzDevice(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, bleService)
@@ -143,7 +143,7 @@ namespace BrickController2.DeviceManagement
                     (byte)(level * 0x20)
                 };
 
-                var result = await _bleDevice?.WriteNoResponseAsync(_characteristic, sendOutputBuffer, token);
+                var result = await _bleDevice!.WriteNoResponseAsync(_characteristic!, sendOutputBuffer, token);
                 await Task.Delay(60, token);
                 return result;
             }

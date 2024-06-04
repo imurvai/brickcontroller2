@@ -16,7 +16,7 @@ namespace BrickController2.UI.ViewModels
         private readonly IThemeService _themeService;
         private readonly IDialogService _dialogService;
 
-        private CancellationTokenSource _disappearingTokenSource;
+        private CancellationTokenSource? _disappearingTokenSource;
 
         public SettingsPageViewModel(
             INavigationService navigationService,
@@ -54,7 +54,7 @@ namespace BrickController2.UI.ViewModels
 
         public override void OnDisappearing()
         {
-            _disappearingTokenSource.Cancel();
+            _disappearingTokenSource?.Cancel();
         }
 
         private async Task SelectThemeAsync()
@@ -63,7 +63,7 @@ namespace BrickController2.UI.ViewModels
                 Enum.GetNames(typeof(ThemeType)),
                 Translate("Theme"),
                 Translate("Cancel"),
-                _disappearingTokenSource.Token);
+                _disappearingTokenSource?.Token ?? default);
 
             if (result.IsOk)
             {

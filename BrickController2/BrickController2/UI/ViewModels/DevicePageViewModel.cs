@@ -20,10 +20,10 @@ namespace BrickController2.UI.ViewModels
         private readonly IDeviceManager _deviceManager;
         private readonly IDialogService _dialogService;
 
-        private CancellationTokenSource _connectionTokenSource;
-        private Task _connectionTask;
+        private CancellationTokenSource? _connectionTokenSource;
+        private Task? _connectionTask;
         private bool _reconnect = false;
-        private CancellationTokenSource _disappearingTokenSource;
+        private CancellationTokenSource? _disappearingTokenSource;
         private bool _isDisappearing = false;
 
         public DevicePageViewModel(
@@ -75,7 +75,7 @@ namespace BrickController2.UI.ViewModels
                         Translate("Warning"),
                         Translate("TurnOnBluetoothToConnect"),
                         Translate("Ok"),
-                        _disappearingTokenSource.Token);
+                        _disappearingTokenSource?.Token ?? default);
 
                     await NavigationService.NavigateBackAsync();
                     return;
@@ -89,11 +89,11 @@ namespace BrickController2.UI.ViewModels
         public override async void OnDisappearing()
         {
             _isDisappearing = true;
-            _disappearingTokenSource.Cancel();
+            _disappearingTokenSource?.Cancel();
 
-            if (_connectionTokenSource != null && _connectionTask != null)
+            if (_connectionTokenSource is not null && _connectionTask is not null)
             {
-                _connectionTokenSource.Cancel();
+                _connectionTokenSource?.Cancel();
                 await _connectionTask;
             }
 
@@ -111,7 +111,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("Cancel"),
                     KeyboardType.Text,
                     (deviceName) => !string.IsNullOrEmpty(deviceName),
-                    _disappearingTokenSource.Token);
+                    _disappearingTokenSource?.Token ?? default);
 
                 if (result.IsOk)
                 {
@@ -121,7 +121,7 @@ namespace BrickController2.UI.ViewModels
                             Translate("Warning"),
                             Translate("DeviceNameCanNotBeEmpty"),
                             Translate("Ok"),
-                            _disappearingTokenSource.Token);
+                            _disappearingTokenSource?.Token ?? default);
 
                         return;
                     }
@@ -130,7 +130,7 @@ namespace BrickController2.UI.ViewModels
                         false,
                         async (progressDialog, token) => await Device.RenameDeviceAsync(Device, result.Result),
                         Translate("Renaming"),
-                        token: _disappearingTokenSource.Token);
+                        token: _disappearingTokenSource?.Token ?? default);
                 }
             }
             catch (OperationCanceledException)
@@ -140,7 +140,7 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectAsync()
         {
-            while (!_connectionTokenSource.IsCancellationRequested)
+            while (!(_connectionTokenSource?.IsCancellationRequested ?? false))
             {
                 if (Device.DeviceState != DeviceState.Connected)
                 {
@@ -158,13 +158,13 @@ namespace BrickController2.UI.ViewModels
                                     Enumerable.Empty<ChannelConfiguration>(),
                                     true,
                                     true,
-                                    _connectionTokenSource.Token);
+                                    _connectionTokenSource?.Token ?? default);
                             }
                         },
                         Translate("ConnectingTo"),
                         Device.Name,
                         Translate("Cancel"),
-                        _connectionTokenSource.Token);
+                        _connectionTokenSource?.Token ?? default);
 
                     if (dialogResult.IsCancelled)
                     {
@@ -185,7 +185,7 @@ namespace BrickController2.UI.ViewModels
                                 Translate("Warning"),
                                 Translate("FailedToConnect"),
                                 Translate("Ok"),
-                                _disappearingTokenSource.Token);
+                                _disappearingTokenSource?.Token ?? default);
 
                             if (!_isDisappearing)
                             {

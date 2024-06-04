@@ -27,7 +27,7 @@ namespace BrickController2
 
             _backgroundService = backgroundService;
 
-			Application.Current.RequestedThemeChanged += (s, e) =>
+			Application.Current!.RequestedThemeChanged += (s, e) =>
 			{
 				themeService.CurrentTheme = e.RequestedTheme switch
 				{

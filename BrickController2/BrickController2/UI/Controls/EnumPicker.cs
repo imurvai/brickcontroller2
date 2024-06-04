@@ -8,7 +8,7 @@ namespace BrickController2.UI.Controls
     {
         public EnumPicker()
         {
-            SelectedIndexChanged += OnSelectedIndexChanged;
+            SelectedIndexChanged += OnSelectedIndexChanged!;
 
             foreach (var item in Enum.GetValues(typeof(T)))
             {

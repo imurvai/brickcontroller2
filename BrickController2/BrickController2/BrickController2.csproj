@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <RootNamespace>BrickController2</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

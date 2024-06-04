@@ -2,14 +2,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-ios</TargetFrameworks>
+    <TargetFrameworks>net8.0-ios</TargetFrameworks>
+    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
 		<LangVersion>latest</LangVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
-		<OutputType>Exe</OutputType>
+		<SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
+    <OutputType>Exe</OutputType>
 		<Nullable>enable</Nullable>
 		<ApplicationId>com.scn.BrickController2</ApplicationId>
 		<RootNamespace>BrickController2.iOS</RootNamespace>
-	</PropertyGroup>
+    <UseMaui>true</UseMaui>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+	<ItemGroup>
+	  <BundleResource Remove="Resources\splash.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\splash.svg" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Autofac" />
@@ -18,6 +29,17 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
 		<PackageReference Include="Microsoft.Maui.Essentials" />
 		<ProjectReference Include="..\BrickController2\BrickController2.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Properties\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiSplashScreen Include="Resources\splash.svg">
+	    <Color>#990000</Color>
+	    <BaseSize>128,128</BaseSize>
+	  </MauiSplashScreen>
 	</ItemGroup>
 
 </Project>

@@ -24,7 +24,7 @@ namespace BrickController2.UI.ViewModels
         private readonly IDialogService _dialogService;
         private readonly IPlayLogic _playLogic;
 
-        private CancellationTokenSource _disappearingTokenSource;
+        private CancellationTokenSource? _disappearingTokenSource;
 
         private List<ControllerEventViewModel> _controllerEvents = new List<ControllerEventViewModel>();
 
@@ -68,7 +68,7 @@ namespace BrickController2.UI.ViewModels
 
         public override void OnDisappearing()
         {
-            _disappearingTokenSource.Cancel();
+            _disappearingTokenSource?.Cancel();
         }
 
         public ControllerProfile ControllerProfile { get; }
@@ -110,7 +110,7 @@ namespace BrickController2.UI.ViewModels
                         Translate("Cancel"),
                         KeyboardType.Text,
                         fn => FileHelper.FilenameValidator(fn),
-                        _disappearingTokenSource.Token);
+                        _disappearingTokenSource?.Token ?? default);
 
                     if (!result.IsOk)
                     {
@@ -126,7 +126,7 @@ namespace BrickController2.UI.ViewModels
                             Translate("DoYouWantToOverWrite"),
                             Translate("Yes"),
                             Translate("No"),
-                            _disappearingTokenSource.Token))
+                            _disappearingTokenSource?.Token ?? default))
                     {
                         try
                         {
@@ -137,7 +137,7 @@ namespace BrickController2.UI.ViewModels
                                 Translate("ExportSuccessful"),
                                 filePath,
                                 Translate("Ok"),
-                                _disappearingTokenSource.Token);
+                                _disappearingTokenSource?.Token ?? default);
                         }
                         catch (Exception)
                         {
@@ -145,7 +145,7 @@ namespace BrickController2.UI.ViewModels
                                 Translate("Error"),
                                 Translate("FailedToExportControllerProfile"),
                                 Translate("Ok"),
-                                _disappearingTokenSource.Token);
+                                _disappearingTokenSource?.Token ?? default);
 
                             return;
                         }
@@ -169,7 +169,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("Cancel"),
                     KeyboardType.Text,
                     (profileName) => !string.IsNullOrEmpty(profileName),
-                    _disappearingTokenSource.Token);
+                    _disappearingTokenSource?.Token ?? default);
 
                 if (result.IsOk)
                 {
@@ -179,7 +179,7 @@ namespace BrickController2.UI.ViewModels
                             Translate("Warning"),
                             Translate("ProfileNameCanNotBeEmpty"),
                             Translate("Ok"),
-                            _disappearingTokenSource.Token);
+                            _disappearingTokenSource?.Token ?? default);
                         return;
                     }
 
@@ -187,7 +187,7 @@ namespace BrickController2.UI.ViewModels
                         false,
                         async (progressDialog, token) => await _creationManager.RenameControllerProfileAsync(ControllerProfile, result.Result),
                         Translate("Renaming"),
-                        token: _disappearingTokenSource.Token);
+                        token: _disappearingTokenSource?.Token ?? default);
                 }
             }
             catch (OperationCanceledException)
@@ -205,7 +205,7 @@ namespace BrickController2.UI.ViewModels
                         Translate("Warning"),
                         Translate("ScanForDevicesFirst"),
                         Translate("Ok"),
-                        _disappearingTokenSource.Token);
+                        _disappearingTokenSource?.Token ?? default);
                     return;
                 }
 
@@ -213,17 +213,17 @@ namespace BrickController2.UI.ViewModels
                     Translate("Controller"),
                     Translate("PressButtonOrMoveJoy"),
                     Translate("Cancel"),
-                    _disappearingTokenSource.Token);
+                    _disappearingTokenSource?.Token ?? default);
                 if (result.IsOk)
                 {
-                    ControllerEvent controllerEvent = null;
+                    ControllerEvent? controllerEvent = null;
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => controllerEvent = await _creationManager.AddOrGetControllerEventAsync(ControllerProfile, result.EventType, result.EventCode),
                         Translate("Creating"),
-                        token: _disappearingTokenSource.Token);
+                        token: _disappearingTokenSource?.Token ?? default);
 
-                    await NavigationService.NavigateToAsync<ControllerActionPageViewModel>(new NavigationParameters(("controllerevent", controllerEvent)));
+                    await NavigationService.NavigateToAsync<ControllerActionPageViewModel>(new NavigationParameters(("controllerevent", controllerEvent!)));
                 }
             }
             catch (OperationCanceledException)
@@ -233,9 +233,9 @@ namespace BrickController2.UI.ViewModels
 
         private async Task PlayAsync()
         {
-            var validationResult = _playLogic.ValidateCreation(ControllerProfile.Creation);
+            var validationResult = _playLogic.ValidateCreation(ControllerProfile.Creation!);
 
-            string warning = null;
+            string warning = string.Empty;
             switch (validationResult)
             {
                 case CreationValidationResult.MissingControllerAction:
@@ -253,7 +253,7 @@ namespace BrickController2.UI.ViewModels
 
             if (validationResult == CreationValidationResult.Ok)
             {
-                await NavigationService.NavigateToAsync<PlayerPageViewModel>(new NavigationParameters(("creation", ControllerProfile.Creation)));
+                await NavigationService.NavigateToAsync<PlayerPageViewModel>(new NavigationParameters(("creation", ControllerProfile.Creation!)));
             }
             else
             {
@@ -261,7 +261,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("Warning"),
                     warning,
                     Translate("Ok"),
-                    _disappearingTokenSource.Token);
+                    _disappearingTokenSource?.Token ?? default);
             }
         }
 
@@ -274,7 +274,7 @@ namespace BrickController2.UI.ViewModels
                     $"{Translate("AreYouSureToDeleteControllerEvent")} {controllerEvent.EventCode}?",
                     Translate("Yes"),
                     Translate("No"),
-                    _disappearingTokenSource.Token))
+                    _disappearingTokenSource?.Token ?? default))
                 {
                     await _dialogService.ShowProgressDialogAsync(
                         false,
@@ -284,7 +284,7 @@ namespace BrickController2.UI.ViewModels
                             PopulateControllerEvents();
                         },
                         Translate("Deleting"),
-                        token: _disappearingTokenSource.Token);
+                        token: _disappearingTokenSource?.Token ?? default);
                 }
             }
             catch (OperationCanceledException)
@@ -301,7 +301,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("AreYouSureToDeleteThisControllerAcrion"),
                     Translate("Yes"),
                     Translate("No"),
-                    _disappearingTokenSource.Token))
+                    _disappearingTokenSource?.Token ?? default))
                 {
                     await _dialogService.ShowProgressDialogAsync(
                         false,
@@ -309,7 +309,7 @@ namespace BrickController2.UI.ViewModels
                         {
                             var controllerEvent = controllerAction.ControllerEvent;
                             await _creationManager.DeleteControllerActionAsync(controllerAction);
-                            if (controllerEvent.ControllerActions.Count == 0)
+                            if (controllerEvent!.ControllerActions.Count == 0)
                             {
                                 await _creationManager.DeleteControllerEventAsync(controllerEvent);
                             }
@@ -317,7 +317,7 @@ namespace BrickController2.UI.ViewModels
                             PopulateControllerEvents();
                         },
                         Translate("Deleting"),
-                        token: _disappearingTokenSource.Token);
+                        token: _disappearingTokenSource?.Token ?? default);
                 }
             }
             catch (OperationCanceledException)

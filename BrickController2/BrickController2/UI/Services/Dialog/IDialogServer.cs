@@ -4,6 +4,6 @@ namespace BrickController2.UI.Services.Dialog
 {
     public interface IDialogServer : IDialogService
     {
-        IGameControllerService GameControllerService { get; set; }
+        IGameControllerService? GameControllerService { get; set; }
     }
 }

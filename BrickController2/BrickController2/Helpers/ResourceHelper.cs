@@ -7,13 +7,13 @@ namespace BrickController2.Helpers
 {
     public static class ResourceHelper
     {
-        private static ResourceManager _translationResourceManager = null;
+        private static ResourceManager? _translationResourceManager = null;
 
         public static ResourceManager TranslationResourceManager
         {
             get
             {
-                if (_translationResourceManager == null)
+                if (_translationResourceManager is null)
                 {
                     _translationResourceManager = new ResourceManager("BrickController2.Resources.TranslationResources", typeof(TranslationResources).GetTypeInfo().Assembly);
                 }

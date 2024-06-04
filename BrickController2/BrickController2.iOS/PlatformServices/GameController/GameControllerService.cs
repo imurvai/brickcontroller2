@@ -32,7 +32,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
             {
                 lock (_lockObject)
                 {
-                    if (GameControllerEventInternal == null)
+                    if (GameControllerEventInternal is null)
                     {
                         if (GCController.Controllers.Length == 0)
                         {
@@ -54,7 +54,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
                 {
                     GameControllerEventInternal -= value;
 
-                    if (GameControllerEventInternal == null)
+                    if (GameControllerEventInternal is null)
                     {
                         GCController.StopWirelessControllerDiscovery();
                         _didConnectNotification?.Dispose();
@@ -87,7 +87,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
             {
                 _gameController = GCController.Controllers.FirstOrDefault();
 
-                if (_gameController != null)
+                if (_gameController is not null)
                 {
                     GCController.StopWirelessControllerDiscovery();
                     _didConnectNotification?.Dispose();
@@ -101,15 +101,15 @@ namespace BrickController2.iOS.PlatformServices.GameController
                     switch (GetGameControllerType(_gameController))
                     {
                         case GameControllerType.Micro:
-                            SetupMicroGamePad(_gameController.MicroGamepad);
+                            SetupMicroGamePad(_gameController.MicroGamepad!);
                             break;
 
                         case GameControllerType.Standard:
-                            SetupGamePad(_gameController.Gamepad);
+                            SetupGamePad(_gameController.Gamepad!);
                             break;
 
                         case GameControllerType.Extended:
-                            SetupExtendedGamePad(_gameController.ExtendedGamepad);
+                            SetupExtendedGamePad(_gameController.ExtendedGamepad!);
                             break;
                     }
                 }

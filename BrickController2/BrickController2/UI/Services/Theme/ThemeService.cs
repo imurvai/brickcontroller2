@@ -30,7 +30,7 @@ namespace BrickController2.UI.Services.Theme
 
         public void ApplyCurrentTheme()
         {
-            var mergedDictionaries = Application.Current.Resources.MergedDictionaries;
+            var mergedDictionaries = Application.Current!.Resources.MergedDictionaries;
             if (mergedDictionaries != null)
             {
                 mergedDictionaries.Clear();

@@ -12,7 +12,7 @@ namespace BrickController2.UI.Controls
 
         public ExtendedSlider()
         {
-            ValueChanged += ExtendedSlider_ValueChanged;
+            ValueChanged += ExtendedSlider_ValueChanged!;
         }
 
         public ICommand TouchDownCommand

@@ -19,7 +19,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         private TaskCompletionSource<byte[]?>? _readCompletionSource = null;
         private TaskCompletionSource<bool>? _writeCompletionSource = null;
 
-        private Action<Guid, byte[]>? _onCharacteristicChanged = null;
+        private Action<Guid, byte[]?>? _onCharacteristicChanged = null;
         private Action<IBluetoothLEDevice>? _onDeviceDisconnected = null;
 
         public BluetoothLEDevice(CBCentralManager centralManager, CBPeripheral peripheral)
@@ -34,7 +34,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
 
         public async Task<IEnumerable<IGattService>?> ConnectAndDiscoverServicesAsync(
             bool autoConnect,
-            Action<Guid, byte[]> onCharacteristicChanged,
+            Action<Guid, byte[]?> onCharacteristicChanged,
             Action<IBluetoothLEDevice> onDeviceDisconnected,
             CancellationToken token)
         {
@@ -102,7 +102,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             }
         }
 
-        public async Task<byte[]> ReadAsync(IGattCharacteristic characteristic, CancellationToken token)
+        public async Task<byte[]?> ReadAsync(IGattCharacteristic characteristic, CancellationToken token)
         {
             using (token.Register(() =>
             {
@@ -283,7 +283,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         {
             lock(_lock)
             {
-                var data = error == null ? characteristic.Value?.ToArray() : null;
+                var data = error is null ? characteristic.Value?.ToArray() : null;
 
                 if (_readCompletionSource is not null)
                 {
@@ -291,7 +291,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 }
                 else
                 {
-                    if (error == null)
+                    if (error is null)
                     {
                         var guid = characteristic.UUID.ToGuid();
                         _onCharacteristicChanged?.Invoke(guid, data);
