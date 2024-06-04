@@ -25,7 +25,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         }
 
         public bool IsBluetoothLESupported => true;
-        public bool IsBluetoothOn => _centralManager.State == CBCentralManagerState.PoweredOn;
+        public bool IsBluetoothOn => _centralManager.State == CBManagerState.PoweredOn;
 
         public async Task<bool> ScanDevicesAsync(Action<ScanResult> scanCallback, CancellationToken token)
         {
@@ -53,15 +53,15 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             }
         }
 
-        public IBluetoothLEDevice GetKnownDevice(string address)
+        public IBluetoothLEDevice? GetKnownDevice(string address)
         {
             var peripheral = _centralManager?.RetrievePeripheralsWithIdentifiers(new NSUuid(address)).FirstOrDefault();
-            if (peripheral == null)
+            if (peripheral is null)
             {
                 return null;
             }
 
-            var device = new BluetoothLEDevice(_centralManager, peripheral);
+            var device = new BluetoothLEDevice(_centralManager!, peripheral);
             _peripheralMap[peripheral] = device;
 
             return device;
@@ -75,7 +75,7 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
         {
             lock(_lock)
             {
-                if (peripheral == null || peripheral.Identifier == null || string.IsNullOrEmpty(peripheral.Name))
+                if (peripheral is null || peripheral.Identifier is null || string.IsNullOrEmpty(peripheral.Name))
                 {
                     return;
                 }
@@ -108,13 +108,13 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             var result = new Dictionary<byte, byte[]>();
 
             var manufacturerData = GetDataForKey(advertisementData, CBAdvertisement.DataManufacturerDataKey);
-            if (manufacturerData != null)
+            if (manufacturerData is not null)
             {
                 result[0xFF] = manufacturerData;
             }
 
             var completeDeviceName = GetDataForKey(advertisementData, CBAdvertisement.DataLocalNameKey);
-            if (completeDeviceName != null)
+            if (completeDeviceName is not null)
             {
                 result[0x09] = completeDeviceName;
             }

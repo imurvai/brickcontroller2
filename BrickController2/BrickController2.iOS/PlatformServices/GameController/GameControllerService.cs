@@ -21,10 +21,10 @@ namespace BrickController2.iOS.PlatformServices.GameController
 
         private readonly IDictionary<string, float> _lastControllerEventValueMap = new Dictionary<string, float>();
 
-        private GCController _gameController;
-        private event EventHandler<GameControllerEventArgs> GameControllerEventInternal;
-        private NSObject _didConnectNotification;
-        private NSObject _didDisconnectNotification;
+        private GCController? _gameController;
+        private event EventHandler<GameControllerEventArgs>? GameControllerEventInternal;
+        private NSObject? _didConnectNotification;
+        private NSObject? _didDisconnectNotification;
 
         public event EventHandler<GameControllerEventArgs> GameControllerEvent
         {
@@ -120,7 +120,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
         {
             try
             {
-                if (controller.MicroGamepad != null)
+                if (controller.MicroGamepad is not null)
                 {
                     return GameControllerType.Micro;
                 }
@@ -129,7 +129,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
 
             try
             {
-                if (controller.Gamepad != null)
+                if (controller.Gamepad is not null)
                 {
                     return GameControllerType.Standard;
                 }
@@ -138,7 +138,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
 
             try
             {
-                if (controller.ExtendedGamepad != null)
+                if (controller.ExtendedGamepad is not null)
                 {
                     return GameControllerType.Extended;
                 }

@@ -7,9 +7,9 @@ using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.Controls
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class DeviceOutputTesterControl : ContentView
-	{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class DeviceOutputTesterControl : ContentView
+    {
 		public DeviceOutputTesterControl ()
 		{
 			InitializeComponent ();

@@ -32,17 +32,9 @@ namespace BrickController2.Droid
 
         protected override void OnCreate(Bundle? bundle)
         {
-            //TabLayoutResource = Resource.Layout.Tabbar;
-            //ToolbarResource = Resource.Layout.Toolbar;
-
             base.OnCreate(bundle);
 
             Window!.AddFlags(WindowManagerFlags.KeepScreenOn);
-
-            //Platform.Init(this, bundle);
-
-            //Forms.SetFlags("SwipeView_Experimental");
-            //Forms.Init(this, bundle);
         }
 
         public override bool OnKeyDown([GeneratedEnum] global::Android.Views.Keycode keyCode, KeyEvent? e)

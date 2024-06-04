@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using static SQLite.SQLite3;
 
 namespace BrickController2.DeviceManagement
 {

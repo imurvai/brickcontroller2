@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Compatibility;
+using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
+using Microsoft.Maui.Controls.Platform;
+using Microsoft.Maui.Graphics;
+using UIKit;
 using BrickController2.iOS.UI.CustomRenderers;
 using BrickController2.UI.Controls;
-using UIKit;
-using Microsoft.Maui;
-using Xamarin.Forms.Platform.iOS;
 
 [assembly:ExportRenderer(typeof(ColorImage), typeof(ColorImageRenderer))]
 namespace BrickController2.iOS.UI.CustomRenderers
@@ -33,7 +36,7 @@ namespace BrickController2.iOS.UI.CustomRenderers
                 return;
             }
 
-            if (colorImage.Color.Equals(Xamarin.Forms.Color.Transparent))
+            if (colorImage.Color.Equals(Colors.Transparent))
             {
                 Control.Image = Control.Image.ImageWithRenderingMode(UIImageRenderingMode.Automatic);
                 Control.TintColor = null;

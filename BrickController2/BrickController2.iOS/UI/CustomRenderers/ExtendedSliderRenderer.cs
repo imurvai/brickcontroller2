@@ -1,7 +1,9 @@
-﻿using BrickController2.iOS.UI.CustomRenderers;
+﻿using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Compatibility;
+using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
+using Microsoft.Maui.Controls.Platform;
+using BrickController2.iOS.UI.CustomRenderers;
 using BrickController2.UI.Controls;
-using Microsoft.Maui;
-using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(ExtendedSlider), typeof(ExtendedSliderRenderer))]
 namespace BrickController2.iOS.UI.CustomRenderers
