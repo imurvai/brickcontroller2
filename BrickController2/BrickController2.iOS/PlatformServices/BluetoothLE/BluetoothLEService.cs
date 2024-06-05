@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using BrickController2.PlatformServices.BluetoothLE;
 using CoreBluetooth;
 using CoreFoundation;
 using Foundation;
+using BrickController2.PlatformServices.BluetoothLE;
 
 namespace BrickController2.iOS.PlatformServices.BluetoothLE
 {
@@ -21,7 +21,9 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
 
         public BluetoothLEService()
         {
+#pragma warning disable CA1422 // Validate platform compatibility
             _centralManager = new CBCentralManager(this, DispatchQueue.CurrentQueue);
+#pragma warning restore CA1422 // Validate platform compatibility
         }
 
         public bool IsBluetoothLESupported => true;

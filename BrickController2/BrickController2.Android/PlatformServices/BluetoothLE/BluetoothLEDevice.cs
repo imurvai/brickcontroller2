@@ -69,7 +69,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                     State = BluetoothLEDeviceState.Connecting;
 
                     _bluetoothDevice = _bluetoothAdapter.GetRemoteDevice(Address);
-                    if (_bluetoothDevice == null)
+                    if (_bluetoothDevice is null)
                     {
                         State = BluetoothLEDeviceState.Disconnected;
                         return null;
@@ -84,7 +84,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
                         _bluetoothGatt = _bluetoothDevice.ConnectGatt(_context, autoConnect, this);
                     }
 
-                    if (_bluetoothGatt == null)
+                    if (_bluetoothGatt is null)
                     {
                         _bluetoothDevice.Dispose();
                         _bluetoothDevice = null;

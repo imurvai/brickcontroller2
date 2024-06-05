@@ -63,7 +63,7 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                var sequenceFilesMap = FileHelper.EnumerateDirectoryFilesToFilenameMap(SharedFileStorageService.SharedStorageDirectory, $"*.{FileHelper.SequenceFileExtension}");
+                var sequenceFilesMap = FileHelper.EnumerateDirectoryFilesToFilenameMap(SharedFileStorageService.SharedStorageDirectory!, $"*.{FileHelper.SequenceFileExtension}");
                 if (sequenceFilesMap?.Any() ?? false)
                 {
                     var result = await _dialogService.ShowSelectionDialogAsync(

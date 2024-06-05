@@ -63,7 +63,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService>? services, CancellationToken token)
         {
             var deviceInformationService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_DEVICE_INFORMATION);
             _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_FIRMWARE_REVISION);
@@ -164,14 +164,14 @@ namespace BrickController2.DeviceManagement
         private async Task ReadDeviceInfo(CancellationToken token)
         {
             var firmwareData = await _bleDevice!.ReadAsync(_firmwareRevisionCharacteristic!, token);
-            var firmwareVersion = firmwareData.ToAsciiStringSafe();
+            var firmwareVersion = firmwareData?.ToAsciiStringSafe();
             if (!string.IsNullOrEmpty(firmwareVersion))
             {
                 FirmwareVersion = firmwareVersion;
             }
 
             var hardwareData = await _bleDevice.ReadAsync(_hardwareRevisionCharacteristic!, token);
-            var hardwareVersion = hardwareData.ToAsciiStringSafe();
+            var hardwareVersion = hardwareData?.ToAsciiStringSafe();
             if (!string.IsNullOrEmpty(hardwareVersion))
             {
                 HardwareVersion = hardwareVersion;

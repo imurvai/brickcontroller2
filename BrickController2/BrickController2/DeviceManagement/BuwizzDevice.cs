@@ -64,12 +64,12 @@ namespace BrickController2.DeviceManagement
 
         public override bool CanBePowerSource => true;
 
-        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService>? services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
 
-            return Task.FromResult(_characteristic != null);
+            return Task.FromResult(_characteristic is not null);
         }
 
         protected override async Task ProcessOutputsAsync(CancellationToken token)

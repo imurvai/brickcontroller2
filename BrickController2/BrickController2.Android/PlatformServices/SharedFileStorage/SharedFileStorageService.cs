@@ -1,5 +1,4 @@
-﻿using Android.OS;
-using BrickController2.Helpers;
+﻿using BrickController2.Helpers;
 using BrickController2.PlatformServices.SharedFileStorage;
 using System;
 using System.IO;

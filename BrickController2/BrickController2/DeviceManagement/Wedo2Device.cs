@@ -69,7 +69,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService>? services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == CONTROL_SERVICE_UUID);
             _motorCharacteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == OUTPUT_CHARACTERISTIC_UUID);

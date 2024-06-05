@@ -216,7 +216,7 @@ namespace BrickController2.UI.ViewModels
         {
             try
             {
-                var controllerProfileFilesMap = FileHelper.EnumerateDirectoryFilesToFilenameMap(SharedFileStorageService.SharedStorageDirectory, $"*.{FileHelper.ControllerProfileFileExtension}");
+                var controllerProfileFilesMap = FileHelper.EnumerateDirectoryFilesToFilenameMap(SharedFileStorageService.SharedStorageDirectory!, $"*.{FileHelper.ControllerProfileFileExtension}");
                 if (controllerProfileFilesMap?.Any() ?? false)
                 {
                     var result = await _dialogService.ShowSelectionDialogAsync(
@@ -279,7 +279,7 @@ namespace BrickController2.UI.ViewModels
                     }
 
                     filename = result.Result;
-                    var filePath = Path.Combine(SharedFileStorageService.SharedStorageDirectory, $"{filename}.{FileHelper.CreationFileExtension}");
+                    var filePath = Path.Combine(SharedFileStorageService.SharedStorageDirectory!, $"{filename}.{FileHelper.CreationFileExtension}");
 
                     if (!File.Exists(filePath) || 
                         await _dialogService.ShowQuestionDialogAsync(

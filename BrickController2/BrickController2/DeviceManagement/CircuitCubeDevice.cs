@@ -68,7 +68,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService>? services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _writeCharacteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_WRITE);
@@ -78,12 +78,12 @@ namespace BrickController2.DeviceManagement
             _hardwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_HARDWARE_REVISION);
 
             _notifyCharacteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_NOTIFY);
-            if (_notifyCharacteristic != null)
+            if (_notifyCharacteristic is not null)
             {
                 await _bleDevice!.EnableNotificationAsync(_notifyCharacteristic, token);
             }
 
-            return _writeCharacteristic != null && _firmwareRevisionCharacteristic != null && _hardwareRevisionCharacteristic != null;
+            return _writeCharacteristic is not null && _firmwareRevisionCharacteristic is not null && _hardwareRevisionCharacteristic is not null;
         }
 
         protected override void OnCharacteristicChanged(Guid characteristicGuid, byte[] data)

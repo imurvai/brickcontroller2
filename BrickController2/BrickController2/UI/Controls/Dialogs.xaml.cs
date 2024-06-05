@@ -176,7 +176,7 @@ namespace BrickController2.UI.Controls
                 SelectionDialogItems.SelectionChanged -= selectionChangedHandler!;
                 SelectionDialogCancelButton.Clicked -= buttonHandler!;
                 await HideView(SelectionDialog);
-                tcs.TrySetResult(new SelectionDialogResult<T>(true, (T)SelectionDialogItems.SelectedItem));
+                tcs.TrySetResult(new SelectionDialogResult<T>(true, (T)SelectionDialogItems.SelectedItem!));
             }
 
             async void buttonHandler(object sender, EventArgs args)
@@ -240,14 +240,14 @@ namespace BrickController2.UI.Controls
             using (token.Register(() =>
             {
                 GameControllerEventDialogCancelButton.Clicked -= buttonHandler!;
-                GameControllerService.GameControllerEvent -= gameControllerEventHandler!;
+                GameControllerService!.GameControllerEvent -= gameControllerEventHandler!;
                 HideViewImmediately(GameControllerEventDialog);
                 tcs.TrySetResult(new GameControllerEventDialogResult(false, GameControllerEventType.Axis, string.Empty));
             }))
             {
                 await ShowView(GameControllerEventDialog);
                 GameControllerEventDialogCancelButton.Clicked += buttonHandler!;
-                GameControllerService.GameControllerEvent += gameControllerEventHandler!;
+                GameControllerService!.GameControllerEvent += gameControllerEventHandler!;
 
                 return await tcs.Task;
             }
@@ -255,7 +255,7 @@ namespace BrickController2.UI.Controls
             async void buttonHandler(object sender, EventArgs args)
             {
                 GameControllerEventDialogCancelButton.Clicked -= buttonHandler!;
-                GameControllerService.GameControllerEvent -= gameControllerEventHandler!;
+                GameControllerService!.GameControllerEvent -= gameControllerEventHandler!;
                 await HideView(GameControllerEventDialog);
                 tcs.TrySetResult(new GameControllerEventDialogResult(false, GameControllerEventType.Axis, string.Empty));
             }

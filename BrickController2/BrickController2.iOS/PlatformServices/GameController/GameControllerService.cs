@@ -105,7 +105,9 @@ namespace BrickController2.iOS.PlatformServices.GameController
                             break;
 
                         case GameControllerType.Standard:
+#pragma warning disable CA1422 // Validate platform compatibility
                             SetupGamePad(_gameController.Gamepad!);
+#pragma warning restore CA1422 // Validate platform compatibility
                             break;
 
                         case GameControllerType.Extended:
@@ -129,10 +131,12 @@ namespace BrickController2.iOS.PlatformServices.GameController
 
             try
             {
+#pragma warning disable CA1422 // Validate platform compatibility
                 if (controller.Gamepad is not null)
                 {
                     return GameControllerType.Standard;
                 }
+#pragma warning restore CA1422 // Validate platform compatibility
             }
             catch (InvalidCastException) { }
 
@@ -158,6 +162,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
 
         private void SetupGamePad(GCGamepad gamePad)
         {
+#pragma warning disable CA1422 // Validate platform compatibility
             SetupDigitalButtonInput(gamePad.ButtonA, "Button_A");
             SetupDigitalButtonInput(gamePad.ButtonB, "Button_B");
             SetupDigitalButtonInput(gamePad.ButtonX, "Button_X");
@@ -167,6 +172,7 @@ namespace BrickController2.iOS.PlatformServices.GameController
             SetupDigitalButtonInput(gamePad.RightShoulder, "RightShoulder");
 
             SetupDPadInput(gamePad.DPad, "DPad");
+#pragma warning restore CA1422 // Validate platform compatibility
         }
 
         private void SetupExtendedGamePad(GCExtendedGamepad gamePad)

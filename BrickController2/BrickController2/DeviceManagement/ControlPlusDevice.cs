@@ -157,12 +157,12 @@ namespace BrickController2.DeviceManagement
             return await AutoCalibrateServoAsync(channel, token);
         }
 
-        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService>? services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _characteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID);
 
-            if (_characteristic != null)
+            if (_characteristic is not null)
             {
                 return await _bleDevice!.EnableNotificationAsync(_characteristic, token);
             }
@@ -770,11 +770,11 @@ namespace BrickController2.DeviceManagement
             catch { }
         }
 
-        private void ProcessHubPropertyData(byte[] data)
+        private void ProcessHubPropertyData(byte[]? data)
         {
             try
             {
-                if (data == null || data.Length < 6)
+                if (data is null || data.Length < 6)
                 {
                     return;
                 }

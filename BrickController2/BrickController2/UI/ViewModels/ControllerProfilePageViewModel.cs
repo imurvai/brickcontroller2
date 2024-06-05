@@ -118,7 +118,7 @@ namespace BrickController2.UI.ViewModels
                     }
 
                     filename = result.Result;
-                    var filePath = Path.Combine(SharedFileStorageService.SharedStorageDirectory, $"{filename}.{FileHelper.ControllerProfileFileExtension}");
+                    var filePath = Path.Combine(SharedFileStorageService.SharedStorageDirectory!, $"{filename}.{FileHelper.ControllerProfileFileExtension}");
 
                     if (!File.Exists(filePath) ||
                         await _dialogService.ShowQuestionDialogAsync(

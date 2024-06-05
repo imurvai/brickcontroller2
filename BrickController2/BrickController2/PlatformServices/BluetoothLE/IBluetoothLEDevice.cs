@@ -10,7 +10,7 @@ namespace BrickController2.PlatformServices.BluetoothLE
         string Address { get; }
         BluetoothLEDeviceState State { get; }
 
-        Task<IEnumerable<IGattService>> ConnectAndDiscoverServicesAsync(
+        Task<IEnumerable<IGattService>?> ConnectAndDiscoverServicesAsync(
             bool autoConnect,
             Action<Guid, byte[]?> onCharacteristicChanged,
             Action<IBluetoothLEDevice> onDeviceDisconnected,
@@ -19,7 +19,7 @@ namespace BrickController2.PlatformServices.BluetoothLE
 
         Task<bool> EnableNotificationAsync(IGattCharacteristic characteristic, CancellationToken token);
 
-        Task<byte[]> ReadAsync(IGattCharacteristic characteristic, CancellationToken token);
+        Task<byte[]?> ReadAsync(IGattCharacteristic characteristic, CancellationToken token);
 
         Task<bool> WriteAsync(IGattCharacteristic characteristic, byte[] data, CancellationToken token);
         Task<bool> WriteNoResponseAsync(IGattCharacteristic characteristic, byte[] data, CancellationToken token);
