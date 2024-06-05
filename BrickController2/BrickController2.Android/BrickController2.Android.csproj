@@ -2,8 +2,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 		<TargetFrameworks>net8.0-android</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
     <SupportedOSPlatformVersion>23.0</SupportedOSPlatformVersion>
@@ -18,7 +16,7 @@
     <UseMaui>true</UseMaui>
   </PropertyGroup>
 
-	<ItemGroup>
+  <ItemGroup>
 		<None Remove="Resources\mipmap-hdpi\ic_launcher.png" />
 		<None Remove="Resources\mipmap-mdpi\ic_launcher.png" />
 		<None Remove="Resources\mipmap-xhdpi\ic_launcher.png" />

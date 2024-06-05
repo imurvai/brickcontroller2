@@ -14,7 +14,7 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
 
-	<ItemGroup>
+  <ItemGroup>
 	  <BundleResource Remove="Resources\splash.svg" />
 	</ItemGroup>
 
