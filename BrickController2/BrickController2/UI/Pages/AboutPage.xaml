@@ -34,15 +34,15 @@
 
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
-                        <Label Text="Copyright © 2023, István Murvai (SCN)"/>
+                        <Label Text="Copyright © 2024, István Murvai (SCN)"/>
 
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
                         <Label Text="{extensions:Translate ExternalLibraries}" FontAttributes="Bold"/>
                         <Label Text="Autofac"/>
                         <Label Text="SQLiteNetExtensionsAsync"/>
-                        <Label Text="Xamarin.Forms"/>
-                        <Label Text="Xamarin.Essentials"/>
+                        <Label Text="Microsoft.Maui"/>
+                        <Label Text="Microsoft.Maui.Essentials"/>
 
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
