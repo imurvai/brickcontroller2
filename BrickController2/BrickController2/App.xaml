@@ -61,6 +61,7 @@
         <Style x:Key="NavigationBarGridStyle" TargetType="Grid">
             <Setter Property="BackgroundColor" Value="{DynamicResource NavigationBarColor}"/>
             <Setter Property="Padding" Value="10"/>
+            <Setter Property="ColumnSpacing" Value="6"/>
         </Style>
         
         <Style x:Key="NavigationBarLabelStyle" TargetType="Label">
@@ -79,6 +80,7 @@
         <Style x:Key="HeaderGridStyle" TargetType="Grid">
             <Setter Property="BackgroundColor" Value="{DynamicResource HeaderBackgroundColor}"/>
             <Setter Property="Padding" Value="10"/>
+            <Setter Property="ColumnSpacing" Value="6"/>
         </Style>
 
         <Style x:Key="HeaderBarImageButtonStyle" TargetType="controls:ImageButton">
@@ -92,6 +94,7 @@
         <Style x:Key="FooterGridStyle" TargetType="Grid">
             <Setter Property="BackgroundColor" Value="{DynamicResource FooterBackgroudColor}"/>
             <Setter Property="Padding" Value="4"/>
+            <Setter Property="ColumnSpacing" Value="6"/>
         </Style>
 
         <Style x:Key="FooterColorImageStyle" TargetType="controls:ColorImage">
@@ -105,11 +108,14 @@
         <Style x:Key="CollectionViewHeaderGridStyle" TargetType="Grid">
             <Setter Property="BackgroundColor" Value="{DynamicResource CollectionViewHeaderBackgroundColor}"/>
             <Setter Property="Padding" Value="10"/>
+            <Setter Property="ColumnSpacing" Value="6"/>
         </Style>
         
         <Style x:Key="CollectionItemGridStyle" TargetType="Grid">
             <Setter Property="BackgroundColor" Value="{DynamicResource PageBackgroundColor}"/>
             <Setter Property="Padding" Value="10"/>
+            <Setter Property="ColumnSpacing" Value="6"/>
+            <Setter Property="RowSpacing" Value="6"/>
         </Style>
         
         <Style x:Key="CollectionViewEmptyLabelStyle" TargetType="Label">
