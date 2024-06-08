@@ -1,11 +1,11 @@
 # BrickController 2
 
-Cross platform mobile application for controlling Lego creations using a bluetooth gamepad.
+Cross platform mobile application for controlling your creations using a bluetooth gamepad.
 
 ## Supported platforms
 
-- Android 4.3+
-- iOS 8+
+- Android 5.0+
+- iOS 11+
 
 ## Supported receivers
 
@@ -22,12 +22,12 @@ Cross platform mobile application for controlling Lego creations using a bluetoo
 
 ## Project details
 
-BrickController 2 is a Xamarin.Forms application and can be compiled using Visual Studio 2017 (Professional, Enterprise and Community Editions).
+BrickController 2 is a MAUI application and can be compiled using Visual Studio 2022 (Professional, Enterprise and Community Editions)
+or Visual Studio for Mac.
 
 ## 3rd party libraries used
 
 - Autofac IOC container
-- [Plugin.Permissions](https://github.com/jamesmontemagno/PermissionsPlugin)
 - [SQLite-Net-Extensions Async](https://bitbucket.org/twincoders/sqlite-net-extensions)
 
 ## Author
