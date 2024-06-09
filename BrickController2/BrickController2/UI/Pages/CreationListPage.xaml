@@ -82,7 +82,7 @@
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToDevicesCommand}"/>
                         </Frame.GestureRecognizers>
-                        <VerticalStackLayout HorizontalOptions="CenterAndExpand">
+                        <VerticalStackLayout HorizontalOptions="CenterAndExpand" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_link.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Devices}" FontSize="Small"/>
                         </VerticalStackLayout>
@@ -91,7 +91,7 @@
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToControllerTesterCommand}"/>
                         </Frame.GestureRecognizers>
-                        <VerticalStackLayout HorizontalOptions="CenterAndExpand">
+                        <VerticalStackLayout HorizontalOptions="CenterAndExpand" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_console.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Controller}" FontSize="Small"/>
                         </VerticalStackLayout>
@@ -100,7 +100,7 @@
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToSequencesCommand}"/>
                         </Frame.GestureRecognizers>
-                        <VerticalStackLayout HorizontalOptions="CenterAndExpand">
+                        <VerticalStackLayout HorizontalOptions="CenterAndExpand" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_sequence.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Sequences}" FontSize="Small"/>
                         </VerticalStackLayout>
@@ -109,7 +109,7 @@
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToAboutCommand}"/>
                         </Frame.GestureRecognizers>
-                        <VerticalStackLayout HorizontalOptions="CenterAndExpand">
+                        <VerticalStackLayout HorizontalOptions="CenterAndExpand" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_info.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate About}" FontSize="Small"/>
                         </VerticalStackLayout>

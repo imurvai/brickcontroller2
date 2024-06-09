@@ -173,7 +173,8 @@
         <!-- Misc -->
 
         <Style x:Key="DividerBoxViewStyle" TargetType="BoxView">
-            <Setter Property="BackgroundColor" Value="{DynamicResource DividerColor}"/>
+            <Setter Property="Color" Value="{DynamicResource DividerColor}"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="HeightRequest" Value="1"/>
             <Setter Property="HorizontalOptions" Value="Fill"/>
             <Setter Property="VerticalOptions" Value="Center"/>

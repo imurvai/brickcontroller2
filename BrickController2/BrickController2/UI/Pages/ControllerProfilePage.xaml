@@ -91,7 +91,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <controls:ColorImage Grid.Column="0" Source="{extensions:ImageResource Source=ic_exclamation_mark.png}" Color="{DynamicResource NegativeColor}" IsVisible="{Binding ControllerActionValid, Converter={StaticResource InverseBool}}" WidthRequest="30" HeightRequest="30" VerticalOptions="Center"/>
-                                    <StackLayout Grid.Column="1" Orientation="Horizontal" VerticalOptions="Center" Margin="0,4">
+                                    <HorizontalStackLayout Grid.Column="1" VerticalOptions="Center" Margin="0,4" Spacing="6">
                                         <Label Text="{extensions:Translate Device}"/>
                                         <Label Text=": "/>
                                         <Label Text="{Binding DeviceName}" FontAttributes="Bold"/>
@@ -100,7 +100,7 @@
                                         <controls:DeviceChannelLabel DeviceType="{Binding DeviceType}" Channel="{Binding Channel}" FontAttributes="Bold"/>
                                         <Label Text=" - "/>
                                         <Label Text="{Binding InvertName}" FontAttributes="Bold"/>
-                                    </StackLayout>
+                                    </HorizontalStackLayout>
                                 </Grid>
                             </SwipeView>
                         </DataTemplate>

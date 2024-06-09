@@ -34,10 +34,10 @@
 
                 <!-- Controller action -->
                 <ScrollView>
-                    <StackLayout Orientation="Vertical" Padding="20">
+                    <VerticalStackLayout Padding="20">
 
                         <!-- Device selector -->
-                        <Grid>
+                        <Grid ColumnSpacing="6">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="3*"/>
@@ -57,7 +57,7 @@
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
 
                         <!-- Invert switch -->
-                        <Grid>
+                        <Grid ColumnSpacing="6">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="3*"/>
@@ -86,7 +86,7 @@
 
                                 <Label Grid.Column="0" Text="{extensions:Translate ChannelType}" VerticalOptions="Center"/>
 
-                                <Grid Grid.Column="1">
+                                <Grid Grid.Column="1" ColumnSpacing="6">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
@@ -111,7 +111,7 @@
                                         <Binding Path="Action.Channel" />
                                     </MultiBinding>
                                 </StackLayout.IsVisible>
-                                <Grid>
+                                <Grid ColumnSpacing="6">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="2*"/>
                                         <ColumnDefinition Width="3*"/>
@@ -158,7 +158,7 @@
                                     <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
                             </StackLayout.Triggers>
-                            <Grid>
+                            <Grid ColumnSpacing="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="3*"/>
@@ -175,14 +175,14 @@
                                         <Setter Property="IsVisible" Value="True"/>
                                     </DataTrigger>
                                 </StackLayout.Triggers>
-                                <Grid>
+                                <Grid ColumnSpacing="6">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="2*"/>
                                         <ColumnDefinition Width="3*"/>
                                     </Grid.ColumnDefinitions>
 
                                     <Label Grid.Column="0" Text="{extensions:Translate Sequence}" VerticalOptions="Center"/>
-                                    <Grid Grid.Column="1">
+                                    <Grid Grid.Column="1" ColumnSpacing="6">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
@@ -203,7 +203,7 @@
                                     <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
                             </StackLayout.Triggers>
-                            <Grid>
+                            <Grid ColumnSpacing="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="3*"/>
@@ -223,7 +223,7 @@
                                     <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
                             </StackLayout.Triggers>
-                            <Grid>
+                            <Grid ColumnSpacing="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="3*"/>
@@ -243,7 +243,7 @@
                                     <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
                             </StackLayout.Triggers>
-                            <Grid>
+                            <Grid ColumnSpacing="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="3*"/>
@@ -282,7 +282,7 @@
                                 </StackLayout>
                             </Grid>
 
-                            <Grid>
+                            <Grid ColumnSpacing="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="3*"/>
@@ -299,7 +299,7 @@
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
                         </StackLayout>
 
-                    </StackLayout>
+                    </VerticalStackLayout>
                 </ScrollView>
 
             </Grid>

@@ -23,14 +23,14 @@
 
                 <!-- Body -->
                 <ScrollView>
-                    <StackLayout Padding="20">
+                    <VerticalStackLayout Padding="20" Spacing="6">
 
                         <Label Text="BrickController 2" FontSize="Medium" FontAttributes="Bold"/>
 
-                        <StackLayout Orientation="Horizontal">
+                        <HorizontalStackLayout Spacing="6">
                             <Label Text="{extensions:Translate Version}  "/>
                             <Label Text="{Binding Version}"/>
-                        </StackLayout>
+                        </HorizontalStackLayout>
 
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
 
@@ -54,7 +54,7 @@
                         <Label Text="{extensions:Translate Disclaimer}" FontAttributes="Bold"/>
                         <Label Text="LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this application" FontSize="Small"/>
 
-                    </StackLayout>
+                    </VerticalStackLayout>
                 </ScrollView>
             </Grid>
 
