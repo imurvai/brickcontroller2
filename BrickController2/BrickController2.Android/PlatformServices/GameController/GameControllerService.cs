@@ -118,7 +118,7 @@ namespace BrickController2.Droid.PlatformServices.GameController
             return false;
         }
 
-        private float AdjustControllerValue(float value)
+        private static float AdjustControllerValue(float value)
         {
             value = Math.Abs(value) < 0.05 ? 0.0F : value;
             value = value > 0.95 ? 1.0F : value;
@@ -126,7 +126,7 @@ namespace BrickController2.Droid.PlatformServices.GameController
             return value;
         }
 
-        private bool AreAlmostEqual(float a, float b)
+        private static bool AreAlmostEqual(float a, float b)
         {
             return Math.Abs(a - b) < 0.001;
         }

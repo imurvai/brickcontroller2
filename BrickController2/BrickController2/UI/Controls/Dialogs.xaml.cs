@@ -117,6 +117,8 @@ namespace BrickController2.UI.Controls
                 InputDialogPositiveButton.Clicked -= buttonHandler!;
                 InputDialogNegativeButton.Clicked -= buttonHandler!;
                 HideViewImmediately(InputDialog);
+                InputDialogEntry.IsEnabled = false; // Trick to hide the keyboard
+                InputDialogEntry.IsEnabled = true;
                 tcs.TrySetResult(new InputDialogResult(false, InputDialogEntry.Text));
             }))
             {
@@ -138,6 +140,8 @@ namespace BrickController2.UI.Controls
                 InputDialogPositiveButton.Clicked -= buttonHandler!;
                 InputDialogNegativeButton.Clicked -= buttonHandler!;
                 await HideView(InputDialog);
+                InputDialogEntry.IsEnabled = false; // Trick to hide the keyboard
+                InputDialogEntry.IsEnabled = true;
                 tcs.TrySetResult(new InputDialogResult(sender == InputDialogPositiveButton || sender == InputDialogEntry, InputDialogEntry.Text));
             }
 

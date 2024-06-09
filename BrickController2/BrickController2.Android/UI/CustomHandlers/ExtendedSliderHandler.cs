@@ -10,10 +10,10 @@ namespace BrickController2.Android.UI.CustomHandlers
     {
         public static readonly PropertyMapper<ExtendedSlider, ExtendedSliderHandler> _PropertyMapper = new(SliderHandler.Mapper)
         {
-            //[nameof(BrickController2.UI.Controls.ExtendedSlider.Value)] = (handler, slider) => handler.PlatformView?.Step = slider.Step
+            [nameof(ExtendedSlider.Step)] = MapValue
         };
 
-        private ExtendedSlider? ExtendedSlider => (VirtualView as ExtendedSlider);
+        private ExtendedSlider? Slider => VirtualView as ExtendedSlider;
 
         public ExtendedSliderHandler() : base(_PropertyMapper)
         {
@@ -40,22 +40,23 @@ namespace BrickController2.Android.UI.CustomHandlers
 
         private void StartTrackingTouch(object? sender, SeekBar.StartTrackingTouchEventArgs e)
         {
-            ExtendedSlider?.TouchDown();
+            Slider?.TouchDown();
         }
 
         private void StopTrackingTouch(object? sender, SeekBar.StopTrackingTouchEventArgs e)
         {
-            ExtendedSlider?.TouchUp();
+            Slider?.TouchUp();
         }
 
         private void ProgressChanged(object? sender, SeekBar.ProgressChangedEventArgs e)
         {
-            if (ExtendedSlider is null || !e.FromUser)
+            if (Slider is null || !e.FromUser)
             {
                 return;
             }
 
-            ExtendedSlider.Value = ExtendedSlider.Minimum + ((ExtendedSlider.Maximum - ExtendedSlider.Minimum) * e.Progress / SliderExtensions.PlatformMaxValue);
+            var newValue = Slider.Minimum + ((Slider.Maximum - Slider.Minimum) * e.Progress / SliderExtensions.PlatformMaxValue);
+            Slider.SetAndRoundNewValue(newValue);
         }
     }
 }

@@ -10,11 +10,6 @@ namespace BrickController2.UI.Controls
         public static BindableProperty TouchUpCommandProperty = BindableProperty.Create(nameof(TouchUpCommand), typeof(ICommand), typeof(ExtendedSlider), null);
         public static BindableProperty StepProperty = BindableProperty.Create(nameof(Step), typeof(double), typeof(ExtendedSlider), 1.0, propertyChanged: OnStepChanged);
 
-        public ExtendedSlider()
-        {
-            ValueChanged += ExtendedSlider_ValueChanged!;
-        }
-
         public ICommand TouchDownCommand
         {
             get => (ICommand)GetValue(TouchDownCommandProperty);
@@ -49,19 +44,16 @@ namespace BrickController2.UI.Controls
             }
         }
 
+        public void SetAndRoundNewValue(double value)
+        {
+            Value = Round(value, Step);
+        }
+
         private static void OnStepChanged(BindableObject bindable, object oldValue, object newValue)
         {
             if (bindable is ExtendedSlider slider && newValue is double newStep && newStep > 0)
             {
                 slider.Value = Round(slider.Value, newStep);
-            }
-        }
-
-        private void ExtendedSlider_ValueChanged(object sender, ValueChangedEventArgs e)
-        {
-            if (Step > 0)
-            {
-                Value = Round(e.NewValue, Step);
             }
         }
 
