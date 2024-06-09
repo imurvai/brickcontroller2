@@ -33,9 +33,9 @@
 
                 <!-- Device info -->
                 <ScrollView>
-                    <StackLayout Orientation="Vertical" Padding="10">
+                    <VerticalStackLayout Padding="10">
 
-                        <Grid>
+                        <Grid ColumnSpacing="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
@@ -43,7 +43,7 @@
 
                             <Image Grid.Column="0" Source="{Binding Device.DeviceType, Converter={StaticResource DeviceTypeToSmallImage}}" WidthRequest="50" HeightRequest="50" VerticalOptions="Start"/>
 
-                            <Grid Grid.Column="1">
+                            <Grid Grid.Column="1" RowSpacing="4">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="2*"/>
@@ -110,24 +110,27 @@
 
                         <!-- Outputs -->
                         <VerticalStackLayout>
-                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="10,4,10,8"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="10,20,10,8"/>
                             <VerticalStackLayout BindableLayout.ItemsSource="{Binding DeviceOutputs}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid Style="{StaticResource CollectionItemGridStyle}">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="30"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <controls:DeviceChannelLabel Grid.Column="0" DeviceType="{Binding Device.DeviceType}" Channel="{Binding Channel}"/>
-                                            <controls:ExtendedSlider Grid.Column="1" Minimum="-100" Maximum="100" IsEnabled="{Binding Device.DeviceState, Converter={StaticResource DeviceConnectedToBool}}" Value="{Binding Output}" TouchUpCommand="{Binding TouchUpCommand}"/>
-                                        </Grid>
+                                        <VerticalStackLayout>
+                                            <Grid Style="{StaticResource CollectionItemGridStyle}" Margin="10,4,10,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="30"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <controls:DeviceChannelLabel Grid.Column="0" DeviceType="{Binding Device.DeviceType}" Channel="{Binding Channel}"/>
+                                                <controls:ExtendedSlider Grid.Column="1" Minimum="-100" Maximum="100" IsEnabled="{Binding Device.DeviceState, Converter={StaticResource DeviceConnectedToBool}}" Value="{Binding Output}" TouchUpCommand="{Binding TouchUpCommand}"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,6,6,0"/>
+                                        </VerticalStackLayout>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
                         </VerticalStackLayout>
 
-                    </StackLayout>
+                    </VerticalStackLayout>
                 </ScrollView>
             </Grid>
 

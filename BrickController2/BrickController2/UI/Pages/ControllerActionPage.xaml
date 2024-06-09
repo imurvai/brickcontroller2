@@ -49,15 +49,15 @@
                             <controls:FloatingActionButton Grid.Column="2" ButtonColor="Green" ImageSource="{extensions:ImageResource Source=ic_link.png}" ImageColor="White" Command="{Binding OpenDeviceDetailsCommand}" VerticalOptions="Center"/>
                         </Grid>
 
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,10,6,10"/>
 
                         <!-- Device channel selector -->
                         <controls:DeviceChannelSelector DeviceType="{Binding SelectedDevice.DeviceType}" SelectedChannel="{Binding Action.Channel}"/>
 
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,10,6,10"/>
 
                         <!-- Invert switch -->
-                        <Grid ColumnSpacing="6">
+                        <Grid ColumnSpacing="6" Margin="0,6">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="3*"/>
@@ -67,17 +67,17 @@
                             <controls:CheckBox Grid.Column="1" Checked="{Binding Action.IsInvert}" HorizontalOptions="End"/>
                         </Grid>
 
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
-                        <Label Text="{extensions:Translate AdvancedSettings}" FontSize="Medium" FontAttributes="Bold" Margin="0,5,0,5"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,10,6,10"/>
+                        <Label Text="{extensions:Translate AdvancedSettings}" FontSize="Medium" FontAttributes="Bold" Margin="0,6,0,16"/>
 
                         <!-- Channel output type selector -->
-                        <StackLayout Orientation="Vertical">
-                            <StackLayout.IsVisible>
+                        <VerticalStackLayout>
+                            <VerticalStackLayout.IsVisible>
                                 <MultiBinding Converter="{StaticResource DeviceAndChannelToChannelOutputTypeVisible}">
                                     <Binding Path="SelectedDevice" />
                                     <Binding Path="Action.Channel" />
                                 </MultiBinding>
-                            </StackLayout.IsVisible>
+                            </VerticalStackLayout.IsVisible>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
@@ -104,35 +104,33 @@
                             </Grid>
 
                             <!-- Max servo angle setting -->
-                            <StackLayout Orientation="Vertical">
-                                <StackLayout.IsVisible>
+                            <Grid ColumnSpacing="6" Margin="0,10">
+                                <Grid.IsVisible>
                                     <MultiBinding Converter="{StaticResource DeviceAndChannelToMaxServoAngleVisible}">
                                         <Binding Path="SelectedDevice" />
                                         <Binding Path="Action.Channel" />
                                     </MultiBinding>
-                                </StackLayout.IsVisible>
-                                <Grid ColumnSpacing="6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="3*"/>
-                                    </Grid.ColumnDefinitions>
+                                </Grid.IsVisible>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
 
-                                    <Label Grid.Column="0" Text="{extensions:Translate ServoAngle}"/>
-                                    <StackLayout Grid.Column="1" Orientation="Horizontal">
-                                        <controls:ExtendedSlider Value="{Binding Action.MaxServoAngle}" Minimum="0" Maximum="180" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
-                                        <Label Text="{Binding Action.MaxServoAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
-                                        <Label Text="°"/>
-                                    </StackLayout>
-                                </Grid>
-                            </StackLayout>
+                                <Label Grid.Column="0" Text="{extensions:Translate ServoAngle}"/>
+                                <StackLayout Grid.Column="1" Orientation="Horizontal">
+                                    <controls:ExtendedSlider Value="{Binding Action.MaxServoAngle}" Minimum="0" Maximum="180" Step="5" HorizontalOptions="FillAndExpand" MinimumTrackColor="LightGray"/>
+                                    <Label Text="{Binding Action.MaxServoAngle}" WidthRequest="35" HorizontalOptions="End" HorizontalTextAlignment="End"/>
+                                    <Label Text="°"/>
+                                </StackLayout>
+                            </Grid>
 
                             <!-- Stepper angle setting -->
-                            <StackLayout Orientation="Vertical" IsVisible="False">
-                                <StackLayout.Triggers>
-                                    <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.StepperMotor}">
+                            <VerticalStackLayout IsVisible="False">
+                                <VerticalStackLayout.Triggers>
+                                    <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.StepperMotor}">
                                         <Setter Property="IsVisible" Value="True"/>
                                     </DataTrigger>
-                                </StackLayout.Triggers>
+                                </VerticalStackLayout.Triggers>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="2*"/>
@@ -146,18 +144,18 @@
                                         <Label Text="°"/>
                                     </StackLayout>
                                 </Grid>
-                            </StackLayout>
+                            </VerticalStackLayout>
 
-                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
-                        </StackLayout>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,10,6,10"/>
+                        </VerticalStackLayout>
 
                         <!-- Button type selector -->
-                        <StackLayout Orientation="Vertical" IsVisible="False">
-                            <StackLayout.Triggers>
-                                <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Button}">
+                        <VerticalStackLayout IsVisible="False">
+                            <VerticalStackLayout.Triggers>
+                                <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Button}">
                                     <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
-                            </StackLayout.Triggers>
+                            </VerticalStackLayout.Triggers>
                             <Grid ColumnSpacing="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
@@ -169,12 +167,12 @@
                             </Grid>
 
                             <!-- Sequence selector -->
-                            <StackLayout Orientation="Vertical" IsVisible="False">
-                                <StackLayout.Triggers>
-                                    <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ButtonType}" Value="{x:Static creationManagement:ControllerButtonType.Sequence}">
+                            <VerticalStackLayout IsVisible="False">
+                                <VerticalStackLayout.Triggers>
+                                    <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding Action.ButtonType}" Value="{x:Static creationManagement:ControllerButtonType.Sequence}">
                                         <Setter Property="IsVisible" Value="True"/>
                                     </DataTrigger>
-                                </StackLayout.Triggers>
+                                </VerticalStackLayout.Triggers>
                                 <Grid ColumnSpacing="6">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="2*"/>
@@ -191,18 +189,18 @@
                                         <controls:FloatingActionButton Grid.Column="1" ButtonColor="Gray" ImageSource="{extensions:ImageResource Source=ic_settings.png}" ImageColor="White" Command="{Binding OpenSequenceEditorCommand}" VerticalOptions="Center"/>
                                     </Grid>
                                 </Grid>
-                            </StackLayout>
+                            </VerticalStackLayout>
 
-                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
-                        </StackLayout>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,10,6,10"/>
+                        </VerticalStackLayout>
 
                         <!-- Axis type selector -->
-                        <StackLayout Orientation="Vertical" IsVisible="False">
-                            <StackLayout.Triggers>
-                                <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
+                        <VerticalStackLayout IsVisible="False">
+                            <VerticalStackLayout.Triggers>
+                                <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
                                     <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
-                            </StackLayout.Triggers>
+                            </VerticalStackLayout.Triggers>
                             <Grid ColumnSpacing="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
@@ -213,16 +211,16 @@
                                 <Button Grid.Column="1" Text="{Binding Action.AxisType}" Command="{Binding SelectAxisTypeCommand}" Style="{StaticResource PickerButtonStyle}"/>
                             </Grid>
 
-                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
-                        </StackLayout>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,10,6,10"/>
+                        </VerticalStackLayout>
 
                         <!-- Axis characteristic selector -->
-                        <StackLayout Orientation="Vertical" IsVisible="False">
-                            <StackLayout.Triggers>
-                                <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
+                        <VerticalStackLayout IsVisible="False">
+                            <VerticalStackLayout.Triggers>
+                                <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
                                     <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
-                            </StackLayout.Triggers>
+                            </VerticalStackLayout.Triggers>
                             <Grid ColumnSpacing="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
@@ -233,16 +231,16 @@
                                 <Button Grid.Column="1" Text="{Binding Action.AxisCharacteristic}" Command="{Binding SelectAxisCharacteristicCommand}" Style="{StaticResource PickerButtonStyle}"/>
                             </Grid>
 
-                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
-                        </StackLayout>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,10,6,10"/>
+                        </VerticalStackLayout>
 
                         <!-- Max output percent -->
-                        <StackLayout Orientation="Vertical" IsVisible="False">
-                            <StackLayout.Triggers>
-                                <DataTrigger TargetType="StackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.NormalMotor}">
+                        <VerticalStackLayout IsVisible="False" Margin="0,6">
+                            <VerticalStackLayout.Triggers>
+                                <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.NormalMotor}">
                                     <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
-                            </StackLayout.Triggers>
+                            </VerticalStackLayout.Triggers>
                             <Grid ColumnSpacing="6">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
@@ -257,18 +255,18 @@
                                 </StackLayout>
                             </Grid>
 
-                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
-                        </StackLayout>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,10,6,10"/>
+                        </VerticalStackLayout>
 
                         <!-- Axis active and dead zones percent -->
-                        <StackLayout Orientation="Vertical" IsVisible="False">
-                            <StackLayout.Triggers>
-                                <DataTrigger TargetType="StackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
+                        <VerticalStackLayout IsVisible="False" Margin="0,6">
+                            <VerticalStackLayout.Triggers>
+                                <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding ControllerEvent.EventType}" Value="{x:Static gameController:GameControllerEventType.Axis}">
                                     <Setter Property="IsVisible" Value="True"/>
                                 </DataTrigger>
-                            </StackLayout.Triggers>
+                            </VerticalStackLayout.Triggers>
 
-                            <Grid Margin="0,0,0,8">
+                            <Grid Margin="0,0,0,16">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="3*"/>
@@ -296,8 +294,8 @@
                                 </StackLayout>
                             </Grid>
 
-                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,8,5,8"/>
-                        </StackLayout>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,10,6,10"/>
+                        </VerticalStackLayout>
 
                     </VerticalStackLayout>
                 </ScrollView>

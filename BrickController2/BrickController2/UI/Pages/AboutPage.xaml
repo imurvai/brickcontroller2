@@ -32,11 +32,11 @@
                             <Label Text="{Binding Version}"/>
                         </HorizontalStackLayout>
 
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,16,6,16"/>
 
                         <Label Text="Copyright © 2024, István Murvai (SCN)"/>
 
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,16,6,16"/>
 
                         <Label Text="{extensions:Translate ExternalLibraries}" FontAttributes="Bold"/>
                         <Label Text="Autofac"/>
@@ -44,12 +44,12 @@
                         <Label Text="Microsoft.Maui"/>
                         <Label Text="Microsoft.Maui.Essentials"/>
 
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,16,6,16"/>
 
                         <Label Text="{extensions:Translate IconSet}" FontAttributes="Bold"/>
                         <Label Text="FlatIcon"/>
 
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,16,6,16"/>
 
                         <Label Text="{extensions:Translate Disclaimer}" FontAttributes="Bold"/>
                         <Label Text="LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this application" FontSize="Small"/>

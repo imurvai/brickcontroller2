@@ -50,12 +50,15 @@
                                         <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteControllerProfileCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Grid Style="{StaticResource CollectionItemGridStyle}">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding BindingContext.ControllerProfileTappedCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
-                                    </Grid.GestureRecognizers>
-                                    <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
-                                </Grid>
+                                <VerticalStackLayout>
+                                    <Grid Style="{StaticResource CollectionItemGridStyle}">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.ControllerProfileTappedCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                        <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
+                                    </Grid>
+                                    <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,6,6,0"/>
+                                </VerticalStackLayout>
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
