@@ -1,5 +1,6 @@
 ﻿using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Hosting;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -11,6 +12,9 @@ using BrickController2.DeviceManagement.DI;
 using BrickController2.iOS.PlatformServices.DI;
 using BrickController2.iOS.UI.Services.DI;
 using BrickController2.UI.DI;
+using BrickController2.iOS.UI.CustomHandlers;
+using BrickController2.UI.Controls;
+using BrickController2.iOS.UI.CustomRenderers;
 
 namespace BrickController2.iOS
 {
@@ -25,6 +29,9 @@ namespace BrickController2.iOS
                 .UseMauiApp<App>()
                 .ConfigureMauiHandlers(handlers =>
                 {
+                    handlers.AddHandler<ColorImage, ColorImageHandler>();
+                    handlers.AddHandler<ExtendedSlider, ExtendedSliderHandler>();
+                    handlers.AddHandler(typeof(ListView), typeof(NoAnimListViewRenderer));
                 })
                 .ConfigureContainer(new AutofacServiceProviderFactory(), autofacBuilder =>
                 {
