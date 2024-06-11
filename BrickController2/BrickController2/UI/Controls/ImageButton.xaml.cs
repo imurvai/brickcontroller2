@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Graphics;
 
 namespace BrickController2.UI.Controls
 {
@@ -45,7 +46,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is ImageButton imageButton && newValue is ImageSource imageSource)
             {
-                imageButton.Image.Source = imageSource;
+                imageButton.MyImage.Source = imageSource;
             }
         }
 
@@ -53,7 +54,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is ImageButton imageButton && newValue is Color color)
             {
-                imageButton.Image.Color = color;
+                imageButton.MyImage.Color = color;
             }
         }
 
@@ -61,7 +62,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is ImageButton imageButton && newValue is ICommand command)
             {
-                imageButton.TapGuestureRecognizer.Command = command;
+                imageButton.MyTapGuestureRecognizer.Command = command;
             }
         }
 
@@ -69,7 +70,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is ImageButton imageButton)
             {
-                imageButton.TapGuestureRecognizer.CommandParameter = newValue;
+                imageButton.MyTapGuestureRecognizer.CommandParameter = newValue;
             }
         }
     }

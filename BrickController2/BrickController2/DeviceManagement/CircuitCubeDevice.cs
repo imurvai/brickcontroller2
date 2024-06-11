@@ -34,10 +34,10 @@ namespace BrickController2.DeviceManagement
 
         private volatile int _sendAttemptsLeft;
 
-        private IGattCharacteristic _writeCharacteristic;
-        private IGattCharacteristic _notifyCharacteristic;
-        private IGattCharacteristic _hardwareRevisionCharacteristic;
-        private IGattCharacteristic _firmwareRevisionCharacteristic;
+        private IGattCharacteristic? _writeCharacteristic;
+        private IGattCharacteristic? _notifyCharacteristic;
+        private IGattCharacteristic? _hardwareRevisionCharacteristic;
+        private IGattCharacteristic? _firmwareRevisionCharacteristic;
 
         public CircuitCubeDevice(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, bleService)
@@ -68,7 +68,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override async Task<bool> ValidateServicesAsync(IEnumerable<IGattService>? services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID);
             _writeCharacteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_WRITE);
@@ -78,17 +78,17 @@ namespace BrickController2.DeviceManagement
             _hardwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_HARDWARE_REVISION);
 
             _notifyCharacteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_NOTIFY);
-            if (_notifyCharacteristic != null)
+            if (_notifyCharacteristic is not null)
             {
-                await _bleDevice?.EnableNotificationAsync(_notifyCharacteristic, token);
+                await _bleDevice!.EnableNotificationAsync(_notifyCharacteristic, token);
             }
 
-            return _writeCharacteristic != null && _firmwareRevisionCharacteristic != null && _hardwareRevisionCharacteristic != null;
+            return _writeCharacteristic is not null && _firmwareRevisionCharacteristic is not null && _hardwareRevisionCharacteristic is not null;
         }
 
         protected override void OnCharacteristicChanged(Guid characteristicGuid, byte[] data)
         {
-            if (characteristicGuid != _notifyCharacteristic.Uuid || data.Length <= 1)
+            if (characteristicGuid != _notifyCharacteristic!.Uuid || data.Length <= 1)
                 return;
 
             var bateryVoltage = data.ToAsciiStringSafe();
@@ -187,7 +187,7 @@ namespace BrickController2.DeviceManagement
                     commendBytes.CopyTo(_driveMotorsBuffer, idx);
                     idx += 5;
                 }
-                return await _bleDevice?.WriteAsync(_writeCharacteristic, _driveMotorsBuffer, token);
+                return await _bleDevice!.WriteAsync(_writeCharacteristic!, _driveMotorsBuffer, token);
             }
             catch (Exception)
             {
@@ -199,7 +199,7 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                return await _bleDevice?.WriteAsync(_writeCharacteristic, TURN_OFF_ALL_COMMAND, token);
+                return await _bleDevice!.WriteAsync(_writeCharacteristic!, TURN_OFF_ALL_COMMAND, token);
             }
             catch (Exception)
             {
@@ -209,21 +209,21 @@ namespace BrickController2.DeviceManagement
 
         private async Task ReadDeviceInfo(CancellationToken token)
         {
-            var firmwareData = await _bleDevice?.ReadAsync(_firmwareRevisionCharacteristic, token);
+            var firmwareData = await _bleDevice!.ReadAsync(_firmwareRevisionCharacteristic!, token);
             var firmwareVersion = firmwareData?.ToAsciiStringSafe();
             if (!string.IsNullOrEmpty(firmwareVersion))
             {
                 FirmwareVersion = firmwareVersion;
             }
 
-            var hardwareData = await _bleDevice?.ReadAsync(_hardwareRevisionCharacteristic, token);
+            var hardwareData = await _bleDevice!.ReadAsync(_hardwareRevisionCharacteristic!, token);
             var hardwareRevision = hardwareData?.ToAsciiStringSafe();
             if (!string.IsNullOrEmpty(hardwareRevision))
             {
                 HardwareVersion = hardwareRevision;
             }
 
-            await _bleDevice?.WriteAsync(_writeCharacteristic, BATTERY_STATUS_COMMAND, token);
+            await _bleDevice!.WriteAsync(_writeCharacteristic!, BATTERY_STATUS_COMMAND, token);
         }
     }
 }

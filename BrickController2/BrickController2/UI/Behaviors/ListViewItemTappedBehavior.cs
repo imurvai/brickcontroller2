@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Windows.Input;
-using Xamarin.Forms;
+using Microsoft.Maui.Controls;
 
 namespace BrickController2.UI.Behaviors
 {
     public class ListViewItemTappedBehavior : Behavior<ListView>
     {
-        private ListView _target;
+        private ListView? _target;
 
         public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ListViewItemTappedBehavior), null, BindingMode.OneWay, null, OnCommandChanged);
         public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ListViewItemTappedBehavior), null, BindingMode.OneWay, null, OnCommandParameterChanged);
@@ -26,15 +26,15 @@ namespace BrickController2.UI.Behaviors
         protected override void OnAttachedTo(ListView listView)
         {
             base.OnAttachedTo(listView);
-            listView.ItemTapped += OnItemTapped;
-            listView.BindingContextChanged += OnBindingContextChanged;
+            listView.ItemTapped += OnItemTapped!;
+            listView.BindingContextChanged += OnBindingContextChanged!;
             _target = listView;
         }
 
         protected override void OnDetachingFrom(ListView listView)
         {
-            listView.ItemTapped -= OnItemTapped;
-            listView.BindingContextChanged -= OnBindingContextChanged;
+            listView.ItemTapped -= OnItemTapped!;
+            listView.BindingContextChanged -= OnBindingContextChanged!;
             _target = null;
             base.OnDetachingFrom(listView);
         }

@@ -1,9 +1,9 @@
-﻿using BrickController2.UI.Services.Background;
+﻿using System;
+using System.Linq;
+using Microsoft.Maui.Controls;
+using BrickController2.UI.Services.Background;
 using BrickController2.UI.Services.Dialog;
 using BrickController2.UI.ViewModels;
-using System;
-using System.Linq;
-using Xamarin.Forms;
 
 namespace BrickController2.UI.Pages
 {
@@ -12,7 +12,7 @@ namespace BrickController2.UI.Pages
         private readonly IBackgroundService _backgroundService;
         private readonly IDialogServerHost _dialogServerHost;
 
-        private IDialogServer _dialogServer;
+        private IDialogServer? _dialogServer;
         private bool _appeared;
 
         public PageBase(IBackgroundService backgroundService, IDialogServerHost dialogServerHost)
@@ -39,10 +39,10 @@ namespace BrickController2.UI.Pages
         {
             base.OnAppearing();
 
-            _dialogServerHost.RegisterDialogServer(_dialogServer);
+            _dialogServerHost.RegisterDialogServer(_dialogServer!);
 
-            _backgroundService.ApplicationSleepEvent += OnApplicationSleep;
-            _backgroundService.ApplicationResumeEvent += OnApplicationResume;
+            _backgroundService.ApplicationSleepEvent += OnApplicationSleep!;
+            _backgroundService.ApplicationResumeEvent += OnApplicationResume!;
 
             OnAppearingInternal();
 
@@ -54,10 +54,10 @@ namespace BrickController2.UI.Pages
 
             OnDisappearingInternal();
 
-            _dialogServerHost.UnregisterDialogServer(_dialogServer);
+            _dialogServerHost.UnregisterDialogServer(_dialogServer!);
 
-            _backgroundService.ApplicationSleepEvent -= OnApplicationSleep;
-            _backgroundService.ApplicationResumeEvent -= OnApplicationResume;
+            _backgroundService.ApplicationSleepEvent -= OnApplicationSleep!;
+            _backgroundService.ApplicationResumeEvent -= OnApplicationResume!;
         }
 
         protected override bool OnBackButtonPressed()

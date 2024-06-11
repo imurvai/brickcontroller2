@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView
-    xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="BrickController2.UI.Controls.Dialogs"
     BackgroundColor="#80000000"
@@ -16,7 +16,7 @@
                     <StackLayout Orientation="Vertical">
                         <Label x:Name="MessageBoxTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
                         <Label x:Name="MessageBoxMessage" HorizontalOptions="Center"/>
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,16,0,16"/>
                         <Button x:Name="MessageBoxButton"/>
                     </StackLayout>
                 </Frame>
@@ -28,7 +28,7 @@
                     <StackLayout Orientation="Vertical">
                         <Label x:Name="QuestionDialogTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
                         <Label x:Name="QuestionDialogMessage" HorizontalOptions="Center"/>
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,16,0,16"/>
                         <Grid ColumnSpacing="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -46,7 +46,7 @@
                 <Frame x:Name="InputDialogFrame" Style="{StaticResource DialogFrameStyle}" HorizontalOptions="Center" VerticalOptions="Start" WidthRequest="280" Margin="0,10,0,0" Padding="20">
                     <StackLayout Orientation="Vertical">
                         <Entry x:Name="InputDialogEntry" HorizontalOptions="FillAndExpand"/>
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,4,0,4"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,16,0,16"/>
                         <Grid ColumnSpacing="6">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -72,7 +72,7 @@
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,16,0,16"/>
                         <Button x:Name="SelectionDialogCancelButton" BackgroundColor="{DynamicResource NegativeColor}"/>
                     </StackLayout>
                 </Frame>
@@ -87,7 +87,7 @@
                         <ProgressBar x:Name="ProgressDialogProgressBar" HorizontalOptions="FillAndExpand"/>
                         <ActivityIndicator x:Name="ProgressDialogActivityIndicator" IsRunning="True" HeightRequest="40" HorizontalOptions="Center"/>
                         <StackLayout x:Name="ProgressBarButtonPart" Orientation="Vertical">
-                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,16,0,16"/>
                             <Button x:Name="ProgressDialogCancelButton" BackgroundColor="{DynamicResource NegativeColor}"/>
                         </StackLayout>
                     </StackLayout>
@@ -100,7 +100,7 @@
                     <StackLayout Orientation="Vertical">
                         <Label x:Name="GameControllerEventDialogTitle" HorizontalOptions="Center" FontAttributes="Bold" FontSize="Large"/>
                         <Label x:Name="GameControllerEventDialogMessage" HorizontalOptions="Center"/>
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,8,0,8"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,16,0,16"/>
                         <Button x:Name="GameControllerEventDialogCancelButton" BackgroundColor="{DynamicResource NegativeColor}"/>
                     </StackLayout>
                 </Frame>

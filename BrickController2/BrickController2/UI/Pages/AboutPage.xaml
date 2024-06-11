@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <local:PageBase
-    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
-    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.AboutPage"
     Title="{extensions:Translate About}"
@@ -23,38 +23,38 @@
 
                 <!-- Body -->
                 <ScrollView>
-                    <StackLayout Padding="20">
+                    <VerticalStackLayout Padding="20" Spacing="6">
 
                         <Label Text="BrickController 2" FontSize="Medium" FontAttributes="Bold"/>
 
-                        <StackLayout Orientation="Horizontal">
+                        <HorizontalStackLayout Spacing="6">
                             <Label Text="{extensions:Translate Version}  "/>
                             <Label Text="{Binding Version}"/>
-                        </StackLayout>
+                        </HorizontalStackLayout>
 
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,16,6,16"/>
 
-                        <Label Text="Copyright © 2023, István Murvai (SCN)"/>
+                        <Label Text="Copyright © 2024, István Murvai (SCN)"/>
 
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,16,6,16"/>
 
                         <Label Text="{extensions:Translate ExternalLibraries}" FontAttributes="Bold"/>
                         <Label Text="Autofac"/>
                         <Label Text="SQLiteNetExtensionsAsync"/>
-                        <Label Text="Xamarin.Forms"/>
-                        <Label Text="Xamarin.Essentials"/>
+                        <Label Text="Microsoft.Maui"/>
+                        <Label Text="Microsoft.Maui.Essentials"/>
 
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,16,6,16"/>
 
                         <Label Text="{extensions:Translate IconSet}" FontAttributes="Bold"/>
                         <Label Text="FlatIcon"/>
 
-                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="5,16,5,16"/>
+                        <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,16,6,16"/>
 
                         <Label Text="{extensions:Translate Disclaimer}" FontAttributes="Bold"/>
                         <Label Text="LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this application" FontSize="Small"/>
 
-                    </StackLayout>
+                    </VerticalStackLayout>
                 </ScrollView>
             </Grid>
 

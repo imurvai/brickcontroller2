@@ -1,16 +1,16 @@
 ﻿using System.Globalization;
 using System.Threading;
-using BrickController2.PlatformServices.Localization;
+using Microsoft.Maui.Controls;
 using Foundation;
-using Xamarin.Forms;
+using BrickController2.PlatformServices.Localization;
 
 [assembly:Dependency(typeof(BrickController2.iOS.PlatformServices.Localization.LocalizationService))]
 namespace BrickController2.iOS.PlatformServices.Localization
 {
     public class LocalizationService : ILocalizationService
     {
-        private string _netLanguage;
-        private CultureInfo _ci;
+        private string? _netLanguage;
+        private CultureInfo? _ci;
 
         public CultureInfo CurrentCultureInfo
         {

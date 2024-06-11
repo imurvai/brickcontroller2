@@ -19,7 +19,7 @@ namespace BrickController2.UI.ViewModels
         private readonly ICreationManager _creationManager;
         private readonly IDialogService _dialogService;
 
-        private CancellationTokenSource _disappearingTokenSource;
+        private CancellationTokenSource? _disappearingTokenSource;
 
         public SequenceListPageViewModel(
             INavigationService navigationService,
@@ -56,21 +56,21 @@ namespace BrickController2.UI.ViewModels
 
         public override void OnDisappearing()
         {
-            _disappearingTokenSource.Cancel();
+            _disappearingTokenSource?.Cancel();
         }
 
         private async Task ImportSequenceAsync()
         {
             try
             {
-                var sequenceFilesMap = FileHelper.EnumerateDirectoryFilesToFilenameMap(SharedFileStorageService.SharedStorageDirectory, $"*.{FileHelper.SequenceFileExtension}");
+                var sequenceFilesMap = FileHelper.EnumerateDirectoryFilesToFilenameMap(SharedFileStorageService.SharedStorageDirectory!, $"*.{FileHelper.SequenceFileExtension}");
                 if (sequenceFilesMap?.Any() ?? false)
                 {
                     var result = await _dialogService.ShowSelectionDialogAsync(
                         sequenceFilesMap.Keys,
                         Translate("Sequences"),
                         Translate("Cancel"),
-                        _disappearingTokenSource.Token);
+                        _disappearingTokenSource?.Token ?? default);
 
                     if (result.IsOk)
                     {
@@ -84,7 +84,7 @@ namespace BrickController2.UI.ViewModels
                                 Translate("Error"),
                                 Translate("FailedToImportSequence"),
                                 Translate("Ok"),
-                                _disappearingTokenSource.Token);
+                                _disappearingTokenSource?.Token ?? default);
                         }
                     }
                 }
@@ -94,7 +94,7 @@ namespace BrickController2.UI.ViewModels
                         Translate("Information"),
                         Translate("NoSequencesToImport"),
                         Translate("Ok"),
-                        _disappearingTokenSource.Token);
+                        _disappearingTokenSource?.Token ?? default);
                 }
             }
             catch (OperationCanceledException)
@@ -107,13 +107,13 @@ namespace BrickController2.UI.ViewModels
             try
             {
                 var result = await _dialogService.ShowInputDialogAsync(
-                    null,
+                    string.Empty,
                     Translate("SequenceName"),
                     Translate("Create"),
                     Translate("Cancel"),
                     KeyboardType.Text,
                     (sequenceName) => !string.IsNullOrEmpty(sequenceName),
-                    _disappearingTokenSource.Token);
+                    _disappearingTokenSource?.Token ?? default);
 
                 if (result.IsOk)
                 {
@@ -123,7 +123,7 @@ namespace BrickController2.UI.ViewModels
                             Translate("Warning"),
                             Translate("SequenceNameCanNotBeEmpty"),
                             Translate("Ok"),
-                            _disappearingTokenSource.Token);
+                            _disappearingTokenSource?.Token ?? default);
 
                         return;
                     }
@@ -133,12 +133,12 @@ namespace BrickController2.UI.ViewModels
                             Translate("Warning"),
                             Translate("SequenceNameIsUsed"),
                             Translate("Ok"),
-                            _disappearingTokenSource.Token);
+                            _disappearingTokenSource?.Token ?? default);
 
                         return;
                     }
 
-                    Sequence sequence = null;
+                    Sequence? sequence = null;
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) =>
@@ -146,9 +146,9 @@ namespace BrickController2.UI.ViewModels
                             sequence = await _creationManager.AddSequenceAsync(result.Result);
                         },
                         Translate("Creating"),
-                        token: _disappearingTokenSource.Token);
+                        token: _disappearingTokenSource?.Token ?? default);
 
-                    await NavigationService.NavigateToAsync<SequenceEditorPageViewModel>(new NavigationParameters(("sequence", sequence)));
+                    await NavigationService.NavigateToAsync<SequenceEditorPageViewModel>(new NavigationParameters(("sequence", sequence!)));
                 }
             }
             catch (OperationCanceledException)
@@ -165,13 +165,13 @@ namespace BrickController2.UI.ViewModels
                     $"{Translate("AreYouSureToDeleteSequence")} '{sequence.Name}'?",
                     Translate("Yes"),
                     Translate("No"),
-                    _disappearingTokenSource.Token))
+                    _disappearingTokenSource?.Token ?? default))
                 {
                     await _dialogService.ShowProgressDialogAsync(
                         false,
                         async (progressDialog, token) => await _creationManager.DeleteSequenceAsync(sequence),
                         Translate("Deleting"),
-                        token: _disappearingTokenSource.Token);
+                        token: _disappearingTokenSource?.Token ?? default);
                 }
             }
             catch (OperationCanceledException)

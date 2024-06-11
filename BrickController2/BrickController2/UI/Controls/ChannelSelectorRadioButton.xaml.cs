@@ -1,7 +1,7 @@
-﻿using BrickController2.DeviceManagement;
-using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using System.Windows.Input;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Controls;
+using BrickController2.DeviceManagement;
 
 namespace BrickController2.UI.Controls
 {

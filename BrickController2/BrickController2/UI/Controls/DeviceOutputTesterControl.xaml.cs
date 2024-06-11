@@ -1,15 +1,15 @@
 ﻿using BrickController2.Helpers;
 using BrickController2.UI.Converters;
 using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
 using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.Controls
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class DeviceOutputTesterControl : ContentView
-	{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class DeviceOutputTesterControl : ContentView
+    {
 		public DeviceOutputTesterControl ()
 		{
 			InitializeComponent ();
@@ -33,7 +33,7 @@ namespace BrickController2.UI.Controls
 
         private void Setup(Device device)
         {
-            StackLayout.Children.Clear();
+            MyStackLayout.Children.Clear();
 
             for (int channel = 0; channel < device.NumberOfChannels; channel++)
             {
@@ -51,7 +51,7 @@ namespace BrickController2.UI.Controls
                 slider.SetBinding(ExtendedSlider.MinimumProperty, nameof(DeviceOutputViewModel.MinValue));
                 slider.SetBinding(ExtendedSlider.MaximumProperty, nameof(DeviceOutputViewModel.MaxValue));
 
-                StackLayout.Children.Add(slider);
+                MyStackLayout.Children.Add(slider);
             }
         }
 

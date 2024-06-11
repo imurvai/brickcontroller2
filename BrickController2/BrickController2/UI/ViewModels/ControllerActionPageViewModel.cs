@@ -21,9 +21,9 @@ namespace BrickController2.UI.ViewModels
         private readonly IDialogService _dialogService;
         private readonly IPreferencesService _preferences;
 
-        private CancellationTokenSource _disappearingTokenSource;
+        private CancellationTokenSource? _disappearingTokenSource;
 
-        private Device _selectedDevice;
+        private Device? _selectedDevice;
 
         public ControllerActionPageViewModel(
             INavigationService navigationService,
@@ -40,11 +40,11 @@ namespace BrickController2.UI.ViewModels
             _dialogService = dialogService;
             _preferences = preferences;
 
-            ControllerAction = parameters.Get<ControllerAction>("controlleraction", null);
-            ControllerEvent = parameters.Get<ControllerEvent>("controllerevent", null) ?? ControllerAction?.ControllerEvent;
+            ControllerAction = parameters.Get<ControllerAction?>("controlleraction", null);
+            ControllerEvent = parameters.Get<ControllerEvent?>("controllerevent", null) ?? ControllerAction?.ControllerEvent!;
 
             var device = _deviceManager.GetDeviceById(ControllerAction?.DeviceId);
-            if (ControllerAction != null && device != null)
+            if (ControllerAction is not null && device is not null)
             {
                 SelectedDevice = device;
                 Action.Channel = ControllerAction.Channel;
@@ -63,7 +63,7 @@ namespace BrickController2.UI.ViewModels
             }
             else
             {
-                var lastSelectedDeviceId = _preferences.Get<string>("LastSelectedDeviceId", null, "com.scn.BrickController2.ControllerActionPage");
+                var lastSelectedDeviceId = _preferences.Get<string>("LastSelectedDeviceId", string.Empty, "com.scn.BrickController2.ControllerActionPage");
                 SelectedDevice = _deviceManager.GetDeviceById(lastSelectedDeviceId) ?? _deviceManager.Devices.FirstOrDefault();
                 Action.Channel = 0;
                 Action.IsInvert = false;
@@ -95,18 +95,18 @@ namespace BrickController2.UI.ViewModels
         public ObservableCollection<Device> Devices => _deviceManager.Devices;
         public ObservableCollection<string> Sequences => new ObservableCollection<string>(_creationManager.Sequences.Select(s => s.Name).ToArray());
 
-        public ControllerEvent ControllerEvent { get; }
-        public ControllerAction ControllerAction { get; }
+        public ControllerEvent? ControllerEvent { get; }
+        public ControllerAction? ControllerAction { get; }
 
-        public Device SelectedDevice
+        public Device? SelectedDevice
         {
             get { return _selectedDevice; }
             set
             {
                 _selectedDevice = value;
-                Action.DeviceId = value.Id;
+                Action.DeviceId = value!.Id;
 
-                if (_selectedDevice.NumberOfChannels <= Action.Channel)
+                if (_selectedDevice!.NumberOfChannels <= Action.Channel)
                 {
                     Action.Channel = 0;
                 }
@@ -136,7 +136,7 @@ namespace BrickController2.UI.ViewModels
 
         public override void OnDisappearing()
         {
-            _preferences.Set<string>("LastSelectedDeviceId", _selectedDevice.Id, "com.scn.BrickController2.ControllerActionPage");
+            _preferences.Set<string>("LastSelectedDeviceId", _selectedDevice!.Id, "com.scn.BrickController2.ControllerActionPage");
 
             _disappearingTokenSource?.Cancel();
         }
@@ -149,7 +149,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("Warning"),
                     Translate("SelectDeviceBeforeSaving"),
                     Translate("Ok"),
-                    _disappearingTokenSource.Token);
+                    _disappearingTokenSource?.Token ?? default);
                 return;
             }
 
@@ -179,7 +179,7 @@ namespace BrickController2.UI.ViewModels
                     else
                     {
                         await _creationManager.AddOrUpdateControllerActionAsync(
-                            ControllerEvent,
+                            ControllerEvent!,
                             Action.DeviceId,
                             Action.Channel,
                             Action.IsInvert,
@@ -197,7 +197,7 @@ namespace BrickController2.UI.ViewModels
                     }
                 },
                 Translate("Saving"),
-                token: _disappearingTokenSource.Token);
+                token: _disappearingTokenSource?.Token ?? default);
 
             await NavigationService.NavigateBackAsync();
         }
@@ -208,7 +208,7 @@ namespace BrickController2.UI.ViewModels
                 Devices,
                 Translate("SelectDevice"),
                 Translate("Cancel"),
-                _disappearingTokenSource.Token);
+                _disappearingTokenSource?.Token ?? default);
 
             if (result.IsOk)
             {
@@ -232,7 +232,7 @@ namespace BrickController2.UI.ViewModels
                 Enum.GetNames(typeof(ChannelOutputType)),
                 Translate("ChannelType"),
                 Translate("Cancel"),
-                _disappearingTokenSource.Token);
+                _disappearingTokenSource?.Token ?? default);
 
             if (result.IsOk)
             {
@@ -256,7 +256,7 @@ namespace BrickController2.UI.ViewModels
                 Enum.GetNames(typeof(ControllerButtonType)),
                 Translate("ButtonType"),
                 Translate("Cancel"),
-                _disappearingTokenSource.Token);
+                _disappearingTokenSource?.Token ?? default);
 
             if (result.IsOk)
             {
@@ -272,7 +272,7 @@ namespace BrickController2.UI.ViewModels
                     Sequences,
                     Translate("SelectSequence"),
                     Translate("Cancel"),
-                    _disappearingTokenSource.Token);
+                    _disappearingTokenSource?.Token ?? default);
 
                 if (result.IsOk)
                 {
@@ -285,7 +285,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("Warning"),
                     Translate("NoSequences"),
                     Translate("Ok"),
-                    _disappearingTokenSource.Token);
+                    _disappearingTokenSource?.Token ?? default);
             }
         }
 
@@ -303,7 +303,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("Warning"),
                     Translate("MissingSequence"),
                     Translate("Ok"),
-                    _disappearingTokenSource.Token);
+                    _disappearingTokenSource?.Token ?? default);
             }
         }
 
@@ -313,7 +313,7 @@ namespace BrickController2.UI.ViewModels
                 Enum.GetNames(typeof(ControllerAxisType)),
                 Translate("AxisType"),
                 Translate("Cancel"),
-                _disappearingTokenSource.Token);
+                _disappearingTokenSource?.Token ?? default);
 
             if (result.IsOk)
             {
@@ -327,7 +327,7 @@ namespace BrickController2.UI.ViewModels
                 Enum.GetNames(typeof(ControllerAxisCharacteristic)),
                 Translate("AxisCharacteristic"),
                 Translate("Cancel"),
-                _disappearingTokenSource.Token);
+                _disappearingTokenSource?.Token ?? default);
 
             if (result.IsOk)
             {

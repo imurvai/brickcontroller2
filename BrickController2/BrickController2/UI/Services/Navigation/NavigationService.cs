@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Maui.Controls;
 using BrickController2.UI.DI;
 using BrickController2.UI.ViewModels;
-using Xamarin.Forms;
 
 namespace BrickController2.UI.Services.Navigation
 {
@@ -18,34 +18,35 @@ namespace BrickController2.UI.Services.Navigation
             _viewModelFactory = viewModelFactory;
         }
 
-        public Task NavigateToAsync<T>(NavigationParameters parameters = null) where T : PageViewModelBase
+        public Task NavigateToAsync<T>(NavigationParameters? parameters = null) where T : PageViewModelBase
         {
             var vm = _viewModelFactory(typeof(T), parameters);
             var page = _pageFactory(GetPageType<T>(), vm);
-            return Application.Current.MainPage.Navigation.PushAsync(page);
+            return Application.Current!.MainPage!.Navigation.PushAsync(page);
         }
 
-        public Task NavigateToModalAsync<T>(NavigationParameters parameters = null) where T : PageViewModelBase
+        public Task NavigateToModalAsync<T>(NavigationParameters? parameters = null) where T : PageViewModelBase
         {
             var vm = _viewModelFactory(typeof(T), parameters);
             var page = _pageFactory(GetPageType<T>(), vm);
-            return Application.Current.MainPage.Navigation.PushModalAsync(page);
+            return Application.Current!.MainPage!.Navigation.PushModalAsync(page);
         }
 
         public Task NavigateBackAsync()
         {
-            return Application.Current.MainPage.Navigation.PopAsync();
+            return Application.Current!.MainPage!.Navigation.PopAsync();
         }
 
         public Task NavigateModalBackAsync()
         {
-            return Application.Current.MainPage.Navigation.PopAsync();
+            return Application.Current!.MainPage!.Navigation.PopAsync();
         }
 
         private Type GetPageType<T>() where T : PageViewModelBase
         {
-            var pageTypeName = typeof(T).FullName?.Replace(".ViewModels.", ".Pages.").Replace("PageViewModel", "Page");
-            var pageType = pageTypeName != null ? Assembly.GetExecutingAssembly().GetType(pageTypeName) : null;
+            var pageTypeName = typeof(T).FullName!.Replace(".ViewModels.", ".Pages.").Replace("PageViewModel", "Page");
+            var pageType = Assembly.GetExecutingAssembly().GetType(pageTypeName) ??
+                throw new InvalidOperationException("page type not found.");
             return pageType;
         }
     }

@@ -1,6 +1,7 @@
-﻿using BrickController2.UI.Services.Preferences;
+﻿using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Controls;
+using BrickController2.UI.Services.Preferences;
 using BrickController2.UI.Themes;
-using Xamarin.Forms;
 
 namespace BrickController2.UI.Services.Theme
 {
@@ -29,7 +30,7 @@ namespace BrickController2.UI.Services.Theme
 
         public void ApplyCurrentTheme()
         {
-            var mergedDictionaries = Application.Current.Resources.MergedDictionaries;
+            var mergedDictionaries = Application.Current!.Resources.MergedDictionaries;
             if (mergedDictionaries != null)
             {
                 mergedDictionaries.Clear();
@@ -40,8 +41,8 @@ namespace BrickController2.UI.Services.Theme
                     ThemeType.Light => new LightTheme(),
                     _ => Application.Current.RequestedTheme switch
                     {
-                        OSAppTheme.Dark => new DarkTheme(),
-                        OSAppTheme.Light => new LightTheme(),
+                        AppTheme.Dark => new DarkTheme(),
+                        AppTheme.Light => new LightTheme(),
                         _ => new LightTheme()
                     }
                 };

@@ -1,19 +1,19 @@
-﻿using Android.Content;
+﻿using System;
+using System.Threading.Tasks;
+using Android.Content;
 using Android.Hardware;
 using BrickController2.PlatformServices.Infrared;
-using System;
-using System.Threading.Tasks;
 
 namespace BrickController2.Droid.PlatformServices.Infrared
 {
     public class InfraredService : IInfraredService
     {
-        private readonly ConsumerIrManager _irManager;
+        private readonly ConsumerIrManager? _irManager;
 
         public InfraredService(Context context)
         {
-            var irManager = (ConsumerIrManager)context.GetSystemService(Context.ConsumerIrService);
-            if (irManager != null && irManager.HasIrEmitter)
+            var irManager = (ConsumerIrManager?)context.GetSystemService(Context.ConsumerIrService);
+            if (irManager is not null && irManager.HasIrEmitter)
             {
                 _irManager = irManager;
             }
@@ -23,17 +23,20 @@ namespace BrickController2.Droid.PlatformServices.Infrared
 
         public bool IsCarrierFrequencySupported(int carrierFrequency)
         {
-            if (_irManager == null)
+            if (_irManager is null)
             {
                 return false;
             }
 
             var frequencyRanges = _irManager.GetCarrierFrequencies();
-            foreach (var range in frequencyRanges)
+            if (frequencyRanges is not null)
             {
-                if (range.MinFrequency <= carrierFrequency && carrierFrequency <= range.MaxFrequency)
+                foreach (var range in frequencyRanges)
                 {
-                    return true;
+                    if (range.MinFrequency <= carrierFrequency && carrierFrequency <= range.MaxFrequency)
+                    {
+                        return true;
+                    }
                 }
             }
 

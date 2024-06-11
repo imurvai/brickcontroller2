@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Xamarin.Forms;
+using Microsoft.Maui.Controls;
 
 namespace BrickController2.UI.Converters
 {
     public class CollectionNullOrEmptyToBoolConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value is IEnumerable<object> collection)
             {
@@ -18,7 +18,7 @@ namespace BrickController2.UI.Converters
             return true;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

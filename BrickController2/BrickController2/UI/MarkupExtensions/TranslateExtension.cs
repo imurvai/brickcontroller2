@@ -1,14 +1,14 @@
-﻿using BrickController2.Helpers;
-using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using System;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using BrickController2.Helpers;
 
 namespace BrickController2.UI.MarkupExtensions
 {
     [ContentProperty("Key")]
     public class TranslateExtension : IMarkupExtension<string>
     {
-        public string Key { get; set; }
+        public required string Key { get; set; }
 
         public string ProvideValue(IServiceProvider serviceProvider)
         {

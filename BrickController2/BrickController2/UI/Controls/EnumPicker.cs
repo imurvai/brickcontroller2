@@ -1,5 +1,5 @@
 ﻿using System;
-using Xamarin.Forms;
+using Microsoft.Maui.Controls;
 
 namespace BrickController2.UI.Controls
 {
@@ -8,7 +8,7 @@ namespace BrickController2.UI.Controls
     {
         public EnumPicker()
         {
-            SelectedIndexChanged += OnSelectedIndexChanged;
+            SelectedIndexChanged += OnSelectedIndexChanged!;
 
             foreach (var item in Enum.GetValues(typeof(T)))
             {

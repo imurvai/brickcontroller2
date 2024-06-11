@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BrickController2.Helpers
 {
-    public class VolatileBuffer<T>
+    public class VolatileBuffer<T> where T : notnull
     {
         private readonly T[] _buffer;
 
@@ -13,7 +13,7 @@ namespace BrickController2.Helpers
 
             for (int i = 0; i < capacity; i++)
             {
-                _buffer[i] = default;
+                _buffer[i] = default!;
             }
         }
 

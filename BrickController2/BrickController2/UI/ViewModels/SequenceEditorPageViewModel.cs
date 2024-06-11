@@ -20,7 +20,7 @@ namespace BrickController2.UI.ViewModels
         private readonly IDialogService _dialogService;
         private readonly ICreationManager _creationManager;
 
-        private CancellationTokenSource _disappearingTokenSource;
+        private CancellationTokenSource? _disappearingTokenSource;
 
         public SequenceEditorPageViewModel(
             INavigationService navigationService,
@@ -92,7 +92,7 @@ namespace BrickController2.UI.ViewModels
                         Translate("Cancel"),
                         KeyboardType.Text,
                         fn => FileHelper.FilenameValidator(fn),
-                        _disappearingTokenSource.Token);
+                        _disappearingTokenSource?.Token ?? default);
 
                     if (!result.IsOk)
                     {
@@ -100,7 +100,7 @@ namespace BrickController2.UI.ViewModels
                     }
 
                     filename = result.Result;
-                    var filePath = Path.Combine(SharedFileStorageService.SharedStorageDirectory, $"{filename}.{FileHelper.SequenceFileExtension}");
+                    var filePath = Path.Combine(SharedFileStorageService.SharedStorageDirectory!, $"{filename}.{FileHelper.SequenceFileExtension}");
 
                     if (!File.Exists(filePath) ||
                         await _dialogService.ShowQuestionDialogAsync(
@@ -108,7 +108,7 @@ namespace BrickController2.UI.ViewModels
                             Translate("DoYouWantToOverWrite"),
                             Translate("Yes"),
                             Translate("No"),
-                            _disappearingTokenSource.Token))
+                            _disappearingTokenSource?.Token ?? default))
                     {
                         try
                         {
@@ -119,7 +119,7 @@ namespace BrickController2.UI.ViewModels
                                 Translate("ExportSuccessful"),
                                 filePath,
                                 Translate("Ok"),
-                                _disappearingTokenSource.Token);
+                                _disappearingTokenSource?.Token ?? default);
                         }
                         catch (Exception)
                         {
@@ -127,7 +127,7 @@ namespace BrickController2.UI.ViewModels
                                 Translate("Error"),
                                 Translate("FailedToExportSequence"),
                                 Translate("Ok"),
-                                _disappearingTokenSource.Token);
+                                _disappearingTokenSource?.Token ?? default);
 
                             return;
                         }
@@ -151,7 +151,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("Cancel"),
                     KeyboardType.Text,
                     (value) => !string.IsNullOrEmpty(value),
-                    _disappearingTokenSource.Token);
+                    _disappearingTokenSource?.Token ?? default);
 
                 if (result.IsOk)
                 {
@@ -161,7 +161,7 @@ namespace BrickController2.UI.ViewModels
                             Translate("Warning"),
                             Translate("SequenceNameCanNotBeEmpty"),
                             Translate("Ok"),
-                            _disappearingTokenSource.Token);
+                            _disappearingTokenSource?.Token ?? default);
 
                         return;
                     }
@@ -171,7 +171,7 @@ namespace BrickController2.UI.ViewModels
                             Translate("Warning"),
                             Translate("SequenceNameIsUsed"),
                             Translate("Ok"),
-                            _disappearingTokenSource.Token);
+                            _disappearingTokenSource?.Token ?? default);
 
                         return;
                     }
@@ -199,7 +199,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("AreYouSureToDeleteControlPoint"),
                     Translate("Yes"),
                     Translate("No"),
-                    _disappearingTokenSource.Token))
+                    _disappearingTokenSource?.Token ?? default))
                 {
                     Sequence.ControlPoints.Remove(controlPoint);
 
@@ -223,7 +223,7 @@ namespace BrickController2.UI.ViewModels
                     Translate("Cancel"),
                     KeyboardType.Numeric,
                     (durationText) => !string.IsNullOrEmpty(durationText) && int.TryParse(durationText, out int durationMs) && durationMs >= 300 && durationMs <= 10000,
-                    _disappearingTokenSource.Token);
+                    _disappearingTokenSource?.Token ?? default);
 
                 if (!result.IsOk)
                 {
@@ -238,7 +238,7 @@ namespace BrickController2.UI.ViewModels
                             Translate("Warining"),
                             Translate("ValueOutOfRange"),
                             Translate("Ok"),
-                            _disappearingTokenSource.Token);
+                            _disappearingTokenSource?.Token ?? default);
 
                         return;
                     }
@@ -251,7 +251,7 @@ namespace BrickController2.UI.ViewModels
                         Translate("Warning"),
                         Translate("ValueMustBeNumeric"),
                         Translate("Ok"),
-                        _disappearingTokenSource.Token);
+                        _disappearingTokenSource?.Token ?? default);
 
                     return;
                 }
@@ -277,7 +277,7 @@ namespace BrickController2.UI.ViewModels
                             Sequence.ControlPoints);
                     },
                     Translate("Saving"),
-                    token: _disappearingTokenSource.Token);
+                    token: _disappearingTokenSource?.Token ?? default);
 
                 await NavigationService.NavigateBackAsync();
             }

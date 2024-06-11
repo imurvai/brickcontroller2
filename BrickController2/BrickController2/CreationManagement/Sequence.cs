@@ -8,7 +8,7 @@ namespace BrickController2.CreationManagement
 {
     public class Sequence : NotifyPropertyChangedSource
     {
-        private string _name;
+        private string _name = string.Empty;
         private bool _loop;
         private bool _interpolate;
         private ObservableCollection<SequenceControlPoint> _controlPoints = new ObservableCollection<SequenceControlPoint>();
@@ -42,7 +42,7 @@ namespace BrickController2.CreationManagement
             set { _controlPoints = value ?? new ObservableCollection<SequenceControlPoint>(); RaisePropertyChanged(); }
         }
 
-        public string ControlPointsBlobbed { get; set; }
+        public string? ControlPointsBlobbed { get; set; }
 
         [Ignore]
         public int TotalDurationMs

@@ -12,7 +12,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
 
         public static UUID ToUUID(this Guid guid)
         {
-            return UUID.FromString(guid.ToString());
+            return UUID.FromString(guid.ToString())!;
         }
     }
 }

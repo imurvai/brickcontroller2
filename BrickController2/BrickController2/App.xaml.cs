@@ -1,7 +1,9 @@
 using System;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Graphics;
 using BrickController2.UI.DI;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 using BrickController2.UI.ViewModels;
 using BrickController2.UI.Pages;
 using BrickController2.UI.Services.Background;
@@ -10,7 +12,7 @@ using BrickController2.UI.Services.Theme;
 [assembly: XamlCompilation (XamlCompilationOptions.Skip)]
 namespace BrickController2
 {
-	public partial class App
+	public partial class App : Application
 	{
         private readonly BackgroundService _backgroundService;
 
@@ -25,12 +27,12 @@ namespace BrickController2
 
             _backgroundService = backgroundService;
 
-			RequestedThemeChanged += (s, e) =>
+			Application.Current!.RequestedThemeChanged += (s, e) =>
 			{
 				themeService.CurrentTheme = e.RequestedTheme switch
 				{
-					OSAppTheme.Dark => ThemeType.Dark,
-					OSAppTheme.Light => ThemeType.Light,
+					AppTheme.Dark => ThemeType.Dark,
+					AppTheme.Light => ThemeType.Light,
 					_ => ThemeType.System
 				};
 				themeService.ApplyCurrentTheme();
@@ -40,8 +42,8 @@ namespace BrickController2
             var vm = viewModelFactory(typeof(CreationListPageViewModel), null);
 		    var page = pageFactory(typeof(CreationListPage), vm);
 		    var navigationPage = navigationPageFactory(page);
-            navigationPage.BarBackgroundColor = Color.Red;
-            navigationPage.BarTextColor = Color.White;
+            navigationPage.BarBackgroundColor = Colors.Red;
+            navigationPage.BarTextColor = Colors.White;
 
             MainPage = navigationPage;
 		}

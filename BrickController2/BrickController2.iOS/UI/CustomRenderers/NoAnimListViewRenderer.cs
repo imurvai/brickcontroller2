@@ -1,8 +1,7 @@
-﻿using BrickController2.iOS.UI.CustomRenderers;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
+﻿using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Handlers.Compatibility;
+using Microsoft.Maui.Controls.Platform;
 
-[assembly: ExportRenderer(typeof(ListView), typeof(NoAnimListViewRenderer))]
 namespace BrickController2.iOS.UI.CustomRenderers
 {
     public class NoAnimListViewRenderer : ListViewRenderer

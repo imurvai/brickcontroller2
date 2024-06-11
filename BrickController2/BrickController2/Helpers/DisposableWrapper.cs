@@ -4,7 +4,7 @@ namespace BrickController2.Helpers
 {
     public class DisposableWrapper<T> : IDisposable where T : class
     {
-        private T _objectToDispose;
+        private T? _objectToDispose;
         private readonly Action<T> _disposeAction;
 
         public DisposableWrapper(T objectToDispose, Action<T> disposeAction)

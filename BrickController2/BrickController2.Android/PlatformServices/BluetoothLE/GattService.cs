@@ -14,7 +14,7 @@ namespace BrickController2.Droid.PlatformServices.BluetoothLE
         }
         
         public BluetoothGattService BluetoothGattService { get; }
-        public Guid Uuid => BluetoothGattService.Uuid.ToGuid();
+        public Guid Uuid => BluetoothGattService.Uuid!.ToGuid();
         public IEnumerable<IGattCharacteristic> Characteristics { get; }
     }
 }

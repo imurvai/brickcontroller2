@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <local:PageBase
-    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
-    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.DevicePage"
     Title="{extensions:Translate Device}"
@@ -33,9 +33,9 @@
 
                 <!-- Device info -->
                 <ScrollView>
-                    <StackLayout Orientation="Vertical" Padding="10">
+                    <VerticalStackLayout Padding="10">
 
-                        <Grid>
+                        <Grid ColumnSpacing="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
@@ -43,7 +43,7 @@
 
                             <Image Grid.Column="0" Source="{Binding Device.DeviceType, Converter={StaticResource DeviceTypeToSmallImage}}" WidthRequest="50" HeightRequest="50" VerticalOptions="Start"/>
 
-                            <Grid Grid.Column="1">
+                            <Grid Grid.Column="1" RowSpacing="4">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="2*"/>
@@ -71,10 +71,10 @@
                                 <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Text="{Binding Device.Address}" FontSize="Micro" FontAttributes="Bold"/>
 
                                 <Label Grid.Column="0" Grid.Row="4" Text="{extensions:Translate Battery}" FontSize="Small"/>
-                                <StackLayout Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
+                                <HorizontalStackLayout Grid.Column="1" Grid.Row="4">
                                     <Label Text="{Binding Device.BatteryVoltage}" FontSize="Medium" FontAttributes="Bold"/>
                                     <Label Text="{Binding Device.BatteryVoltageSign}" FontSize="Medium"/>
-                                </StackLayout>
+                                </HorizontalStackLayout>
 
                                 <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5">
                                     <Grid.ColumnDefinitions>
@@ -82,52 +82,55 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <StackLayout Grid.Column="0" Orientation="Horizontal">
+                                    <HorizontalStackLayout Grid.Column="0">
                                         <Label Text="FW: " FontSize="Small"/>
                                         <Label Text="{Binding Device.FirmwareVersion}" FontSize="Small" FontAttributes="Bold"/>
-                                    </StackLayout>
-                                    <StackLayout Grid.Column="1" Orientation="Horizontal">
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Grid.Column="1">
                                         <Label Text="HW: " FontSize="Small"/>
                                         <Label Text="{Binding Device.HardwareVersion}" FontSize="Small" FontAttributes="Bold"/>
-                                    </StackLayout>
+                                    </HorizontalStackLayout>
                                 </Grid>
                             </Grid>
                         </Grid>
 
                         <!-- BuWizz 1 output level -->
-                        <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizzDevice}" Padding="10">
+                        <VerticalStackLayout IsVisible="{Binding IsBuWizzDevice}" Padding="10">
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,4,0,4"/>
                             <Label Text="{extensions:Translate OutputLevel}"/>
                             <controls:SegmentedControl ItemsCsv="Low,Normal,High" SelectionChangedCommand="{Binding BuWizzOutputLevelChangedCommand}" SelectedIndex="{Binding BuWizzOutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
-                        </StackLayout>
+                        </VerticalStackLayout>
 
                         <!-- BuWizz 2 output level -->
-                        <StackLayout Orientation="Vertical" IsVisible="{Binding IsBuWizz2Device}" Padding="10">
+                        <VerticalStackLayout IsVisible="{Binding IsBuWizz2Device}" Padding="10">
                             <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="0,4,0,4"/>
                             <Label Text="{extensions:Translate OutputLevel}"/>
                             <controls:SegmentedControl ItemsCsv="Low,Normal,High,Ludicrous" SelectionChangedCommand="{Binding BuWizz2OutputLevelChangedCommand}" SelectedIndex="{Binding BuWizz2OutputLevel}" HorizontalOptions="Fill" VerticalOptions="Start"/>
-                        </StackLayout>
+                        </VerticalStackLayout>
 
                         <!-- Outputs -->
-                        <StackLayout Orientation="Vertical">
-                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="10,4,10,8"/>
-                            <StackLayout BindableLayout.ItemsSource="{Binding DeviceOutputs}" Orientation="Vertical">
+                        <VerticalStackLayout>
+                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="10,20,10,8"/>
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding DeviceOutputs}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid Style="{StaticResource CollectionItemGridStyle}">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="30"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <controls:DeviceChannelLabel Grid.Column="0" DeviceType="{Binding Device.DeviceType}" Channel="{Binding Channel}"/>
-                                            <controls:ExtendedSlider Grid.Column="1" Minimum="-100" Maximum="100" IsEnabled="{Binding Device.DeviceState, Converter={StaticResource DeviceConnectedToBool}}" Value="{Binding Output}" TouchUpCommand="{Binding TouchUpCommand}"/>
-                                        </Grid>
+                                        <VerticalStackLayout>
+                                            <Grid Style="{StaticResource CollectionItemGridStyle}" Margin="10,4,10,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="30"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <controls:DeviceChannelLabel Grid.Column="0" DeviceType="{Binding Device.DeviceType}" Channel="{Binding Channel}"/>
+                                                <controls:ExtendedSlider Grid.Column="1" Minimum="-100" Maximum="100" IsEnabled="{Binding Device.DeviceState, Converter={StaticResource DeviceConnectedToBool}}" Value="{Binding Output}" TouchUpCommand="{Binding TouchUpCommand}"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,6,6,0"/>
+                                        </VerticalStackLayout>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
-                            </StackLayout>
-                        </StackLayout>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
 
-                    </StackLayout>
+                    </VerticalStackLayout>
                 </ScrollView>
             </Grid>
 

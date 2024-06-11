@@ -9,7 +9,7 @@ namespace BrickController2.CreationManagement
 {
     public class Creation : NotifyPropertyChangedSource
     {
-        private string _name;
+        private string _name = string.Empty;
         private ObservableCollection<ControllerProfile> _controllerProfiles = new ObservableCollection<ControllerProfile>();
 
         [PrimaryKey, AutoIncrement]

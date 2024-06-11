@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <local:PageBase 
-    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
-    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.CreationPage"
     x:Name="Page"
@@ -50,12 +50,15 @@
                                         <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteControllerProfileCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Grid Style="{StaticResource CollectionItemGridStyle}">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding BindingContext.ControllerProfileTappedCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
-                                    </Grid.GestureRecognizers>
-                                    <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
-                                </Grid>
+                                <VerticalStackLayout>
+                                    <Grid Style="{StaticResource CollectionItemGridStyle}">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.ControllerProfileTappedCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                        <Label Text="{Binding Name}" FontSize="Large" FontAttributes="Bold"/>
+                                    </Grid>
+                                    <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,6,6,0"/>
+                                </VerticalStackLayout>
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

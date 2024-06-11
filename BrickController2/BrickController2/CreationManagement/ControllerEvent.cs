@@ -10,7 +10,7 @@ namespace BrickController2.CreationManagement
     public class ControllerEvent : NotifyPropertyChangedSource
     {
         private GameControllerEventType _eventType;
-        private string _eventCode;
+        private string _eventCode = string.Empty;
         private ObservableCollection<ControllerAction> _controllerActions = new ObservableCollection<ControllerAction>();
 
         [PrimaryKey, AutoIncrement]
@@ -23,7 +23,7 @@ namespace BrickController2.CreationManagement
 
         [ManyToOne]
         [JsonIgnore]
-        public ControllerProfile ControllerProfile { get; set; }
+        public ControllerProfile? ControllerProfile { get; set; }
 
         public GameControllerEventType EventType
         {

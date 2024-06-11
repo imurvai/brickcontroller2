@@ -4,5 +4,5 @@ using System;
 
 namespace BrickController2.UI.DI
 {
-    public delegate PageViewModelBase ViewModelFactory(Type type, NavigationParameters parameters);
+    public delegate PageViewModelBase ViewModelFactory(Type type, NavigationParameters? parameters);
 }
