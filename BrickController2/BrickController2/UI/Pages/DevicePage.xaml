@@ -132,6 +132,8 @@
 
                     </VerticalStackLayout>
                 </ScrollView>
+
+                <controls:FloatingActionButton ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_search.png}" ImageColor="White" Command="{Binding ScanCommand}" IsVisible="{Binding CanBePowerSource}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
             </Grid>
 
             <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
