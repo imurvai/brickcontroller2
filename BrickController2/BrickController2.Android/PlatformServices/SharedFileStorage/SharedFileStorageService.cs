@@ -13,7 +13,7 @@ namespace BrickController2.Droid.PlatformServices.SharedFileStorage
 
         public bool _isPermissionGranted = false;
 
-        public bool IsSharedStorageAvailable => IsPermissionGranted && SharedStorageDirectory != null;
+        public bool IsSharedStorageAvailable => IsPermissionGranted && SharedStorageDirectory is not null;
 
         public bool IsPermissionGranted
         {
@@ -26,14 +26,14 @@ namespace BrickController2.Droid.PlatformServices.SharedFileStorage
             }
         }
 
-        public string SharedStorageBaseDirectory
+        public string? SharedStorageBaseDirectory
         {
             get
             {
                 try
                 {
 #pragma warning disable CS0618 // Type or member is obsolete
-                    var storageDirectory = ((int)Build.VERSION.SdkInt <= 32) ?
+                    var storageDirectory = (Build.VERSION.SdkInt <= BuildVersionCodes.SV2) ?
                         // Android API 32 and older - keep backward compatible: /storage/emulated/0/
                         Environment.ExternalStorageDirectory?.AbsolutePath :
                         // Android API 33+ - use /storage/emulated/0/Documents
@@ -55,7 +55,7 @@ namespace BrickController2.Droid.PlatformServices.SharedFileStorage
             }
         }
 
-        public string SharedStorageDirectory
+        public string? SharedStorageDirectory
         {
             get
             {

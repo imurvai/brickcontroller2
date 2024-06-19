@@ -1,7 +1,7 @@
-﻿using BrickController2.DeviceManagement;
+﻿using System;
+using Microsoft.Maui.Controls;
+using BrickController2.DeviceManagement;
 using BrickController2.Helpers;
-using System;
-using Xamarin.Forms;
 
 namespace BrickController2.UI.Controls
 {

@@ -31,10 +31,10 @@ namespace BrickController2.DeviceManagement
 
         private readonly int[] _sendAttemptsLeft = new int[2];
 
-        private IGattCharacteristic _motorCharacteristic;
-        private IGattCharacteristic _sensorValueCharacteristic;
-        private IGattCharacteristic _inputCharacteristic;
-        private IGattCharacteristic _firmwareRevisionCharacteristic;
+        private IGattCharacteristic? _motorCharacteristic;
+        private IGattCharacteristic? _sensorValueCharacteristic;
+        private IGattCharacteristic? _inputCharacteristic;
+        private IGattCharacteristic? _firmwareRevisionCharacteristic;
 
         public Wedo2Device(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, bleService)
@@ -69,7 +69,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService>? services, CancellationToken token)
         {
             var service = services?.FirstOrDefault(s => s.Uuid == CONTROL_SERVICE_UUID);
             _motorCharacteristic = service?.Characteristics?.FirstOrDefault(c => c.Uuid == OUTPUT_CHARACTERISTIC_UUID);
@@ -79,10 +79,10 @@ namespace BrickController2.DeviceManagement
             var deviceInformationService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_DEVICE_INFORMATION);
             _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_FIRMWARE_REVISION);
 
-            return Task.FromResult(_motorCharacteristic != null &&
-                _inputCharacteristic != null &&
-                _sensorValueCharacteristic != null &&
-                _firmwareRevisionCharacteristic != null);
+            return Task.FromResult(_motorCharacteristic is not null &&
+                _inputCharacteristic is not null &&
+                _sensorValueCharacteristic is not null &&
+                _firmwareRevisionCharacteristic is not null);
         }
 
         protected override void OnCharacteristicChanged(Guid characteristicGuid, byte[] data)
@@ -104,16 +104,16 @@ namespace BrickController2.DeviceManagement
             {
                 if (requestDeviceInformation)
                 {
-                    var firmwareData = await _bleDevice?.ReadAsync(_firmwareRevisionCharacteristic, token);
+                    var firmwareData = await _bleDevice!.ReadAsync(_firmwareRevisionCharacteristic!, token);
                     var firmwareVersion = firmwareData?.ToAsciiStringSafe();
                     FirmwareVersion = firmwareVersion ?? String.Empty;
                     BatteryVoltage = String.Empty;
 
                     // INPUT: INPUT_FORMAT, COMMAND_TYPE_WRITE, port, TYPE, 0, 30i, INPUT_FORMAT_UNIT, 1
                     byte[] voltageCommand = new byte[] { 0x01, 0x02, 0x04, 0x14, 0x00, 0x1e, 0x00, 0x00, 0x00, 0x02, 0x01 };
-                    await _bleDevice.WriteAsync(_inputCharacteristic, voltageCommand, token);
+                    await _bleDevice.WriteAsync(_inputCharacteristic!, voltageCommand, token);
 
-                    await _bleDevice.EnableNotificationAsync(_sensorValueCharacteristic, token);
+                    await _bleDevice.EnableNotificationAsync(_sensorValueCharacteristic!, token);
                 }
             }
             catch { }
@@ -167,7 +167,7 @@ namespace BrickController2.DeviceManagement
                         _motorBuffer[0] = (byte)(1 + channel);
                         _motorBuffer[3] = value;
 
-                        if (!await _bleDevice?.WriteAsync(_motorCharacteristic, _motorBuffer, token))
+                        if (!await _bleDevice!.WriteAsync(_motorCharacteristic!, _motorBuffer, token))
                         {
                             return false;
                         }

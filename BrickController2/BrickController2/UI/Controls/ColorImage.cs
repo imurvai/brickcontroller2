@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 
 namespace BrickController2.UI.Controls
 {

@@ -5,7 +5,7 @@ namespace BrickController2.UI.Services.MainThread
 {
     public class MainThreadService : IMainThreadService
     {
-        public bool IsOnMainThread => Xamarin.Essentials.MainThread.IsMainThread;
+        public bool IsOnMainThread => Microsoft.Maui.ApplicationModel.MainThread.IsMainThread;
 
         public async Task RunOnMainThread(Action action)
         {
@@ -17,7 +17,7 @@ namespace BrickController2.UI.Services.MainThread
             {
                 var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-                Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
+                Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
                 {
                     try
                     {

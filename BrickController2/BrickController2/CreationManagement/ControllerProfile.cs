@@ -8,7 +8,7 @@ namespace BrickController2.CreationManagement
 {
     public class ControllerProfile : NotifyPropertyChangedSource
     {
-        private string _name;
+        private string _name = string.Empty;
         private ObservableCollection<ControllerEvent> _controllerEvents = new ObservableCollection<ControllerEvent>();
 
         [PrimaryKey, AutoIncrement]
@@ -21,7 +21,7 @@ namespace BrickController2.CreationManagement
 
         [ManyToOne]
         [JsonIgnore]
-        public Creation Creation { get; set; }
+        public Creation? Creation { get; set; }
 
         public string Name
         {

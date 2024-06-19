@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Graphics;
 
 namespace BrickController2.UI.Controls
 {
@@ -45,7 +46,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is FloatingActionButton fab && newValue is Color backgroundColor)
             {
-                fab.Frame.BackgroundColor = backgroundColor;
+                fab.MyFrame.BackgroundColor = backgroundColor;
             }
         }
 
@@ -53,7 +54,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is FloatingActionButton fab && newValue is ImageSource imageSource)
             {
-                fab.Image.Source = imageSource;
+                fab.MyImage.Source = imageSource;
             }
         }
 
@@ -61,7 +62,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is FloatingActionButton fab && newValue is Color imageColor)
             {
-                fab.Image.Color = imageColor;
+                fab.MyImage.Color = imageColor;
             }
         }
 
@@ -69,7 +70,7 @@ namespace BrickController2.UI.Controls
         {
             if (bindable is FloatingActionButton fab && newValue is ICommand command)
             {
-                fab.TapGuestureRecognizer.Command = command;
+                fab.MyTapGuestureRecognizer.Command = command;
             }
         }
     }

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" clip-rule="evenodd" fill-rule="evenodd" xml:space="preserve">
+ <defs>
+  <linearGradient id="q" x1="0.13" x2="1.07" xlink:href="#f" y1="0.3" y2="0.79"/>
+  <linearGradient id="o">
+   <stop offset="0" stop-color="#111"/>
+   <stop offset="1" stop-color="#9d9d9d"/>
+  </linearGradient>
+  <linearGradient id="b">
+   <stop offset="0" stop-color="#1a1a1a"/>
+   <stop offset="0.63" stop-color="#666"/>
+  </linearGradient>
+  <linearGradient id="j">
+   <stop offset="0.04" stop-color="#818181"/>
+   <stop offset="1" stop-color="#323232"/>
+  </linearGradient>
+  <linearGradient id="i">
+   <stop offset="0.14" stop-color="#1a80c7"/>
+   <stop offset="1" stop-color="#09334f"/>
+  </linearGradient>
+  <linearGradient id="h">
+   <stop offset="0.15" stop-color="#c97f1e"/>
+   <stop offset="1" stop-color="#4d300c"/>
+  </linearGradient>
+  <linearGradient id="g">
+   <stop offset="0.16" stop-color="#5c5c5c"/>
+   <stop offset="1" stop-color="#2e2e2e"/>
+  </linearGradient>
+  <linearGradient id="k">
+   <stop offset="0.09" stop-color="#0f0"/>
+   <stop offset="1" stop-color="#004d00"/>
+  </linearGradient>
+  <linearGradient id="l">
+   <stop offset="0.02" stop-color="#ff1a1a"/>
+   <stop offset="1" stop-color="#380000"/>
+  </linearGradient>
+  <linearGradient id="r" x1="0.5" x2="0.5" xlink:href="#b" y1="1" y2="0"/>
+  <linearGradient id="f">
+   <stop offset="0" stop-color="#666"/>
+   <stop offset="0.63" stop-color="#1a1a1a"/>
+  </linearGradient>
+  <linearGradient id="n">
+   <stop offset="0" stop-color="#a1a1a1"/>
+   <stop offset="1" stop-color="#404040"/>
+  </linearGradient>
+  <linearGradient id="C" x1="0.15" x2="0.86" xlink:href="#n" y1="0.14" y2="0.85"/>
+  <linearGradient id="m">
+   <stop offset="0" stop-color="#a3a3a3"/>
+   <stop offset="0.88" stop-color="#3e3e3e"/>
+  </linearGradient>
+  <linearGradient id="B" x1="0.15" x2="0.84" xlink:href="#m" y1="0.15" y2="0.84"/>
+  <linearGradient id="D" x1="0.5" x2="0.5" xlink:href="#o" y1="1" y2="0"/>
+  <radialGradient cx="294.45" cy="382.65" fx="294.45" fy="382.65" gradientTransform="matrix(.92958 0 0 .92958 72.85 69.574)" gradientUnits="userSpaceOnUse" id="u" r="25.82" xlink:href="#g"/>
+  <radialGradient cx="694.41" cy="340.39" fx="694.41" fy="340.39" gradientTransform="matrix(.92958 0 0 .92958 48.898 23.969)" gradientUnits="userSpaceOnUse" id="z" r="25.82" xlink:href="#h"/>
+  <radialGradient cx="739.08" cy="385.93" fx="739.08" fy="385.93" gradientTransform="matrix(.92958 0 0 .92958 52.043 27.176)" gradientUnits="userSpaceOnUse" id="y" r="25.82" xlink:href="#l"/>
+  <radialGradient cx="694.41" cy="430.56" fx="694.41" fy="430.56" gradientTransform="matrix(.92958 0 0 .92958 48.898 30.318)" gradientUnits="userSpaceOnUse" id="x" r="25.82" xlink:href="#k"/>
+  <radialGradient cx="646.3" cy="385.93" fx="646.3" fy="385.93" gradientTransform="matrix(.92958 0 0 .92958 45.51 27.176)" gradientUnits="userSpaceOnUse" id="A" r="25.82" xlink:href="#i"/>
+  <radialGradient cx="415.11" cy="507.52" fx="415.11" fy="507.52" gradientTransform="translate(231.673 29.76) scale(.94318)" gradientUnits="userSpaceOnUse" id="p" r="44" xlink:href="#j"/>
+  <radialGradient cx="294.45" cy="382.65" fx="294.45" fy="382.65" gradientTransform="matrix(.92958 0 0 .92958 121.515 28.945)" gradientUnits="userSpaceOnUse" id="v" r="25.82" xlink:href="#g"/>
+  <radialGradient cx="294.45" cy="382.65" fx="294.45" fy="382.65" gradientTransform="matrix(.92958 0 0 .92958 72.85 -14.598)" gradientUnits="userSpaceOnUse" id="w" r="25.82" xlink:href="#g"/>
+  <radialGradient cx="294.45" cy="382.65" fx="294.45" fy="382.65" gradientTransform="matrix(.92958 0 0 .92958 20.734 26.945)" gradientUnits="userSpaceOnUse" id="s" r="25.82" xlink:href="#g"/>
+  <radialGradient cx="415.11" cy="507.52" fx="415.11" fy="507.52" gradientTransform="translate(23.586 28.837) scale(.94318)" gradientUnits="userSpaceOnUse" id="t" r="44" xlink:href="#j"/>
+ </defs>
+ <g class="layer">
+  <title>Layer 1</title>
+  <ellipse cx="518.41" cy="501.95" fill="#ffffff" id="svg_23" rx="418.5" ry="407.5" stroke="#bc6d6d" stroke-width="0"/>
+  <path d="m359.18,283.69c-3.99,-0.46 -8.12,-0.61 -12.13,-0.61l-0.08,0c-42.17,0.03 -80.3,25.12 -97.01,63.85c-65.44,86.16 -97.46,168.65 -101.54,233.21c-2.06,32.56 2.97,60.72 15.25,82.35c12.28,21.63 32.29,36.35 57.41,40.62c48.2,8.19 83.85,-12.57 107.43,-44.03c20.26,-27.03 32.93,-61.62 42.08,-94.48a72.49,72.49 0 0 0 110.9,-28.09l48.67,-0.71l26.05,0.35c11.21,27.11 37.65,44.79 66.98,44.79a72.49,72.49 0 0 0 44.91,-15.59c9.15,32.89 21.83,67.53 42.11,94.58c23.58,31.46 59.22,52.22 107.43,44.03c25.11,-4.26 45.13,-18.99 57.4,-40.62c12.28,-21.62 17.32,-49.79 15.26,-82.35c-4.12,-65.14 -41.34,-155.08 -107.97,-242.07l0.02,0.15c-18.38,-34.46 -54.25,-55.99 -93.3,-55.99l-0.08,0c-12.16,0.01 -15.04,1.24 -17.08,1.14l-23.32,0.34c-96.7,0.18 -192.71,0.04 -289.39,-0.86" fill="#000" id="svg_1"/>
+  <path d="m623.19,450.85c-31.8,0 -57.59,25.79 -57.59,57.6c0,31.81 25.78,57.59 57.59,57.59c31.81,0 57.6,-25.78 57.6,-57.59c0,-31.81 -25.79,-57.6 -57.6,-57.6zm0.01,12.91c24.68,0 44.68,20.01 44.68,44.69c0,24.68 -20,44.68 -44.68,44.68c-24.68,0 -44.69,-20 -44.69,-44.68c0,-24.68 20.01,-44.69 44.69,-44.69zm-208.09,-13.96c-31.81,0 -57.6,25.78 -57.6,57.59c0,31.81 25.79,57.6 57.6,57.6c31.81,0 57.59,-25.79 57.59,-57.6c0,-31.81 -25.78,-57.59 -57.59,-57.59zm0,12.91c24.68,0 44.69,20 44.69,44.68c0,24.68 -20.01,44.69 -44.69,44.69c-24.68,0 -44.68,-20.01 -44.68,-44.69s20,-44.68 44.68,-44.68z" fill="#666" id="svg_2"/>
+  <path d="m344.02,493.23a72.49,72.49 0 0 0 -0.13,0.64a72.49,72.49 0 0 1 0.13,-0.64zm349.52,-2.3a72.49,72.49 0 0 1 0.1,0.44a72.49,72.49 0 0 0 -0.1,-0.44zm-348.89,-0.56a72.49,72.49 0 0 0 -0.33,1.39a72.49,72.49 0 0 1 0.33,-1.39zm0.31,-1.26a72.49,72.49 0 0 0 -0.14,0.56a72.49,72.49 0 0 1 0.14,-0.56z" fill="#d45500" id="svg_3"/>
+  <path d="m344.02,493.23zm349.52,-2.3zm-348.89,-0.56zm0.31,-1.26zm348.01,-0.32zm-345.59,-7.23z" id="svg_4"/>
+  <circle cx="623.2" cy="508.45" fill="url(#p)" fill-rule="evenodd" id="svg_5" r="41.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.58"/>
+  <path d="m415.11,467.67c21.94,0 39.72,17.79 39.72,39.72c0,21.94 -17.78,39.72 -39.72,39.72c-21.94,0 -39.72,-17.78 -39.72,-39.72c0,-21.94 17.78,-39.72 39.72,-39.72z" fill="#999" id="svg_6"/>
+  <path d="m438.35,438.73zm166.41,-0.39zm-168.46,-0.27zm-3.41,-0.95a71.61,71.61 0 0 1 1.35,0.35a70.84,70.84 0 0 1 -1.35,-0.35zm178.08,-0.12zm-180.2,-0.39zm-2.02,-0.41zm-1.29,-0.24zm-2.19,-0.34z" id="svg_7"/>
+  <path d="m794.78,388.57c49.37,72.98 73.35,141.27 76.66,193.61c1.89,29.92 -2.97,54.46 -12.83,71.83c-9.86,17.38 -24.23,27.94 -44.14,31.32c-41.84,7.11 -68.38,-9.04 -89.14,-36.73c-19.97,-26.65 -32.9,-64.39 -42.04,-99.61a72.49,72.49 0 0 0 12.39,-40.54a72.49,72.49 0 0 0 -1.37,-14.03a105.73,105.73 0 0 0 100.47,-105.6a105.73,105.73 0 0 0 0,-0.25z" fill="url(#q)" id="svg_8"/>
+  <path d="m241.35,391.57a105.73,105.73 0 0 0 102.42,102.93a72.49,72.49 0 0 0 -1.15,12.89a72.49,72.49 0 0 0 12.73,41.04c-9.13,35.14 -22.05,72.75 -41.97,99.32c-20.75,27.69 -47.3,43.84 -89.14,36.73c-19.9,-3.38 -34.27,-13.95 -44.14,-31.32c-9.86,-17.37 -14.72,-41.91 -12.82,-71.83c3.25,-51.41 26.44,-118.23 74.07,-189.76z" fill="url(#r)" id="svg_9"/>
+  <circle cx="294.45" cy="382.65" fill="url(#s)" fill-rule="evenodd" id="svg_10" r="24" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.34"/>
+  <circle cx="415.11" cy="507.52" fill="url(#t)" fill-rule="evenodd" id="svg_11" r="41.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.58"/>
+  <path d="m344.02,493.23a72.49,72.49 0 0 0 -0.13,0.64a72.49,72.49 0 0 1 0.13,-0.64zm349.52,-2.3a72.49,72.49 0 0 1 0.1,0.44a72.49,72.49 0 0 0 -0.1,-0.44zm-348.89,-0.56a72.49,72.49 0 0 0 -0.33,1.39a72.49,72.49 0 0 1 0.33,-1.39zm0.31,-1.26a72.49,72.49 0 0 0 -0.14,0.56a72.49,72.49 0 0 1 0.14,-0.56z" fill="#d45500" id="svg_12"/>
+  <circle cx="346.56" cy="425.28" fill="url(#u)" fill-rule="evenodd" id="svg_13" r="24" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.34"/>
+  <circle cx="395.23" cy="384.65" fill="url(#v)" fill-rule="evenodd" id="svg_14" r="24" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.34"/>
+  <circle cx="346.56" cy="341.11" fill="url(#w)" fill-rule="evenodd" id="svg_15" r="24" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.34"/>
+  <circle cx="694.41" cy="430.56" fill="url(#x)" fill-rule="evenodd" id="svg_16" r="24" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.34"/>
+  <circle cx="739.08" cy="385.93" fill="url(#y)" fill-rule="evenodd" id="svg_17" r="24" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.34"/>
+  <circle cx="694.41" cy="340.39" fill="url(#z)" fill-rule="evenodd" id="svg_18" r="24" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.34"/>
+  <circle cx="646.3" cy="385.93" fill="url(#A)" fill-rule="evenodd" id="svg_19" r="24" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.34"/>
+  <path d="m347.05,298.05c-50.13,0 -90.78,40.64 -90.78,90.77c0,50.13 40.64,90.77 90.78,90.77c0.37,0 0.74,0 1.12,-0.01c11.23,-27.04 37.63,-44.66 66.91,-44.68l0.03,0a72.49,72.49 0 0 1 9.75,0.66a90.77,90.77 0 0 0 12.96,-46.74c0,-50.13 -40.64,-90.77 -90.77,-90.77zm-0.49,16.11c14.81,0 26.82,12.01 26.82,26.82c0,14.8 -12.01,26.81 -26.82,26.81c-14.81,0 -26.81,-12.01 -26.81,-26.81c0,-14.81 12,-26.82 26.81,-26.82zm-52.11,41.55c14.81,0 26.81,12 26.81,26.81c0,14.81 -12.01,26.81 -26.81,26.81c-14.81,0 -26.81,-12 -26.81,-26.81c0,-14.81 12,-26.81 26.8,-26.81l0.01,0zm100.78,2c14.81,0 26.81,12 26.81,26.81c0,14.81 -12.01,26.81 -26.81,26.81c-14.81,0 -26.81,-12 -26.81,-26.81c0,-14.81 12,-26.81 26.81,-26.81zm-48.67,40.63c14.81,0 26.82,12 26.82,26.81c0,14.81 -12.01,26.81 -26.82,26.81c-14.81,0 -26.81,-12 -26.81,-26.81c0,-14.81 12,-26.81 26.81,-26.81z" fill="url(#B)" id="svg_20"/>
+  <path d="m689.05,298.05c-50.14,0 -90.78,40.64 -90.78,90.77a90.77,90.77 0 0 0 13.74,48.01a72.52,72.52 0 0 1 11.15,-0.87l0.03,0c28.98,0 55.17,17.25 66.61,43.88l-0.11,-0.25c49.88,-0.36 90.13,-40.89 90.13,-90.77c0,-50.13 -40.64,-90.77 -90.77,-90.77zm5.36,15.39c14.81,0 26.81,12.01 26.81,26.82c0,14.8 -12,26.81 -26.81,26.81c-14.81,0 -26.81,-12.01 -26.81,-26.81c0,-14.81 12,-26.82 26.81,-26.82zm-48.11,45.55c14.8,0 26.81,12 26.81,26.81c0,14.81 -12.01,26.81 -26.81,26.81c-14.81,0 -26.81,-12 -26.81,-26.81c-0.01,-14.81 12,-26.81 26.81,-26.81zm92.78,0c14.81,0 26.81,12 26.81,26.81c0,14.81 -12.01,26.81 -26.81,26.81c-14.81,0 -26.81,-12 -26.81,-26.81c0,-14.81 12,-26.81 26.81,-26.81zm-44.67,44.63c14.81,0 26.81,12 26.81,26.81c0,14.8 -12,26.81 -26.81,26.81c-14.81,0 -26.81,-12 -26.81,-26.81c0,-14.81 12,-26.81 26.81,-26.81z" fill="url(#C)" id="svg_21"/>
+  <path d="m628.9,301.86a105.73,105.73 0 0 0 -31.9,139c-27.9,10.81 -46.29,37.66 -46.29,67.59c0,3.55 0.26,7.11 0.78,10.62l-21.34,-0.28l-43.56,0.64a72.49,72.49 0 0 0 1.01,-12.04c0,-30.55 -19.16,-57.83 -47.9,-68.19a73.48,73.48 0 0 0 0.26,0.09a105.73,105.73 0 0 0 -32.71,-137.4l114.62,1.54l107.03,-1.57z" fill="url(#D)" id="svg_22"/>
+ </g>
+</svg>

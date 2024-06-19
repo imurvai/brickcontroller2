@@ -1,10 +1,12 @@
-﻿using BrickController2.UI.Commands;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Graphics;
+using BrickController2.UI.Commands;
 
 namespace BrickController2.UI.Controls
 {
@@ -67,7 +69,7 @@ namespace BrickController2.UI.Controls
 
         private void Build(IList<string> items)
         {
-            StackLayout.Children.Clear();
+            MyStackLayout.Children.Clear();
             _labels.Clear();
 
             if (items == null || items.Count() == 0)
@@ -90,9 +92,10 @@ namespace BrickController2.UI.Controls
                     };
                     separator.SetDynamicResource(BoxView.BackgroundColorProperty, "DividerColor");
 
-                    StackLayout.Children.Add(separator);
+                    MyStackLayout.Children.Add(separator);
                 }
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 var label = new Label
                 {
                     Text = buttonText,
@@ -100,18 +103,19 @@ namespace BrickController2.UI.Controls
                     HorizontalOptions = LayoutOptions.FillAndExpand,
                     VerticalOptions = LayoutOptions.Center
                 };
+#pragma warning restore CS0618 // Type or member is obsolete
                 _labels.Add(label);
 
                 var frame = new Frame
                 {
-                    BackgroundColor = Color.Transparent,
+                    BackgroundColor = Colors.Transparent,
                     Padding = new Thickness(1),
                     HasShadow = false
                 };
                 frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>(i => ItemTapped(i)), CommandParameter = index });
                 frame.Content = label;
 
-                StackLayout.Children.Add(frame);
+                MyStackLayout.Children.Add(frame);
             }
 
             SetSelection(SelectedIndex);

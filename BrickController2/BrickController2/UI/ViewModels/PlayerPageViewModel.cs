@@ -25,10 +25,10 @@ namespace BrickController2.UI.ViewModels
         private readonly IList<Device> _buwizzDevices = new List<Device>();
         private readonly IList<Device> _buwizz2Devices = new List<Device>();
 
-        private Task _connectionTask;
-        private CancellationTokenSource _connectionTokenSource;
+        private Task? _connectionTask;
+        private CancellationTokenSource? _connectionTokenSource;
         private bool _isDisappearing = false;
-        private CancellationTokenSource _disappearingTokenSource;
+        private CancellationTokenSource? _disappearingTokenSource;
 
         public PlayerPageViewModel(
             INavigationService navigationService,
@@ -55,7 +55,7 @@ namespace BrickController2.UI.ViewModels
         }
 
         public Creation Creation { get; }
-        public ControllerProfile ActiveProfile
+        public ControllerProfile? ActiveProfile
         {
             get => _playLogic.ActiveProfile;
             set => _playLogic.ActiveProfile = value;
@@ -88,7 +88,7 @@ namespace BrickController2.UI.ViewModels
                 return;
             }
 
-            _gameControllerService.GameControllerEvent += GameControllerEventHandler;
+            _gameControllerService.GameControllerEvent += GameControllerEventHandler!;
 
             _connectionTokenSource = new CancellationTokenSource();
             _connectionTask = ConnectDevicesAsync();
@@ -98,7 +98,7 @@ namespace BrickController2.UI.ViewModels
         {
             _isDisappearing = true;
 
-            _gameControllerService.GameControllerEvent -= GameControllerEventHandler;
+            _gameControllerService.GameControllerEvent -= GameControllerEventHandler!;
 
             _playLogic.StopPlay();
 
@@ -136,7 +136,7 @@ namespace BrickController2.UI.ViewModels
 
         private async Task ConnectDevicesAsync()
         {
-            while (!_connectionTokenSource.IsCancellationRequested)
+            while (!(_connectionTokenSource?.IsCancellationRequested ?? false))
             {
                 var deviceToConnectTo = GetNextDeviceToConnectTo();
                 if (deviceToConnectTo != null)
@@ -185,7 +185,7 @@ namespace BrickController2.UI.ViewModels
                         Translate("ConnectingTo"),
                         deviceToConnectTo.Name,
                         Translate("Cancel"),
-                        _connectionTokenSource.Token);
+                        _connectionTokenSource?.Token ?? default);
 
                     if (dialogResult.IsCancelled)
                     {
@@ -205,7 +205,7 @@ namespace BrickController2.UI.ViewModels
                                 Translate("Warning"),
                                 Translate("FailedToConnect"),
                                 Translate("Ok"),
-                                _disappearingTokenSource.Token);
+                                _disappearingTokenSource?.Token ?? default);
 
                             if (!_isDisappearing)
                             {
@@ -230,9 +230,9 @@ namespace BrickController2.UI.ViewModels
             }
         }
 
-        private Device GetNextDeviceToConnectTo()
+        private Device? GetNextDeviceToConnectTo()
         {
-            Device deviceToConnectTo = null;
+            Device? deviceToConnectTo = null;
 
             foreach (var device in _devices)
             {

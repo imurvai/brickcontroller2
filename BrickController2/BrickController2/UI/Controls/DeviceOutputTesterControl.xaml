@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BrickController2.UI.Controls.DeviceOutputTesterControl">
 
     <ContentView.Content>
-        <StackLayout x:Name="StackLayout" Orientation="Vertical">
-        </StackLayout>
+        <VerticalStackLayout x:Name="MyStackLayout">
+        </VerticalStackLayout>
     </ContentView.Content>
 </ContentView>

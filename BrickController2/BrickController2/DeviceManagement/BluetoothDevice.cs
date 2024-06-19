@@ -10,11 +10,11 @@ namespace BrickController2.DeviceManagement
     {
         protected readonly IBluetoothLEService _bleService;
 
-        protected IBluetoothLEDevice _bleDevice;
-        private Task _outputTask;
-        private CancellationTokenSource _outputTaskTokenSource;
+        protected IBluetoothLEDevice? _bleDevice;
+        private Task? _outputTask;
+        private CancellationTokenSource? _outputTaskTokenSource;
 
-        private Action<Device> _onDeviceDisconnected = null;
+        private Action<Device>? _onDeviceDisconnected = null;
 
         public BluetoothDevice(string name, string address, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
             : base(name, address, deviceRepository)
@@ -23,7 +23,7 @@ namespace BrickController2.DeviceManagement
         }
 
         protected abstract bool AutoConnectOnFirstConnect { get; }
-        protected abstract Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token);
+        protected abstract Task<bool> ValidateServicesAsync(IEnumerable<IGattService>? services, CancellationToken token);
         protected abstract Task ProcessOutputsAsync(CancellationToken token);
 
         public async override Task<DeviceConnectionResult> ConnectAsync(
@@ -54,7 +54,7 @@ namespace BrickController2.DeviceManagement
                     DeviceState = DeviceState.Connecting;
                     var services = await _bleDevice.ConnectAndDiscoverServicesAsync(
                         reconnect || AutoConnectOnFirstConnect,
-                        OnCharacteristicChanged,
+                        OnCharacteristicChanged!,
                         OnDeviceDisconnected,
                         token);
 

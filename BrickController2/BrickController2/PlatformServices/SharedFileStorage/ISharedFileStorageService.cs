@@ -6,8 +6,8 @@
 
         bool IsPermissionGranted { get; set; }
 
-        string SharedStorageBaseDirectory { get; }
+        string? SharedStorageBaseDirectory { get; }
 
-        string SharedStorageDirectory { get; }
+        string? SharedStorageDirectory { get; }
     }
 }

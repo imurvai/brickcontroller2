@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <local:PageBase
-    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:BrickController2.UI.Controls"
     xmlns:converters="clr-namespace:BrickController2.UI.Converters"
     xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
-    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:local="clr-namespace:BrickController2.UI.Pages"
     x:Class="BrickController2.UI.Pages.SequenceListPage"
     x:Name="Page"
@@ -43,19 +43,22 @@
                                         <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteSequenceCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
-                                <Grid Style="{StaticResource CollectionItemGridStyle}">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding BindingContext.SequenceTappedCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
-                                    </Grid.GestureRecognizers>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Frame Grid.Column="0" WidthRequest="40" HeightRequest="40" BackgroundColor="{Binding Id, Converter={StaticResource IntToColor}}" CornerRadius="20" Padding="0" HasShadow="False" VerticalOptions="Center">
-                                        <Label Text="{Binding Name, Converter={StaticResource TextToCapitalInitial}}" TextColor="White" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                    </Frame>
-                                    <Label Grid.Column="1" Text="{Binding Name}" FontSize="Large" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
-                                </Grid>
+                                <VerticalStackLayout>
+                                    <Grid Style="{StaticResource CollectionItemGridStyle}">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding BindingContext.SequenceTappedCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
+                                        </Grid.GestureRecognizers>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Frame Grid.Column="0" WidthRequest="40" HeightRequest="40" BackgroundColor="{Binding Id, Converter={StaticResource IntToColor}}" CornerRadius="20" Padding="0" HasShadow="False" VerticalOptions="Center">
+                                            <Label Text="{Binding Name, Converter={StaticResource TextToCapitalInitial}}" TextColor="White" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        </Frame>
+                                        <Label Grid.Column="1" Text="{Binding Name}" FontSize="Large" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
+                                    </Grid>
+                                    <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,6,6,0"/>
+                                </VerticalStackLayout>
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

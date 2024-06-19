@@ -17,6 +17,6 @@ namespace BrickController2.DeviceManagement
         Task DeleteDeviceAsync(Device device);
         Task DeleteDevicesAsync();
 
-        Device GetDeviceById(string Id);
+        Device? GetDeviceById(string? Id);
     }
 }

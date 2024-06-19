@@ -26,10 +26,10 @@ namespace BrickController2.DeviceManagement
 
         private volatile int _sendAttemptsLeft;
 
-        private IGattCharacteristic _firmwareRevisionCharacteristic;
-        private IGattCharacteristic _hardwareRevisionCharacteristic;
-        private IGattCharacteristic _remoteControlCharacteristic;
-        private IGattCharacteristic _quickDriveCharacteristic;
+        private IGattCharacteristic? _firmwareRevisionCharacteristic;
+        private IGattCharacteristic? _hardwareRevisionCharacteristic;
+        private IGattCharacteristic? _remoteControlCharacteristic;
+        private IGattCharacteristic? _quickDriveCharacteristic;
 
         public SBrickDevice(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, bleService)
@@ -63,7 +63,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService> services, CancellationToken token)
+        protected override Task<bool> ValidateServicesAsync(IEnumerable<IGattService>? services, CancellationToken token)
         {
             var deviceInformationService = services?.FirstOrDefault(s => s.Uuid == SERVICE_UUID_DEVICE_INFORMATION);
             _firmwareRevisionCharacteristic = deviceInformationService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_FIRMWARE_REVISION);
@@ -74,10 +74,10 @@ namespace BrickController2.DeviceManagement
             _quickDriveCharacteristic = remoteControlService?.Characteristics?.FirstOrDefault(c => c.Uuid == CHARACTERISTIC_UUID_QUICK_DRIVE);
 
             return Task.FromResult(
-                _firmwareRevisionCharacteristic != null &&
-                _hardwareRevisionCharacteristic != null &&
-                _remoteControlCharacteristic != null && 
-                _quickDriveCharacteristic != null);
+                _firmwareRevisionCharacteristic is not null &&
+                _hardwareRevisionCharacteristic is not null &&
+                _remoteControlCharacteristic is not null && 
+                _quickDriveCharacteristic is not null);
         }
 
         protected override async Task<bool> AfterConnectSetupAsync(bool requestDeviceInformation, CancellationToken token)
@@ -153,7 +153,7 @@ namespace BrickController2.DeviceManagement
                     (byte)((Math.Abs(v[3]) & 0xfe) | 0x02 | dir[3])
                 };
 
-                return await _bleDevice?.WriteAsync(_quickDriveCharacteristic, sendOutputBuffer, token);
+                return await _bleDevice!.WriteAsync(_quickDriveCharacteristic!, sendOutputBuffer, token);
             }
             catch
             {
@@ -163,23 +163,23 @@ namespace BrickController2.DeviceManagement
 
         private async Task ReadDeviceInfo(CancellationToken token)
         {
-            var firmwareData = await _bleDevice?.ReadAsync(_firmwareRevisionCharacteristic, token);
+            var firmwareData = await _bleDevice!.ReadAsync(_firmwareRevisionCharacteristic!, token);
             var firmwareVersion = firmwareData?.ToAsciiStringSafe();
             if (!string.IsNullOrEmpty(firmwareVersion))
             {
                 FirmwareVersion = firmwareVersion;
             }
 
-            var hardwareData = await _bleDevice?.ReadAsync(_hardwareRevisionCharacteristic, token);
+            var hardwareData = await _bleDevice.ReadAsync(_hardwareRevisionCharacteristic!, token);
             var hardwareVersion = hardwareData?.ToAsciiStringSafe();
             if (!string.IsNullOrEmpty(hardwareVersion))
             {
                 HardwareVersion = hardwareVersion;
             }
 
-            await _bleDevice?.WriteAsync(_remoteControlCharacteristic, new byte[] { 0x0f, 0x08 }, token);
-            var voltageBuffer = await _bleDevice?.ReadAsync(_remoteControlCharacteristic, token);
-            if (voltageBuffer != null && voltageBuffer.Length >= 2)
+            await _bleDevice.WriteAsync(_remoteControlCharacteristic!, new byte[] { 0x0f, 0x08 }, token);
+            var voltageBuffer = await _bleDevice!.ReadAsync(_remoteControlCharacteristic!, token);
+            if (voltageBuffer is not null && voltageBuffer.Length >= 2)
             {
                 var rawVoltage = voltageBuffer[0] + (voltageBuffer[1] << 8);
                 var voltage = (rawVoltage * 0.83875F) / 2047;

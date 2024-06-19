@@ -7,7 +7,7 @@ namespace BrickController2.CreationManagement
 {
     public class ControllerAction : NotifyPropertyChangedSource
     {
-        private string _deviceId;
+        private string _deviceId = string.Empty;
         private int _channel;
         private ChannelOutputType _channelOutputType;
         private bool _isInvert;
@@ -20,7 +20,7 @@ namespace BrickController2.CreationManagement
         private int _maxServoAngle;
         private int _servoBaseAngle;
         private int _stepperAngle;
-        private string _sequenceName;
+        private string _sequenceName = string.Empty;
 
         [PrimaryKey, AutoIncrement]
         [JsonIgnore]
@@ -32,7 +32,7 @@ namespace BrickController2.CreationManagement
 
         [ManyToOne]
         [JsonIgnore]
-        public ControllerEvent ControllerEvent { get; set; }
+        public ControllerEvent? ControllerEvent { get; set; }
 
         public string DeviceId
         {

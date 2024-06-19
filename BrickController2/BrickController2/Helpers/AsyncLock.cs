@@ -21,7 +21,7 @@ namespace BrickController2.Helpers
 
         private struct Releaser : IDisposable
         {
-            private SemaphoreSlim _semaphore;
+            private SemaphoreSlim? _semaphore;
 
             internal Releaser(SemaphoreSlim semaphore)
             {

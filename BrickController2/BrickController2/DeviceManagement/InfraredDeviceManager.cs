@@ -26,15 +26,15 @@ namespace BrickController2.DeviceManagement
         private readonly int[] _irData = new int[18 * 2];
 
         private int _connectedDevicesCount = 0;
-        private Task _irTask;
-        private CancellationTokenSource _irTaskCancelationTokenSource;
+        private Task? _irTask;
+        private CancellationTokenSource? _irTaskCancelationTokenSource;
 
         public InfraredDeviceManager(IInfraredService infraredService)
         {
             _infraredService = infraredService;
         }
 
-        public async Task<bool> ScanAsync(Func<DeviceType, string, string, byte[], Task> deviceFoundCallback, CancellationToken token)
+        public async Task<bool> ScanAsync(Func<DeviceType, string, string, byte[]?, Task> deviceFoundCallback, CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -146,11 +146,11 @@ namespace BrickController2.DeviceManagement
                 return;
             }
 
-            _irTaskCancelationTokenSource.Cancel();
+            _irTaskCancelationTokenSource?.Cancel();
             await _irTask;
 
             _irTask = null;
-            _irTaskCancelationTokenSource.Dispose();
+            _irTaskCancelationTokenSource?.Dispose();
             _irTaskCancelationTokenSource = null;
         }
 

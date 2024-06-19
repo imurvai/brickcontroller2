@@ -21,7 +21,7 @@ namespace BrickController2.DeviceManagement
         public bool IsBluetoothLESupported => _bleService.IsBluetoothLESupported;
         public bool IsBluetoothOn => _bleService.IsBluetoothOn;
 
-        public async Task<bool> ScanAsync(Func<DeviceType, string, string, byte[], Task> deviceFoundCallback, CancellationToken token)
+        public async Task<bool> ScanAsync(Func<DeviceType, string, string, byte[]?, Task> deviceFoundCallback, CancellationToken token)
         {
             using (await _asyncLock.LockAsync())
             {
@@ -54,7 +54,7 @@ namespace BrickController2.DeviceManagement
             }
         }
 
-        private (DeviceType DeviceType, byte[] ManufacturerData) GetDeviceIfo(IDictionary<byte, byte[]> advertismentData)
+        private (DeviceType DeviceType, byte[]? ManufacturerData) GetDeviceIfo(IDictionary<byte, byte[]> advertismentData)
         {
             if (advertismentData == null)
             {
@@ -74,7 +74,7 @@ namespace BrickController2.DeviceManagement
                 case "98-01": return (DeviceType.SBrick, manufacturerData);
                 case "48-4d": return (DeviceType.BuWizz, manufacturerData);
                 case "4e-05":
-                    if (advertismentData.TryGetValue(0x09, out byte[] completeLocalName))
+                    if (advertismentData.TryGetValue(0x09, out byte[]? completeLocalName))
                     {
                         var completeLocalNameString = BitConverter.ToString(completeLocalName).ToLower();
                         if (completeLocalNameString == "42-75-57-69-7a-7a") // BuWizz
@@ -105,10 +105,10 @@ namespace BrickController2.DeviceManagement
             return (DeviceType.Unknown, null);
         }
 
-        private (DeviceType DeviceType, byte[] ManufacturerData) GetDeviceInfoByService(IDictionary<byte, byte[]> advertismentData)
+        private (DeviceType DeviceType, byte[]? ManufacturerData) GetDeviceInfoByService(IDictionary<byte, byte[]> advertismentData)
         {
             // 0x06: 128 bits Service UUID type
-            if (!advertismentData.TryGetValue(0x06, out byte[] serviceData) || serviceData.Length < 16)
+            if (!advertismentData.TryGetValue(0x06, out byte[]? serviceData) || serviceData.Length < 16)
             {
                 return (DeviceType.Unknown, null);
             }

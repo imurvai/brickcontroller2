@@ -6,33 +6,33 @@ namespace BrickController2.UI.Services.Preferences
     {
         private readonly object _lock = new object();
 
-        public bool ContainsKey(string key, string section = null)
+        public bool ContainsKey(string key, string? section = null)
         {
             lock (_lock)
             {
-                return Xamarin.Essentials.Preferences.ContainsKey(key, section);
+                return Microsoft.Maui.Storage.Preferences.ContainsKey(key, section);
             }
         }
 
-        public T Get<T>(string key, string section = null)
+        public T Get<T>(string key, string? section = null) where T : notnull
         {
             lock (_lock)
             {
-                object result = null;
+                object? result = null;
 
                 if (typeof(T).IsEnum)
                 {
-                    var enumString = Xamarin.Essentials.Preferences.Get(key, string.Empty, section);
+                    var enumString = Microsoft.Maui.Storage.Preferences.Get(key, string.Empty, section);
                     result = Enum.Parse(typeof(T), enumString);
                 }
                 else
                 {
                     result = (Type.GetTypeCode(typeof(T))) switch
                     {
-                        TypeCode.Boolean => Xamarin.Essentials.Preferences.Get(key, false, section),
-                        TypeCode.Int32 => Xamarin.Essentials.Preferences.Get(key, 0, section),
-                        TypeCode.Single => Xamarin.Essentials.Preferences.Get(key, 0F, section),
-                        TypeCode.String => Xamarin.Essentials.Preferences.Get(key, string.Empty, section),
+                        TypeCode.Boolean => Microsoft.Maui.Storage.Preferences.Get(key, false, section),
+                        TypeCode.Int32 => Microsoft.Maui.Storage.Preferences.Get(key, 0, section),
+                        TypeCode.Single => Microsoft.Maui.Storage.Preferences.Get(key, 0F, section),
+                        TypeCode.String => Microsoft.Maui.Storage.Preferences.Get(key, string.Empty, section),
                         _ => throw new NotSupportedException($"{typeof(T)} is not supported."),
                     };
                 }
@@ -41,7 +41,7 @@ namespace BrickController2.UI.Services.Preferences
             }
         }
 
-        public T Get<T>(string key, T defaultValue, string section = null)
+        public T Get<T>(string key, T defaultValue, string? section = null) where T : notnull
         {
             lock (_lock)
             {
@@ -54,33 +54,33 @@ namespace BrickController2.UI.Services.Preferences
             }
         }
 
-        public void Set<T>(string key, T value, string section = null)
+        public void Set<T>(string key, T value, string? section = null) where T : notnull
         {
             lock (_lock)
             {
                 if (typeof(T).IsEnum)
                 {
                     var stringValue = value.ToString();
-                    Xamarin.Essentials.Preferences.Set(key, stringValue, section);
+                    Microsoft.Maui.Storage.Preferences.Set(key, stringValue, section);
                 }
                 else
                 {
                     switch (value)
                     {
                         case bool b:
-                            Xamarin.Essentials.Preferences.Set(key, b, section);
+                            Microsoft.Maui.Storage.Preferences.Set(key, b, section);
                             break;
 
                         case int i:
-                            Xamarin.Essentials.Preferences.Set(key, i, section);
+                            Microsoft.Maui.Storage.Preferences.Set(key, i, section);
                             break;
 
                         case float f:
-                            Xamarin.Essentials.Preferences.Set(key, f, section);
+                            Microsoft.Maui.Storage.Preferences.Set(key, f, section);
                             break;
 
                         case string s:
-                            Xamarin.Essentials.Preferences.Set(key, s, section);
+                            Microsoft.Maui.Storage.Preferences.Set(key, s, section);
                             break;
 
                         default:

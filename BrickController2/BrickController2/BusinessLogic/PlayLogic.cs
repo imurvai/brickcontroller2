@@ -1,9 +1,9 @@
-﻿using BrickController2.CreationManagement;
-using BrickController2.DeviceManagement;
-using BrickController2.PlatformServices.GameController;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BrickController2.CreationManagement;
+using BrickController2.DeviceManagement;
+using BrickController2.PlatformServices.GameController;
 
 namespace BrickController2.BusinessLogic
 {
@@ -28,7 +28,7 @@ namespace BrickController2.BusinessLogic
             _sequencePlayer = sequencePlayer;
         }
 
-        public ControllerProfile ActiveProfile { get; set; }
+        public ControllerProfile? ActiveProfile { get; set; }
 
         public CreationValidationResult ValidateCreation(Creation creation)
         {
@@ -96,12 +96,12 @@ namespace BrickController2.BusinessLogic
                                     continue;
                                 }
 
-                                var outputValue = ProcessButtonEvent(isPressed, controllerAction, device.DeviceType);
+                                var outputValue = ProcessButtonEvent(isPressed, controllerAction, device!.DeviceType);
                                 device.SetOutput(channel, outputValue);
                             }
                             else if (gameControllerEvent.Key.EventType == GameControllerEventType.Axis)
                             {
-                                var (useAxisValue, axisValue) = ProcessAxisEvent(gameControllerEvent.Key.EventCode, gameControllerEvent.Value, controllerAction, device.DeviceType);
+                                var (useAxisValue, axisValue) = ProcessAxisEvent(gameControllerEvent.Key.EventCode, gameControllerEvent.Value, controllerAction, device!.DeviceType);
                                 if (useAxisValue)
                                 {
                                     StoreAxisOutputValue(axisValue, controllerAction.DeviceId, controllerAction.Channel, controllerEvent.EventType, controllerEvent.EventCode);

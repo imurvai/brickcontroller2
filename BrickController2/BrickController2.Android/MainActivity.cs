@@ -1,20 +1,12 @@
 ﻿using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
-using Autofac;
-using BrickController2.CreationManagement.DI;
-using BrickController2.Database.DI;
-using BrickController2.DeviceManagement.DI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Maui;
+using Microsoft.Maui.ApplicationModel;
 using BrickController2.Droid.PlatformServices.GameController;
-using BrickController2.Droid.PlatformServices.DI;
-using BrickController2.Droid.UI.Services.DI;
-using BrickController2.UI.DI;
-using BrickController2.BusinessLogic.DI;
-using Xamarin.Forms;
-using Xamarin.Essentials;
 
 namespace BrickController2.Droid
 {
@@ -22,73 +14,63 @@ namespace BrickController2.Droid
         Label = "BrickController2",
         Icon = "@mipmap/ic_launcher",
         Theme = "@style/MainTheme",
-        MainLauncher = false,
-        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+        MainLauncher = true,
+        ConfigurationChanges = 
+            ConfigChanges.ScreenSize | 
+            ConfigChanges.Orientation | 
+            ConfigChanges.UiMode | 
+            ConfigChanges.ScreenLayout | 
+            ConfigChanges.SmallestScreenSize)]
+    public class MainActivity : MauiAppCompatActivity
     {
         private GameControllerService _gameControllerService;
 
-        #region Activity
-
-        protected override void OnCreate(Bundle bundle)
+        public MainActivity()
         {
-            TabLayoutResource = Resource.Layout.Tabbar;
-            ToolbarResource = Resource.Layout.Toolbar;
+            _gameControllerService = IPlatformApplication.Current!.Services.GetRequiredService<GameControllerService>()!;
+        }
 
+        protected override void OnCreate(Bundle? bundle)
+        {
             base.OnCreate(bundle);
 
-            Window.AddFlags(WindowManagerFlags.KeepScreenOn);
-
-            Platform.Init(this, bundle);
-
-            Forms.SetFlags("SwipeView_Experimental");
-            Forms.Init(this, bundle);
-
-            var container = InitDI();
-            _gameControllerService = container.Resolve<GameControllerService>();
-
-            var app = container.Resolve<App>();
-            LoadApplication(app);
+            Window!.AddFlags(WindowManagerFlags.KeepScreenOn);
         }
 
-        public override bool OnKeyDown([GeneratedEnum] Keycode keyCode, KeyEvent e)
+        public override bool OnKeyDown([GeneratedEnum] global::Android.Views.Keycode keyCode, KeyEvent? e)
         {
-            return _gameControllerService.OnKeyDown(keyCode, e) || base.OnKeyDown(keyCode, e);
+            if (_gameControllerService is not null && e is not null)
+            {
+                return _gameControllerService.OnKeyDown(keyCode, e) || base.OnKeyDown(keyCode, e);
+            }
+
+            return base.OnKeyDown(keyCode, e);
         }
 
-        public override bool OnKeyUp([GeneratedEnum] Keycode keyCode, KeyEvent e)
+        public override bool OnKeyUp([GeneratedEnum] global::Android.Views.Keycode keyCode, KeyEvent? e)
         {
-            return _gameControllerService.OnKeyUp(keyCode, e) || base.OnKeyUp(keyCode, e);
+            if (_gameControllerService is not null && e is not null)
+            {
+                return _gameControllerService.OnKeyUp(keyCode, e) || base.OnKeyUp(keyCode, e);
+            }
+
+            return base.OnKeyUp(keyCode, e);
         }
 
-        public override bool OnGenericMotionEvent(MotionEvent e)
+        public override bool OnGenericMotionEvent(MotionEvent? e)
         {
-            return _gameControllerService.OnGenericMotionEvent(e) || base.OnGenericMotionEvent(e);
+            if (_gameControllerService is not null && e is not null)
+            {
+                return _gameControllerService.OnGenericMotionEvent(e) || base.OnGenericMotionEvent(e);
+            }
+
+            return base.OnGenericMotionEvent(e);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-
-        #endregion
-
-        private IContainer InitDI()
-        {
-            var builder = new ContainerBuilder();
-
-            builder.RegisterInstance(this).As<Context>().As<Activity>();
-            builder.RegisterModule(new PlatformServicesModule());
-            builder.RegisterModule(new UIServicesModule());
-
-            builder.RegisterModule(new BusinessLogicModule());
-            builder.RegisterModule(new DatabaseModule());
-            builder.RegisterModule(new CreationManagementModule());
-            builder.RegisterModule(new DeviceManagementModule());
-            builder.RegisterModule(new UiModule());
-
-            return builder.Build();
         }
     }
 }

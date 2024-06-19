@@ -11,11 +11,11 @@ namespace BrickController2.Helpers
 #endif
         }
 
-        public static void Error(string message, Exception ex = null)
+        public static void Error(string message, Exception? ex = null)
         {
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(message);
-            if (ex != null)
+            if (ex is not null)
             {
                 System.Diagnostics.Debug.WriteLine(ex);
             }
