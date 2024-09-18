@@ -90,15 +90,18 @@ namespace BrickController2.BusinessLogic
 
                     foreach (var kvp in _sequences)
                     {
+                        var key = kvp.Key;
+                        var value = kvp.Value;
                         // Start the sequence "now" if it hasn't been started yet
-                        if (!kvp.Value.StartTimeMs.HasValue)
+                        if (!value.StartTimeMs.HasValue)
                         {
-                            _sequences[kvp.Key] = (kvp.Value.Sequence, kvp.Value.Invert, _timeSinceStartMs);
+                            value = (value.Sequence, value.Invert, _timeSinceStartMs);
+                            _sequences[key] = value;
                         }
 
-                        if (!ProcessSequence(kvp.Key.DeviceId, kvp.Key.Channel, kvp.Value.Sequence, kvp.Value.Invert, kvp.Value.StartTimeMs!.Value, _timeSinceStartMs))
+                        if (!ProcessSequence(key.DeviceId, key.Channel, value.Sequence, value.Invert, value.StartTimeMs!.Value, _timeSinceStartMs))
                         {
-                            sequencesToRemove.Add((kvp.Key.DeviceId, kvp.Key.Channel));
+                            sequencesToRemove.Add((key.DeviceId, key.Channel));
                         }
                     }
 
