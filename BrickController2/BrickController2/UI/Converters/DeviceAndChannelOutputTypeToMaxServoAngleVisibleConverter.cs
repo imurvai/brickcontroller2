@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Globalization;
+using BrickController2.CreationManagement;
 using Microsoft.Maui.Controls;
 using Device = BrickController2.DeviceManagement.Device;
 
 namespace BrickController2.UI.Converters
 {
-    internal class DeviceAndChannelToMaxServoAngleVisibleConverter : IMultiValueConverter
+    internal class DeviceAndChannelOutputTypeToMaxServoAngleVisibleConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values[0] is Device device)
             {
-                return values[1] is int channel && device.CanChangeMaxServoAngle(channel);
+                return values[1] is ChannelOutputType outputType && outputType == ChannelOutputType.ServoMotor &&
+                    values[2] is int channel && device.CanChangeMaxServoAngle(channel);
             }
 
             return false;

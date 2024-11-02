@@ -17,11 +17,11 @@
     <local:PageBase.Resources>
         <ResourceDictionary>
             <converters:DeviceAndChannelToChannelOutputTypeVisibleConverter x:Key="DeviceAndChannelToChannelOutputTypeVisible"/>
-            <converters:DeviceAndChannelToMaxServoAngleVisibleConverter x:Key="DeviceAndChannelToMaxServoAngleVisible"/>
+			<converters:DeviceAndChannelOutputTypeToMaxServoAngleVisibleConverter x:Key="DeviceAndChannelOutputTypeToMaxServoAngleVisible"/>
         </ResourceDictionary>
     </local:PageBase.Resources>
 
-    <NavigationPage.TitleView>
+	<NavigationPage.TitleView>
         <Grid HorizontalOptions="FillAndExpand">
             <Label Text="{extensions:Translate ControllerAction}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
             <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark.png}" Command="{Binding SaveControllerActionCommand}" Style="{StaticResource NavigationBarImageButtonStyle}" HorizontalOptions="End" Margin="12,0"/>
@@ -106,8 +106,9 @@
                             <!-- Max servo angle setting -->
                             <Grid ColumnSpacing="6" Margin="0,10">
                                 <Grid.IsVisible>
-                                    <MultiBinding Converter="{StaticResource DeviceAndChannelToMaxServoAngleVisible}">
+                                    <MultiBinding Converter="{StaticResource DeviceAndChannelOutputTypeToMaxServoAngleVisible}">
                                         <Binding Path="SelectedDevice" />
+										<Binding Path="Action.ChannelOutputType" />
                                         <Binding Path="Action.Channel" />
                                     </MultiBinding>
                                 </Grid.IsVisible>
@@ -125,7 +126,7 @@
                             </Grid>
 
                             <!-- Stepper angle setting -->
-                            <VerticalStackLayout IsVisible="False">
+                            <VerticalStackLayout IsVisible="False" Margin="0,10">
                                 <VerticalStackLayout.Triggers>
                                     <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding Action.ChannelOutputType}" Value="{x:Static creationManagement:ChannelOutputType.StepperMotor}">
                                         <Setter Property="IsVisible" Value="True"/>
