@@ -150,12 +150,11 @@
         </Style>
 
         <!-- Dialog related -->
-
-        <Style x:Key="DialogFrameStyle" TargetType="Frame">
+        <Style x:Key="DialogBorderStyle" TargetType="Border">
             <Setter Property="BackgroundColor" Value="{DynamicResource DialogBackgroundColor}"/>
-            <Setter Property="BorderColor" Value="{DynamicResource DialogBorderColor}"/>
-            <Setter Property="CornerRadius" Value="10"/>
-            <Setter Property="HasShadow" Value="True"/>
+            <Setter Property="Stroke" Value="{DynamicResource DialogBorderColor}"/>
+            <Setter Property="StrokeShape" Value="RoundRectangle 10"/>
+            <Setter Property="StrokeThickness" Value="1"/>
         </Style>
         
         <!-- Picker button -->

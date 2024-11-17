@@ -6,11 +6,11 @@
     x:Class="BrickController2.UI.Controls.FloatingActionButton">
     
   <ContentView.Content>
-        <Frame x:Name="MyFrame" WidthRequest="50" HeightRequest="50" CornerRadius="25" Padding="0">
-            <Frame.GestureRecognizers>
+        <Border x:Name="MyFrame" WidthRequest="50" HeightRequest="50" StrokeShape="RoundRectangle 25" Padding="0">
+            <Border.GestureRecognizers>
                 <TapGestureRecognizer x:Name="MyTapGuestureRecognizer"/>
-            </Frame.GestureRecognizers>
+            </Border.GestureRecognizers>
             <controls:ColorImage x:Name="MyImage" WidthRequest="20" HeightRequest="20" HorizontalOptions="Center" VerticalOptions="Center"/>
-        </Frame>
+        </Border>
     </ContentView.Content>
 </ContentView>

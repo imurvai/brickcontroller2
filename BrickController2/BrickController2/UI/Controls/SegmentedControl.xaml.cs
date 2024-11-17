@@ -106,16 +106,15 @@ namespace BrickController2.UI.Controls
 #pragma warning restore CS0618 // Type or member is obsolete
                 _labels.Add(label);
 
-                var frame = new Frame
+                var border = new Border
                 {
                     BackgroundColor = Colors.Transparent,
-                    Padding = new Thickness(1),
-                    HasShadow = false
+                    Padding = new Thickness(1)
                 };
-                frame.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>(i => ItemTapped(i)), CommandParameter = index });
-                frame.Content = label;
+                border.GestureRecognizers.Add(new TapGestureRecognizer { Command = new SafeCommand<int>(i => ItemTapped(i)), CommandParameter = index });
+                border.Content = label;
 
-                MyStackLayout.Children.Add(frame);
+                MyStackLayout.Children.Add(border);
             }
 
             SetSelection(SelectedIndex);

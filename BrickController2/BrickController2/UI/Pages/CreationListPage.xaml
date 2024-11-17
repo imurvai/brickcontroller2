@@ -57,9 +57,9 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <Frame Grid.Column="0" WidthRequest="40" HeightRequest="40" BackgroundColor="{Binding Id, Converter={StaticResource IntToColor}}" CornerRadius="20" Padding="0" HasShadow="False" VerticalOptions="Center">
+                                        <Border Grid.Column="0" WidthRequest="40" HeightRequest="40" BackgroundColor="{Binding Id, Converter={StaticResource IntToColor}}" StrokeShape="RoundRectangle 20" Padding="0" VerticalOptions="Center">
                                             <Label Text="{Binding Name, Converter={StaticResource TextToCapitalInitial}}" TextColor="White" FontSize="Medium" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                        </Frame>
+                                        </Border>
                                         <Label Grid.Column="1" Text="{Binding Name}" FontSize="Large" FontAttributes="Bold" VerticalOptions="CenterAndExpand"/>
                                     </Grid>
                                     <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,6,6,0"/>
@@ -81,42 +81,42 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Frame Grid.Column="0" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
-                        <Frame.GestureRecognizers>
+                    <Border Grid.Column="0" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent">
+                        <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToDevicesCommand}"/>
-                        </Frame.GestureRecognizers>
+                        </Border.GestureRecognizers>
                         <VerticalStackLayout HorizontalOptions="CenterAndExpand" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_link.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Devices}" FontSize="Small"/>
                         </VerticalStackLayout>
-                    </Frame>
-                    <Frame Grid.Column="1" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
-                        <Frame.GestureRecognizers>
+                    </Border>
+                    <Border Grid.Column="1" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent">
+                        <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToControllerTesterCommand}"/>
-                        </Frame.GestureRecognizers>
+                        </Border.GestureRecognizers>
                         <VerticalStackLayout HorizontalOptions="CenterAndExpand" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_console.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Controller}" FontSize="Small"/>
                         </VerticalStackLayout>
-                    </Frame>
-                    <Frame Grid.Column="2" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
-                        <Frame.GestureRecognizers>
+                    </Border>
+                    <Border Grid.Column="2" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent">
+                        <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToSequencesCommand}"/>
-                        </Frame.GestureRecognizers>
+                        </Border.GestureRecognizers>
                         <VerticalStackLayout HorizontalOptions="CenterAndExpand" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_sequence.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate Sequences}" FontSize="Small"/>
                         </VerticalStackLayout>
-                    </Frame>
-                    <Frame Grid.Column="3" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent" HasShadow="False">
-                        <Frame.GestureRecognizers>
+                    </Border>
+                    <Border Grid.Column="3" HorizontalOptions="Fill" Padding="2" BackgroundColor="Transparent">
+                        <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding NavigateToAboutCommand}"/>
-                        </Frame.GestureRecognizers>
+                        </Border.GestureRecognizers>
                         <VerticalStackLayout HorizontalOptions="CenterAndExpand" Spacing="6">
                             <controls:ColorImage Source="{extensions:ImageResource Source=ic_info.png}" Style="{StaticResource FooterColorImageStyle}"/>
                             <Label Text="{extensions:Translate About}" FontSize="Small"/>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
                 </Grid>
 
                 <controls:FloatingActionButton Grid.Row="0" ButtonColor="Red" ImageSource="{extensions:ImageResource Source=ic_add.png}" ImageColor="White" Command="{Binding AddCreationCommand}" HorizontalOptions="End" VerticalOptions="End" Margin="10"/>
