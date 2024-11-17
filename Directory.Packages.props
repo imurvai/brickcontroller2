@@ -8,6 +8,7 @@
     <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.40" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.40" />
     <PackageVersion Include="Microsoft.Maui.Essentials" Version="8.0.40" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="sqlite-net-pcl" Version="1.9.172" />
     <PackageVersion Include="SQLiteNetExtensions" Version="2.1.0" />
     <PackageVersion Include="SQLiteNetExtensions.Async" Version="2.1.0" />
