@@ -44,6 +44,9 @@ namespace BrickController2.UI.Converters
                 case DeviceType.WeDo2:
                     return ResourceHelper.GetImageResource("wedo2hub_image_small.png");
 
+                case DeviceType.TechnicMove:
+                    return ResourceHelper.GetImageResource("technic_move_small.png");
+
                 default:
                     return null;
             }

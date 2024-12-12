@@ -46,6 +46,8 @@
     <EmbeddedResource Include="UI\Images\sbrick_image.png" />
     <EmbeddedResource Include="UI\Images\sbrick_image_small.png" />
     <EmbeddedResource Include="UI\Images\ic_sequence.png" />
+    <EmbeddedResource Include="UI\Images\technic_move.png" />
+    <EmbeddedResource Include="UI\Images\technic_move_small.png" />
     <EmbeddedResource Include="UI\Images\wedo2hub_image.png" />
     <EmbeddedResource Include="UI\Images\wedo2hub_image_small.png" />
   </ItemGroup>
