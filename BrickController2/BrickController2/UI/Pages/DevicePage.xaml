@@ -24,6 +24,9 @@
     <NavigationPage.TitleView>
         <Grid HorizontalOptions="FillAndExpand">
             <Label Text="{extensions:Translate Device}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center"/>
+            <HorizontalStackLayout HorizontalOptions="End" Margin="12,0" Spacing="12">
+                <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_settings.png}" Command="{Binding OpenDeviceSettingsPageCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+            </HorizontalStackLayout>
         </Grid>
     </NavigationPage.TitleView>
 

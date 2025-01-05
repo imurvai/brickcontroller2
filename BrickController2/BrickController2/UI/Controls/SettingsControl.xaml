@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:t="clr-namespace:BrickController2.UI.Templates"
+    x:Class="BrickController2.UI.Controls.SettingsControl"
+    x:Name="Control"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:InverseBoolConverter x:Key="InverseBool"/>
+            <Style x:Key="settingLabel" TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Start" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="Medium" />
+            </Style>
+            <Style x:Key="settingsSlider" TargetType="controls:ExtendedSlider">
+                <Setter Property="MinimumTrackColor" Value="{DynamicResource PositiveColor}"/>
+                <Setter Property="Minimum" Value="35"/>
+                <Setter Property="Maximum" Value="3500"/>
+                <Setter Property="Step" Value="35"/>
+            </Style>
+            <t:DataTemplatesSelector x:Key="TemplatesSelector">
+                <t:DataTemplatesSelector.BoolDataTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="0" Text="{Binding DisplayName}" Style="{StaticResource Key=settingLabel}"/>
+                            <HorizontalStackLayout Grid.Column="1" Spacing="20">
+                                <Switch IsToggled="{Binding Value}" HorizontalOptions="Center" />
+                                <Label Text="{extensions:Translate On}" Style="{StaticResource Key=settingLabel}" IsVisible="{Binding Value}"/>
+                                <Label Text="{extensions:Translate Off}" Style="{StaticResource Key=settingLabel}" IsVisible="{Binding Value, Converter={StaticResource InverseBool}}"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </t:DataTemplatesSelector.BoolDataTemplate>
+
+                <t:DataTemplatesSelector.EnumDataTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="0" Text="{Binding DisplayName}" Style="{StaticResource Key=settingLabel}"/>
+                            <Button Grid.Column="1" Text="{Binding Value}" Command="{Binding SelectItemCommand}" Style="{StaticResource PickerButtonStyle}" HorizontalOptions="FillAndExpand"/>
+                        </Grid>
+                    </DataTemplate>
+                </t:DataTemplatesSelector.EnumDataTemplate>
+                
+            </t:DataTemplatesSelector>
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ContentView.Content>
+        <CollectionView ItemsSource="{Binding Settings}" SelectionMode="None" Margin="10,10,10,10"
+                        ItemTemplate="{StaticResource TemplatesSelector}" IsGrouped="{Binding IsGrouped}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" VerticalItemSpacing="{OnIdiom Desktop=10, Default=20}" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem Text="{extensions:Translate Reset}" IconImageSource="{extensions:ImageResource Source=ic_delete.png}" BackgroundColor="{DynamicResource SwipeItemBackgroundColor}"
+                                           IsVisible="{Binding HasNonDefaultValue}"
+                                           Command="{Binding BindingContext.ResetGroupToDefaultCommand, Source={x:Reference Control}}" CommandParameter="{Binding .}"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Label Text="{Binding GroupName}" BackgroundColor="{DynamicResource CollectionViewHeaderBackgroundColor}" TextColor="{DynamicResource PrimaryTextColor}"
+                                FontSize="Medium" FontAttributes="Bold" Padding="10" />
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+        </CollectionView>
+    </ContentView.Content>
+
+</ContentView>

@@ -201,6 +201,9 @@
   <data name="BuWizz2OutputLevel" xml:space="preserve">
     <value>BuWizz 2 output level</value>
   </data>
+  <data name="BuWizz2SwapChannels" xml:space="preserve">
+    <value>Swap channels</value>
+  </data>
   <data name="BuWizzOutputLevel" xml:space="preserve">
     <value>BuWizz output level</value>
   </data>
@@ -278,6 +281,9 @@
   </data>
   <data name="Devices" xml:space="preserve">
     <value>Devices</value>
+  </data>
+  <data name="DeviceSettings" xml:space="preserve">
+    <value>Device settings</value>
   </data>
   <data name="DeviceType" xml:space="preserve">
     <value>Device type</value>
@@ -527,5 +533,23 @@
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
+  </data>
+  <data name="BuWizz2DefaultOutputLevel" xml:space="preserve">
+    <value>Default output level</value>
+  </data>
+	<data name="BuWizzDefaultOutputLevel" xml:space="preserve">
+    <value>Default output level</value>
+  </data>
+	<data name="On" xml:space="preserve">
+    <value>On</value>
+  </data>
+	<data name="Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="ResetToDefaults" xml:space="preserve">
+    <value>Reset settings to default</value>
+  </data>
+  <data name="_defaultGroup" xml:space="preserve">
+    <value>General settings</value>
   </data>
 </root>

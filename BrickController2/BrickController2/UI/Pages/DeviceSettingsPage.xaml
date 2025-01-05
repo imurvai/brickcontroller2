@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<local:PageBase
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:BrickController2.UI.Controls"
+    xmlns:converters="clr-namespace:BrickController2.UI.Converters"
+    xmlns:extensions="clr-namespace:BrickController2.UI.MarkupExtensions"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:local="clr-namespace:BrickController2.UI.Pages"
+    xmlns:vm="clr-namespace:BrickController2.UI.ViewModels"
+    xmlns:t="clr-namespace:BrickController2.UI.Templates"
+    x:Class="BrickController2.UI.Pages.DeviceSettingsPage"
+    Title="{extensions:Translate DeviceSettings}"
+    ios:Page.UseSafeArea="True"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand">
+            <Label Text="{extensions:Translate DeviceSettings}" TextColor="{DynamicResource NavigationBarItemColor}" FontSize="Medium" FontAttributes="Bold" VerticalOptions="Center"/>
+            <HorizontalStackLayout HorizontalOptions="End" Margin="12,0" Spacing="12">
+                <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_delete.png}" Command="{Binding ResetToDefaultsCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+                <controls:ImageButton ImageSource="{extensions:ImageResource Source=ic_checkmark.png}" Command="{Binding SaveSettingsCommand}" Style="{StaticResource NavigationBarImageButtonStyle}"/>
+            </HorizontalStackLayout>
+        </Grid>
+    </NavigationPage.TitleView>
+    
+    <local:PageBase.Content>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid RowSpacing="0" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <Grid Grid.Row="0" Style="{StaticResource HeaderGridStyle}">
+                    <Label Text="{Binding Device.Name}" TextColor="{DynamicResource PrimaryTextColor}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Start" VerticalOptions="Center" />
+                </Grid>
+
+                <!-- Setting list -->
+                <controls:SettingsControl Grid.Row="1" />
+
+            </Grid>
+
+            <controls:Dialogs x:Name="Dialogs" AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"/>
+
+        </AbsoluteLayout>
+    </local:PageBase.Content>
+
+</local:PageBase>

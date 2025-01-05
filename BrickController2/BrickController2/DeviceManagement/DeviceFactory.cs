@@ -1,4 +1,7 @@
-﻿namespace BrickController2.DeviceManagement
+﻿using BrickController2.Settings;
+using System.Collections.Generic;
+
+namespace BrickController2.DeviceManagement
 {
-    internal delegate Device DeviceFactory(DeviceType deviceType, string name, string address, byte[] deviceData);
+    internal delegate Device? DeviceFactory(DeviceType deviceType, string name, string address, byte[] deviceData, IEnumerable<NamedSetting> settings);
 }

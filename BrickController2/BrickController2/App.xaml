@@ -27,7 +27,22 @@
         <Style TargetType="Switch">
             <Setter Property="BackgroundColor" Value="{DynamicResource TransparentColor}"/>
             <Setter Property="OnColor" Value="{DynamicResource SwitchOnColor}"/>
-            <Setter Property="ThumbColor" Value="{DynamicResource SwitchThumbColor}"/>
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="On">
+                            <VisualState.Setters>
+                                <Setter Property="ThumbColor" Value="{DynamicResource SwitchThumbColor}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Off">
+                            <VisualState.Setters>
+                                <Setter Property="ThumbColor" Value="{DynamicResource SwitchThumbColorOff}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
         </Style>
 
         <Style TargetType="Picker">

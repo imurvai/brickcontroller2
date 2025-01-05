@@ -58,7 +58,7 @@ namespace BrickController2.UI.Commands
             }
         }
 
-        private void RaiseCanExecuteChanged()
+        internal void RaiseCanExecuteChanged()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -75,6 +75,12 @@ namespace BrickController2.UI.Commands
         {
             _executeAsync = o => { execute?.Invoke(o); return Task.FromResult(true); };
             _canExecute = _ => canExecute?.Invoke() ?? true;
+        }
+
+        public SafeCommand(Action<TExecute> execute, Predicate<object?> canExecute)
+        {
+            _executeAsync = o => { execute?.Invoke(o); return Task.FromResult(true); };
+            _canExecute = o => canExecute.Invoke(o);
         }
 
         public SafeCommand(Func<TExecute, Task> executeAsync, Predicate<object?>? canExecute = null)
@@ -106,7 +112,7 @@ namespace BrickController2.UI.Commands
             }
         }
 
-        private void RaiseCanExecuteChanged()
+        internal void RaiseCanExecuteChanged()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }

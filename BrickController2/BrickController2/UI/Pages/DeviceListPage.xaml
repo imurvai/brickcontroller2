@@ -39,6 +39,14 @@
                                         <SwipeItem Text="{extensions:Translate Delete}" IconImageSource="{extensions:ImageResource Source=ic_delete.png}" BackgroundColor="{DynamicResource DeleteSwipeItemBackgroundColor}" Command="{Binding BindingContext.DeleteDeviceCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}"/>
                                     </SwipeItems>
                                 </SwipeView.LeftItems>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem Text="{extensions:Translate Settings}" IconImageSource="{extensions:ImageResource Source=ic_settings.png}" BackgroundColor="{DynamicResource SwipeItemBackgroundColor}"
+                                                   IsVisible="{Binding HasSettings}"
+                                                   Command="{Binding BindingContext.DeviceSettingsCommand, Source={x:Reference Page}}"
+                                                   CommandParameter="{Binding .}"/>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
                                 <VerticalStackLayout>
                                     <Grid Style="{StaticResource CollectionItemGridStyle}">
                                         <Grid.GestureRecognizers>

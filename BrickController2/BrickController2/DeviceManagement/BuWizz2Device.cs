@@ -1,5 +1,7 @@
-﻿using BrickController2.Helpers;
+﻿using BrickController2.DeviceManagement.BuWizz;
+using BrickController2.Helpers;
 using BrickController2.PlatformServices.BluetoothLE;
+using BrickController2.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +23,13 @@ namespace BrickController2.DeviceManagement
 
         private static readonly TimeSpan VoltageMeasurementTimeout = TimeSpan.FromSeconds(5);
 
+        private const string SwapChannelsSettingName = "BuWizz2SwapChannels";
+        private const string DefaultOutputLevelName = "BuWizz2DefaultOutputLevel";
+        private const BuWizz2OutputLevels DefaultLevel = BuWizz2OutputLevels.Normal;
+
         private readonly int[] _outputValues = new int[4];
         private readonly int[] _lastOutputValues = new int[4];
         private readonly object _outputLock = new object();
-        private readonly bool _swapChannels;
 
         private DateTime _batteryMeasurementTimestamp;
         private byte _batteryVoltageRaw;
@@ -37,18 +42,24 @@ namespace BrickController2.DeviceManagement
         private IGattCharacteristic? _modelNumberCharacteristic;
         private IGattCharacteristic? _firmwareRevisionCharacteristic;
 
-        public BuWizz2Device(string name, string address, byte[] deviceData, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
+        public BuWizz2Device(string name, string address, byte[] deviceData, IEnumerable<NamedSetting> settings, IDeviceRepository deviceRepository, IBluetoothLEService bleService)
             : base(name, address, deviceRepository, bleService)
         {
             // On BuWizz2 with manufacturer data 0x4e054257001e the ports are swapped
             // (no normal BuWizz2es manufacturer data is 0x4e054257001b)
-            _swapChannels = deviceData != null && deviceData.Length >= 6 && deviceData[5] == 0x1E;
+            var swapChannels = deviceData != null && deviceData.Length >= 6 && deviceData[5] == 0x1E;
+
+            // apply values (if any) or default
+            SetSettingValue(SwapChannelsSettingName, settings, swapChannels);
+            SetSettingValue(DefaultOutputLevelName, settings, DefaultLevel);
+            // update output value again to apply settings
+            _outputLevel = DefaultOutputLevel;
         }
 
         public override DeviceType DeviceType => DeviceType.BuWizz2;
         public override int NumberOfChannels => 4;
         public override int NumberOfOutputLevels => 4;
-        public override int DefaultOutputLevel => 1;
+        public override int DefaultOutputLevel => (int)GetSettingValue(DefaultOutputLevelName, DefaultLevel);
         protected override bool AutoConnectOnFirstConnect => false;
 
         public override string BatteryVoltageSign => "V";
@@ -215,13 +226,15 @@ namespace BrickController2.DeviceManagement
             }
         }
 
+        private bool SwapChannels => base.GetSettingValue<bool>(SwapChannelsSettingName);
+
         private async Task<bool> SendOutputValuesAsync(int v0, int v1, int v2, int v3, CancellationToken token)
         {
             try
             {
                 var sendOutputBuffer = new byte[] { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-                if (_swapChannels)
+                if (SwapChannels)
                 {
                     sendOutputBuffer[1] = (byte)(v1 / 2);
                     sendOutputBuffer[2] = (byte)(v0 / 2);
