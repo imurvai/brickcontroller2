@@ -187,7 +187,7 @@ namespace BrickController2.DeviceManagement
                     commendBytes.CopyTo(_driveMotorsBuffer, idx);
                     idx += 5;
                 }
-                return await _bleDevice!.WriteAsync(_writeCharacteristic!, _driveMotorsBuffer, token);
+                return await _bleDevice!.WriteNoResponseAsync(_writeCharacteristic!, _driveMotorsBuffer, token);
             }
             catch (Exception)
             {
@@ -199,7 +199,7 @@ namespace BrickController2.DeviceManagement
         {
             try
             {
-                return await _bleDevice!.WriteAsync(_writeCharacteristic!, TURN_OFF_ALL_COMMAND, token);
+                return await _bleDevice!.WriteNoResponseAsync(_writeCharacteristic!, TURN_OFF_ALL_COMMAND, token);
             }
             catch (Exception)
             {
@@ -223,7 +223,7 @@ namespace BrickController2.DeviceManagement
                 HardwareVersion = hardwareRevision;
             }
 
-            await _bleDevice!.WriteAsync(_writeCharacteristic!, BATTERY_STATUS_COMMAND, token);
+            await _bleDevice!.WriteNoResponseAsync(_writeCharacteristic!, BATTERY_STATUS_COMMAND, token);
         }
     }
 }

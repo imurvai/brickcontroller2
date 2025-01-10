@@ -9,6 +9,8 @@ using CoreFoundation;
 using Foundation;
 using BrickController2.PlatformServices.BluetoothLE;
 
+using static BrickController2.Protocols.BluetoothLowEnergy;
+
 namespace BrickController2.iOS.PlatformServices.BluetoothLE
 {
     public class BluetoothLEService : CBCentralManagerDelegate, IBluetoothLEService
@@ -112,13 +114,19 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
             var manufacturerData = GetDataForKey(advertisementData, CBAdvertisement.DataManufacturerDataKey);
             if (manufacturerData is not null)
             {
-                result[0xFF] = manufacturerData;
+                result[ADTYPE_MANUFACTURER_SPECIFIC] = manufacturerData;
             }
 
             var completeDeviceName = GetDataForKey(advertisementData, CBAdvertisement.DataLocalNameKey);
             if (completeDeviceName is not null)
             {
-                result[0x09] = completeDeviceName;
+                result[ADTYPE_LOCAL_NAME_COMPLETE] = completeDeviceName;
+            }
+
+            var serviceUuid = GetServiceUuidForKey(advertisementData, CBAdvertisement.DataServiceUUIDsKey);
+            if (serviceUuid is not null)
+            {
+                result[ADTYPE_SERVICE_128BIT] = serviceUuid;
             }
 
             // TODO: add the rest of the advertisementdata...
@@ -143,6 +151,28 @@ namespace BrickController2.iOS.PlatformServices.BluetoothLE
                 return Encoding.ASCII.GetBytes(stringObject.ToString());
             }
 
+            return null;
+        }
+
+        private static byte[]? GetServiceUuidForKey(NSDictionary advertisementData, NSString key)
+        {
+            if (advertisementData != null &&
+                advertisementData.TryGetValue(key, out var rawObject) &&
+                rawObject is NSArray arrayObject)
+            {
+                // find first available 128-bit UUID
+                for (nuint i = 0; i < arrayObject.Count; i++)
+                {
+                    var cbuuid = arrayObject.GetItem<CBUUID>(i);
+                    if (cbuuid.Data.Length == 16)
+                    {
+                        // Service UUID's are read backwards (little endian) according to specs
+                        var serviceUUid = cbuuid.Data.ToArray();
+                        Array.Reverse(serviceUUid);
+                        return serviceUUid;
+                    }
+                }
+            }
             return null;
         }
     }
