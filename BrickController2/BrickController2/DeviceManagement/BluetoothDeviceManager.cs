@@ -74,17 +74,19 @@ namespace BrickController2.DeviceManagement
                 case "98-01": return (DeviceType.SBrick, manufacturerData);
                 case "48-4d": return (DeviceType.BuWizz, manufacturerData);
                 case "4e-05":
-                    if (advertismentData.TryGetValue(0x09, out byte[]? completeLocalName))
+                    // detect using manufacterer data prefix
+                    if (!manufacturerDataString.StartsWith("4e-05-42-57-03-"))
                     {
-                        var completeLocalNameString = BitConverter.ToString(completeLocalName).ToLower();
-                        if (completeLocalNameString == "42-75-57-69-7a-7a") // BuWizz
-                        {
-                            return (DeviceType.BuWizz2, manufacturerData);
-                        }
-                        else
-                        {
-                            return (DeviceType.BuWizz3, manufacturerData);
-                        }
+                        return (DeviceType.BuWizz2, manufacturerData);
+                    }
+                    else
+                    {
+                        return (DeviceType.BuWizz3, manufacturerData);
+                    }
+                case "05-45": // BuWizz2 has new ID since firmware 1.2.30 - use BuWizz2 prefix
+                    if (manufacturerDataString.StartsWith("05-45-42-57-02-"))
+                    {
+                        return (DeviceType.BuWizz2, manufacturerData);
                     }
                     break;
                 case "97-03":
