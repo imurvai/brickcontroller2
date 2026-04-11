@@ -52,7 +52,7 @@
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,10,6,10"/>
 
                         <!-- Device channel selector -->
-                        <controls:DeviceChannelSelector DeviceType="{Binding SelectedDevice.DeviceType}" SelectedChannel="{Binding Action.Channel}"/>
+                        <controls:DeviceChannelSelector Device="{Binding SelectedDevice}" SelectedChannel="{Binding Action.Channel}"/>
 
                         <BoxView Style="{StaticResource DividerBoxViewStyle}" Margin="6,10,6,10"/>
 
