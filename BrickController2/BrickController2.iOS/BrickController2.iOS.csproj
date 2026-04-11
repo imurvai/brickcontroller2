@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-    <TargetFrameworks>net8.0-ios</TargetFrameworks>
-    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+ 	<PropertyGroup>
+    <TargetFrameworks>net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
+    <RuntimeIdentifier Condition="'$(TargetFramework)' == 'net8.0-ios'">ios-arm64</RuntimeIdentifier>
 		<LangVersion>latest</LangVersion>
-		<SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-ios'">11.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
+    <AppBundleManifest Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">Info.maccatalyst.plist</AppBundleManifest>
     <OutputType>Exe</OutputType>
 		<Nullable>enable</Nullable>
 		<ApplicationId>com.scn.BrickController2</ApplicationId>
@@ -14,13 +16,18 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <ItemGroup>
+	<ItemGroup>
 	  <BundleResource Remove="Resources\splash.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <None Remove="Resources\splash.svg" />
 	</ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-maccatalyst'">
+    <InterfaceDefinition Remove="LaunchScreen.storyboard" />
+    <BundleResource Remove="LaunchScreen.storyboard" />
+  </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Autofac" />

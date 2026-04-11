@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>BrickController2</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.scn.brickcontroller2</string>
+	<key>CFBundleName</key>
+	<string>BrickController2</string>
+	<key>CFBundleShortVersionString</key>
+	<string>3.4</string>
+	<key>CFBundleVersion</key>
+	<string>50</string>
+	<key>MinimumOSVersion</key>
+	<string>14.0</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Bluetooth access is required to use SBrick, BuWizz or Powered-Up devices.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Bluetooth access is required to use SBrick, BuWizz or Powered-Up devices.</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>UIUserInterfaceStyle</key>
+	<string>Dark</string>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>XSLaunchImageAssets</key>
+	<string>Assets.xcassets/LaunchImages.launchimage</string>
+</dict>
+</plist>
